@@ -338,7 +338,7 @@ namespace Registry.Viewport
             }
             ShowAssocViewport<T>(MenuCallback, viewModel.PrimaryKeyFirst + " = " +
                 Convert.ToInt32(viewModel.CurrentRow[viewModel.PrimaryKeyFirst], CultureInfo.InvariantCulture),
-                viewModel.CurrentRow.Row, ParentTypeEnum.Building);
+                viewModel.CurrentRow.Row, ParentTypeEnum.Premises);
         }
 
         private void premises_funds_RefreshEvent(object sender, EventArgs e)
