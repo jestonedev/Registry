@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
@@ -32,6 +33,9 @@ namespace Registry.Viewport.SearchForms
             comboBoxAmmountDGIExpr.SelectedIndex = 2;
             comboBoxAmmountTenancyExpr.SelectedIndex = 2;
             comboBoxDateStartStateExpr.SelectedIndex = 2;
+            comboBoxClaimDirectionDateExpr.SelectedIndex = 2;
+            comboBoxCourtOrderDateExpr.SelectedIndex = 2;
+            comboBoxObtainingCourtOrderDateExpr.SelectedIndex = 2;
 
             foreach (Control control in Controls)
             {
@@ -52,50 +56,15 @@ namespace Registry.Viewport.SearchForms
         internal override string GetFilter()
         {
             var filter = "";
-            IEnumerable<int> includedClaims = null;
+            var includedClaims = ClaimIdsByClaimStateInfo();
             IEnumerable<int> includedAccounts = null;
-            if (checkBoxLastState.Checked)
+            if (checkBoxAcceptedByLegalDepartmentWhoEnable.Checked && !string.IsNullOrEmpty(textBoxAcceptedByLegalDepartmentWho.Text.Trim()))
             {
-                if (checkBoxStateEnable.Checked && comboBoxState.SelectedValue != null)
-                {
-                    var lastStates = CalcDataModel.GetInstance<CalcDataModelLastClaimStates>();
-                    var lastStateTypes = from lastStateRow in lastStates.FilterDeletedRows()
-                        where lastStateRow.Field<int?>("id_state_type") == (int?) comboBoxState.SelectedValue
-                        select lastStateRow.Field<int>("id_claim");
-                    includedClaims = DataModelHelper.Intersect(null, lastStateTypes);
-                }
-                if (checkBoxDateStartStateEnable.Checked)
-                {
-                    var lastStateBindingSource = new BindingSource
-                    {
-                        DataSource = CalcDataModel.GetInstance<CalcDataModelLastClaimStates>().Select(),
-                        Filter = BuildFilter("date_start_state", comboBoxDateStartStateExpr.Text,
-                            dateTimePickerDateStartStateFrom.Value.Date,
-                            dateTimePickerDateStartStateTo.Value.Date)
-                    };
-                    var claimsByDateStartState = new List<int>();
-                    for (var i = 0; i < lastStateBindingSource.Count; i++)
-                    {
-                        var idClaim = (int?) ((DataRowView) lastStateBindingSource[i])["id_claim"];
-                        if (idClaim != null)
-                            claimsByDateStartState.Add(idClaim.Value);
-                    }
-                    includedClaims = DataModelHelper.Intersect(includedClaims, claimsByDateStartState);
-                }
-            }
-            else
-            {
-                var claims = from row in DataModel.GetInstance<EntityDataModel<ClaimState>>().FilterDeletedRows()
-                             where 
-                                (!checkBoxStateEnable.Checked || row.Field<int?>("id_state_type") == (int?)comboBoxState.SelectedValue) &&
-                                (!checkBoxDateStartStateEnable.Checked || 
-                                DateSatisfiesExpression(
-                                    row["date_start_state"] == DBNull.Value ? null : (DateTime?)row["date_start_state"],
-                                    comboBoxDateStartStateExpr.Text,
-                                    dateTimePickerDateStartStateFrom.Value.Date,
-                                    dateTimePickerDateStartStateTo.Value.Date))
-                    select row.Field<int>("id_claim");
-                includedClaims = DataModelHelper.Intersect(null, claims);
+                var claims =
+                    ClaimsService.ClaimIdsByStateCondition(
+                        r => (r.Field<string>("accepted_by_legal_department_who") ?? "").ToUpperInvariant()
+                                .Contains(textBoxAcceptedByLegalDepartmentWho.Text.Trim().ToUpperInvariant()) && r.Field<int>("id_state_type") == 3);
+                includedClaims = DataModelHelper.Intersect(includedClaims, claims);
             }
             if (checkBoxAccountEnable.Checked && !string.IsNullOrEmpty(textBoxAccount.Text.Trim()))
             {
@@ -172,6 +141,86 @@ namespace Registry.Viewport.SearchForms
             return filter;
         }
 
+        private IEnumerable<int> ClaimIdsByClaimStateInfo()
+        {
+            IEnumerable<int> includedClaims = null;
+            if (checkBoxLastState.Checked)
+            {
+                if (checkBoxStateEnable.Checked && comboBoxState.SelectedValue != null)
+                {
+                    var lastStates = CalcDataModel.GetInstance<CalcDataModelLastClaimStates>();
+                    var lastStateTypes = from lastStateRow in lastStates.FilterDeletedRows()
+                        where lastStateRow.Field<int?>("id_state_type") == (int?) comboBoxState.SelectedValue
+                        select lastStateRow.Field<int>("id_claim");
+                    includedClaims = DataModelHelper.Intersect(null, lastStateTypes);
+                }
+                if (checkBoxDateStartStateEnable.Checked)
+                {
+                    var lastStateBindingSource = new BindingSource
+                    {
+                        DataSource = CalcDataModel.GetInstance<CalcDataModelLastClaimStates>().Select(),
+                        Filter = BuildFilter("date_start_state", comboBoxDateStartStateExpr.Text,
+                            dateTimePickerDateStartStateFrom.Value.Date,
+                            dateTimePickerDateStartStateTo.Value.Date)
+                    };
+                    var claimsByDateStartState = new List<int>();
+                    for (var i = 0; i < lastStateBindingSource.Count; i++)
+                    {
+                        var idClaim = (int?) ((DataRowView) lastStateBindingSource[i])["id_claim"];
+                        if (idClaim != null)
+                            claimsByDateStartState.Add(idClaim.Value);
+                    }
+                    includedClaims = DataModelHelper.Intersect(includedClaims, claimsByDateStartState);
+                }
+            }
+            else
+            {
+                var claims = from row in DataModel.GetInstance<EntityDataModel<ClaimState>>().FilterDeletedRows()
+                    where
+                        (!checkBoxStateEnable.Checked || row.Field<int?>("id_state_type") == (int?) comboBoxState.SelectedValue) &&
+                        (!checkBoxDateStartStateEnable.Checked ||
+                         DateSatisfiesExpression(
+                             row["date_start_state"] == DBNull.Value ? null : (DateTime?) row["date_start_state"],
+                             comboBoxDateStartStateExpr.Text,
+                             dateTimePickerDateStartStateFrom.Value.Date,
+                             dateTimePickerDateStartStateTo.Value.Date))
+                    select row.Field<int>("id_claim");
+                includedClaims = DataModelHelper.Intersect(null, claims);
+            }
+            int idStateType;
+            if (comboBoxState.SelectedValue == null ||
+                !int.TryParse(comboBoxState.SelectedValue.ToString(), out idStateType) || idStateType != 4)
+                return includedClaims;       
+            if (checkBoxClaimDirectionDateEnable.Checked)
+            {
+                var claims = ClaimsService.ClaimIdsByStateCondition(r =>
+                    DateSatisfiesExpression(r.Field<DateTime?>("claim_direction_date"),
+                        comboBoxClaimDirectionDateExpr.Text,
+                        dateTimePickerClaimDirectionDateFrom.Value.Date,
+                        dateTimePickerClaimDirectionDateTo.Value.Date) && r.Field<int>("id_state_type") == 4);
+                includedClaims = DataModelHelper.Intersect(includedClaims, claims);
+            }
+            if (checkBoxCourtOrderDateEnable.Checked)
+            {
+                var claims = ClaimsService.ClaimIdsByStateCondition(r =>
+                    DateSatisfiesExpression(r.Field<DateTime?>("court_order_date"),
+                        comboBoxCourtOrderDateExpr.Text,
+                        dateTimePickerCourtOrderDateFrom.Value.Date,
+                        dateTimePickerCourtOrderDateTo.Value.Date) && r.Field<int>("id_state_type") == 4);
+                includedClaims = DataModelHelper.Intersect(includedClaims, claims);
+            }
+            if (checkBoxObtainingCourtOrderDateEnable.Checked)
+            {
+                var claims = ClaimsService.ClaimIdsByStateCondition(r =>
+                    DateSatisfiesExpression(r.Field<DateTime?>("obtaining_court_order_date"),
+                        comboBoxObtainingCourtOrderDateExpr.Text,
+                        dateTimePickerObtainingCourtOrderDateFrom.Value.Date,
+                        dateTimePickerObtainingCourtOrderDateTo.Value.Date) && r.Field<int>("id_state_type") == 4);
+                includedClaims = DataModelHelper.Intersect(includedClaims, claims);
+            }           
+            return includedClaims;
+        }
+
         private static bool DateSatisfiesExpression(DateTime? dateStartState, string rawOperator, DateTime dateStartStateFrom, DateTime dateStartStateTo)
         {
             if (dateStartState == null) return false;
@@ -235,18 +284,29 @@ namespace Registry.Viewport.SearchForms
             {
                 MessageBox.Show(@"Укажите лицевой счет или уберите галочку фильтрации по лицевому счету",@"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxAccount.Focus();
                 return;
             }
             if (checkBoxSRNEnable.Checked && string.IsNullOrEmpty(textBoxSRN.Text.Trim()))
             {
                 MessageBox.Show(@"Укажите СРН или уберите галочку фильтрации по СРН", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxSRN.Focus();
+                return;
+            }
+            if (checkBoxAcceptedByLegalDepartmentWhoEnable.Checked &&
+                string.IsNullOrEmpty(textBoxAcceptedByLegalDepartmentWho.Text.Trim()))
+            {
+                MessageBox.Show(@"Введите часть ФИО юриста, принявшего работу в юридический отдел или уберите галочку с фильтрации по ФИО юриста", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxAcceptedByLegalDepartmentWho.Focus();
                 return;
             }
             if (checkBoxStateEnable.Checked && comboBoxState.SelectedValue == null)
             {
                 MessageBox.Show(@"Выберите состояние исковой работы или уберите галочку фильтрации по последнему состоянию исковой работы", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                comboBoxState.Focus();
                 return;
             }
             DialogResult = DialogResult.OK;
@@ -255,6 +315,14 @@ namespace Registry.Viewport.SearchForms
         private void checkBoxLastStateChecked_CheckedChanged(object sender, EventArgs e)
         {
             comboBoxState.Enabled = checkBoxStateEnable.Checked;
+            if (!checkBoxStateEnable.Checked)
+            {
+                SetExtStatePropertiesVisibility(false);
+            }
+            else
+            {
+                comboBoxState_SelectedValueChanged(comboBoxState, new EventArgs());
+            }
         }
 
         private void checkBoxAccountChecked_CheckedChanged(object sender, EventArgs e)
@@ -312,6 +380,57 @@ namespace Registry.Viewport.SearchForms
         private void checkBoxSRNChecked_CheckedChanged(object sender, EventArgs e)
         {
             textBoxSRN.Enabled = checkBoxSRNEnable.Checked;
+        }
+
+        private void checkBoxClaimDirectionDateEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            dateTimePickerClaimDirectionDateFrom.Enabled = checkBoxClaimDirectionDateEnable.Checked;
+            dateTimePickerClaimDirectionDateTo.Enabled = checkBoxClaimDirectionDateEnable.Checked;
+            comboBoxClaimDirectionDateExpr.Enabled = checkBoxClaimDirectionDateEnable.Checked;
+        }
+
+        private void checkBoxAcceptedByLegalDepartmentWhoEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxAcceptedByLegalDepartmentWho.Enabled = checkBoxAcceptedByLegalDepartmentWhoEnable.Checked;
+        }
+
+        private void checkBoxCourtOrderDateEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            dateTimePickerCourtOrderDateFrom.Enabled = checkBoxCourtOrderDateEnable.Checked;
+            dateTimePickerCourtOrderDateTo.Enabled = checkBoxCourtOrderDateEnable.Checked;
+            comboBoxCourtOrderDateExpr.Enabled = checkBoxCourtOrderDateEnable.Checked;
+        }
+
+        private void checkBoxObtainingCourtOrderDateEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            dateTimePickerObtainingCourtOrderDateFrom.Enabled = checkBoxObtainingCourtOrderDateEnable.Checked;
+            dateTimePickerObtainingCourtOrderDateTo.Enabled = checkBoxObtainingCourtOrderDateEnable.Checked;
+            comboBoxObtainingCourtOrderDateExpr.Enabled = checkBoxObtainingCourtOrderDateEnable.Checked;
+        }
+
+        private void comboBoxState_SelectedValueChanged(object sender, EventArgs e)
+        {
+            int idStateType;
+            if (comboBoxState.SelectedValue != null &&
+                int.TryParse(comboBoxState.SelectedValue.ToString(), out idStateType) && idStateType == 4)
+            {
+                SetExtStatePropertiesVisibility(true);
+            }
+            else
+            {
+                SetExtStatePropertiesVisibility(false);
+            }
+        }
+
+        private void SetExtStatePropertiesVisibility(bool visibility)
+        {
+            dateTimePickerClaimDirectionDateFrom.Visible = dateTimePickerClaimDirectionDateTo.Visible =
+            comboBoxClaimDirectionDateExpr.Visible = dateTimePickerCourtOrderDateFrom.Visible =
+            dateTimePickerCourtOrderDateTo.Visible = comboBoxCourtOrderDateExpr.Visible =
+            dateTimePickerObtainingCourtOrderDateFrom.Visible = dateTimePickerObtainingCourtOrderDateTo.Visible =
+            comboBoxObtainingCourtOrderDateExpr.Visible = label8.Visible = label9.Visible = label10.Visible =
+            checkBoxObtainingCourtOrderDateEnable.Visible = checkBoxCourtOrderDateEnable.Visible = checkBoxClaimDirectionDateEnable.Visible = visibility;
+            Height = visibility ? 495 : 370;
         }
     }
 }
