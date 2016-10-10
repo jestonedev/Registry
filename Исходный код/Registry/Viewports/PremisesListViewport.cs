@@ -443,7 +443,7 @@ namespace Registry.Viewport
                     var stateRow = Presenter.ViewModel["object_states"].DataSource.Rows.Find(
                         row[Presenter.ViewModel["object_states"].PrimaryKeyFirst]);
                     if (stateRow != null)
-                        e.Value = stateRow["state_female"];
+                        e.Value = stateRow["state_neutral"];
                     break;
                 case "current_fund":
                     if (DataModelHelper.MunicipalAndUnknownObjectStates().ToList().Contains((int)row["id_state"]))

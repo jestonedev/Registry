@@ -292,7 +292,7 @@ namespace Registry.Viewport
                 case "id_state":
                     var stateRow = Presenter.ViewModel["object_states"].DataSource.Rows.Find(row["id_state"]);
                     if (stateRow != null)
-                        e.Value = stateRow["state_female"];
+                        e.Value = stateRow["state_neutral"];
                     break;
                 case "mun_area":
                     e.Value = Convert.ToDecimal(Presenter.ViewModel["municipal_premises"].DataSource.AsEnumerable().
