@@ -66,6 +66,14 @@ namespace Registry.Viewport.SearchForms
                                 .Contains(textBoxAcceptedByLegalDepartmentWho.Text.Trim().ToUpperInvariant()) && r.Field<int>("id_state_type") == 3);
                 includedClaims = DataModelHelper.Intersect(includedClaims, claims);
             }
+            if (checkBoxTransferedToLegalDepartmentWhoEnable.Checked && !string.IsNullOrEmpty(textBoxTransferedToLegalDepartmentWho.Text.Trim()))
+            {
+                var claims =
+                    ClaimsService.ClaimIdsByStateCondition(
+                        r => (r.Field<string>("transfer_to_legal_department_who") ?? "").ToUpperInvariant()
+                                .Contains(textBoxTransferedToLegalDepartmentWho.Text.Trim().ToUpperInvariant()) && r.Field<int>("id_state_type") == 2);
+                includedClaims = DataModelHelper.Intersect(includedClaims, claims);
+            }
             if (checkBoxAccountEnable.Checked && !string.IsNullOrEmpty(textBoxAccount.Text.Trim()))
             {
                 var accounts =
@@ -430,7 +438,13 @@ namespace Registry.Viewport.SearchForms
             dateTimePickerObtainingCourtOrderDateFrom.Visible = dateTimePickerObtainingCourtOrderDateTo.Visible =
             comboBoxObtainingCourtOrderDateExpr.Visible = label8.Visible = label9.Visible = label10.Visible =
             checkBoxObtainingCourtOrderDateEnable.Visible = checkBoxCourtOrderDateEnable.Visible = checkBoxClaimDirectionDateEnable.Visible = visibility;
-            Height = visibility ? 495 : 370;
+            Height = visibility ? 453 : 390;
+            groupBox1.Height = visibility ? 271 : 141;
+        }
+
+        private void checkBoxTransferedToLegalDepartmentWhoEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxTransferedToLegalDepartmentWho.Enabled = checkBoxTransferedToLegalDepartmentWhoEnable.Checked;
         }
     }
 }
