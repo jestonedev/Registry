@@ -48,6 +48,11 @@ namespace Registry.Viewport.ModalEditors
             get { return string.IsNullOrEmpty(textBoxAcceptedByLegalDepartmentWho.Text) ? null : textBoxAcceptedByLegalDepartmentWho.Text; }
         }
 
+        public string BksRequester
+        {
+            get { return string.IsNullOrEmpty(textBoxBksRequester.Text) ? null : textBoxBksRequester.Text; }
+        }
+
 
         public MultiClaimsStateConfigForm()
         {
@@ -61,6 +66,7 @@ namespace Registry.Viewport.ModalEditors
             comboBoxClaimStateType.DataSource = source;
             textBoxTransferToLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
             textBoxAcceptedByLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
+            textBoxBksRequester.Text = UserDomain.Current.DisplayName;
         }
 
         private void comboBoxClaimStateType_SelectedValueChanged(object sender, EventArgs e)
@@ -73,6 +79,9 @@ namespace Registry.Viewport.ModalEditors
             tabControlWithoutTabs1.Visible = true;
             switch ((int)comboBoxClaimStateType.SelectedValue)
             {
+                case 1:
+                    tabControlWithoutTabs1.SelectTab(tabPageRequestToBks);
+                    break;
                 case 2:
                     tabControlWithoutTabs1.SelectTab(tabPageToLegalDepartment);
                     break;

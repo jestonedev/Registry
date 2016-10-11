@@ -9,6 +9,7 @@ using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
+using Settings;
 
 namespace Registry.Viewport.SearchForms
 {
@@ -37,6 +38,10 @@ namespace Registry.Viewport.SearchForms
             comboBoxCourtOrderDateExpr.SelectedIndex = 2;
             comboBoxObtainingCourtOrderDateExpr.SelectedIndex = 2;
 
+            textBoxBksRequester.Text = UserDomain.Current.DisplayName;
+            textBoxTransferedToLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
+            textBoxAcceptedByLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
+
             foreach (Control control in Controls)
             {
                 control.KeyDown += (sender, e) =>
@@ -58,6 +63,14 @@ namespace Registry.Viewport.SearchForms
             var filter = "";
             var includedClaims = ClaimIdsByClaimStateInfo();
             IEnumerable<int> includedAccounts = null;
+            if (checkBoxBksRequesterEnable.Checked && !string.IsNullOrEmpty(textBoxBksRequester.Text.Trim()))
+            {
+                var claims =
+                    ClaimsService.ClaimIdsByStateCondition(
+                        r => (r.Field<string>("bks_requester") ?? "").ToUpperInvariant()
+                                .Contains(textBoxBksRequester.Text.Trim().ToUpperInvariant()) && r.Field<int>("id_state_type") == 1);
+                includedClaims = DataModelHelper.Intersect(includedClaims, claims);
+            }
             if (checkBoxAcceptedByLegalDepartmentWhoEnable.Checked && !string.IsNullOrEmpty(textBoxAcceptedByLegalDepartmentWho.Text.Trim()))
             {
                 var claims =
@@ -302,10 +315,26 @@ namespace Registry.Viewport.SearchForms
                 textBoxSRN.Focus();
                 return;
             }
+            if (checkBoxBksRequesterEnable.Checked &&
+                string.IsNullOrEmpty(textBoxBksRequester.Text.Trim()))
+            {
+                MessageBox.Show(@"Введите часть ФИО сотрудника, сделавшего запрос в БКС, или уберите галочку фильтрации по данному полю", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxBksRequester.Focus();
+                return;
+            }
+            if (checkBoxTransferedToLegalDepartmentWhoEnable.Checked &&
+                string.IsNullOrEmpty(textBoxTransferedToLegalDepartmentWho.Text.Trim()))
+            {
+                MessageBox.Show(@"Введите часть ФИО сотрудника, передавшего работу в юридический отдел, или уберите галочку фильтрации по данному полю", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxTransferedToLegalDepartmentWho.Focus();
+                return;
+            }
             if (checkBoxAcceptedByLegalDepartmentWhoEnable.Checked &&
                 string.IsNullOrEmpty(textBoxAcceptedByLegalDepartmentWho.Text.Trim()))
             {
-                MessageBox.Show(@"Введите часть ФИО юриста, принявшего работу в юридический отдел или уберите галочку с фильтрации по ФИО юриста", @"Ошибка",
+                MessageBox.Show(@"Введите часть ФИО сотрудника, принявшего работу в юридический отдел, или уберите галочку фильтрации по данному полю", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxAcceptedByLegalDepartmentWho.Focus();
                 return;
@@ -438,13 +467,18 @@ namespace Registry.Viewport.SearchForms
             dateTimePickerObtainingCourtOrderDateFrom.Visible = dateTimePickerObtainingCourtOrderDateTo.Visible =
             comboBoxObtainingCourtOrderDateExpr.Visible = label8.Visible = label9.Visible = label10.Visible =
             checkBoxObtainingCourtOrderDateEnable.Visible = checkBoxCourtOrderDateEnable.Visible = checkBoxClaimDirectionDateEnable.Visible = visibility;
-            Height = visibility ? 453 : 390;
+            Height = visibility ? 453 : 436;
             groupBox1.Height = visibility ? 271 : 141;
         }
 
         private void checkBoxTransferedToLegalDepartmentWhoEnable_CheckedChanged(object sender, EventArgs e)
         {
             textBoxTransferedToLegalDepartmentWho.Enabled = checkBoxTransferedToLegalDepartmentWhoEnable.Checked;
+        }
+
+        private void checkBoxBksRequesterEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxBksRequester.Enabled = checkBoxBksRequesterEnable.Checked;
         }
     }
 }

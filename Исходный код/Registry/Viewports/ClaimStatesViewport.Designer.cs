@@ -30,6 +30,13 @@ namespace Registry.Viewport
             this.groupBox35 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanelDetails = new System.Windows.Forms.TableLayoutPanel();
             this.tabControlWithoutTabs1 = new CustomControls.TabControlWithoutTabs();
+            this.tabPageRequestToBks = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel31 = new System.Windows.Forms.Panel();
+            this.panel32 = new System.Windows.Forms.Panel();
+            this.label31 = new System.Windows.Forms.Label();
+            this.textBoxBksRequester = new System.Windows.Forms.TextBox();
             this.tabPageToLegalDepartment = new System.Windows.Forms.TabPage();
             this.groupBoxTransfertToLegalDepartment = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -165,6 +172,10 @@ namespace Registry.Viewport
             this.groupBox35.SuspendLayout();
             this.tableLayoutPanelDetails.SuspendLayout();
             this.tabControlWithoutTabs1.SuspendLayout();
+            this.tabPageRequestToBks.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.tableLayoutPanel15.SuspendLayout();
+            this.panel32.SuspendLayout();
             this.tabPageToLegalDepartment.SuspendLayout();
             this.groupBoxTransfertToLegalDepartment.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -278,6 +289,7 @@ namespace Registry.Viewport
             // tabControlWithoutTabs1
             // 
             this.tableLayoutPanelDetails.SetColumnSpan(this.tabControlWithoutTabs1, 2);
+            this.tabControlWithoutTabs1.Controls.Add(this.tabPageRequestToBks);
             this.tabControlWithoutTabs1.Controls.Add(this.tabPageToLegalDepartment);
             this.tabControlWithoutTabs1.Controls.Add(this.tabPageAcceptedByLegalDepartment);
             this.tabControlWithoutTabs1.Controls.Add(this.tabPagePreparingOrder);
@@ -291,6 +303,84 @@ namespace Registry.Viewport
             this.tabControlWithoutTabs1.Size = new System.Drawing.Size(996, 356);
             this.tabControlWithoutTabs1.TabIndex = 2;
             this.tabControlWithoutTabs1.TabStop = false;
+            // 
+            // tabPageRequestToBks
+            // 
+            this.tabPageRequestToBks.Controls.Add(this.groupBox1);
+            this.tabPageRequestToBks.Location = new System.Drawing.Point(4, 24);
+            this.tabPageRequestToBks.Name = "tabPageRequestToBks";
+            this.tabPageRequestToBks.Size = new System.Drawing.Size(988, 328);
+            this.tabPageRequestToBks.TabIndex = 5;
+            this.tabPageRequestToBks.Text = "Запрос в БКС";
+            this.tabPageRequestToBks.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.tableLayoutPanel15);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(0);
+            this.groupBox1.Size = new System.Drawing.Size(988, 47);
+            this.groupBox1.TabIndex = 1;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Запрос в БКС";
+            // 
+            // tableLayoutPanel15
+            // 
+            this.tableLayoutPanel15.ColumnCount = 2;
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel15.Controls.Add(this.panel31, 1, 0);
+            this.tableLayoutPanel15.Controls.Add(this.panel32, 0, 0);
+            this.tableLayoutPanel15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel15.Location = new System.Drawing.Point(0, 14);
+            this.tableLayoutPanel15.Name = "tableLayoutPanel15";
+            this.tableLayoutPanel15.RowCount = 1;
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel15.Size = new System.Drawing.Size(988, 33);
+            this.tableLayoutPanel15.TabIndex = 0;
+            // 
+            // panel31
+            // 
+            this.panel31.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel31.Location = new System.Drawing.Point(494, 0);
+            this.panel31.Margin = new System.Windows.Forms.Padding(0);
+            this.panel31.Name = "panel31";
+            this.panel31.Size = new System.Drawing.Size(494, 33);
+            this.panel31.TabIndex = 1;
+            // 
+            // panel32
+            // 
+            this.panel32.Controls.Add(this.label31);
+            this.panel32.Controls.Add(this.textBoxBksRequester);
+            this.panel32.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel32.Location = new System.Drawing.Point(0, 0);
+            this.panel32.Margin = new System.Windows.Forms.Padding(0);
+            this.panel32.Name = "panel32";
+            this.panel32.Size = new System.Drawing.Size(494, 33);
+            this.panel32.TabIndex = 0;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(10, 9);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(116, 15);
+            this.label31.TabIndex = 34;
+            this.label31.Text = "Кто сделал запрос";
+            // 
+            // textBoxBksRequester
+            // 
+            this.textBoxBksRequester.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxBksRequester.Location = new System.Drawing.Point(157, 6);
+            this.textBoxBksRequester.MaxLength = 255;
+            this.textBoxBksRequester.Name = "textBoxBksRequester";
+            this.textBoxBksRequester.Size = new System.Drawing.Size(327, 21);
+            this.textBoxBksRequester.TabIndex = 33;
             // 
             // tabPageToLegalDepartment
             // 
@@ -357,6 +447,7 @@ namespace Registry.Viewport
             this.textBoxTransferToLegalDepartmentWho.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTransferToLegalDepartmentWho.Location = new System.Drawing.Point(161, 6);
+            this.textBoxTransferToLegalDepartmentWho.MaxLength = 255;
             this.textBoxTransferToLegalDepartmentWho.Name = "textBoxTransferToLegalDepartmentWho";
             this.textBoxTransferToLegalDepartmentWho.Size = new System.Drawing.Size(327, 21);
             this.textBoxTransferToLegalDepartmentWho.TabIndex = 0;
@@ -394,9 +485,9 @@ namespace Registry.Viewport
             // tabPageAcceptedByLegalDepartment
             // 
             this.tabPageAcceptedByLegalDepartment.Controls.Add(this.groupBoxAcceptedByLegalDepartment);
-            this.tabPageAcceptedByLegalDepartment.Location = new System.Drawing.Point(4, 22);
+            this.tabPageAcceptedByLegalDepartment.Location = new System.Drawing.Point(4, 24);
             this.tabPageAcceptedByLegalDepartment.Name = "tabPageAcceptedByLegalDepartment";
-            this.tabPageAcceptedByLegalDepartment.Size = new System.Drawing.Size(988, 330);
+            this.tabPageAcceptedByLegalDepartment.Size = new System.Drawing.Size(988, 328);
             this.tabPageAcceptedByLegalDepartment.TabIndex = 4;
             this.tabPageAcceptedByLegalDepartment.Text = "Принято в юр. отдел";
             this.tabPageAcceptedByLegalDepartment.UseVisualStyleBackColor = true;
@@ -455,6 +546,7 @@ namespace Registry.Viewport
             this.textBoxAcceptedByLegalDepartmentWho.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxAcceptedByLegalDepartmentWho.Location = new System.Drawing.Point(161, 6);
+            this.textBoxAcceptedByLegalDepartmentWho.MaxLength = 255;
             this.textBoxAcceptedByLegalDepartmentWho.Name = "textBoxAcceptedByLegalDepartmentWho";
             this.textBoxAcceptedByLegalDepartmentWho.Size = new System.Drawing.Size(327, 21);
             this.textBoxAcceptedByLegalDepartmentWho.TabIndex = 0;
@@ -494,10 +586,10 @@ namespace Registry.Viewport
             this.tabPagePreparingOrder.Controls.Add(this.groupBoxObtainingCourtOrder);
             this.tabPagePreparingOrder.Controls.Add(this.groupBoxCourtOrder);
             this.tabPagePreparingOrder.Controls.Add(this.groupBoxClaimDirectedToCourt);
-            this.tabPagePreparingOrder.Location = new System.Drawing.Point(4, 22);
+            this.tabPagePreparingOrder.Location = new System.Drawing.Point(4, 24);
             this.tabPagePreparingOrder.Margin = new System.Windows.Forms.Padding(0);
             this.tabPagePreparingOrder.Name = "tabPagePreparingOrder";
-            this.tabPagePreparingOrder.Size = new System.Drawing.Size(988, 330);
+            this.tabPagePreparingOrder.Size = new System.Drawing.Size(988, 328);
             this.tabPagePreparingOrder.TabIndex = 1;
             this.tabPagePreparingOrder.Text = "Подготовка и получение судебного приказа";
             this.tabPagePreparingOrder.UseVisualStyleBackColor = true;
@@ -556,6 +648,7 @@ namespace Registry.Viewport
             this.textBoxObtainingCourtOrderDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxObtainingCourtOrderDescription.Location = new System.Drawing.Point(161, 6);
+            this.textBoxObtainingCourtOrderDescription.MaxLength = 255;
             this.textBoxObtainingCourtOrderDescription.Name = "textBoxObtainingCourtOrderDescription";
             this.textBoxObtainingCourtOrderDescription.Size = new System.Drawing.Size(327, 21);
             this.textBoxObtainingCourtOrderDescription.TabIndex = 0;
@@ -644,6 +737,7 @@ namespace Registry.Viewport
             this.textBoxCourtOrderNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCourtOrderNum.Location = new System.Drawing.Point(161, 6);
+            this.textBoxCourtOrderNum.MaxLength = 255;
             this.textBoxCourtOrderNum.Name = "textBoxCourtOrderNum";
             this.textBoxCourtOrderNum.Size = new System.Drawing.Size(327, 21);
             this.textBoxCourtOrderNum.TabIndex = 0;
@@ -732,6 +826,7 @@ namespace Registry.Viewport
             this.textBoxClaimDirectionDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxClaimDirectionDescription.Location = new System.Drawing.Point(161, 6);
+            this.textBoxClaimDirectionDescription.MaxLength = 255;
             this.textBoxClaimDirectionDescription.Name = "textBoxClaimDirectionDescription";
             this.textBoxClaimDirectionDescription.Size = new System.Drawing.Size(327, 21);
             this.textBoxClaimDirectionDescription.TabIndex = 0;
@@ -775,10 +870,10 @@ namespace Registry.Viewport
             this.tabPageExecutoryProcess.Controls.Add(this.groupBoxEnforcementProceedingEnd);
             this.tabPageExecutoryProcess.Controls.Add(this.groupBoxEnforcementProceedingStart);
             this.tabPageExecutoryProcess.Controls.Add(this.groupBoxDirectionCourtOrderBailiffs);
-            this.tabPageExecutoryProcess.Location = new System.Drawing.Point(4, 22);
+            this.tabPageExecutoryProcess.Location = new System.Drawing.Point(4, 24);
             this.tabPageExecutoryProcess.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageExecutoryProcess.Name = "tabPageExecutoryProcess";
-            this.tabPageExecutoryProcess.Size = new System.Drawing.Size(988, 330);
+            this.tabPageExecutoryProcess.Size = new System.Drawing.Size(988, 328);
             this.tabPageExecutoryProcess.TabIndex = 2;
             this.tabPageExecutoryProcess.Text = "Исполнительное производство";
             this.tabPageExecutoryProcess.UseVisualStyleBackColor = true;
@@ -837,6 +932,7 @@ namespace Registry.Viewport
             this.textBoxRepeatedEnforcementProceedingEndDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxRepeatedEnforcementProceedingEndDescription.Location = new System.Drawing.Point(161, 6);
+            this.textBoxRepeatedEnforcementProceedingEndDescription.MaxLength = 255;
             this.textBoxRepeatedEnforcementProceedingEndDescription.Name = "textBoxRepeatedEnforcementProceedingEndDescription";
             this.textBoxRepeatedEnforcementProceedingEndDescription.Size = new System.Drawing.Size(327, 21);
             this.textBoxRepeatedEnforcementProceedingEndDescription.TabIndex = 0;
@@ -925,6 +1021,7 @@ namespace Registry.Viewport
             this.textBoxRepeatedEnforcementProceedingStartDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxRepeatedEnforcementProceedingStartDescription.Location = new System.Drawing.Point(161, 6);
+            this.textBoxRepeatedEnforcementProceedingStartDescription.MaxLength = 255;
             this.textBoxRepeatedEnforcementProceedingStartDescription.Name = "textBoxRepeatedEnforcementProceedingStartDescription";
             this.textBoxRepeatedEnforcementProceedingStartDescription.Size = new System.Drawing.Size(327, 21);
             this.textBoxRepeatedEnforcementProceedingStartDescription.TabIndex = 0;
@@ -1013,6 +1110,7 @@ namespace Registry.Viewport
             this.textBoxRepeatedDirectionCourtOrderBailiffsDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxRepeatedDirectionCourtOrderBailiffsDescription.Location = new System.Drawing.Point(161, 6);
+            this.textBoxRepeatedDirectionCourtOrderBailiffsDescription.MaxLength = 255;
             this.textBoxRepeatedDirectionCourtOrderBailiffsDescription.Name = "textBoxRepeatedDirectionCourtOrderBailiffsDescription";
             this.textBoxRepeatedDirectionCourtOrderBailiffsDescription.Size = new System.Drawing.Size(327, 21);
             this.textBoxRepeatedDirectionCourtOrderBailiffsDescription.TabIndex = 0;
@@ -1101,6 +1199,7 @@ namespace Registry.Viewport
             this.textBoxEnforcementProceedingTerminateDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxEnforcementProceedingTerminateDescription.Location = new System.Drawing.Point(161, 6);
+            this.textBoxEnforcementProceedingTerminateDescription.MaxLength = 255;
             this.textBoxEnforcementProceedingTerminateDescription.Name = "textBoxEnforcementProceedingTerminateDescription";
             this.textBoxEnforcementProceedingTerminateDescription.Size = new System.Drawing.Size(327, 21);
             this.textBoxEnforcementProceedingTerminateDescription.TabIndex = 0;
@@ -1189,6 +1288,7 @@ namespace Registry.Viewport
             this.textBoxEnforcementProceedingEndDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxEnforcementProceedingEndDescription.Location = new System.Drawing.Point(161, 6);
+            this.textBoxEnforcementProceedingEndDescription.MaxLength = 255;
             this.textBoxEnforcementProceedingEndDescription.Name = "textBoxEnforcementProceedingEndDescription";
             this.textBoxEnforcementProceedingEndDescription.Size = new System.Drawing.Size(327, 21);
             this.textBoxEnforcementProceedingEndDescription.TabIndex = 0;
@@ -1277,6 +1377,7 @@ namespace Registry.Viewport
             this.textBoxEnforcementProceedingStartDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxEnforcementProceedingStartDescription.Location = new System.Drawing.Point(161, 6);
+            this.textBoxEnforcementProceedingStartDescription.MaxLength = 255;
             this.textBoxEnforcementProceedingStartDescription.Name = "textBoxEnforcementProceedingStartDescription";
             this.textBoxEnforcementProceedingStartDescription.Size = new System.Drawing.Size(327, 21);
             this.textBoxEnforcementProceedingStartDescription.TabIndex = 0;
@@ -1365,6 +1466,7 @@ namespace Registry.Viewport
             this.textBoxDirectionCourtOrderBailiffsDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDirectionCourtOrderBailiffsDescription.Location = new System.Drawing.Point(161, 6);
+            this.textBoxDirectionCourtOrderBailiffsDescription.MaxLength = 255;
             this.textBoxDirectionCourtOrderBailiffsDescription.Name = "textBoxDirectionCourtOrderBailiffsDescription";
             this.textBoxDirectionCourtOrderBailiffsDescription.Size = new System.Drawing.Size(327, 21);
             this.textBoxDirectionCourtOrderBailiffsDescription.TabIndex = 0;
@@ -1403,10 +1505,10 @@ namespace Registry.Viewport
             // 
             this.tabPageCompletionClaims.Controls.Add(this.groupBoxClaimComplete);
             this.tabPageCompletionClaims.Controls.Add(this.groupBoxCourtOrderCancel);
-            this.tabPageCompletionClaims.Location = new System.Drawing.Point(4, 22);
+            this.tabPageCompletionClaims.Location = new System.Drawing.Point(4, 24);
             this.tabPageCompletionClaims.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageCompletionClaims.Name = "tabPageCompletionClaims";
-            this.tabPageCompletionClaims.Size = new System.Drawing.Size(988, 330);
+            this.tabPageCompletionClaims.Size = new System.Drawing.Size(988, 328);
             this.tabPageCompletionClaims.TabIndex = 3;
             this.tabPageCompletionClaims.Text = "Завершение претензионной работы";
             this.tabPageCompletionClaims.UseVisualStyleBackColor = true;
@@ -1465,6 +1567,7 @@ namespace Registry.Viewport
             this.textBoxClaimCompleteDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxClaimCompleteDescription.Location = new System.Drawing.Point(161, 6);
+            this.textBoxClaimCompleteDescription.MaxLength = 255;
             this.textBoxClaimCompleteDescription.Name = "textBoxClaimCompleteDescription";
             this.textBoxClaimCompleteDescription.Size = new System.Drawing.Size(327, 21);
             this.textBoxClaimCompleteDescription.TabIndex = 0;
@@ -1496,6 +1599,7 @@ namespace Registry.Viewport
             this.textBoxClaimCompleteReason.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxClaimCompleteReason.Location = new System.Drawing.Point(158, 34);
+            this.textBoxClaimCompleteReason.MaxLength = 255;
             this.textBoxClaimCompleteReason.Name = "textBoxClaimCompleteReason";
             this.textBoxClaimCompleteReason.Size = new System.Drawing.Size(327, 21);
             this.textBoxClaimCompleteReason.TabIndex = 34;
@@ -1573,6 +1677,7 @@ namespace Registry.Viewport
             this.textBoxCourtOrderCancelDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCourtOrderCancelDescription.Location = new System.Drawing.Point(161, 6);
+            this.textBoxCourtOrderCancelDescription.MaxLength = 255;
             this.textBoxCourtOrderCancelDescription.Name = "textBoxCourtOrderCancelDescription";
             this.textBoxCourtOrderCancelDescription.Size = new System.Drawing.Size(327, 21);
             this.textBoxCourtOrderCancelDescription.TabIndex = 0;
@@ -1753,6 +1858,11 @@ namespace Registry.Viewport
             this.groupBox35.ResumeLayout(false);
             this.tableLayoutPanelDetails.ResumeLayout(false);
             this.tabControlWithoutTabs1.ResumeLayout(false);
+            this.tabPageRequestToBks.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.tableLayoutPanel15.ResumeLayout(false);
+            this.panel32.ResumeLayout(false);
+            this.panel32.PerformLayout();
             this.tabPageToLegalDepartment.ResumeLayout(false);
             this.groupBoxTransfertToLegalDepartment.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -1976,5 +2086,12 @@ namespace Registry.Viewport
         private Panel panel4;
         private DateTimePicker dateTimePickerAcceptedByLegalDepartmentDate;
         private Label label4;
+        private TabPage tabPageRequestToBks;
+        private GroupBox groupBox1;
+        private TableLayoutPanel tableLayoutPanel15;
+        private Panel panel31;
+        private Panel panel32;
+        private Label label31;
+        private TextBox textBoxBksRequester;
     }
 }

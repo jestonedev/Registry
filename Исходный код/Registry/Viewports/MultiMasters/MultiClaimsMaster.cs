@@ -227,6 +227,7 @@ namespace Registry.Viewport.MultiMasters
                     IdStateType = form.IdStateType,
                     DateStartState = form.DateStartState,
                     Description = form.Description,
+                    BksRequester = form.BksRequester,
                     AcceptedByLegalDepartmentDate = form.AcceptedByLegalDepartmentDate,
                     AcceptedByLegalDepartmentWho = form.AcceptedByLegalDepartmentWho,
                     TransfertToLegalDepartmentDate = form.TransfertToLegalDepartmentDate,
@@ -248,6 +249,7 @@ namespace Registry.Viewport.MultiMasters
                 claimsStateRow["id_state_type"] = ViewportHelper.ValueOrDbNull(claimState.IdStateType);
                 claimsStateRow["date_start_state"] = ViewportHelper.ValueOrDbNull(claimState.DateStartState);
                 claimsStateRow["description"] = ViewportHelper.ValueOrDbNull(claimState.Description);
+                claimsStateRow["bks_requester"] = ViewportHelper.ValueOrDbNull(claimState.BksRequester);
                 claimsStateRow["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDbNull(claimState.TransferToLegalDepartmentWho);
                 claimsStateRow["transfert_to_legal_department_date"] = ViewportHelper.ValueOrDbNull(claimState.TransfertToLegalDepartmentDate);
                 claimsStateRow["accepted_by_legal_department_who"] = ViewportHelper.ValueOrDbNull(claimState.AcceptedByLegalDepartmentWho);

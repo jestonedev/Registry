@@ -108,6 +108,7 @@ namespace Registry.Viewport.Presenters
             {
                 IdClaim = idClaim,
                 IdStateType = firstStateType,
+                BksRequester = UserDomain.Current.DisplayName,
                 TransferToLegalDepartmentWho = UserDomain.Current.DisplayName,
                 AcceptedByLegalDepartmentWho = UserDomain.Current.DisplayName,
                 DateStartState = DateTime.Now.Date

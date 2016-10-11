@@ -60,6 +60,13 @@
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.comboBoxClaimStateType = new System.Windows.Forms.ComboBox();
             this.label109 = new System.Windows.Forms.Label();
+            this.tabPageRequestToBks = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel32 = new System.Windows.Forms.Panel();
+            this.label31 = new System.Windows.Forms.Label();
+            this.textBoxBksRequester = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.tableLayoutPanelDetails.SuspendLayout();
             this.tabControlWithoutTabs1.SuspendLayout();
@@ -75,6 +82,10 @@
             this.panel5.SuspendLayout();
             this.panel11.SuspendLayout();
             this.panel31.SuspendLayout();
+            this.tabPageRequestToBks.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.tableLayoutPanel15.SuspendLayout();
+            this.panel32.SuspendLayout();
             this.SuspendLayout();
             // 
             // vButtonOk
@@ -135,6 +146,7 @@
             // tabControlWithoutTabs1
             // 
             this.tableLayoutPanelDetails.SetColumnSpan(this.tabControlWithoutTabs1, 2);
+            this.tabControlWithoutTabs1.Controls.Add(this.tabPageRequestToBks);
             this.tabControlWithoutTabs1.Controls.Add(this.tabPageToLegalDepartment);
             this.tabControlWithoutTabs1.Controls.Add(this.tabPageAcceptedByLegalDepartment);
             this.tabControlWithoutTabs1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -253,7 +265,7 @@
             this.tabPageAcceptedByLegalDepartment.Location = new System.Drawing.Point(4, 22);
             this.tabPageAcceptedByLegalDepartment.Name = "tabPageAcceptedByLegalDepartment";
             this.tabPageAcceptedByLegalDepartment.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPageAcceptedByLegalDepartment.Size = new System.Drawing.Size(883, 49);
+            this.tabPageAcceptedByLegalDepartment.Size = new System.Drawing.Size(883, 26);
             this.tabPageAcceptedByLegalDepartment.TabIndex = 4;
             this.tabPageAcceptedByLegalDepartment.Text = "Принято в юр. отдел";
             // 
@@ -427,6 +439,85 @@
             this.label109.TabIndex = 29;
             this.label109.Text = "Вид состояния";
             // 
+            // tabPageRequestToBks
+            // 
+            this.tabPageRequestToBks.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            this.tabPageRequestToBks.Controls.Add(this.groupBox1);
+            this.tabPageRequestToBks.Location = new System.Drawing.Point(4, 22);
+            this.tabPageRequestToBks.Name = "tabPageRequestToBks";
+            this.tabPageRequestToBks.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageRequestToBks.Size = new System.Drawing.Size(883, 26);
+            this.tabPageRequestToBks.TabIndex = 5;
+            this.tabPageRequestToBks.Text = "Запрос в БКС";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.tableLayoutPanel15);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(0);
+            this.groupBox1.Size = new System.Drawing.Size(877, 47);
+            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Запрос в БКС";
+            // 
+            // tableLayoutPanel15
+            // 
+            this.tableLayoutPanel15.ColumnCount = 2;
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel15.Controls.Add(this.panel6, 1, 0);
+            this.tableLayoutPanel15.Controls.Add(this.panel32, 0, 0);
+            this.tableLayoutPanel15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel15.Location = new System.Drawing.Point(0, 13);
+            this.tableLayoutPanel15.Name = "tableLayoutPanel15";
+            this.tableLayoutPanel15.RowCount = 1;
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel15.Size = new System.Drawing.Size(877, 34);
+            this.tableLayoutPanel15.TabIndex = 0;
+            // 
+            // panel6
+            // 
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Location = new System.Drawing.Point(438, 0);
+            this.panel6.Margin = new System.Windows.Forms.Padding(0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(439, 34);
+            this.panel6.TabIndex = 1;
+            // 
+            // panel32
+            // 
+            this.panel32.Controls.Add(this.label31);
+            this.panel32.Controls.Add(this.textBoxBksRequester);
+            this.panel32.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel32.Location = new System.Drawing.Point(0, 0);
+            this.panel32.Margin = new System.Windows.Forms.Padding(0);
+            this.panel32.Name = "panel32";
+            this.panel32.Size = new System.Drawing.Size(438, 34);
+            this.panel32.TabIndex = 0;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(10, 9);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(103, 13);
+            this.label31.TabIndex = 34;
+            this.label31.Text = "Кто сделал запрос";
+            // 
+            // textBoxBksRequester
+            // 
+            this.textBoxBksRequester.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxBksRequester.Location = new System.Drawing.Point(157, 6);
+            this.textBoxBksRequester.MaxLength = 255;
+            this.textBoxBksRequester.Name = "textBoxBksRequester";
+            this.textBoxBksRequester.Size = new System.Drawing.Size(271, 20);
+            this.textBoxBksRequester.TabIndex = 33;
+            // 
             // MultiClaimsStateConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -463,6 +554,11 @@
             this.panel11.PerformLayout();
             this.panel31.ResumeLayout(false);
             this.panel31.PerformLayout();
+            this.tabPageRequestToBks.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.tableLayoutPanel15.ResumeLayout(false);
+            this.panel32.ResumeLayout(false);
+            this.panel32.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -500,5 +596,12 @@
         private System.Windows.Forms.TextBox textBoxDescription;
         private System.Windows.Forms.ComboBox comboBoxClaimStateType;
         private System.Windows.Forms.Label label109;
+        private System.Windows.Forms.TabPage tabPageRequestToBks;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel15;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel32;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.TextBox textBoxBksRequester;
     }
 }

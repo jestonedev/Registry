@@ -68,20 +68,24 @@ namespace Registry.Viewport
                  Presenter.ViewModel["claim_state_types"].PrimaryKeyFirst);
             ViewportHelper.BindProperty(comboBoxClaimStateType, "SelectedValue", bindingSource,
                 Presenter.ViewModel["claim_state_types"].PrimaryKeyFirst, DBNull.Value);
-
             ViewportHelper.BindProperty(textBoxDescription, "Text", bindingSource, "description", "");
             ViewportHelper.BindProperty(dateTimePickerStartState, "Value", bindingSource, "date_start_state", DateTime.Now.Date);
 
+            ViewportHelper.BindProperty(textBoxBksRequester, "Text", bindingSource, "bks_requester", "");
+
             ViewportHelper.BindProperty(dateTimePickerTransfertToLegalDepartmentDate, "Value", bindingSource, "transfert_to_legal_department_date", DateTime.Now.Date);
             ViewportHelper.BindProperty(textBoxTransferToLegalDepartmentWho, "Text", bindingSource, "transfer_to_legal_department_who", "");
+            
             ViewportHelper.BindProperty(dateTimePickerAcceptedByLegalDepartmentDate, "Value", bindingSource, "accepted_by_legal_department_date", DateTime.Now.Date);
             ViewportHelper.BindProperty(textBoxAcceptedByLegalDepartmentWho, "Text", bindingSource, "accepted_by_legal_department_who", "");
+            
             ViewportHelper.BindProperty(dateTimePickerClaimDirectionDate, "Value", bindingSource, "claim_direction_date", DateTime.Now.Date);
             ViewportHelper.BindProperty(textBoxClaimDirectionDescription, "Text", bindingSource, "claim_direction_description", "");
             ViewportHelper.BindProperty(dateTimePickerCourtOrderDate, "Value", bindingSource, "court_order_date", DateTime.Now.Date);
             ViewportHelper.BindProperty(textBoxCourtOrderNum, "Text", bindingSource, "court_order_num", "");
             ViewportHelper.BindProperty(dateTimePickerObtainingCourtOrderDate, "Value", bindingSource, "obtaining_court_order_date", DateTime.Now.Date);
             ViewportHelper.BindProperty(textBoxObtainingCourtOrderDescription, "Text", bindingSource, "obtaining_court_order_description", "");
+            
             ViewportHelper.BindProperty(dateTimePickerDirectionCourtOrderBailiffsDate, "Value", bindingSource, "direction_court_order_bailiffs_date", DateTime.Now.Date);
             ViewportHelper.BindProperty(textBoxDirectionCourtOrderBailiffsDescription, "Text", bindingSource, "direction_court_order_bailiffs_description", "");
             ViewportHelper.BindProperty(dateTimePickerEnforcementProceedingStartDate, "Value", bindingSource, "enforcement_proceeding_start_date", DateTime.Now.Date);
@@ -96,6 +100,7 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(textBoxRepeatedEnforcementProceedingStartDescription, "Text", bindingSource, "repeated_enforcement_proceeding_start_description", "");
             ViewportHelper.BindProperty(dateTimePickerRepeatedEnforcementProceedingEndDate, "Value", bindingSource, "repeated_enforcement_proceeding_end_date", DateTime.Now.Date);
             ViewportHelper.BindProperty(textBoxRepeatedEnforcementProceedingEndDescription, "Text", bindingSource, "repeated_enforcement_proceeding_end_description", "");
+            
             ViewportHelper.BindProperty(dateTimePickerCourtOrderCancelDate, "Value", bindingSource, "court_order_cancel_date", DateTime.Now.Date);
             ViewportHelper.BindProperty(textBoxCourtOrderCancelDescription, "Text", bindingSource, "court_order_cancel_description", "");
             ViewportHelper.BindProperty(dateTimePickerClaimCompleteDate, "Value", bindingSource, "claim_complete_date", DateTime.Now.Date);
@@ -245,6 +250,7 @@ namespace Registry.Viewport
                 IdStateType = ViewportHelper.ValueOrNull<int>(comboBoxClaimStateType),
                 IdClaim = ViewportHelper.ValueOrNull<int>(ParentRow, "id_claim"),
                 Description = ViewportHelper.ValueOrNull(textBoxDescription),
+                BksRequester = ViewportHelper.ValueOrNull(textBoxBksRequester),
                 DateStartState = ViewportHelper.ValueOrNull(dateTimePickerStartState),
                 TransfertToLegalDepartmentDate = ViewportHelper.ValueOrNull(dateTimePickerTransfertToLegalDepartmentDate),
                 TransferToLegalDepartmentWho = ViewportHelper.ValueOrNull(textBoxTransferToLegalDepartmentWho),
@@ -389,6 +395,7 @@ namespace Registry.Viewport
             }
             textBoxTransferToLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
             textBoxAcceptedByLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
+            textBoxBksRequester.Text = UserDomain.Current.DisplayName;
             DataGridView.Enabled = false;
             IsEditable = true;
         }
@@ -545,6 +552,9 @@ namespace Registry.Viewport
             if (!(comboBoxClaimStateType.SelectedValue is int)) return;
             switch ((int)comboBoxClaimStateType.SelectedValue)
             {
+                case 1:
+                    tabControlWithoutTabs1.SelectTab(tabPageRequestToBks);
+                    break;
                 case 2:
                     tabControlWithoutTabs1.SelectTab(tabPageToLegalDepartment);
                     break;

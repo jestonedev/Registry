@@ -224,6 +224,7 @@ namespace Registry.Viewport.MultiMasters
                 {
                     IdClaim = claim.IdClaim,
                     IdStateType = firstStateType,
+                    BksRequester = UserDomain.Current.DisplayName,
                     TransferToLegalDepartmentWho = UserDomain.Current.DisplayName,
                     AcceptedByLegalDepartmentWho = UserDomain.Current.DisplayName,
                     DateStartState = DateTime.Now.Date
@@ -242,6 +243,7 @@ namespace Registry.Viewport.MultiMasters
                 claimsStateRow["id_state"] = ViewportHelper.ValueOrDbNull(claimState.IdState);
                 claimsStateRow["id_claim"] = ViewportHelper.ValueOrDbNull(claimState.IdClaim);
                 claimsStateRow["id_state_type"] = ViewportHelper.ValueOrDbNull(claimState.IdStateType);
+                claimsStateRow["bks_requester"] = ViewportHelper.ValueOrDbNull(claimState.BksRequester);
                 claimsStateRow["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDbNull(claimState.TransferToLegalDepartmentWho);
                 claimsStateRow["accepted_by_legal_department_who"] = ViewportHelper.ValueOrDbNull(claimState.AcceptedByLegalDepartmentWho);
                 claimsStateRow["date_start_state"] = ViewportHelper.ValueOrDbNull(claimState.DateStartState);

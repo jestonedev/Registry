@@ -14,6 +14,7 @@ namespace Registry.Entities
         public int? IdStateType { get; set; }
         public DateTime? DateStartState { get; set; }
         public string Description { get; set; }
+        public string BksRequester { get; set; }
         public DateTime? TransfertToLegalDepartmentDate { get; set; }
         public string TransferToLegalDepartmentWho { get; set; }
         public DateTime? AcceptedByLegalDepartmentDate { get; set; }
