@@ -70,7 +70,7 @@ namespace Registry.DataModels.CalcDataModels
                     idObjectType = 1
                 });
             var tenants = from row in tenancyPersons
-                where row.Field<int?>("id_kinship") == 1
+                          where row.Field<int?>("id_kinship") == 1 && row.Field<DateTime?>("exclude_date") == null
                 select new
                 {
                     id_process = row.Field<int>("id_process"),
