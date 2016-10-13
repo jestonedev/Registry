@@ -76,7 +76,15 @@ namespace Registry.Viewport.SearchForms
             {
                 if (!string.IsNullOrEmpty(filter))
                     filter += " AND ";
-                filter += string.Format("raw_address LIKE '%{0}%'", textBoxRawAddress.Text);
+                var addressParts = textBoxRawAddress.Text.Trim().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                var addressFilter = "";
+                foreach (var part in addressParts)
+                {
+                    if (!string.IsNullOrEmpty(addressFilter))
+                        addressFilter += " AND ";
+                    addressFilter += addressFilter + string.Format("raw_address LIKE '%{0}%'", part);
+                }
+                filter += string.Format("({0})", addressFilter);
             }
             if (checkBoxStreetEnable.Checked)
                 includedAccounts = DataModelHelper.Intersect(null, PaymentService.GetAccountIdsByStreet(comboBoxStreet.SelectedValue.ToString()));
