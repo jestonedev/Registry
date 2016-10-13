@@ -37,6 +37,7 @@
         RequestToBksReporter,
         JudicialOrderReporter,
         TransfertToLegalDepartmentReporter,
-        TenancyNotifyContractAgreement
+        TenancyNotifyContractAgreement,
+        ClaimsStatesReporter
     }
 }

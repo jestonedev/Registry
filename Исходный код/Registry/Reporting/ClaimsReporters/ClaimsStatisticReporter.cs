@@ -10,19 +10,17 @@ namespace Registry.Reporting.ClaimsReporters
         public override void Run()
         {
             ReportTitle = "Общий отчет по исковой работе";
-            var arguments = new Dictionary<string, string>();
-            arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "claims\\claims_statistic.xml"));
-            arguments.Add("connectionString", RegistrySettings.ConnectionString);
+            var arguments = new Dictionary<string, string>
+            {
+                {"config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "claims\\claims_statistic.xml")},
+                {"connectionString", RegistrySettings.ConnectionString}
+            };
             using (var cfForm = new ClaimsFilterForm())
             {
                 if (cfForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    var filter = "";
-                    filter = cfForm.GetFilter();
-                    if (String.IsNullOrEmpty(filter.Trim()))
-                        arguments.Add("filter", "1=1");
-                    else
-                        arguments.Add("filter", filter);
+                    var filter = cfForm.GetFilter();
+                    arguments.Add("filter", string.IsNullOrEmpty(filter.Trim()) ? "1=1" : filter);
                     base.Run(arguments);
                 }
                 else

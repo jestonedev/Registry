@@ -963,6 +963,11 @@ namespace Registry
             RunReport(ReporterType.ResettleFullProcessingReporter);
         }
 
+        private void ribbonButtonClaimStatesReport_Click(object sender, EventArgs e)
+        {
+            RunReport(ReporterType.ClaimsStatesReporter);
+        }
+
         private void ribbonButton1711_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;

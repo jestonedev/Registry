@@ -61,6 +61,13 @@
     <Compile Include="ClaimsReporters\JudicialOrderReporter.cs" />
     <Compile Include="ClaimsReporters\RequestToBksReporter.cs" />
     <Compile Include="ClaimsReporters\TransfertToLegalDepartmentReporter.cs" />
+    <Compile Include="ClaimsReporters\ClaimsStatesReporter.cs" />
+    <Compile Include="ClaimStatesSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClaimStatesSettingsForm.Designer.cs">
+      <DependentUpon>ClaimStatesSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="JudicialOrderSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -182,6 +189,9 @@
   <ItemGroup>
     <EmbeddedResource Include="ClaimsFilterForm.resx">
       <DependentUpon>ClaimsFilterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClaimStatesSettingsForm.resx">
+      <DependentUpon>ClaimStatesSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DateRangeForm.resx">
       <DependentUpon>DateRangeForm.cs</DependentUpon>

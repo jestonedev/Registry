@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Registry.Reporting.RegistryReporters;
 using Registry.Reporting.ClaimsReporters;
 using Registry.Reporting.TenancyReporters;
@@ -43,6 +44,8 @@ namespace Registry.Reporting
                     return new MultiExcerptReporter();
                 case ReporterType.ClaimsStatisticReporter:
                     return new ClaimsStatisticReporter();
+                case ReporterType.ClaimsStatesReporter:
+                    return new ClaimsStatesReporter();
                 case ReporterType.TenancyContractCommercialReporter:
                     return new TenancyContractCommercialReporter();
                 case ReporterType.TenancyContractSocialReporter:
