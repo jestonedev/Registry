@@ -659,7 +659,7 @@ namespace Registry.Viewport
         protected override void OnVisibleChanged(EventArgs e)
         {
             UnbindedCheckBoxesUpdate();
-            textBoxHouse.Focus();
+            dataGridViewRestrictions.Focus();
             base.OnVisibleChanged(e);
         }
 

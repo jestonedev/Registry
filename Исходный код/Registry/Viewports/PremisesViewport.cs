@@ -830,7 +830,7 @@ namespace Registry.Viewport
             RedrawOwnershipDataGridRows();
             RedrawSubPremiseDataGridRows();
             UnbindedCheckBoxesUpdate();
-            textBoxPremisesNumber.Focus();
+            dataGridViewRestrictions.Focus();
             base.OnVisibleChanged(e);
         }
 
