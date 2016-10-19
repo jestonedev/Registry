@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -489,8 +490,32 @@ namespace Registry.DataModels.Services
                         var surnameValue = reader.GetString(0);
                         var nameValue = reader.GetString(1);
                         var patronymicValue = reader.GetString(2);
-                        var birthValue = reader.GetDateTime(3);
-                        var regDateValue = reader.GetDateTime(4);
+                        DateTime? birthValue = null;
+                        try
+                        {
+                            birthValue = reader.GetDateTime(3);
+                        }
+                        catch (SqlNullValueException)
+                        {
+                            // Ignore
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // Ignore
+                        }
+                        DateTime? regDateValue = null;
+                        try
+                        {
+                            regDateValue = reader.GetDateTime(4);
+                        }
+                        catch (SqlNullValueException)
+                        {
+                            // Ignore
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // Ignore
+                        }
                         var person = new TenancyPerson
                         {
                             Surname = surnameValue,
