@@ -238,7 +238,13 @@ namespace Registry.Viewport.SearchForms
                         dateTimePickerObtainingCourtOrderDateFrom.Value.Date,
                         dateTimePickerObtainingCourtOrderDateTo.Value.Date) && r.Field<int>("id_state_type") == 4);
                 includedClaims = DataModelHelper.Intersect(includedClaims, claims);
-            }           
+            }
+            if (checkBoxCourtOrderNumEnable.Checked)
+            {
+                var claims = ClaimsService.ClaimIdsByStateCondition(r => 
+                    r.Field<string>("court_order_num") == textBoxCourtOrderNum.Text.Trim() && r.Field<int>("id_state_type") == 4);
+                includedClaims = DataModelHelper.Intersect(includedClaims, claims);
+            }
             return includedClaims;
         }
 
@@ -313,6 +319,13 @@ namespace Registry.Viewport.SearchForms
                 MessageBox.Show(@"Укажите СРН или уберите галочку фильтрации по СРН", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxSRN.Focus();
+                return;
+            }
+            if (checkBoxCourtOrderNumEnable.Checked && string.IsNullOrEmpty(textBoxCourtOrderNum.Text.Trim()))
+            {
+                MessageBox.Show(@"Укажите номер судебного приказа или уберите галочку фильтрации по номеру судебного приказа", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxCourtOrderNum.Focus();
                 return;
             }
             if (checkBoxBksRequesterEnable.Checked &&
@@ -466,9 +479,10 @@ namespace Registry.Viewport.SearchForms
             dateTimePickerCourtOrderDateTo.Visible = comboBoxCourtOrderDateExpr.Visible =
             dateTimePickerObtainingCourtOrderDateFrom.Visible = dateTimePickerObtainingCourtOrderDateTo.Visible =
             comboBoxObtainingCourtOrderDateExpr.Visible = label8.Visible = label9.Visible = label10.Visible =
-            checkBoxObtainingCourtOrderDateEnable.Visible = checkBoxCourtOrderDateEnable.Visible = checkBoxClaimDirectionDateEnable.Visible = visibility;
-            Height = visibility ? 453 : 436;
-            groupBox1.Height = visibility ? 271 : 141;
+            checkBoxObtainingCourtOrderDateEnable.Visible = checkBoxCourtOrderDateEnable.Visible = checkBoxClaimDirectionDateEnable.Visible = 
+            checkBoxCourtOrderNumEnable.Visible = textBoxCourtOrderNum.Visible = visibility;
+            Height = visibility ? 495 : 436;
+            groupBox1.Height = visibility ? 313 : 141;
         }
 
         private void checkBoxTransferedToLegalDepartmentWhoEnable_CheckedChanged(object sender, EventArgs e)
@@ -479,6 +493,11 @@ namespace Registry.Viewport.SearchForms
         private void checkBoxBksRequesterEnable_CheckedChanged(object sender, EventArgs e)
         {
             textBoxBksRequester.Enabled = checkBoxBksRequesterEnable.Checked;
+        }
+
+        private void checkBoxCourtOrderNumEnable_CheckStateChanged(object sender, EventArgs e)
+        {
+            textBoxCourtOrderNum.Enabled = checkBoxCourtOrderNumEnable.Checked;
         }
     }
 }
