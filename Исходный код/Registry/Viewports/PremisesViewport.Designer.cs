@@ -73,12 +73,6 @@ namespace Registry.Viewport
         private VIBlend.WinForms.Controls.vButton vButtonRoomEdit;
         private VIBlend.WinForms.Controls.vButton vButtonRoomDelete;
         private VIBlend.WinForms.Controls.vButton vButtonRoomAdd;
-        private DataGridViewTextBoxColumn id_restriction;
-        private DataGridViewTextBoxColumn restriction_number;
-        private DataGridViewTextBoxColumn restriction_date;
-        private DataGridViewTextBoxColumn restriction_description;
-        private DataGridViewComboBoxColumn id_restriction_type;
-        private DataGridViewTextBoxColumn restriction_relation;
         private DataGridViewTextBoxColumn id_ownership_right;
         private DataGridViewTextBoxColumn ownership_number;
         private DataGridViewTextBoxColumn ownership_date;
@@ -107,12 +101,6 @@ namespace Registry.Viewport
             this.vButtonRestrictionDelete = new VIBlend.WinForms.Controls.vButton();
             this.vButtonRestrictionAdd = new VIBlend.WinForms.Controls.vButton();
             this.dataGridViewRestrictions = new System.Windows.Forms.DataGridView();
-            this.id_restriction = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.restriction_relation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.vButtonOwnershipEdit = new VIBlend.WinForms.Controls.vButton();
@@ -184,6 +172,13 @@ namespace Registry.Viewport
             this.sub_premises_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_cadastral_cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_balance_cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_restriction = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_date_state_reg = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.restriction_relation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel3.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -356,6 +351,7 @@ namespace Registry.Viewport
             this.restriction_number,
             this.restriction_date,
             this.restriction_description,
+            this.restriction_date_state_reg,
             this.id_restriction_type,
             this.restriction_relation});
             this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 17);
@@ -365,51 +361,6 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.TabIndex = 0;
             this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
             this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
-            // 
-            // id_restriction
-            // 
-            this.id_restriction.HeaderText = "Идентификатор";
-            this.id_restriction.Name = "id_restriction";
-            this.id_restriction.Visible = false;
-            // 
-            // restriction_number
-            // 
-            this.restriction_number.HeaderText = "Номер";
-            this.restriction_number.MinimumWidth = 100;
-            this.restriction_number.Name = "restriction_number";
-            this.restriction_number.ReadOnly = true;
-            // 
-            // restriction_date
-            // 
-            this.restriction_date.HeaderText = "Дата";
-            this.restriction_date.MinimumWidth = 100;
-            this.restriction_date.Name = "restriction_date";
-            this.restriction_date.ReadOnly = true;
-            // 
-            // restriction_description
-            // 
-            this.restriction_description.HeaderText = "Наименование";
-            this.restriction_description.MinimumWidth = 200;
-            this.restriction_description.Name = "restriction_description";
-            this.restriction_description.ReadOnly = true;
-            this.restriction_description.Width = 200;
-            // 
-            // id_restriction_type
-            // 
-            this.id_restriction_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.id_restriction_type.HeaderText = "Тип права собственности";
-            this.id_restriction_type.MinimumWidth = 200;
-            this.id_restriction_type.Name = "id_restriction_type";
-            this.id_restriction_type.ReadOnly = true;
-            this.id_restriction_type.Width = 200;
-            // 
-            // restriction_relation
-            // 
-            this.restriction_relation.HeaderText = "Принадлежность";
-            this.restriction_relation.MinimumWidth = 150;
-            this.restriction_relation.Name = "restriction_relation";
-            this.restriction_relation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.restriction_relation.Width = 150;
             // 
             // groupBox10
             // 
@@ -1253,6 +1204,58 @@ namespace Registry.Viewport
             this.sub_premises_balance_cost.MinimumWidth = 100;
             this.sub_premises_balance_cost.Name = "sub_premises_balance_cost";
             // 
+            // id_restriction
+            // 
+            this.id_restriction.HeaderText = "Идентификатор";
+            this.id_restriction.Name = "id_restriction";
+            this.id_restriction.Visible = false;
+            // 
+            // restriction_number
+            // 
+            this.restriction_number.HeaderText = "Номер";
+            this.restriction_number.MinimumWidth = 100;
+            this.restriction_number.Name = "restriction_number";
+            this.restriction_number.ReadOnly = true;
+            // 
+            // restriction_date
+            // 
+            this.restriction_date.HeaderText = "Дата документа";
+            this.restriction_date.MinimumWidth = 100;
+            this.restriction_date.Name = "restriction_date";
+            this.restriction_date.ReadOnly = true;
+            // 
+            // restriction_description
+            // 
+            this.restriction_description.HeaderText = "Наименование";
+            this.restriction_description.MinimumWidth = 200;
+            this.restriction_description.Name = "restriction_description";
+            this.restriction_description.ReadOnly = true;
+            this.restriction_description.Width = 200;
+            // 
+            // restriction_date_state_reg
+            // 
+            this.restriction_date_state_reg.HeaderText = "Дата г/р в УЮ";
+            this.restriction_date_state_reg.MinimumWidth = 100;
+            this.restriction_date_state_reg.Name = "restriction_date_state_reg";
+            this.restriction_date_state_reg.ReadOnly = true;
+            // 
+            // id_restriction_type
+            // 
+            this.id_restriction_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.id_restriction_type.HeaderText = "Тип права собственности";
+            this.id_restriction_type.MinimumWidth = 200;
+            this.id_restriction_type.Name = "id_restriction_type";
+            this.id_restriction_type.ReadOnly = true;
+            this.id_restriction_type.Width = 200;
+            // 
+            // restriction_relation
+            // 
+            this.restriction_relation.HeaderText = "Принадлежность";
+            this.restriction_relation.MinimumWidth = 150;
+            this.restriction_relation.Name = "restriction_relation";
+            this.restriction_relation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.restriction_relation.Width = 150;
+            // 
             // PremisesViewport
             // 
             this.AutoScroll = true;
@@ -1307,5 +1310,12 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn sub_premises_account;
         private DataGridViewTextBoxColumn sub_premises_cadastral_cost;
         private DataGridViewTextBoxColumn sub_premises_balance_cost;
+        private DataGridViewTextBoxColumn id_restriction;
+        private DataGridViewTextBoxColumn restriction_number;
+        private DataGridViewTextBoxColumn restriction_date;
+        private DataGridViewTextBoxColumn restriction_description;
+        private DataGridViewTextBoxColumn restriction_date_state_reg;
+        private DataGridViewComboBoxColumn id_restriction_type;
+        private DataGridViewTextBoxColumn restriction_relation;
     }
 }

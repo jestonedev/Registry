@@ -43,6 +43,8 @@ namespace Registry.Viewport.ModalEditors
             this.comboBoxIdRestrictionType = new System.Windows.Forms.ComboBox();
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.vButtonSave = new VIBlend.WinForms.Controls.vButton();
+            this.dateTimePickerRestrictionDateStateReg = new System.Windows.Forms.DateTimePicker();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -66,11 +68,11 @@ namespace Registry.Viewport.ModalEditors
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(66, 44);
+            this.label2.Location = new System.Drawing.Point(65, 44);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(101, 15);
+            this.label2.Size = new System.Drawing.Size(102, 15);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Дата реквизита";
+            this.label2.Text = "Дата документа";
             // 
             // dateTimePickerRestrictionDate
             // 
@@ -82,7 +84,7 @@ namespace Registry.Viewport.ModalEditors
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(73, 104);
+            this.label3.Location = new System.Drawing.Point(72, 104);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(95, 15);
             this.label3.TabIndex = 4;
@@ -101,7 +103,7 @@ namespace Registry.Viewport.ModalEditors
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 74);
+            this.label4.Location = new System.Drawing.Point(10, 74);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(157, 15);
             this.label4.TabIndex = 6;
@@ -121,11 +123,11 @@ namespace Registry.Viewport.ModalEditors
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(222, 177);
+            this.vButtonCancel.Location = new System.Drawing.Point(222, 201);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(136, 40);
-            this.vButtonCancel.TabIndex = 5;
+            this.vButtonCancel.TabIndex = 6;
             this.vButtonCancel.Text = "Отменить";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -134,22 +136,42 @@ namespace Registry.Viewport.ModalEditors
             // 
             this.vButtonSave.AllowAnimations = true;
             this.vButtonSave.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSave.Location = new System.Drawing.Point(61, 177);
+            this.vButtonSave.Location = new System.Drawing.Point(61, 201);
             this.vButtonSave.Name = "vButtonSave";
             this.vButtonSave.RoundedCornersMask = ((byte)(15));
             this.vButtonSave.Size = new System.Drawing.Size(136, 40);
-            this.vButtonSave.TabIndex = 4;
+            this.vButtonSave.TabIndex = 5;
             this.vButtonSave.Text = "Добавить";
             this.vButtonSave.UseVisualStyleBackColor = false;
             this.vButtonSave.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonSave.Click += new System.EventHandler(this.vButtonSave_Click);
+            // 
+            // dateTimePickerRestrictionDateStateReg
+            // 
+            this.dateTimePickerRestrictionDateStateReg.Checked = false;
+            this.dateTimePickerRestrictionDateStateReg.Location = new System.Drawing.Point(177, 172);
+            this.dateTimePickerRestrictionDateStateReg.Name = "dateTimePickerRestrictionDateStateReg";
+            this.dateTimePickerRestrictionDateStateReg.ShowCheckBox = true;
+            this.dateTimePickerRestrictionDateStateReg.Size = new System.Drawing.Size(223, 21);
+            this.dateTimePickerRestrictionDateStateReg.TabIndex = 4;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(79, 177);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(88, 15);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Дата г/р в УЮ";
             // 
             // RestrictionsEditorMultiMaster
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(415, 223);
+            this.ClientSize = new System.Drawing.Size(415, 246);
+            this.Controls.Add(this.dateTimePickerRestrictionDateStateReg);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.vButtonCancel);
             this.Controls.Add(this.vButtonSave);
             this.Controls.Add(this.comboBoxIdRestrictionType);
@@ -183,5 +205,7 @@ namespace Registry.Viewport.ModalEditors
         private ComboBox comboBoxIdRestrictionType;
         private vButton vButtonCancel;
         private vButton vButtonSave;
+        private DateTimePicker dateTimePickerRestrictionDateStateReg;
+        private Label label5;
     }
 }

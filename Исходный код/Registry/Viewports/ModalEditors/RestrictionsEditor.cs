@@ -80,7 +80,8 @@ namespace Registry.Viewport
                     Date = ViewportHelper.ValueOrNull(dateTimePickerRestrictionDate),
                     Description = ViewportHelper.ValueOrNull(textBoxRestrictionDescription),
                     Number = ViewportHelper.ValueOrNull(textBoxRestrictionNumber),
-                    IdRestrictionType = ViewportHelper.ValueOrNull<int>(comboBoxIdRestrictionType)
+                    IdRestrictionType = ViewportHelper.ValueOrNull<int>(comboBoxIdRestrictionType),
+                    DateStateReg = ViewportHelper.ValueOrNull(dateTimePickerRestrictionDateStateReg)
                 };
                 if (state == ViewportState.ModifyRowState)
                     restrictionValue.IdRestriction = restriction.IdRestriction;
@@ -94,6 +95,8 @@ namespace Registry.Viewport
                 textBoxRestrictionNumber.Text = value.Number;
                 textBoxRestrictionDescription.Text = value.Description;
                 dateTimePickerRestrictionDate.Value = value.Date ?? DateTime.Now;
+                dateTimePickerRestrictionDateStateReg.Checked = value.DateStateReg != null;
+                dateTimePickerRestrictionDateStateReg.Value = value.DateStateReg ?? DateTime.Now;
                 comboBoxIdRestrictionType.SelectedValue = value.IdRestrictionType;
             }
         }
@@ -181,7 +184,7 @@ namespace Registry.Viewport
                         break;
                 }
                 restrictions.EditingNewRecord = true;
-                restrictions.Select().Rows.Add(idRestriction, restriction.IdRestrictionType, restriction.Number, restriction.Date, restriction.Description);
+                restrictions.Select().Rows.Add(idRestriction, restriction.IdRestrictionType, restriction.Number, restriction.Date, restriction.Description, restriction.DateStateReg);
                 restriction_assoc.Select().Rows.Add(idParent, idRestriction);
                 restrictions.EditingNewRecord = false;
             } else

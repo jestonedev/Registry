@@ -12,6 +12,11 @@ namespace Registry.Viewport.ModalEditors
             get { return dateTimePickerRestrictionDate.Value.Date; }
         }
 
+        public DateTime? DateStateReg
+        {
+            get { return dateTimePickerRestrictionDateStateReg.Value.Date; }
+        }
+
         public string RestrictionNumber {
             get { return string.IsNullOrEmpty(textBoxRestrictionNumber.Text) ? null : textBoxRestrictionNumber.Text; }
         }

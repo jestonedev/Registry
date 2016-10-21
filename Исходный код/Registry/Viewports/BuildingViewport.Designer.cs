@@ -69,10 +69,6 @@ namespace Registry.Viewport
         private ComboBox comboBoxStructureType;
         private CheckBox checkBoxImprovement;
         private CheckBox checkBoxElevator;
-        private DataGridViewTextBoxColumn restriction_number;
-        private DataGridViewTextBoxColumn restriction_date;
-        private DataGridViewTextBoxColumn restriction_description;
-        private DataGridViewComboBoxColumn id_restriction_type;
         private DataGridViewTextBoxColumn ownership_number;
         private DataGridViewTextBoxColumn ownership_date;
         private DataGridViewTextBoxColumn ownership_description;
@@ -172,10 +168,6 @@ namespace Registry.Viewport
             this.vButtonRestrictionDelete = new VIBlend.WinForms.Controls.vButton();
             this.vButtonRestrictionAdd = new VIBlend.WinForms.Controls.vButton();
             this.dataGridViewRestrictions = new System.Windows.Forms.DataGridView();
-            this.restriction_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.vButtonOwnershipEdit = new VIBlend.WinForms.Controls.vButton();
@@ -191,6 +183,11 @@ namespace Registry.Viewport
             this.textBoxRoomsBTI = new System.Windows.Forms.TextBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
+            this.restriction_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_date_state_reg = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.tableLayoutPanel.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -1189,6 +1186,7 @@ namespace Registry.Viewport
             this.restriction_number,
             this.restriction_date,
             this.restriction_description,
+            this.restriction_date_state_reg,
             this.id_restriction_type});
             this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
@@ -1197,37 +1195,6 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.TabIndex = 0;
             this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
             this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
-            // 
-            // restriction_number
-            // 
-            this.restriction_number.HeaderText = "Номер";
-            this.restriction_number.MinimumWidth = 100;
-            this.restriction_number.Name = "restriction_number";
-            this.restriction_number.ReadOnly = true;
-            // 
-            // restriction_date
-            // 
-            this.restriction_date.HeaderText = "Дата";
-            this.restriction_date.MinimumWidth = 100;
-            this.restriction_date.Name = "restriction_date";
-            this.restriction_date.ReadOnly = true;
-            // 
-            // restriction_description
-            // 
-            this.restriction_description.HeaderText = "Наименование";
-            this.restriction_description.MinimumWidth = 200;
-            this.restriction_description.Name = "restriction_description";
-            this.restriction_description.ReadOnly = true;
-            this.restriction_description.Width = 200;
-            // 
-            // id_restriction_type
-            // 
-            this.id_restriction_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.id_restriction_type.HeaderText = "Тип права собственности";
-            this.id_restriction_type.MinimumWidth = 200;
-            this.id_restriction_type.Name = "id_restriction_type";
-            this.id_restriction_type.ReadOnly = true;
-            this.id_restriction_type.Width = 200;
             // 
             // groupBox7
             // 
@@ -1414,6 +1381,44 @@ namespace Registry.Viewport
             this.textBoxDescription.Size = new System.Drawing.Size(302, 87);
             this.textBoxDescription.TabIndex = 0;
             // 
+            // restriction_number
+            // 
+            this.restriction_number.HeaderText = "Номер";
+            this.restriction_number.MinimumWidth = 100;
+            this.restriction_number.Name = "restriction_number";
+            this.restriction_number.ReadOnly = true;
+            // 
+            // restriction_date
+            // 
+            this.restriction_date.HeaderText = "Дата документа";
+            this.restriction_date.MinimumWidth = 100;
+            this.restriction_date.Name = "restriction_date";
+            this.restriction_date.ReadOnly = true;
+            // 
+            // restriction_description
+            // 
+            this.restriction_description.HeaderText = "Наименование";
+            this.restriction_description.MinimumWidth = 200;
+            this.restriction_description.Name = "restriction_description";
+            this.restriction_description.ReadOnly = true;
+            this.restriction_description.Width = 200;
+            // 
+            // restriction_date_state_reg
+            // 
+            this.restriction_date_state_reg.HeaderText = "Дата г/р в УЮ";
+            this.restriction_date_state_reg.MinimumWidth = 100;
+            this.restriction_date_state_reg.Name = "restriction_date_state_reg";
+            this.restriction_date_state_reg.ReadOnly = true;
+            // 
+            // id_restriction_type
+            // 
+            this.id_restriction_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.id_restriction_type.HeaderText = "Тип права собственности";
+            this.id_restriction_type.MinimumWidth = 200;
+            this.id_restriction_type.Name = "id_restriction_type";
+            this.id_restriction_type.ReadOnly = true;
+            this.id_restriction_type.Width = 200;
+            // 
             // BuildingViewport
             // 
             this.AutoScroll = true;
@@ -1490,5 +1495,10 @@ namespace Registry.Viewport
         private TextBox textBoxDescription;
         private Label label26;
         private TextBox textBoxHousingCooperative;
+        private DataGridViewTextBoxColumn restriction_number;
+        private DataGridViewTextBoxColumn restriction_date;
+        private DataGridViewTextBoxColumn restriction_description;
+        private DataGridViewTextBoxColumn restriction_date_state_reg;
+        private DataGridViewComboBoxColumn id_restriction_type;
     }
 }

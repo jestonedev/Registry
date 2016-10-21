@@ -326,6 +326,7 @@ namespace Registry.Viewport
             id_restriction.DataPropertyName = Presenter.ViewModel["restrictions"].PrimaryKeyFirst;
             restriction_number.DataPropertyName = "number";
             restriction_date.DataPropertyName = "date";
+            restriction_date_state_reg.DataPropertyName = "date_state_reg";
             restriction_description.DataPropertyName = "description";
             ViewportHelper.BindSource(id_restriction_type, Presenter.ViewModel["restriction_types"].BindingSource, "restriction_type",
                 Presenter.ViewModel["restriction_types"].PrimaryKeyFirst);
@@ -1003,7 +1004,7 @@ namespace Registry.Viewport
 
         private void dataGridViewRestrictions_Resize(object sender, EventArgs e)
         {
-            if (dataGridViewRestrictions.Size.Width > 700)
+            if (dataGridViewRestrictions.Size.Width > 800)
             {
                 if (restriction_description.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     restriction_description.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

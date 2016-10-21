@@ -98,6 +98,7 @@ namespace Registry.Viewport
             id_restriction.DataPropertyName = "id_restriction";
             number.DataPropertyName = "number";
             date.DataPropertyName = "date";
+            date_state_reg.DataPropertyName = "date_state_reg";
             description.DataPropertyName = "description";
             ViewportHelper.BindSource(id_restriction_type, Presenter.ViewModel["restriction_types"].BindingSource, "restriction_type",
                 Presenter.ViewModel["restriction_types"].PrimaryKeyFirst);

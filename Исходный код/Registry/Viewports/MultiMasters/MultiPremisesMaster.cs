@@ -286,6 +286,7 @@ namespace Registry.Viewport.MultiMasters
                     {
                         IdRestrictionType = form.IdRestrictionType,
                         Date = form.Date,
+                        DateStateReg = form.DateStateReg,
                         Number = form.RestrictionNumber,
                         Description = form.RestrictionDescription
                     };
@@ -301,7 +302,7 @@ namespace Registry.Viewport.MultiMasters
                     }
                     restrictionsAssoc.Insert(new RestrictionPremisesAssoc(idPremises, idRestriction, null));
                     restrictions.EditingNewRecord = true;
-                    restrictions.Select().Rows.Add(idRestriction, restriction.IdRestrictionType, restriction.Number, restriction.Date, restriction.Description);
+                    restrictions.Select().Rows.Add(idRestriction, restriction.IdRestrictionType, restriction.Number, restriction.Date, restriction.Description, restriction.DateStateReg);
                     restrictionsAssoc.Select().Rows.Add(idPremises, idRestriction);
                     restrictions.EditingNewRecord = false;
                     toolStripProgressBar1.Value = i;

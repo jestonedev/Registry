@@ -25,6 +25,7 @@ namespace Registry.Viewport
             this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.date = new CustomControls.DataGridViewDateTimeColumn();
             this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date_state_reg = new CustomControls.DataGridViewDateTimeColumn();
             this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -52,6 +53,7 @@ namespace Registry.Viewport
             this.number,
             this.date,
             this.description,
+            this.date_state_reg,
             this.id_restriction_type});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
@@ -83,7 +85,7 @@ namespace Registry.Viewport
             // date
             // 
             this.date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.date.HeaderText = "Дата";
+            this.date.HeaderText = "Дата документа";
             this.date.MinimumWidth = 150;
             this.date.Name = "date";
             this.date.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
@@ -95,6 +97,15 @@ namespace Registry.Viewport
             this.description.HeaderText = "Наименование";
             this.description.MinimumWidth = 300;
             this.description.Name = "description";
+            // 
+            // date_state_reg
+            // 
+            this.date_state_reg.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.date_state_reg.HeaderText = "Дата г/р в УЮ";
+            this.date_state_reg.MinimumWidth = 150;
+            this.date_state_reg.Name = "date_state_reg";
+            this.date_state_reg.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.date_state_reg.Width = 150;
             // 
             // id_restriction_type
             // 
@@ -124,6 +135,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn number;
         private DataGridViewDateTimeColumn date;
         private DataGridViewTextBoxColumn description;
+        private DataGridViewDateTimeColumn date_state_reg;
         private DataGridViewComboBoxColumn id_restriction_type;
     }
 }
