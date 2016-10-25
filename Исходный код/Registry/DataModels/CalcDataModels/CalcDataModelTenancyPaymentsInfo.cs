@@ -52,7 +52,7 @@ namespace Registry.DataModels.CalcDataModels
             var buildings = EntityDataModel<Building>.GetInstance().FilterDeletedRows().ToList();
             var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows().ToList();
             var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
-            var emergencyPremises = PremisesService.PremiseIDsByOwnershipType(2).ToList();
+            var emergencyPremises = PremisesService.PremiseIDsByOwnershipType(2).Distinct().ToList();
 
             Func<DataRow, bool, int> getRentCategory = (buildingRow, isEmergency) =>
             {
