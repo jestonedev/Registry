@@ -58,6 +58,7 @@
     <Compile Include="CalcDataModels\CalcDataModelPremiseSubPremisesSumArea.cs" />
     <Compile Include="CalcDataModels\CalcDataModelResettleAggregated.cs" />
     <Compile Include="CalcDataModels\CalcDataModelLastClaimStates.cs" />
+    <Compile Include="CalcDataModels\CalcDataModelTenancyPaymentsInfo.cs" />
     <Compile Include="CalcDataModels\CalcDataModelTenancyPremisesInfo.cs" />
     <Compile Include="CalcDataModels\CalcDataModelTenancyNotifiesMaxDate.cs" />
     <Compile Include="CalcDataModels\CalcDataModelType.cs" />

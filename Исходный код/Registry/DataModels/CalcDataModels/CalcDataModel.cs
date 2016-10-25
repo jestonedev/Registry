@@ -56,7 +56,7 @@ namespace Registry.DataModels.CalcDataModels
                             {
                                 var modelRef = reference.Target;
                                 if (modelRef == null) continue;
-                                var model = ((CalcDataModel)modelRef);
+                                var model = (CalcDataModel)modelRef;
                                 if (!model.DefferedUpdate) continue;
                                 model.Refresh();
                                 model.DefferedUpdate = false;

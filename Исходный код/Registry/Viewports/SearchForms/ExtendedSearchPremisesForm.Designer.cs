@@ -571,7 +571,7 @@ namespace Registry.Viewport.SearchForms
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(764, 468);
+            this.ClientSize = new System.Drawing.Size(764, 471);
             this.Controls.Add(this.checkBoxSubTenancy);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.textBoxRestrictionNumber);

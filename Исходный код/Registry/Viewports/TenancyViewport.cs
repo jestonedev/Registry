@@ -456,17 +456,44 @@ namespace Registry.Viewport
                 "ListChanged", v_persons_ListChanged);
 
             AddEventHandler<EventArgs>(Presenter.ViewModel["tenancy_premises_info"].Model, "RefreshEvent", tenancy_premises_info_RefreshEvent);
-
-            ((TenancyPresenter)Presenter).FiltersRebuild();
-
+            AddEventHandler<EventArgs>(Presenter.ViewModel["tenancy_payments_info"].Model, "RefreshEvent", tenancy_payments_info_RefreshEvent);
+            
+            FiltersRebuild();
             v_tenancies_CurrentItemChanged(null, new EventArgs());
             DataChangeHandlersInit();
             IsEditable = true;
         }
 
-        private void tenancy_premises_info_RefreshEvent(object sender, EventArgs e)
+        private void FiltersRebuild()
         {
             ((TenancyPresenter)Presenter).FiltersRebuild();
+            var currentRow = Presenter.ViewModel["general"].CurrentRow;
+            if (currentRow == null)
+            {
+                numericUpDownPayment.Minimum = 0;
+                numericUpDownPayment.Maximum = 0;
+                numericUpDownPayment.Value = 0;
+                return;
+            }
+            var idProcess = (int)currentRow["id_process"];
+            var payments =
+                from row in Presenter.ViewModel["tenancy_payments_info"].Model.FilterDeletedRows()
+                where (int)row["id_process"] == idProcess
+                select (decimal) row["payment"];
+            var payment = payments.Sum(v => v);
+            numericUpDownPayment.Minimum = payment;
+            numericUpDownPayment.Maximum = payment;
+            numericUpDownPayment.Value = payment;
+        }
+
+        private void tenancy_premises_info_RefreshEvent(object sender, EventArgs e)
+        {
+            FiltersRebuild();
+        }
+
+        private void tenancy_payments_info_RefreshEvent(object sender, EventArgs e)
+        {
+            FiltersRebuild();
         }
 
         public override bool CanSearchRecord()
@@ -809,7 +836,7 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             BindWarrantId();
             UpdateDuplicateContractInfo();
-            ((TenancyPresenter)Presenter).FiltersRebuild();
+            FiltersRebuild();
             IsEditable = isEditable;
             if (!Selected) return;
             MenuCallback.NavigationStateUpdate();

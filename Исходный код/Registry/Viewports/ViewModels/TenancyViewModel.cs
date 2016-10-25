@@ -14,7 +14,8 @@ namespace Registry.Viewport.ViewModels
             {"rent_types", new ViewModelItem(DataModel.GetInstance<RentTypesDataModel>())},
             {"warrants", new ViewModelItem(EntityDataModel<Warrant>.GetInstance())},
             {"kinships", new ViewModelItem(DataModel.GetInstance<KinshipsDataModel>())},
-            {"tenancy_premises_info", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>())}
+            {"tenancy_premises_info", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>())},
+            {"tenancy_payments_info", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelTenancyPaymentsInfo>())}
         })
         {
             AddViewModeItem("tenancy_processes_tenancy_rent_periods_history",
