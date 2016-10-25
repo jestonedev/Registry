@@ -111,6 +111,26 @@ namespace Registry.Viewport.SearchForms
                 var premisesIds = PremisesService.PremiseIDsByRestricitonNumber(textBoxRestrictionNumber.Text.Trim());
                 includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
             }
+            if (checkBoxSubTenancy.Checked)
+            {
+                var processesWithSubTenancy =
+                    (from row in EntityDataModel<TenancyProcess>.GetInstance().FilterDeletedRows()
+                    where row.Field<DateTime?>("sub_tenancy_date") != null && row.Field<string>("sub_tenancy_num") != null &&
+                        (row.Field<string>("registration_num") == null || !row.Field<string>("registration_num").EndsWith("н"))
+                    select row.Field<int>("id_process")).ToList();
+                var idPremises = from row in EntityDataModel<TenancyPremisesAssoc>.GetInstance().FilterDeletedRows()
+                    join processId in processesWithSubTenancy
+                        on row.Field<int>("id_process") equals processId
+                    select row.Field<int>("id_premises");
+                var idPremisesBySubPremises = from row in EntityDataModel<TenancySubPremisesAssoc>.GetInstance().FilterDeletedRows()
+                                              join processId in processesWithSubTenancy
+                                                  on row.Field<int>("id_process") equals processId
+                                              join subPremisesRow in EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows()
+                                              on row.Field<int>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
+                                              select subPremisesRow.Field<int>("id_premises");
+                includedPremises = DataModelHelper.Intersect(includedPremises, idPremises.Union(idPremisesBySubPremises));
+            }
+
             if (includedPremises != null)
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))

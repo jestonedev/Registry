@@ -35,5 +35,7 @@ namespace Registry.Entities
         public string ProtocolNum { get; set; }
         public DateTime? ProtocolDate { get; set; }     
         public string Description { get; set; }
+        public DateTime? SubTenancyDate { get; set; }
+        public string SubTenancyNum { get; set; }
     }
 }

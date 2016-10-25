@@ -133,11 +133,13 @@ namespace Registry.Viewport
             {
                 label19.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
+                tableLayoutPanel.RowStyles[0].Height = 295;
             }
             else
             {
                 label19.Visible = false;
                 comboBoxCurrentFundType.Visible = false;
+                tableLayoutPanel.RowStyles[0].Height = 265;
             }
         }
 
@@ -187,6 +189,7 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(numericUpDownTotalArea, "Value", bindingSource, "total_area", 0m);
             ViewportHelper.BindProperty(numericUpDownWear, "Value", bindingSource, "wear", 0m);
             ViewportHelper.BindProperty(dateTimePickerStateDate, "Value", bindingSource, "state_date", DateTime.Now.Date);
+            ViewportHelper.BindProperty(dateTimePickerRegDate, "Value", bindingSource, "reg_date", DateTime.Now.Date);
 
 
             ViewportHelper.BindSource(comboBoxStructureType, Presenter.ViewModel["structure_types"].BindingSource, "structure_type",
@@ -358,6 +361,7 @@ namespace Registry.Viewport
                 TotalArea = Convert.ToDouble(numericUpDownTotalArea.Value),
                 Wear = Convert.ToDouble(numericUpDownWear.Value),
                 StateDate = ViewportHelper.ValueOrNull(dateTimePickerStateDate),
+                RegDate = ViewportHelper.ValueOrNull(dateTimePickerRegDate),
                 Plumbing = checkBoxPlumbing.Checked,
                 HotWaterSupply = checkBoxHotWaterSupply.Checked,
                 Canalization = checkBoxCanalization.Checked,
@@ -398,6 +402,7 @@ namespace Registry.Viewport
             textBoxCadastralNum.Text = building.CadastralNum;
             textBoxDescription.Text = building.Description;
             dateTimePickerStateDate.Value = ViewportHelper.ValueOrDefault(building.StateDate);
+            dateTimePickerRegDate.Value = ViewportHelper.ValueOrDefault(building.RegDate);
             checkBoxPlumbing.Checked = ViewportHelper.ValueOrDefault(building.Plumbing);
             checkBoxHotWaterSupply.Checked = ViewportHelper.ValueOrDefault(building.HotWaterSupply);
             checkBoxCanalization.Checked = ViewportHelper.ValueOrDefault(building.Canalization);

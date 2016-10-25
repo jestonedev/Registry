@@ -97,7 +97,7 @@ namespace Registry.Entities
 
         [DataColumn(Name = "BTI_rooms")]
         public string RoomsBTI { get; set; }
-
         public string HousingCooperative { get; set; }
+        public DateTime? RegDate { get; set; }
     }
 }

@@ -96,6 +96,8 @@ namespace Registry.Viewport
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.dateTimePickerRegDate = new System.Windows.Forms.DateTimePicker();
+            this.label27 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.textBoxHousingCooperative = new System.Windows.Forms.TextBox();
             this.numericUpDownWear = new System.Windows.Forms.NumericUpDown();
@@ -168,6 +170,11 @@ namespace Registry.Viewport
             this.vButtonRestrictionDelete = new VIBlend.WinForms.Controls.vButton();
             this.vButtonRestrictionAdd = new VIBlend.WinForms.Controls.vButton();
             this.dataGridViewRestrictions = new System.Windows.Forms.DataGridView();
+            this.restriction_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_date_state_reg = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.vButtonOwnershipEdit = new VIBlend.WinForms.Controls.vButton();
@@ -183,11 +190,6 @@ namespace Registry.Viewport
             this.textBoxRoomsBTI = new System.Windows.Forms.TextBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.restriction_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_date_state_reg = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.tableLayoutPanel.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -241,11 +243,11 @@ namespace Registry.Viewport
             this.tableLayoutPanel.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
             this.tableLayoutPanel.RowCount = 4;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 265F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 295F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 170F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 113F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(1256, 971);
+            this.tableLayoutPanel.Size = new System.Drawing.Size(1002, 724);
             this.tableLayoutPanel.TabIndex = 0;
             // 
             // groupBox4
@@ -255,7 +257,7 @@ namespace Registry.Viewport
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(3, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(1250, 259);
+            this.groupBox4.Size = new System.Drawing.Size(996, 289);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Общие сведения";
@@ -277,11 +279,13 @@ namespace Registry.Viewport
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1244, 239);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(990, 269);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.dateTimePickerRegDate);
+            this.panel1.Controls.Add(this.label27);
             this.panel1.Controls.Add(this.label26);
             this.panel1.Controls.Add(this.textBoxHousingCooperative);
             this.panel1.Controls.Add(this.numericUpDownWear);
@@ -303,8 +307,27 @@ namespace Registry.Viewport
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(616, 233);
+            this.panel1.Size = new System.Drawing.Size(489, 263);
             this.panel1.TabIndex = 0;
+            // 
+            // dateTimePickerRegDate
+            // 
+            this.dateTimePickerRegDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerRegDate.Location = new System.Drawing.Point(175, 206);
+            this.dateTimePickerRegDate.MinDate = new System.DateTime(1999, 10, 29, 0, 0, 0, 0);
+            this.dateTimePickerRegDate.Name = "dateTimePickerRegDate";
+            this.dateTimePickerRegDate.Size = new System.Drawing.Size(310, 21);
+            this.dateTimePickerRegDate.TabIndex = 7;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(10, 210);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(144, 15);
+            this.label27.TabIndex = 40;
+            this.label27.Text = "Дата включения в РМИ";
             // 
             // label26
             // 
@@ -322,7 +345,7 @@ namespace Registry.Viewport
             this.textBoxHousingCooperative.Location = new System.Drawing.Point(175, 178);
             this.textBoxHousingCooperative.MaxLength = 255;
             this.textBoxHousingCooperative.Name = "textBoxHousingCooperative";
-            this.textBoxHousingCooperative.Size = new System.Drawing.Size(437, 21);
+            this.textBoxHousingCooperative.Size = new System.Drawing.Size(310, 21);
             this.textBoxHousingCooperative.TabIndex = 6;
             // 
             // numericUpDownWear
@@ -337,7 +360,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownWear.Name = "numericUpDownWear";
-            this.numericUpDownWear.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownWear.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownWear.TabIndex = 5;
             this.numericUpDownWear.ThousandsSeparator = true;
             // 
@@ -406,17 +429,17 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownFloors.Name = "numericUpDownFloors";
-            this.numericUpDownFloors.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownFloors.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownFloors.TabIndex = 2;
             // 
             // dateTimePickerStateDate
             // 
             this.dateTimePickerStateDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerStateDate.Location = new System.Drawing.Point(175, 238);
+            this.dateTimePickerStateDate.Location = new System.Drawing.Point(175, 264);
             this.dateTimePickerStateDate.Name = "dateTimePickerStateDate";
             this.dateTimePickerStateDate.ShowCheckBox = true;
-            this.dateTimePickerStateDate.Size = new System.Drawing.Size(437, 21);
+            this.dateTimePickerStateDate.Size = new System.Drawing.Size(310, 21);
             this.dateTimePickerStateDate.TabIndex = 7;
             this.dateTimePickerStateDate.TabStop = false;
             this.dateTimePickerStateDate.Visible = false;
@@ -424,7 +447,7 @@ namespace Registry.Viewport
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(10, 236);
+            this.label22.Location = new System.Drawing.Point(10, 267);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(147, 15);
             this.label22.TabIndex = 37;
@@ -447,7 +470,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownStartupYear.Name = "numericUpDownStartupYear";
-            this.numericUpDownStartupYear.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownStartupYear.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownStartupYear.TabIndex = 3;
             this.numericUpDownStartupYear.Value = new decimal(new int[] {
             1900,
@@ -462,7 +485,7 @@ namespace Registry.Viewport
             this.comboBoxStreet.FormattingEnabled = true;
             this.comboBoxStreet.Location = new System.Drawing.Point(175, 7);
             this.comboBoxStreet.Name = "comboBoxStreet";
-            this.comboBoxStreet.Size = new System.Drawing.Size(437, 23);
+            this.comboBoxStreet.Size = new System.Drawing.Size(310, 23);
             this.comboBoxStreet.TabIndex = 0;
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
             this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
@@ -476,7 +499,7 @@ namespace Registry.Viewport
             this.comboBoxStructureType.FormattingEnabled = true;
             this.comboBoxStructureType.Location = new System.Drawing.Point(175, 121);
             this.comboBoxStructureType.Name = "comboBoxStructureType";
-            this.comboBoxStructureType.Size = new System.Drawing.Size(437, 23);
+            this.comboBoxStructureType.Size = new System.Drawing.Size(310, 23);
             this.comboBoxStructureType.TabIndex = 4;
             // 
             // textBoxHouse
@@ -486,7 +509,7 @@ namespace Registry.Viewport
             this.textBoxHouse.Location = new System.Drawing.Point(175, 37);
             this.textBoxHouse.MaxLength = 20;
             this.textBoxHouse.Name = "textBoxHouse";
-            this.textBoxHouse.Size = new System.Drawing.Size(437, 21);
+            this.textBoxHouse.Size = new System.Drawing.Size(310, 21);
             this.textBoxHouse.TabIndex = 1;
             this.textBoxHouse.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxHouse_KeyPress);
             // 
@@ -498,16 +521,16 @@ namespace Registry.Viewport
             this.comboBoxCurrentFundType.Enabled = false;
             this.comboBoxCurrentFundType.ForeColor = System.Drawing.Color.Black;
             this.comboBoxCurrentFundType.FormattingEnabled = true;
-            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(175, 205);
+            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(175, 234);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
-            this.comboBoxCurrentFundType.Size = new System.Drawing.Size(437, 23);
-            this.comboBoxCurrentFundType.TabIndex = 7;
+            this.comboBoxCurrentFundType.Size = new System.Drawing.Size(310, 23);
+            this.comboBoxCurrentFundType.TabIndex = 8;
             this.comboBoxCurrentFundType.Visible = false;
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(10, 207);
+            this.label19.Location = new System.Drawing.Point(10, 236);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(90, 15);
             this.label19.TabIndex = 35;
@@ -535,9 +558,9 @@ namespace Registry.Viewport
             this.panel2.Controls.Add(this.label16);
             this.panel2.Controls.Add(this.textBoxCadastralNum);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(625, 3);
+            this.panel2.Location = new System.Drawing.Point(498, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(616, 233);
+            this.panel2.Size = new System.Drawing.Size(489, 263);
             this.panel2.TabIndex = 1;
             // 
             // comboBoxHeatingType
@@ -548,7 +571,7 @@ namespace Registry.Viewport
             this.comboBoxHeatingType.FormattingEnabled = true;
             this.comboBoxHeatingType.Location = new System.Drawing.Point(175, 120);
             this.comboBoxHeatingType.Name = "comboBoxHeatingType";
-            this.comboBoxHeatingType.Size = new System.Drawing.Size(433, 23);
+            this.comboBoxHeatingType.Size = new System.Drawing.Size(306, 23);
             this.comboBoxHeatingType.TabIndex = 4;
             // 
             // label25
@@ -637,7 +660,7 @@ namespace Registry.Viewport
             this.comboBoxState.FormattingEnabled = true;
             this.comboBoxState.Location = new System.Drawing.Point(175, 91);
             this.comboBoxState.Name = "comboBoxState";
-            this.comboBoxState.Size = new System.Drawing.Size(433, 23);
+            this.comboBoxState.Size = new System.Drawing.Size(306, 23);
             this.comboBoxState.TabIndex = 3;
             // 
             // numericUpDownBalanceCost
@@ -652,7 +675,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownBalanceCost.Name = "numericUpDownBalanceCost";
-            this.numericUpDownBalanceCost.Size = new System.Drawing.Size(433, 21);
+            this.numericUpDownBalanceCost.Size = new System.Drawing.Size(306, 21);
             this.numericUpDownBalanceCost.TabIndex = 2;
             this.numericUpDownBalanceCost.ThousandsSeparator = true;
             // 
@@ -668,7 +691,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownCadastralCost.Name = "numericUpDownCadastralCost";
-            this.numericUpDownCadastralCost.Size = new System.Drawing.Size(433, 21);
+            this.numericUpDownCadastralCost.Size = new System.Drawing.Size(306, 21);
             this.numericUpDownCadastralCost.TabIndex = 1;
             this.numericUpDownCadastralCost.ThousandsSeparator = true;
             // 
@@ -726,7 +749,7 @@ namespace Registry.Viewport
             this.textBoxCadastralNum.Location = new System.Drawing.Point(175, 7);
             this.textBoxCadastralNum.MaxLength = 20;
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
-            this.textBoxCadastralNum.Size = new System.Drawing.Size(433, 21);
+            this.textBoxCadastralNum.Size = new System.Drawing.Size(306, 21);
             this.textBoxCadastralNum.TabIndex = 0;
             // 
             // groupBox1
@@ -744,9 +767,9 @@ namespace Registry.Viewport
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(3, 268);
+            this.groupBox1.Location = new System.Drawing.Point(3, 298);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(622, 164);
+            this.groupBox1.Size = new System.Drawing.Size(495, 164);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Количество жилых помещений";
@@ -755,7 +778,7 @@ namespace Registry.Viewport
             // 
             this.numericUpDownMunPremisesPercentage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownMunPremisesPercentage.DecimalPlaces = 2;
-            this.numericUpDownMunPremisesPercentage.Location = new System.Drawing.Point(550, 134);
+            this.numericUpDownMunPremisesPercentage.Location = new System.Drawing.Point(423, 134);
             this.numericUpDownMunPremisesPercentage.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -775,7 +798,7 @@ namespace Registry.Viewport
             // 
             this.label24.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(526, 136);
+            this.label24.Location = new System.Drawing.Point(399, 136);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(18, 15);
             this.label24.TabIndex = 11;
@@ -793,7 +816,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownMunPremisesCount.Name = "numericUpDownMunPremisesCount";
             this.numericUpDownMunPremisesCount.ReadOnly = true;
-            this.numericUpDownMunPremisesCount.Size = new System.Drawing.Size(340, 21);
+            this.numericUpDownMunPremisesCount.Size = new System.Drawing.Size(213, 21);
             this.numericUpDownMunPremisesCount.TabIndex = 8;
             // 
             // label23
@@ -816,7 +839,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownPremisesCount.Name = "numericUpDownPremisesCount";
-            this.numericUpDownPremisesCount.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownPremisesCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownPremisesCount.TabIndex = 0;
             // 
             // numericUpDownRoomsCount
@@ -830,7 +853,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownRoomsCount.Name = "numericUpDownRoomsCount";
-            this.numericUpDownRoomsCount.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownRoomsCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownRoomsCount.TabIndex = 1;
             // 
             // numericUpDownApartmentsCount
@@ -844,7 +867,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownApartmentsCount.Name = "numericUpDownApartmentsCount";
-            this.numericUpDownApartmentsCount.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownApartmentsCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownApartmentsCount.TabIndex = 2;
             // 
             // numericUpDownSharedApartmentsCount
@@ -858,7 +881,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownSharedApartmentsCount.Name = "numericUpDownSharedApartmentsCount";
-            this.numericUpDownSharedApartmentsCount.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownSharedApartmentsCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownSharedApartmentsCount.TabIndex = 3;
             // 
             // label4
@@ -908,9 +931,9 @@ namespace Registry.Viewport
             this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Controls.Add(this.label13);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(631, 268);
+            this.groupBox3.Location = new System.Drawing.Point(504, 298);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(622, 164);
+            this.groupBox3.Size = new System.Drawing.Size(495, 164);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Количество помещений по типу найма";
@@ -927,7 +950,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownOtherPremisesCount.Name = "numericUpDownOtherPremisesCount";
             this.numericUpDownOtherPremisesCount.ReadOnly = true;
-            this.numericUpDownOtherPremisesCount.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownOtherPremisesCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownOtherPremisesCount.TabIndex = 3;
             // 
             // numericUpDownSpecialPremisesCount
@@ -942,7 +965,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownSpecialPremisesCount.Name = "numericUpDownSpecialPremisesCount";
             this.numericUpDownSpecialPremisesCount.ReadOnly = true;
-            this.numericUpDownSpecialPremisesCount.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownSpecialPremisesCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownSpecialPremisesCount.TabIndex = 2;
             // 
             // numericUpDownCommercialPremisesCount
@@ -957,7 +980,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownCommercialPremisesCount.Name = "numericUpDownCommercialPremisesCount";
             this.numericUpDownCommercialPremisesCount.ReadOnly = true;
-            this.numericUpDownCommercialPremisesCount.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownCommercialPremisesCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownCommercialPremisesCount.TabIndex = 1;
             // 
             // numericUpDownSocialPremisesCount
@@ -972,7 +995,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownSocialPremisesCount.Name = "numericUpDownSocialPremisesCount";
             this.numericUpDownSocialPremisesCount.ReadOnly = true;
-            this.numericUpDownSocialPremisesCount.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownSocialPremisesCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownSocialPremisesCount.TabIndex = 0;
             // 
             // label10
@@ -1020,9 +1043,9 @@ namespace Registry.Viewport
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(3, 438);
+            this.groupBox2.Location = new System.Drawing.Point(3, 468);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(622, 107);
+            this.groupBox2.Size = new System.Drawing.Size(495, 107);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Площадь";
@@ -1039,7 +1062,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
-            this.numericUpDownTotalArea.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownTotalArea.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownTotalArea.TabIndex = 0;
             this.numericUpDownTotalArea.ThousandsSeparator = true;
             // 
@@ -1064,7 +1087,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
-            this.numericUpDownLivingArea.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownLivingArea.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownLivingArea.TabIndex = 1;
             this.numericUpDownLivingArea.ThousandsSeparator = true;
             // 
@@ -1081,7 +1104,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownMunicipalArea.Name = "numericUpDownMunicipalArea";
             this.numericUpDownMunicipalArea.ReadOnly = true;
-            this.numericUpDownMunicipalArea.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownMunicipalArea.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownMunicipalArea.TabIndex = 2;
             this.numericUpDownMunicipalArea.ThousandsSeparator = true;
             // 
@@ -1108,9 +1131,9 @@ namespace Registry.Viewport
             this.groupBox6.Controls.Add(this.panel3);
             this.groupBox6.Controls.Add(this.dataGridViewRestrictions);
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox6.Location = new System.Drawing.Point(3, 551);
+            this.groupBox6.Location = new System.Drawing.Point(3, 581);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(622, 417);
+            this.groupBox6.Size = new System.Drawing.Size(495, 140);
             this.groupBox6.TabIndex = 5;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Реквизиты";
@@ -1121,10 +1144,10 @@ namespace Registry.Viewport
             this.panel3.Controls.Add(this.vButtonRestrictionDelete);
             this.panel3.Controls.Add(this.vButtonRestrictionAdd);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(581, 17);
+            this.panel3.Location = new System.Drawing.Point(454, 17);
             this.panel3.Margin = new System.Windows.Forms.Padding(0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(38, 397);
+            this.panel3.Size = new System.Drawing.Size(38, 120);
             this.panel3.TabIndex = 2;
             // 
             // vButtonRestrictionEdit
@@ -1191,19 +1214,57 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
             this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRestrictions.Size = new System.Drawing.Size(577, 397);
+            this.dataGridViewRestrictions.Size = new System.Drawing.Size(450, 120);
             this.dataGridViewRestrictions.TabIndex = 0;
             this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
             this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
+            // 
+            // restriction_number
+            // 
+            this.restriction_number.HeaderText = "Номер";
+            this.restriction_number.MinimumWidth = 100;
+            this.restriction_number.Name = "restriction_number";
+            this.restriction_number.ReadOnly = true;
+            // 
+            // restriction_date
+            // 
+            this.restriction_date.HeaderText = "Дата документа";
+            this.restriction_date.MinimumWidth = 100;
+            this.restriction_date.Name = "restriction_date";
+            this.restriction_date.ReadOnly = true;
+            // 
+            // restriction_description
+            // 
+            this.restriction_description.HeaderText = "Наименование";
+            this.restriction_description.MinimumWidth = 200;
+            this.restriction_description.Name = "restriction_description";
+            this.restriction_description.ReadOnly = true;
+            this.restriction_description.Width = 200;
+            // 
+            // restriction_date_state_reg
+            // 
+            this.restriction_date_state_reg.HeaderText = "Дата г/р в УЮ";
+            this.restriction_date_state_reg.MinimumWidth = 100;
+            this.restriction_date_state_reg.Name = "restriction_date_state_reg";
+            this.restriction_date_state_reg.ReadOnly = true;
+            // 
+            // id_restriction_type
+            // 
+            this.id_restriction_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.id_restriction_type.HeaderText = "Тип права собственности";
+            this.id_restriction_type.MinimumWidth = 200;
+            this.id_restriction_type.Name = "id_restriction_type";
+            this.id_restriction_type.ReadOnly = true;
+            this.id_restriction_type.Width = 200;
             // 
             // groupBox7
             // 
             this.groupBox7.Controls.Add(this.panel4);
             this.groupBox7.Controls.Add(this.dataGridViewOwnerships);
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox7.Location = new System.Drawing.Point(631, 551);
+            this.groupBox7.Location = new System.Drawing.Point(504, 581);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(622, 417);
+            this.groupBox7.Size = new System.Drawing.Size(495, 140);
             this.groupBox7.TabIndex = 6;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Ограничения";
@@ -1214,10 +1275,10 @@ namespace Registry.Viewport
             this.panel4.Controls.Add(this.vButtonOwnershipDelete);
             this.panel4.Controls.Add(this.vButtonOwnershipAdd);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel4.Location = new System.Drawing.Point(581, 17);
+            this.panel4.Location = new System.Drawing.Point(454, 17);
             this.panel4.Margin = new System.Windows.Forms.Padding(0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(38, 397);
+            this.panel4.Size = new System.Drawing.Size(38, 120);
             this.panel4.TabIndex = 3;
             // 
             // vButtonOwnershipEdit
@@ -1283,7 +1344,7 @@ namespace Registry.Viewport
             this.dataGridViewOwnerships.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewOwnerships.Name = "dataGridViewOwnerships";
             this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewOwnerships.Size = new System.Drawing.Size(577, 397);
+            this.dataGridViewOwnerships.Size = new System.Drawing.Size(450, 120);
             this.dataGridViewOwnerships.TabIndex = 0;
             this.dataGridViewOwnerships.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOwnerships_CellDoubleClick);
             this.dataGridViewOwnerships.Resize += new System.EventHandler(this.dataGridViewOwnerships_Resize);
@@ -1327,12 +1388,12 @@ namespace Registry.Viewport
             this.tableLayoutPanel1.Controls.Add(this.groupBox5, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.groupBox8, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(628, 435);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(501, 465);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(628, 113);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(501, 113);
             this.tableLayoutPanel1.TabIndex = 7;
             // 
             // groupBox5
@@ -1341,7 +1402,7 @@ namespace Registry.Viewport
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox5.Location = new System.Drawing.Point(3, 3);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(308, 107);
+            this.groupBox5.Size = new System.Drawing.Size(244, 107);
             this.groupBox5.TabIndex = 0;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Приватиз. кв. по данным БТИ";
@@ -1355,7 +1416,7 @@ namespace Registry.Viewport
             this.textBoxRoomsBTI.Name = "textBoxRoomsBTI";
             this.textBoxRoomsBTI.ReadOnly = true;
             this.textBoxRoomsBTI.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxRoomsBTI.Size = new System.Drawing.Size(302, 87);
+            this.textBoxRoomsBTI.Size = new System.Drawing.Size(238, 87);
             this.textBoxRoomsBTI.TabIndex = 0;
             // 
             // groupBox8
@@ -1364,9 +1425,9 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox8.Controls.Add(this.textBoxDescription);
-            this.groupBox8.Location = new System.Drawing.Point(317, 3);
+            this.groupBox8.Location = new System.Drawing.Point(253, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(308, 107);
+            this.groupBox8.Size = new System.Drawing.Size(245, 107);
             this.groupBox8.TabIndex = 1;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Доп. сведения";
@@ -1378,53 +1439,15 @@ namespace Registry.Viewport
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDescription.Size = new System.Drawing.Size(302, 87);
+            this.textBoxDescription.Size = new System.Drawing.Size(239, 87);
             this.textBoxDescription.TabIndex = 0;
-            // 
-            // restriction_number
-            // 
-            this.restriction_number.HeaderText = "Номер";
-            this.restriction_number.MinimumWidth = 100;
-            this.restriction_number.Name = "restriction_number";
-            this.restriction_number.ReadOnly = true;
-            // 
-            // restriction_date
-            // 
-            this.restriction_date.HeaderText = "Дата документа";
-            this.restriction_date.MinimumWidth = 100;
-            this.restriction_date.Name = "restriction_date";
-            this.restriction_date.ReadOnly = true;
-            // 
-            // restriction_description
-            // 
-            this.restriction_description.HeaderText = "Наименование";
-            this.restriction_description.MinimumWidth = 200;
-            this.restriction_description.Name = "restriction_description";
-            this.restriction_description.ReadOnly = true;
-            this.restriction_description.Width = 200;
-            // 
-            // restriction_date_state_reg
-            // 
-            this.restriction_date_state_reg.HeaderText = "Дата г/р в УЮ";
-            this.restriction_date_state_reg.MinimumWidth = 100;
-            this.restriction_date_state_reg.Name = "restriction_date_state_reg";
-            this.restriction_date_state_reg.ReadOnly = true;
-            // 
-            // id_restriction_type
-            // 
-            this.id_restriction_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.id_restriction_type.HeaderText = "Тип права собственности";
-            this.id_restriction_type.MinimumWidth = 200;
-            this.id_restriction_type.Name = "id_restriction_type";
-            this.id_restriction_type.ReadOnly = true;
-            this.id_restriction_type.Width = 200;
             // 
             // BuildingViewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(940, 660);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1262, 977);
+            this.ClientSize = new System.Drawing.Size(1008, 730);
             this.Controls.Add(this.tableLayoutPanel);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1500,5 +1523,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn restriction_description;
         private DataGridViewTextBoxColumn restriction_date_state_reg;
         private DataGridViewComboBoxColumn id_restriction_type;
+        private DateTimePicker dateTimePickerRegDate;
+        private Label label27;
     }
 }

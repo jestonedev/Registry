@@ -117,23 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="vButtonSwapRentPeriod.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAGPSURBVDhPY2CgBVDwagtR8GrHxL5tTETZF1S17m9ky87/IOxSuPq/c8Hq/045S/4r+XZwEGWA
-        V8nqv16Vm/+DsEnqEjC2Tl9IvAGexaswDLBMW0C8AR5FKzEMsEghYIC8V5uZvFe7Dwi7F2IaYJ48/z9Q
-        Lgiips0CIyxUfLvMgqs3fA6u3/Y/oHYr2P/IYWCZsey/Veay/5apC74qeneYYQ1M7dAJXr4VG37DNCMb
-        AApIs5SFv1UDenzwxoRh1NQMn8qNGC4wTVn0Xz24P4eoaDSOm97pXbkJ7gXT1MX/NUMn9hKlGaRIxbON
-        ySRh1kpvYDiYAp2uFTZ5rbJ7O1GpEKSIDYi5uKWNREwTZh7XDpt0mkfeQgwkBsSglMiC1SXm8VMLfIuX
-        rfUpWrLeq2DRRrec+ZsdMuYctUyYdtwifupmk9ipGw2jp2zUjZyyXtW/uwzDEIf0eUv9ytf+9y1f89+7
-        dM1/YHL+71606r81MAVapMz/b5o0779Rwpz/BnGzgYE5YT0x4QHyDjLGqgcAzCzn/o+jlUwAAAAASUVO
-        RK5CYII=
-</value>
-  </data>
   <metadata name="rent_periods_until_dismissal.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="vButtonRentPeriodDelete.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAvZJREFUOE+F
@@ -169,6 +156,19 @@
         lJt4yfZ55abdVQS7qxATryvx6r0O8x8NcH5ox4u3DZh8Uw3rq3Kf1MALCfofirsTKOuM2rnsGYPbOwmP
         7yW868ws+Gbx/vMzWKbqn4haYw/991cyb7Kz1JzJ7ZtuVo7MGw3Dzgdt5kmNQqpPPBKlYv/l/QnRtyzt
         fR0urwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="vButtonSwapRentPeriod.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAGPSURBVDhPY2CgBVDwagtR8GrHxL5tTETZF1S17m9ky87/IOxSuPq/c8Hq/045S/4r+XZwEGWA
+        V8nqv16Vm/+DsEnqEjC2Tl9IvAGexaswDLBMW0C8AR5FKzEMsEghYIC8V5uZvFe7Dwi7F2IaYJ48/z9Q
+        Lgiips0CIyxUfLvMgqs3fA6u3/Y/oHYr2P/IYWCZsey/Veay/5apC74qeneYYQ1M7dAJXr4VG37DNCMb
+        AApIs5SFv1UDenzwxoRh1NQMn8qNGC4wTVn0Xz24P4eoaDSOm97pXbkJ7gXT1MX/NUMn9hKlGaRIxbON
+        ySRh1kpvYDiYAp2uFTZ5rbJ7O1GpEKSIDYi5uKWNREwTZh7XDpt0mkfeQgwkBsSglMiC1SXm8VMLfIuX
+        rfUpWrLeq2DRRrec+ZsdMuYctUyYdtwifupmk9ipGw2jp2zUjZyyXtW/uwzDEIf0eUv9ytf+9y1f89+7
+        dM1/YHL+71606r81MAVapMz/b5o0779Rwpz/BnGzgYE5YT0x4QHyDjLGqgcAzCzn/o+jlUwAAAAASUVO
+        RK5CYII=
 </value>
   </data>
   <metadata name="rent_area.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

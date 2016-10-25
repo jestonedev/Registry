@@ -25,7 +25,17 @@ namespace Registry.DataModels.CalcDataModels
         protected CalcDataModel()
         {
             DmLoadType = DataModelLoadSyncType.Asyncronize;
-            _worker.DoWork += Calculate;
+            _worker.DoWork += (sender, e) =>
+            {
+                try
+                {
+                    Calculate(sender, e);
+                }
+                catch (InvalidOperationException)
+                {
+                    DefferedUpdate = true;
+                }
+            };
             _worker.RunWorkerCompleted += CalculationComplete;
             lock (LockObj)
                 _calcedDataModels.Add(new WeakReference(this));

@@ -80,6 +80,7 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxRestrictionType = new System.Windows.Forms.ComboBox();
             this.checkBoxRestrictionTypeEnable = new System.Windows.Forms.CheckBox();
             this.label15 = new System.Windows.Forms.Label();
+            this.checkBoxSubTenancy = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownIDPremises)).BeginInit();
             this.SuspendLayout();
@@ -555,12 +556,23 @@ namespace Registry.Viewport.SearchForms
             this.label15.TabIndex = 62;
             this.label15.Text = "Тип права собственности";
             // 
+            // checkBoxSubTenancy
+            // 
+            this.checkBoxSubTenancy.AutoSize = true;
+            this.checkBoxSubTenancy.Location = new System.Drawing.Point(17, 434);
+            this.checkBoxSubTenancy.Name = "checkBoxSubTenancy";
+            this.checkBoxSubTenancy.Size = new System.Drawing.Size(345, 19);
+            this.checkBoxSubTenancy.TabIndex = 20;
+            this.checkBoxSubTenancy.Text = "Искать помещения с разрешением на сдачу в поднаем";
+            this.checkBoxSubTenancy.UseVisualStyleBackColor = true;
+            // 
             // ExtendedSearchPremisesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             this.ClientSize = new System.Drawing.Size(764, 468);
+            this.Controls.Add(this.checkBoxSubTenancy);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.textBoxRestrictionNumber);
             this.Controls.Add(this.checkBoxRestrictionNumberEnable);
@@ -672,5 +684,6 @@ namespace Registry.Viewport.SearchForms
         private ComboBox comboBoxRestrictionType;
         private CheckBox checkBoxRestrictionTypeEnable;
         private Label label15;
+        private CheckBox checkBoxSubTenancy;
     }
 }

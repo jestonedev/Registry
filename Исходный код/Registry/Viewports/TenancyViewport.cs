@@ -139,6 +139,7 @@ namespace Registry.Viewport
             checkBoxContractEnable.Checked = (row != null) &&
                 (row["registration_date"] != DBNull.Value) && (row["registration_num"] != DBNull.Value);
             checkBoxProtocolEnable.Checked = (row != null) && (row["protocol_date"] != DBNull.Value) && (row["protocol_num"] != DBNull.Value);
+            checkBoxSubTenancyEnable.Checked = (row != null) && (row["sub_tenancy_date"] != DBNull.Value) && (row["sub_tenancy_num"] != DBNull.Value);
             if ((row != null) && (row["issue_date"] != DBNull.Value))
                 dateTimePickerIssueDate.Checked = true;
             else
@@ -179,6 +180,8 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(textBoxProtocolNumber, "Text", bindingSource, "protocol_num", "");
             ViewportHelper.BindProperty(dateTimePickerProtocolDate, "Value", bindingSource, "protocol_date", DateTime.Now.Date);
             ViewportHelper.BindProperty(textBoxDescription, "Text", bindingSource, "description", "");
+            ViewportHelper.BindProperty(dateTimePickerSubTenancyDate, "Value", bindingSource, "sub_tenancy_date", DateTime.Now.Date);
+            ViewportHelper.BindProperty(textBoxSubTenancyNumber, "Text", bindingSource, "sub_tenancy_num", "");
 
             ViewportHelper.BindSource(comboBoxExecutor, Presenter.ViewModel["executors"].BindingSource, "executor_name",
                 Presenter.ViewModel["executors"].PrimaryKeyFirst);
@@ -244,6 +247,13 @@ namespace Registry.Viewport
                 MessageBox.Show(@"Не указан номер протокола жилищной комиссии", @"Ошибка", MessageBoxButtons.OK,
                     MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxProtocolNumber.Focus();
+                return false;
+            }
+            if (checkBoxSubTenancyEnable.Checked && tenancy.SubTenancyNum == null)
+            {
+                MessageBox.Show(@"Не указан номер реквизита на сдачу в поднаем", @"Ошибка", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxSubTenancyNumber.Focus();
                 return false;
             }
             var tenancyFromView = (TenancyProcess) EntityFromView();
@@ -332,6 +342,16 @@ namespace Registry.Viewport
                 tenancy.EndDate = null;
                 tenancy.UntilDismissal = false;
             }
+            if (checkBoxSubTenancyEnable.Checked)
+            {
+                tenancy.SubTenancyDate = ViewportHelper.ValueOrNull(dateTimePickerSubTenancyDate);
+                tenancy.SubTenancyNum = ViewportHelper.ValueOrNull(textBoxSubTenancyNumber);
+            }
+            else
+            {
+                tenancy.SubTenancyDate = null;
+                tenancy.SubTenancyNum = null;
+            }
             // Отклики из прошлого, раньше была возможность менять ордер на вкладке процесса найма, убрано из-за плохой согласованности с основаниями найма
             if (ViewportState != ViewportState.NewRowState)
             {
@@ -383,6 +403,9 @@ namespace Registry.Viewport
             textBoxProtocolNumber.Text = tenancy.ProtocolNum;
             dateTimePickerProtocolDate.Value = ViewportHelper.ValueOrDefault(tenancy.ProtocolDate);
             textBoxDescription.Text = tenancy.Description;
+            checkBoxSubTenancyEnable.Checked = tenancy.SubTenancyDate != null && tenancy.SubTenancyNum != null;
+            dateTimePickerSubTenancyDate.Value = ViewportHelper.ValueOrDefault(tenancy.SubTenancyDate);
+            textBoxSubTenancyNumber.Text = tenancy.SubTenancyNum;
             if (tenancy.IdWarrant != null)
             {
                 textBoxSelectedWarrant.Text = ((TenancyPresenter)Presenter).WarrantStringById(tenancy.IdWarrant.Value);
@@ -437,7 +460,6 @@ namespace Registry.Viewport
             ((TenancyPresenter)Presenter).FiltersRebuild();
 
             v_tenancies_CurrentItemChanged(null, new EventArgs());
-
             DataChangeHandlersInit();
             IsEditable = true;
         }
@@ -786,7 +808,7 @@ namespace Registry.Viewport
             SetViewportCaption();
             UnbindedCheckBoxesUpdate();
             BindWarrantId();
-            labelDuplicateContract.Visible = ((TenancyPresenter) Presenter).HasContractDuplicates();
+            UpdateDuplicateContractInfo();
             ((TenancyPresenter)Presenter).FiltersRebuild();
             IsEditable = isEditable;
             if (!Selected) return;
@@ -798,33 +820,54 @@ namespace Registry.Viewport
         private void TenancyViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
+            {
+                UpdateDuplicateContractInfo();
                 UnbindedCheckBoxesUpdate();
+            }
             MenuCallback.ForceCloseDetachedViewports();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
-            labelDuplicateContract.Visible = ((TenancyPresenter)Presenter).HasContractDuplicates();
         }
 
         private void TenancyViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
+            UpdateDuplicateContractInfo();
             UnbindedCheckBoxesUpdate();
+            CheckViewportModifications();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
-            CheckViewportModifications();
-            labelDuplicateContract.Visible = ((TenancyPresenter)Presenter).HasContractDuplicates();
         }
 
         private void TenancyPersons_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action != DataRowAction.Delete) return;
             RedrawDataGridRows();
-            labelDuplicateContract.Visible = ((TenancyPresenter)Presenter).HasContractDuplicates();
+            UpdateDuplicateContractInfo();
         }
 
         private void TenancyPersons_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             RedrawDataGridRows();
-            labelDuplicateContract.Visible = ((TenancyPresenter)Presenter).HasContractDuplicates();
+            UpdateDuplicateContractInfo();
+        }
+
+        private void UpdateDuplicateContractInfo()
+        {
+            var hasDuplicate = ((TenancyPresenter)Presenter).HasContractDuplicates();
+            labelDuplicateContract.Visible = hasDuplicate;
+            if (hasDuplicate)
+            {
+                textBoxDescription.Height = 47;
+                labelPayment.Top = 71;
+                numericUpDownPayment.Top = 69;
+            }
+            else
+            {
+                textBoxDescription.Height = 62;
+                labelPayment.Top = 86;
+                numericUpDownPayment.Top = 84;
+            }
+            
         }
 
         private void TenancyAssocViewport_RowChanged(object sender, DataRowChangeEventArgs e)
@@ -942,6 +985,11 @@ namespace Registry.Viewport
             dateTimePickerBeginDate.Checked = dateTimePickerEndDate.Checked;
             dateTimePickerEndDate.Checked = false;
             dateTimePickerEndDate.Focus();
+        }
+
+        private void checkBoxSubTenancyEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBoxSubTenancy.Enabled = checkBoxSubTenancyEnable.Checked;
         }
     }
 }
