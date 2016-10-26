@@ -83,7 +83,6 @@ namespace Registry.DataModels.CalcDataModels
         {
             while (_worker.IsBusy)
                 Application.DoEvents();
-            Table.Clear();
             _worker.RunWorkerAsync();
         }
 
@@ -101,14 +100,18 @@ namespace Registry.DataModels.CalcDataModels
 
         protected void CalculationComplete(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (DefferedUpdate) return;
             // Делаем слияние результатов с текущей таблицей
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект RunWorkerCompletedEventArgs в классе CalcDataModel");
             if (e.Error != null)
             {
-                DmLoadState = DataModelLoadState.ErrorLoad;
+                // Если была ошибка расчета, то пробуем пересчитать
+                DefferedUpdate = true;
+                DmLoadState = DataModelLoadState.SuccessLoad;
                 return;
             }
+            Table.Clear();
             var table = e.Result as DataTable;
             if (table != null)
                 Table.Merge(table);

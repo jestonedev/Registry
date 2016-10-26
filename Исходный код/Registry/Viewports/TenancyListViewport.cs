@@ -86,10 +86,16 @@ namespace Registry.Viewport
             }
 
             AddEventHandler<EventArgs>(Presenter.ViewModel["tenancy_aggregated"].Model, "RefreshEvent", tenancies_aggregate_RefreshEvent);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["tenancy_payments_info"].Model, "RefreshEvent", tenancy_payments_info_RefreshEvent);
 
             DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count; 
             
             GeneralBindingSource_CurrentItemChanged(null, new EventArgs());
+        }
+
+        private void tenancy_payments_info_RefreshEvent(object sender, EventArgs e)
+        {
+            DataGridView.Refresh();
         }
 
         public override bool CanDeleteRecord()
