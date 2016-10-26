@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
+using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -487,35 +488,11 @@ namespace Registry.DataModels.Services
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        var surnameValue = reader.GetString(0);
-                        var nameValue = reader.GetString(1);
-                        var patronymicValue = reader.GetString(2);
-                        DateTime? birthValue = null;
-                        try
-                        {
-                            birthValue = reader.GetDateTime(3);
-                        }
-                        catch (SqlNullValueException)
-                        {
-                            // Ignore
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // Ignore
-                        }
-                        DateTime? regDateValue = null;
-                        try
-                        {
-                            regDateValue = reader.GetDateTime(4);
-                        }
-                        catch (SqlNullValueException)
-                        {
-                            // Ignore
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // Ignore
-                        }
+                        var surnameValue = GetValue(() => reader.GetString(0));
+                        var nameValue = GetValue(() => reader.GetString(1));
+                        var patronymicValue = GetValue(() => reader.GetString(2));
+                        DateTime? birthValue = GetValue(() => reader.GetDateTime(3));
+                        DateTime? regDateValue = GetValue(() => reader.GetDateTime(4));
                         var person = new TenancyPerson
                         {
                             Surname = surnameValue,
@@ -539,6 +516,23 @@ namespace Registry.DataModels.Services
                     return tenancyPersons;
                 }
             }
+        }
+
+        private static T GetValue<T>(Func<T> action)
+        {
+            try
+            {
+                return action();
+            }
+            catch (SqlNullValueException)
+            {
+                // Ignore
+            }
+            catch (InvalidCastException)
+            {
+                // Ignore
+            }
+            return default(T);
         }
     }
 }
