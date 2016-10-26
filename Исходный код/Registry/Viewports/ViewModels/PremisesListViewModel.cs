@@ -28,6 +28,7 @@ namespace Registry.Viewport.ViewModels
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
             {
                 AddViewModeItem("premises_tenancies_info", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelPremisesTenanciesInfo>()));
+                AddViewModeItem("tenancy_payments_info", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelTenancyPaymentsInfo>()));
             }
         }
     }

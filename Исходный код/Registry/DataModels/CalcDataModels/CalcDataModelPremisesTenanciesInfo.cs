@@ -28,6 +28,7 @@ namespace Registry.DataModels.CalcDataModels
         {
             var table = new DataTable(TableName) {Locale = CultureInfo.InvariantCulture};
             table.Columns.Add("id_premises").DataType = typeof(int);
+            table.Columns.Add("id_process").DataType = typeof(int);
             table.Columns.Add("registration_num").DataType = typeof(string);
             table.Columns.Add("registration_date").DataType = typeof(DateTime);
             table.Columns.Add("end_date").DataType = typeof(DateTime);
@@ -101,6 +102,7 @@ namespace Registry.DataModels.CalcDataModels
                             select new
                             {
                                 tenancyAssocRow.idPremises,
+                                processRow.id_process,
                                 processRow.registration_num,
                                 processRow.registration_date,
                                 processRow.end_date,
@@ -115,7 +117,7 @@ namespace Registry.DataModels.CalcDataModels
             table.BeginLoadData();
             result.ToList().ForEach(x =>
             {
-                table.Rows.Add(x.idPremises, x.registration_num, 
+                table.Rows.Add(x.idPremises, x.id_process, x.registration_num, 
                     x.registration_date, x.end_date, x.until_dismissal, x.residence_warrant_num, x
                     .residence_warrant_date, x.tenant, x.idObjectType);
             });

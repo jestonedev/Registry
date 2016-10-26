@@ -103,12 +103,21 @@ namespace Registry.Viewport
                     Width = 250,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
+                var paymentColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "payment",
+                    HeaderText = @"Размер платы",
+                    Width = 250,
+                    SortMode = DataGridViewColumnSortMode.NotSortable,
+                    DefaultCellStyle = {Format = "#0.## руб\\."}
+                };
                 DataGridView.Columns.Add(registrationNumColumn);
                 DataGridView.Columns.Add(registrationDateColumn);
                 DataGridView.Columns.Add(endDateColumn);
                 DataGridView.Columns.Add(residenceWarrantNumColumn);
                 DataGridView.Columns.Add(residenceWarrantDateColumn);
                 DataGridView.Columns.Add(tenantColumn);
+                DataGridView.Columns.Add(paymentColumn);
                 AddEventHandler<EventArgs>(Presenter.ViewModel["premises_current_funds"].Model, "RefreshEvent",
                     (s, e) =>
                     {
@@ -461,6 +470,7 @@ namespace Registry.Viewport
                 case "residence_warrant_date":
                 case "tenant":
                 case "end_date":
+                case "payment":
                     if ((int)row["id_premises"] != _idPremises || 
                         _tenancyInfoRows.Any(entry => entry.RowState == DataRowState.Deleted || entry.RowState == DataRowState.Detached))
                     {   
@@ -478,6 +488,8 @@ namespace Registry.Viewport
                     }
                         
                     var tenancyRow = _tenancyInfoRows.First();
+
+
                     switch (DataGridView.Columns[e.ColumnIndex].Name)
                     {
                         case "registration_date":
@@ -492,6 +504,14 @@ namespace Registry.Viewport
                         case "residence_warrant_num":
                         case "tenant":
                                 e.Value = tenancyRow.Field<string>(DataGridView.Columns[e.ColumnIndex].Name);
+                            break;
+                        case "payment":
+                            var idProcess = (int?)_tenancyInfoRows.First()["id_process"];
+                            var paymentRows = from paymentRow in Presenter.ViewModel["tenancy_payments_info"].Model.FilterDeletedRows()
+                                              where paymentRow.Field<int?>("id_process") == idProcess
+                                              select paymentRow.Field<decimal>("payment");
+                            var payment = paymentRows.Sum(r => r);
+                            e.Value = payment;
                             break;
                     }
                     if (tenancyRow.Field<int?>("object_type") == 2)
@@ -510,7 +530,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if ((AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 1645) ||
+            if ((AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 1195) ||
                 (!AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 955))
             {
                 premises_num.Frozen = false;

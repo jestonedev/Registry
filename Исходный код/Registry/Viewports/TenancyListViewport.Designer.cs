@@ -18,6 +18,7 @@ namespace Registry.Viewport
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyListViewport));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_process = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -28,6 +29,7 @@ namespace Registry.Viewport
             this.tenant = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.rent_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.payment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,7 +58,8 @@ namespace Registry.Viewport
             this.residence_warrant_num,
             this.tenant,
             this.rent_type,
-            this.address});
+            this.address,
+            this.payment});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridView.Location = new System.Drawing.Point(3, 3);
@@ -150,6 +153,19 @@ namespace Registry.Viewport
             this.address.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.address.Width = 400;
             // 
+            // payment
+            // 
+            this.payment.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle2.Format = "#0.## руб\\.";
+            dataGridViewCellStyle2.NullValue = null;
+            this.payment.DefaultCellStyle = dataGridViewCellStyle2;
+            this.payment.HeaderText = "Размер платы";
+            this.payment.MinimumWidth = 150;
+            this.payment.Name = "payment";
+            this.payment.ReadOnly = true;
+            this.payment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.payment.Width = 150;
+            // 
             // TenancyListViewport
             // 
             this.BackColor = System.Drawing.Color.White;
@@ -173,5 +189,6 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn tenant;
         private DataGridViewTextBoxColumn rent_type;
         private DataGridViewTextBoxColumn address;
+        private DataGridViewTextBoxColumn payment;
     }
 }

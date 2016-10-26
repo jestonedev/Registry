@@ -355,22 +355,26 @@ namespace Registry.Viewport
                     e.Value = row["residence_warrant_num"];
                     break;
                 case "tenant":
-                    var rowIndex = Presenter.ViewModel["tenancy_aggregated"].BindingSource.
-                        Find("id_process", ((DataRowView)bindingSource[e.RowIndex])["id_process"]);
+                    var rowIndex = Presenter.ViewModel["tenancy_aggregated"].BindingSource.Find("id_process", row["id_process"]);
                     if (rowIndex != -1)
                         e.Value = ((DataRowView)Presenter.ViewModel["tenancy_aggregated"].BindingSource[rowIndex])["tenant"];
                     break;
                 case "rent_type":
-                    rowIndex = Presenter.ViewModel["rent_types"].BindingSource.
-                        Find("id_rent_type", ((DataRowView)bindingSource[e.RowIndex])["id_rent_type"]);
+                    rowIndex = Presenter.ViewModel["rent_types"].BindingSource.Find("id_rent_type", row["id_rent_type"]);
                     if (rowIndex != -1)
                         e.Value = ((DataRowView)Presenter.ViewModel["rent_types"].BindingSource[rowIndex])["rent_type"];
                     break;
                 case "address":
-                    rowIndex = Presenter.ViewModel["tenancy_aggregated"].BindingSource.
-                        Find("id_process", ((DataRowView)bindingSource[e.RowIndex])["id_process"]);
+                    rowIndex = Presenter.ViewModel["tenancy_aggregated"].BindingSource.Find("id_process", row["id_process"]);
                     if (rowIndex != -1)
                         e.Value = ((DataRowView)Presenter.ViewModel["tenancy_aggregated"].BindingSource[rowIndex])["address"];
+                    break;
+                case "payment":
+                    var paymentRows =
+                        from paymentRow in Presenter.ViewModel["tenancy_payments_info"].Model.FilterDeletedRows()
+                        where paymentRow.Field<int?>("id_process") == (int?) row["id_process"]
+                        select paymentRow.Field<decimal>("payment");
+                    e.Value = paymentRows.Sum(r => r);
                     break;
             }
         }
@@ -396,7 +400,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (DataGridView.Size.Width > 1210)
+            if (DataGridView.Size.Width > 1360)
             {
                 if (address.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     address.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

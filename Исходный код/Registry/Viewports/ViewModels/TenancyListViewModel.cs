@@ -11,7 +11,8 @@ namespace Registry.Viewport.ViewModels
         {
             {"general", new ViewModelItem(EntityDataModel<TenancyProcess>.GetInstance())},
             {"rent_types", new ViewModelItem(DataModel.GetInstance<RentTypesDataModel>())},
-            {"tenancy_aggregated", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelTenancyAggregated>())}
+            {"tenancy_aggregated", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelTenancyAggregated>())},
+            {"tenancy_payments_info", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelTenancyPaymentsInfo>())}
         })
         {
         }
