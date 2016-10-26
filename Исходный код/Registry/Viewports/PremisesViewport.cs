@@ -361,11 +361,18 @@ namespace Registry.Viewport
 
         private bool ValidatePremise(Premise premise)
         {
+            var premiseFromView = (Premise)EntityFromView();
             if (premise.IdBuilding == null)
             {
                 MessageBox.Show(@"Необходимо выбрать здание",@"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxHouse.Focus();
                 return false;
+            }
+            if (premise.IdPremises != null && ((premise.IdBuilding != premiseFromView.IdBuilding) || (premise.PremisesNum != premiseFromView.PremisesNum)))
+            {
+                if (MessageBox.Show(@"Вы хотите поменять адрес квартиры. Продолжить?", @"Внимание",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                    return false;
             }
             if (premise.PremisesNum == null || string.IsNullOrEmpty(premise.PremisesNum.Trim()))
             {
@@ -387,7 +394,6 @@ namespace Registry.Viewport
                 return false;
             }
             // Проверяем права на модификацию муниципального или не муниципального здания
-            var premiseFromView = (Premise)EntityFromView();
             if (premiseFromView.IdPremises != null && OtherService.HasMunicipal(premiseFromView.IdPremises.Value, EntityType.Premise)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {

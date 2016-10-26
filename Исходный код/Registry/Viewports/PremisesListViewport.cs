@@ -107,7 +107,7 @@ namespace Registry.Viewport
                 {
                     Name = "payment",
                     HeaderText = @"Размер платы",
-                    Width = 250,
+                    Width = 150,
                     SortMode = DataGridViewColumnSortMode.NotSortable,
                     DefaultCellStyle = {Format = "#0.## руб\\."}
                 };
@@ -143,7 +143,11 @@ namespace Registry.Viewport
                     GeneralDataSource_RowDeleted(s, e);
                 });
             AddEventHandler<EventArgs>(Presenter.ViewModel["premises_current_funds"].Model, "RefreshEvent", (s, e) => DataGridView.Refresh());
-            AddEventHandler<EventArgs>(Presenter.ViewModel["tenancy_payments_info"].Model, "RefreshEvent", (s, e) => DataGridView.Refresh());
+            if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
+            {
+                AddEventHandler<EventArgs>(Presenter.ViewModel["tenancy_payments_info"].Model, "RefreshEvent",
+                    (s, e) => DataGridView.Refresh());
+            }
 
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["ownership_buildings_assoc"].DataSource, "RowChanged", BuildingsOwnershipChanged);
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["ownership_buildings_assoc"].DataSource, "RowDeleted", BuildingsOwnershipChanged);
@@ -531,7 +535,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if ((AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 1195) ||
+            if ((AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 1795) ||
                 (!AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 955))
             {
                 premises_num.Frozen = false;
