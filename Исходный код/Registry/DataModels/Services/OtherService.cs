@@ -23,7 +23,7 @@ namespace Registry.DataModels.Services
                              on buildingsRow.Field<int>("id_building") equals premisesRow.Field<int>("id_building") into bp
                              from bpRow in bp.DefaultIfEmpty()
                              join subPremisesRow in subPremises
-                             on bpRow.Field<int?>("id_premises") equals subPremisesRow.Field<int?>("id_premises") into ps
+                             on bpRow == null ? null : bpRow.Field<int?>("id_premises") equals subPremisesRow.Field<int?>("id_premises") into ps
                              from psRow in ps.DefaultIfEmpty()
                              where (bpRow != null && states.Contains(bpRow.Field<int>("id_state"))) ||
                                    (psRow != null && states.Contains(psRow.Field<int>("id_state")))
