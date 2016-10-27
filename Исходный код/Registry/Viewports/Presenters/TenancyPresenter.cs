@@ -413,8 +413,9 @@ namespace Registry.Viewport.Presenters
             var currentRow = ViewModel["general"].CurrentRow;
             if (currentRow == null) return false;
             if (currentRow["id_rent_type"] == DBNull.Value || 
-                currentRow["id_process"] == DBNull.Value || 
-                (int) currentRow["id_rent_type"] != 3) return false;           
+                currentRow["id_process"] == DBNull.Value ||
+                (int)currentRow["id_rent_type"] != 3 ||
+                (currentRow["registration_num"] != DBNull.Value && currentRow["registration_num"].ToString().EndsWith("н"))) return false;
             var tenant = (from processRow in ViewModel["general"].Model.FilterDeletedRows()
                 join personsRow in EntityDataModel<TenancyPerson>.GetInstance().FilterDeletedRows()
                     on processRow.Field<int?>("id_process") equals personsRow.Field<int?>("id_process")
@@ -431,7 +432,8 @@ namespace Registry.Viewport.Presenters
                       personsRow.Field<string>("name") == tenant.Field<string>("name") &&
                       personsRow.Field<string>("patronymic") == tenant.Field<string>("patronymic") &&
                       processRow.Field<int?>("id_process") != (int?) currentRow["id_process"] &&
-                      processRow.Field<int?>("id_rent_type") == 3
+                      processRow.Field<int?>("id_rent_type") == 3 &&
+                      (processRow.Field<string>("registration_num") == null || !processRow.Field<string>("registration_num").EndsWith("н"))
                 select processRow;
             return result.Any();
         }

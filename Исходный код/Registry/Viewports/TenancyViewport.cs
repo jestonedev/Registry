@@ -301,7 +301,13 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
-            return EntityConverter<TenancyProcess>.FromRow(row);
+            var process = EntityConverter<TenancyProcess>.FromRow(row);
+            if (Presenter.ViewModel["executors"].Model.FilterDeletedRows().Where(v => v.Field<short?>("is_inactive") == 0).
+                        All(v => v.Field<int?>("id_executor") != process.IdExecutor))
+            {
+                process.IdExecutor = null;
+            }
+            return process;
         }
 
         protected override Entity EntityFromViewport()
@@ -468,17 +474,16 @@ namespace Registry.Viewport
         {
             ((TenancyPresenter)Presenter).FiltersRebuild();
             var currentRow = Presenter.ViewModel["general"].CurrentRow;
-            if (currentRow == null)
+            if (currentRow == null || currentRow["id_process"] == DBNull.Value)
             {
                 numericUpDownPayment.Minimum = 0;
                 numericUpDownPayment.Maximum = 0;
                 numericUpDownPayment.Value = 0;
                 return;
             }
-            var idProcess = (int)currentRow["id_process"];
             var payments =
                 from row in Presenter.ViewModel["tenancy_payments_info"].Model.FilterDeletedRows()
-                where (int)row["id_process"] == idProcess
+                where (int)row["id_process"] == (int)currentRow["id_process"]
                 select (decimal) row["payment"];
             var payment = payments.Sum(v => v);
             numericUpDownPayment.Minimum = payment;
