@@ -74,6 +74,8 @@
     <Compile Include="JudicialOrderSettingsForm.Designer.cs">
       <DependentUpon>JudicialOrderSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="RegistryReporters\MunicipalBuildingsReporter.cs" />
+    <Compile Include="RegistryReporters\MunicipalPremisesReporter.cs" />
     <Compile Include="TenancyReporters\TenancyNotifyContractAgreement.cs" />
     <Compile Include="TransferToLegalDepartment.cs">
       <SubType>Form</SubType>
@@ -105,7 +107,7 @@
     <Compile Include="RegistryReporters\MultiExcerptReporter.cs" />
     <Compile Include="RegistryReporters\ExcerptReporter.cs" />
     <Compile Include="RegistryReporters\FullStatisticReporter.cs" />
-    <Compile Include="RegistryReporters\MunicipalPremisesReporter.cs" />
+    <Compile Include="RegistryReporters\MunicipalPremisesCurrentFundsReporter.cs" />
     <Compile Include="RegistryReporters\PremisesByDonationReporter.cs" />
     <Compile Include="RegistryReporters\PremisesByExchangeReporter.cs" />
     <Compile Include="RegistryReporters\PremisesForOrphansReporter.cs" />

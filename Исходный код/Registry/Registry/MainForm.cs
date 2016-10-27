@@ -898,14 +898,9 @@ namespace Registry
             RunReport(ReporterType.RegistryPremisesByDonationReporter);
         }
 
-        private void ribbonButtonMunicipalPremises_Click(object sender, EventArgs e)
+        private void ribbonButtonMunicipalPremisesCurrentFunds_Click(object sender, EventArgs e)
         {
-            RunReport(ReporterType.RegistryMunicipalPremisesReporter);
-        }
-
-        private void ribbonButtonAllPremises_Click(object sender, EventArgs e)
-        {
-            RunReport(ReporterType.RegistryAllPremisesReporter);
+            RunReport(ReporterType.RegistryMunicipalPremisesCurrentFundsReporter);
         }
 
         private void ribbonButtonRegistryFullStatistic_Click(object sender, EventArgs e)
@@ -966,6 +961,16 @@ namespace Registry
         private void ribbonButtonClaimStatesReport_Click(object sender, EventArgs e)
         {
             RunReport(ReporterType.ClaimsStatesReporter);
+        }
+
+        private void ribbonButtonMunicipalBuildings_Click(object sender, EventArgs e)
+        {
+            RunReport(ReporterType.RegistryMunicipalBuildingsReporter);
+        }
+
+        private void ribbonButtonMunicipalPremises_Click(object sender, EventArgs e)
+        {
+            RunReport(ReporterType.RegistryMunicipalPremisesReporter);
         }
 
         private void ribbonButton1711_Click(object sender, EventArgs e)

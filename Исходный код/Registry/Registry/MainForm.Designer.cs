@@ -30,21 +30,21 @@ namespace Registry
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin4 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin4 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient10 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient22 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin4 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient23 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient11 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient24 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient25 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient26 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient12 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient27 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient28 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin2 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient8 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient9 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient10 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient11 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient12 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient6 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient13 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient14 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.ribbon1 = new System.Windows.Forms.Ribbon();
             this.ribbonOrbMenuItemBuildings = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonOrbMenuItemPremises = new System.Windows.Forms.RibbonOrbMenuItem();
@@ -130,8 +130,9 @@ namespace Registry
             this.ribbonButtonPremisesForOrphansReport = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonPremisesByExchangeReport = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonPremisesByDonationReport = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonMunicipalPremisesCurrentFunds = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonMunicipalBuildings = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonMunicipalPremises = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonAllPremises = new System.Windows.Forms.RibbonButton();
             this.ribbonPanel7 = new System.Windows.Forms.RibbonPanel();
             this.ribbonButtonStructureTypes = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonRestrictionTypes = new System.Windows.Forms.RibbonButton();
@@ -155,6 +156,7 @@ namespace Registry
             this.ribbonTabClaims = new System.Windows.Forms.RibbonTab();
             this.ribbonPanel4 = new System.Windows.Forms.RibbonPanel();
             this.ribbonButtonClaimsStatistic = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonClaimStatesReport = new System.Windows.Forms.RibbonButton();
             this.ribbonPanel5 = new System.Windows.Forms.RibbonPanel();
             this.ribbonButtonClaimStateTypes = new System.Windows.Forms.RibbonButton();
             this.ribbonTabResettle = new System.Windows.Forms.RibbonTab();
@@ -173,7 +175,6 @@ namespace Registry
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonClaimStatesReport = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -1035,8 +1036,9 @@ namespace Registry
             this.ribbonPanel6.Items.Add(this.ribbonButtonPremisesForOrphansReport);
             this.ribbonPanel6.Items.Add(this.ribbonButtonPremisesByExchangeReport);
             this.ribbonPanel6.Items.Add(this.ribbonButtonPremisesByDonationReport);
+            this.ribbonPanel6.Items.Add(this.ribbonButtonMunicipalPremisesCurrentFunds);
+            this.ribbonPanel6.Items.Add(this.ribbonButtonMunicipalBuildings);
             this.ribbonPanel6.Items.Add(this.ribbonButtonMunicipalPremises);
-            this.ribbonPanel6.Items.Add(this.ribbonButtonAllPremises);
             this.ribbonPanel6.Text = "Отчеты";
             // 
             // ribbonButtonRegistryShortStatistic
@@ -1154,29 +1156,40 @@ namespace Registry
             this.ribbonButtonPremisesByDonationReport.ToolTipTitle = "Жилые помещения по дарению";
             this.ribbonButtonPremisesByDonationReport.Click += new System.EventHandler(this.ribbonButtonPremisesByDonationReport_Click);
             // 
+            // ribbonButtonMunicipalPremisesCurrentFunds
+            // 
+            this.ribbonButtonMunicipalPremisesCurrentFunds.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMunicipalPremisesCurrentFunds.Image")));
+            this.ribbonButtonMunicipalPremisesCurrentFunds.MaxSizeMode = System.Windows.Forms.RibbonElementSizeMode.Medium;
+            this.ribbonButtonMunicipalPremisesCurrentFunds.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMunicipalPremisesCurrentFunds.SmallImage")));
+            this.ribbonButtonMunicipalPremisesCurrentFunds.Text = "Текущие фонды МЖП";
+            this.ribbonButtonMunicipalPremisesCurrentFunds.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по фондам " +
+    "муниципальных жилых помещений";
+            this.ribbonButtonMunicipalPremisesCurrentFunds.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMunicipalPremisesCurrentFunds.ToolTipImage")));
+            this.ribbonButtonMunicipalPremisesCurrentFunds.ToolTipTitle = "Текущие фонды МЖП";
+            this.ribbonButtonMunicipalPremisesCurrentFunds.Click += new System.EventHandler(this.ribbonButtonMunicipalPremisesCurrentFunds_Click);
+            // 
+            // ribbonButtonMunicipalBuildings
+            // 
+            this.ribbonButtonMunicipalBuildings.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMunicipalBuildings.Image")));
+            this.ribbonButtonMunicipalBuildings.MaxSizeMode = System.Windows.Forms.RibbonElementSizeMode.Medium;
+            this.ribbonButtonMunicipalBuildings.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMunicipalBuildings.SmallImage")));
+            this.ribbonButtonMunicipalBuildings.Text = "Статистика МЗ";
+            this.ribbonButtonMunicipalBuildings.ToolTip = "Статистика по муниципальным зданиям";
+            this.ribbonButtonMunicipalBuildings.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMunicipalBuildings.ToolTipImage")));
+            this.ribbonButtonMunicipalBuildings.ToolTipTitle = "Статистика МЗ";
+            this.ribbonButtonMunicipalBuildings.Value = "";
+            this.ribbonButtonMunicipalBuildings.Click += new System.EventHandler(this.ribbonButtonMunicipalBuildings_Click);
+            // 
             // ribbonButtonMunicipalPremises
             // 
             this.ribbonButtonMunicipalPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMunicipalPremises.Image")));
             this.ribbonButtonMunicipalPremises.MaxSizeMode = System.Windows.Forms.RibbonElementSizeMode.Medium;
             this.ribbonButtonMunicipalPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMunicipalPremises.SmallImage")));
-            this.ribbonButtonMunicipalPremises.Text = "Муниципальные ЖП";
-            this.ribbonButtonMunicipalPremises.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по муницип" +
-    "альным жилым помещениям";
+            this.ribbonButtonMunicipalPremises.Text = "Статистика МП";
+            this.ribbonButtonMunicipalPremises.ToolTip = "Статистика по муниципальным помещениям";
             this.ribbonButtonMunicipalPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMunicipalPremises.ToolTipImage")));
-            this.ribbonButtonMunicipalPremises.ToolTipTitle = "Муниципальные жилые помещения";
+            this.ribbonButtonMunicipalPremises.ToolTipTitle = "Статистика МП";
             this.ribbonButtonMunicipalPremises.Click += new System.EventHandler(this.ribbonButtonMunicipalPremises_Click);
-            // 
-            // ribbonButtonAllPremises
-            // 
-            this.ribbonButtonAllPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAllPremises.Image")));
-            this.ribbonButtonAllPremises.MaxSizeMode = System.Windows.Forms.RibbonElementSizeMode.Medium;
-            this.ribbonButtonAllPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAllPremises.SmallImage")));
-            this.ribbonButtonAllPremises.Text = "Все ЖП";
-            this.ribbonButtonAllPremises.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по всем жи" +
-    "лым помещениям";
-            this.ribbonButtonAllPremises.ToolTipImage = global::Registry.Properties.Resources.ooo_calc__max_;
-            this.ribbonButtonAllPremises.ToolTipTitle = "Все жилые помещения";
-            this.ribbonButtonAllPremises.Click += new System.EventHandler(this.ribbonButtonAllPremises_Click);
             // 
             // ribbonPanel7
             // 
@@ -1404,6 +1417,18 @@ namespace Registry
             this.ribbonButtonClaimsStatistic.Visible = false;
             this.ribbonButtonClaimsStatistic.Click += new System.EventHandler(this.ribbonButtonClaimsStatistic_Click);
             // 
+            // ribbonButtonClaimStatesReport
+            // 
+            this.ribbonButtonClaimStatesReport.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimStatesReport.Image")));
+            this.ribbonButtonClaimStatesReport.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimStatesReport.SmallImage")));
+            this.ribbonButtonClaimStatesReport.Text = "Отчет по стадиям исковых работ";
+            this.ribbonButtonClaimStatesReport.ToolTip = "При нажатии на данную кнопку будет сформирован отчет по запрошенным и преденным д" +
+    "елам по претензионно-исковой работе в OpenOffice Calc";
+            this.ribbonButtonClaimStatesReport.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimStatesReport.ToolTipImage")));
+            this.ribbonButtonClaimStatesReport.ToolTipTitle = "Отчет по запрошенным и переданным делам";
+            this.ribbonButtonClaimStatesReport.Value = "";
+            this.ribbonButtonClaimStatesReport.Click += new System.EventHandler(this.ribbonButtonClaimStatesReport_Click);
+            // 
             // ribbonPanel5
             // 
             this.ribbonPanel5.ButtonMoreEnabled = false;
@@ -1560,53 +1585,53 @@ namespace Registry
             this.dockPanel.Name = "dockPanel";
             this.dockPanel.ShowDocumentIcon = true;
             this.dockPanel.Size = new System.Drawing.Size(1008, 592);
-            dockPanelGradient10.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPanelGradient10.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            autoHideStripSkin4.DockStripGradient = dockPanelGradient10;
-            tabGradient22.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient22.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient22.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            autoHideStripSkin4.TabGradient = tabGradient22;
-            autoHideStripSkin4.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            dockPanelSkin4.AutoHideStripSkin = autoHideStripSkin4;
-            tabGradient23.EndColor = System.Drawing.Color.White;
-            tabGradient23.StartColor = System.Drawing.Color.White;
-            tabGradient23.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient4.ActiveTabGradient = tabGradient23;
-            dockPanelGradient11.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPanelGradient11.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPaneStripGradient4.DockStripGradient = dockPanelGradient11;
-            tabGradient24.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient24.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient24.StartColor = System.Drawing.Color.White;
-            tabGradient24.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient4.InactiveTabGradient = tabGradient24;
-            dockPaneStripSkin4.DocumentGradient = dockPaneStripGradient4;
-            dockPaneStripSkin4.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            tabGradient25.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient25.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient25.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient25.TextColor = System.Drawing.Color.Black;
-            dockPaneStripToolWindowGradient4.ActiveCaptionGradient = tabGradient25;
-            tabGradient26.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient26.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient26.TextColor = System.Drawing.Color.Black;
-            dockPaneStripToolWindowGradient4.ActiveTabGradient = tabGradient26;
-            dockPanelGradient12.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPanelGradient12.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPaneStripToolWindowGradient4.DockStripGradient = dockPanelGradient12;
-            tabGradient27.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient27.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient27.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient27.TextColor = System.Drawing.Color.Black;
-            dockPaneStripToolWindowGradient4.InactiveCaptionGradient = tabGradient27;
-            tabGradient28.EndColor = System.Drawing.Color.Transparent;
-            tabGradient28.StartColor = System.Drawing.Color.Transparent;
-            tabGradient28.TextColor = System.Drawing.Color.Gray;
-            dockPaneStripToolWindowGradient4.InactiveTabGradient = tabGradient28;
-            dockPaneStripSkin4.ToolWindowGradient = dockPaneStripToolWindowGradient4;
-            dockPanelSkin4.DockPaneStripSkin = dockPaneStripSkin4;
-            this.dockPanel.Skin = dockPanelSkin4;
+            dockPanelGradient4.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPanelGradient4.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            autoHideStripSkin2.DockStripGradient = dockPanelGradient4;
+            tabGradient8.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient8.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient8.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            autoHideStripSkin2.TabGradient = tabGradient8;
+            autoHideStripSkin2.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            dockPanelSkin2.AutoHideStripSkin = autoHideStripSkin2;
+            tabGradient9.EndColor = System.Drawing.Color.White;
+            tabGradient9.StartColor = System.Drawing.Color.White;
+            tabGradient9.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient2.ActiveTabGradient = tabGradient9;
+            dockPanelGradient5.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPanelGradient5.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPaneStripGradient2.DockStripGradient = dockPanelGradient5;
+            tabGradient10.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient10.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient10.StartColor = System.Drawing.Color.White;
+            tabGradient10.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient2.InactiveTabGradient = tabGradient10;
+            dockPaneStripSkin2.DocumentGradient = dockPaneStripGradient2;
+            dockPaneStripSkin2.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            tabGradient11.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient11.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient11.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient11.TextColor = System.Drawing.Color.Black;
+            dockPaneStripToolWindowGradient2.ActiveCaptionGradient = tabGradient11;
+            tabGradient12.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient12.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient12.TextColor = System.Drawing.Color.Black;
+            dockPaneStripToolWindowGradient2.ActiveTabGradient = tabGradient12;
+            dockPanelGradient6.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPanelGradient6.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPaneStripToolWindowGradient2.DockStripGradient = dockPanelGradient6;
+            tabGradient13.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient13.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient13.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient13.TextColor = System.Drawing.Color.Black;
+            dockPaneStripToolWindowGradient2.InactiveCaptionGradient = tabGradient13;
+            tabGradient14.EndColor = System.Drawing.Color.Transparent;
+            tabGradient14.StartColor = System.Drawing.Color.Transparent;
+            tabGradient14.TextColor = System.Drawing.Color.Gray;
+            dockPaneStripToolWindowGradient2.InactiveTabGradient = tabGradient14;
+            dockPaneStripSkin2.ToolWindowGradient = dockPaneStripToolWindowGradient2;
+            dockPanelSkin2.DockPaneStripSkin = dockPaneStripSkin2;
+            this.dockPanel.Skin = dockPanelSkin2;
             this.dockPanel.TabIndex = 5;
             this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.dockPanel_ActiveDocumentChanged);
             // 
@@ -1615,18 +1640,6 @@ namespace Registry
             this.ribbonButton3.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.Image")));
             this.ribbonButton3.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.SmallImage")));
             this.ribbonButton3.Text = "Лицевые счета";
-            // 
-            // ribbonButtonClaimStatesReport
-            // 
-            this.ribbonButtonClaimStatesReport.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimStatesReport.Image")));
-            this.ribbonButtonClaimStatesReport.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimStatesReport.SmallImage")));
-            this.ribbonButtonClaimStatesReport.Text = "Отчет по стадиям исковых работ";
-            this.ribbonButtonClaimStatesReport.ToolTip = "При нажатии на данную кнопку будет сформирован отчет по запрошенным и преденным д" +
-    "елам по претензионно-исковой работе в OpenOffice Calc";
-            this.ribbonButtonClaimStatesReport.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimStatesReport.ToolTipImage")));
-            this.ribbonButtonClaimStatesReport.ToolTipTitle = "Отчет по запрошенным и переданным делам";
-            this.ribbonButtonClaimStatesReport.Value = "";
-            this.ribbonButtonClaimStatesReport.Click += new System.EventHandler(this.ribbonButtonClaimStatesReport_Click);
             // 
             // MainForm
             // 
@@ -1735,7 +1748,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonPremisesForOrphansReport;
         private System.Windows.Forms.RibbonButton ribbonButtonPremisesByExchangeReport;
         private System.Windows.Forms.RibbonButton ribbonButtonPremisesByDonationReport;
-        private System.Windows.Forms.RibbonButton ribbonButtonMunicipalPremises;
+        private System.Windows.Forms.RibbonButton ribbonButtonMunicipalPremisesCurrentFunds;
         private System.Windows.Forms.RibbonButton ribbonButtonClaimsStatistic;
         private System.Windows.Forms.RibbonButton ribbonButtonTenancyForCoMS;
         private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel;
@@ -1769,7 +1782,6 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonOrbRegistryExcerptPremise;
         private System.Windows.Forms.RibbonButton ribbonButtonOrbRegistryExcerptSubPremise;
         private System.Windows.Forms.RibbonButton ribbonButtonOrbRegistryExcerptSubPremises;
-        private System.Windows.Forms.RibbonButton ribbonButtonAllPremises;
         private System.Windows.Forms.RibbonSeparator ribbonSeparator3;
         private System.Windows.Forms.RibbonButton ribbonButtonExportOds;
         private System.Windows.Forms.RibbonButton ribbonButtonOrbRegistryMultiPremises;
@@ -1782,6 +1794,8 @@ namespace Registry
         private System.Windows.Forms.RibbonOrbMenuItem ribbonOrbMenuItemHelp;
         private System.Windows.Forms.RibbonButton ribbonButtonNotifyContractAgreement;
         private System.Windows.Forms.RibbonButton ribbonButtonClaimStatesReport;
+        private System.Windows.Forms.RibbonButton ribbonButtonMunicipalBuildings;
+        private System.Windows.Forms.RibbonButton ribbonButtonMunicipalPremises;
     }
 }
 
