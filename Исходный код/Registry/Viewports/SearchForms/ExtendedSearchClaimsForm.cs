@@ -42,20 +42,7 @@ namespace Registry.Viewport.SearchForms
             textBoxTransferedToLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
             textBoxAcceptedByLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
 
-            foreach (Control control in Controls)
-            {
-                control.KeyDown += (sender, e) =>
-                {
-                    var comboBox = sender as ComboBox;
-                    if (comboBox != null && comboBox.DroppedDown)
-                        return;
-                    if (e.KeyCode == Keys.Enter)
-                        vButtonSearch_Click(sender, e);
-                    else
-                        if (e.KeyCode == Keys.Escape)
-                            DialogResult = DialogResult.Cancel;
-                };
-            }
+            HandleHotKeys(Controls, vButtonSearch_Click);
         }
 
         internal override string GetFilter()
@@ -211,39 +198,43 @@ namespace Registry.Viewport.SearchForms
             int idStateType;
             if (comboBoxState.SelectedValue == null ||
                 !int.TryParse(comboBoxState.SelectedValue.ToString(), out idStateType) || idStateType != 4)
-                return includedClaims;       
-            if (checkBoxClaimDirectionDateEnable.Checked)
+                return includedClaims;
+            if (checkBoxStateEnable.Checked && (int?)comboBoxState.SelectedValue == 4)
             {
-                var claims = ClaimsService.ClaimIdsByStateCondition(r =>
-                    DateSatisfiesExpression(r.Field<DateTime?>("claim_direction_date"),
-                        comboBoxClaimDirectionDateExpr.Text,
-                        dateTimePickerClaimDirectionDateFrom.Value.Date,
-                        dateTimePickerClaimDirectionDateTo.Value.Date) && r.Field<int>("id_state_type") == 4);
-                includedClaims = DataModelHelper.Intersect(includedClaims, claims);
-            }
-            if (checkBoxCourtOrderDateEnable.Checked)
-            {
-                var claims = ClaimsService.ClaimIdsByStateCondition(r =>
-                    DateSatisfiesExpression(r.Field<DateTime?>("court_order_date"),
-                        comboBoxCourtOrderDateExpr.Text,
-                        dateTimePickerCourtOrderDateFrom.Value.Date,
-                        dateTimePickerCourtOrderDateTo.Value.Date) && r.Field<int>("id_state_type") == 4);
-                includedClaims = DataModelHelper.Intersect(includedClaims, claims);
-            }
-            if (checkBoxObtainingCourtOrderDateEnable.Checked)
-            {
-                var claims = ClaimsService.ClaimIdsByStateCondition(r =>
-                    DateSatisfiesExpression(r.Field<DateTime?>("obtaining_court_order_date"),
-                        comboBoxObtainingCourtOrderDateExpr.Text,
-                        dateTimePickerObtainingCourtOrderDateFrom.Value.Date,
-                        dateTimePickerObtainingCourtOrderDateTo.Value.Date) && r.Field<int>("id_state_type") == 4);
-                includedClaims = DataModelHelper.Intersect(includedClaims, claims);
-            }
-            if (checkBoxCourtOrderNumEnable.Checked)
-            {
-                var claims = ClaimsService.ClaimIdsByStateCondition(r => 
-                    r.Field<string>("court_order_num") == textBoxCourtOrderNum.Text.Trim() && r.Field<int>("id_state_type") == 4);
-                includedClaims = DataModelHelper.Intersect(includedClaims, claims);
+                if (checkBoxClaimDirectionDateEnable.Checked)
+                {
+                    var claims = ClaimsService.ClaimIdsByStateCondition(r =>
+                        DateSatisfiesExpression(r.Field<DateTime?>("claim_direction_date"),
+                            comboBoxClaimDirectionDateExpr.Text,
+                            dateTimePickerClaimDirectionDateFrom.Value.Date,
+                            dateTimePickerClaimDirectionDateTo.Value.Date) && r.Field<int>("id_state_type") == 4);
+                    includedClaims = DataModelHelper.Intersect(includedClaims, claims);
+                }
+                if (checkBoxCourtOrderDateEnable.Checked)
+                {
+                    var claims = ClaimsService.ClaimIdsByStateCondition(r =>
+                        DateSatisfiesExpression(r.Field<DateTime?>("court_order_date"),
+                            comboBoxCourtOrderDateExpr.Text,
+                            dateTimePickerCourtOrderDateFrom.Value.Date,
+                            dateTimePickerCourtOrderDateTo.Value.Date) && r.Field<int>("id_state_type") == 4);
+                    includedClaims = DataModelHelper.Intersect(includedClaims, claims);
+                }
+                if (checkBoxObtainingCourtOrderDateEnable.Checked)
+                {
+                    var claims = ClaimsService.ClaimIdsByStateCondition(r =>
+                        DateSatisfiesExpression(r.Field<DateTime?>("obtaining_court_order_date"),
+                            comboBoxObtainingCourtOrderDateExpr.Text,
+                            dateTimePickerObtainingCourtOrderDateFrom.Value.Date,
+                            dateTimePickerObtainingCourtOrderDateTo.Value.Date) && r.Field<int>("id_state_type") == 4);
+                    includedClaims = DataModelHelper.Intersect(includedClaims, claims);
+                }
+                if (checkBoxCourtOrderNumEnable.Checked)
+                {
+                    var claims = ClaimsService.ClaimIdsByStateCondition(r =>
+                        r.Field<string>("court_order_num") != null &&
+                        r.Field<string>("court_order_num").Contains(textBoxCourtOrderNum.Text.Trim()) && r.Field<int>("id_state_type") == 4);
+                    includedClaims = DataModelHelper.Intersect(includedClaims, claims);
+                }
             }
             return includedClaims;
         }

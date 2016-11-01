@@ -42,18 +42,7 @@ namespace Registry.Viewport.SearchForms
             comboBoxRecalcDGIExpr.SelectedIndex = 2;
             comboBoxRecalcTenancyExpr.SelectedIndex = 2;
 
-            foreach (Control control in Controls)
-                control.KeyDown += (sender, e) =>
-                {
-                    var comboBox = sender as ComboBox;
-                    if (comboBox != null && comboBox.DroppedDown)
-                        return;
-                    if (e.KeyCode == Keys.Enter)
-                        vButtonSearch_Click(sender, e);
-                    else
-                        if (e.KeyCode == Keys.Escape)
-                            DialogResult = DialogResult.Cancel;
-                };
+            HandleHotKeys(Controls, vButtonSearch_Click);
         }
 
         internal override string GetFilter()

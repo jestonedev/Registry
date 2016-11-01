@@ -16,20 +16,7 @@ namespace Registry.Viewport.SearchForms
         {
             InitializeComponent();
             comboBoxCriteriaType.SelectedIndex = 0;
-            foreach (Control control in Controls)
-            {
-                control.KeyDown += (sender, e) =>
-                {
-                    var comboBox = sender as ComboBox;
-                    if (comboBox != null && comboBox.DroppedDown)
-                        return;
-                    if (e.KeyCode == Keys.Enter)         
-                        vButtonSearch_Click(sender, e);
-                    else
-                        if (e.KeyCode == Keys.Escape)
-                            DialogResult = DialogResult.Cancel;
-                };
-            }
+            HandleHotKeys(Controls, vButtonSearch_Click);
         }
 
         protected override void OnVisibleChanged(EventArgs e)

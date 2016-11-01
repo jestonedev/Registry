@@ -254,22 +254,7 @@ namespace Registry.Viewport.SearchForms
             comboBoxRestrictionType.ValueMember = "id_restriction_type";
             comboBoxRestrictionType.DisplayMember = "restriction_type";
 
-            foreach (Control control in Controls)
-                control.KeyDown += (sender, e) =>
-                {
-                    var comboBox = sender as ComboBox;
-                    if (comboBox != null && comboBox.DroppedDown)
-                        return;
-                    switch (e.KeyCode)
-                    {
-                        case Keys.Enter:
-                            vButtonSearch_Click(sender, e);
-                            break;
-                        case Keys.Escape:
-                            DialogResult = DialogResult.Cancel;
-                            break;
-                    }
-                };
+            HandleHotKeys(Controls, vButtonSearch_Click);
         }
 
         private void vButtonSearch_Click(object sender, EventArgs e)

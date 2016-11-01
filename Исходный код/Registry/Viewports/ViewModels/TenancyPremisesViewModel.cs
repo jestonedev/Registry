@@ -47,7 +47,7 @@ namespace Registry.Viewport.ViewModels
             SnapshotDataSource.Clear();
             var assoc = this["tenancy_premises_assoc"].BindingSource;
             foreach (var row in assoc)
-                SnapshotDataSource.Rows.Add(ResettlePremiseConverter.ToArray((DataRowView)row));
+                SnapshotDataSource.Rows.Add(TenancyPremiseConverter.ToArray((DataRowView)row));
         }
     }
 }

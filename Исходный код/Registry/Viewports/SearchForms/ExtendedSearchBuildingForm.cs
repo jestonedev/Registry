@@ -214,18 +214,8 @@ namespace Registry.Viewport.SearchForms
             comboBoxRestrictionType.DisplayMember = "restriction_type";
 
             numericUpDownStartupYear.Maximum = DateTime.Now.Year;
-            foreach (Control control in Controls)
-                control.KeyDown += (sender, e) =>
-                {
-                    var comboBox = sender as ComboBox;
-                    if (comboBox != null && comboBox.DroppedDown)
-                        return;
-                    if (e.KeyCode == Keys.Enter)
-                        vButtonSearch_Click(sender, e);
-                    else
-                        if (e.KeyCode == Keys.Escape)
-                            DialogResult = DialogResult.Cancel;
-                };
+
+            HandleHotKeys(Controls, vButtonSearch_Click);
         }
 
         private void checkBoxStreetEnable_CheckedChanged(object sender, EventArgs e)

@@ -465,6 +465,16 @@ namespace Registry.Viewport
                 viewModel.CurrentRow.Row, ParentTypeEnum.Claim);
         }
 
+        public override bool CanOpenDetails()
+        {
+            return Presenter.ViewModel["general"].CurrentRow != null;
+        }
+
+        public override void OpenDetails()
+        {
+            ShowAssocViewport<ClaimStatesViewport>();
+        }
+
         protected override void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             SetViewportCaption();
@@ -731,6 +741,11 @@ namespace Registry.Viewport
                 numericUpDownAmountTotal.Minimum =
                     numericUpDownAmountTotal.Maximum = numericUpDownAmountDGI.Value + numericUpDownAmountTenancy.Value +
                     numericUpDownAmountPenalties.Value;
+        }
+
+        private void dataGridViewClaims_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            ShowAssocViewport<ClaimStatesViewport>();
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
@@ -28,20 +29,7 @@ namespace Registry.Viewport.SearchForms
             comboBoxState.ValueMember = "id_state_type";
             comboBoxDateStartStateExpr.SelectedIndex = 2;
 
-            foreach (Control control in Controls)
-            {
-                control.KeyDown += (sender, e) =>
-                {
-                    var comboBox = sender as ComboBox;
-                    if (comboBox != null && comboBox.DroppedDown)
-                        return;
-                    if (e.KeyCode == Keys.Enter)
-                        vButtonSearch_Click(sender, e);
-                    else
-                        if (e.KeyCode == Keys.Escape)
-                            DialogResult = DialogResult.Cancel;
-                };
-            }
+            HandleHotKeys(Controls, vButtonSearch_Click);
         }
 
         internal override string GetFilter()
@@ -124,7 +112,13 @@ namespace Registry.Viewport.SearchForms
                     filter += " AND ";
                 filter += string.Format("at_date = '{0}'", dateTimePickerAtDate.Value.Date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
-
+            if (checkBoxCourtOrderNumEnable.Checked)
+            {
+                var claims = ClaimsService.ClaimIdsByStateCondition(r =>
+                    r.Field<string>("court_order_num") != null && 
+                    r.Field<string>("court_order_num").Contains(textBoxCourtOrderNum.Text.Trim()) && r.Field<int>("id_state_type") == 4);
+                includedClaims = DataModelHelper.Intersect(includedClaims, claims);
+            }
             if (includedClaims != null)
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
@@ -240,6 +234,11 @@ namespace Registry.Viewport.SearchForms
         private void checkBoxSRNEnable_CheckedChanged(object sender, EventArgs e)
         {
             textBoxSRN.Enabled = checkBoxSRNEnable.Checked;
+        }
+
+        private void checkBoxCourtOrderNumEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxCourtOrderNum.Enabled = checkBoxCourtOrderNumEnable.Checked;
         }
     }
 }

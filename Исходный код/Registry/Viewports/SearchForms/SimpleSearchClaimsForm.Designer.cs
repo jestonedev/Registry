@@ -52,8 +52,11 @@ namespace Registry.Viewport.SearchForms
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkBoxLastState = new System.Windows.Forms.CheckBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxCourtOrderNum = new System.Windows.Forms.TextBox();
+            this.checkBoxCourtOrderNumEnable = new System.Windows.Forms.CheckBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,11 +65,11 @@ namespace Registry.Viewport.SearchForms
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(212, 308);
+            this.vButtonCancel.Location = new System.Drawing.Point(212, 343);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
-            this.vButtonCancel.TabIndex = 8;
+            this.vButtonCancel.TabIndex = 10;
             this.vButtonCancel.Text = "Отмена";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -75,11 +78,11 @@ namespace Registry.Viewport.SearchForms
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(74, 308);
+            this.vButtonSearch.Location = new System.Drawing.Point(74, 343);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
-            this.vButtonSearch.TabIndex = 7;
+            this.vButtonSearch.TabIndex = 9;
             this.vButtonSearch.Text = "Поиск";
             this.vButtonSearch.UseVisualStyleBackColor = false;
             this.vButtonSearch.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -90,7 +93,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerAtDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerAtDate.Enabled = false;
-            this.dateTimePickerAtDate.Location = new System.Drawing.Point(34, 272);
+            this.dateTimePickerAtDate.Location = new System.Drawing.Point(34, 267);
             this.dateTimePickerAtDate.Name = "dateTimePickerAtDate";
             this.dateTimePickerAtDate.Size = new System.Drawing.Size(352, 21);
             this.dateTimePickerAtDate.TabIndex = 6;
@@ -107,7 +110,7 @@ namespace Registry.Viewport.SearchForms
             // label91
             // 
             this.label91.AutoSize = true;
-            this.label91.Location = new System.Drawing.Point(12, 254);
+            this.label91.Location = new System.Drawing.Point(12, 249);
             this.label91.Name = "label91";
             this.label91.Size = new System.Drawing.Size(130, 15);
             this.label91.TabIndex = 52;
@@ -127,7 +130,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxAtDateChecked
             // 
             this.checkBoxAtDateChecked.AutoSize = true;
-            this.checkBoxAtDateChecked.Location = new System.Drawing.Point(13, 276);
+            this.checkBoxAtDateChecked.Location = new System.Drawing.Point(13, 271);
             this.checkBoxAtDateChecked.Name = "checkBoxAtDateChecked";
             this.checkBoxAtDateChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAtDateChecked.TabIndex = 5;
@@ -262,15 +265,6 @@ namespace Registry.Viewport.SearchForms
             this.checkBoxLastState.Text = "Фильтровать только по текущему состоянию";
             this.checkBoxLastState.UseVisualStyleBackColor = true;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(5, 67);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(99, 15);
-            this.label3.TabIndex = 193;
-            this.label3.Text = "Дата установки";
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -280,12 +274,52 @@ namespace Registry.Viewport.SearchForms
             this.label2.TabIndex = 55;
             this.label2.Text = "Вид состояния";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(5, 67);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(99, 15);
+            this.label3.TabIndex = 193;
+            this.label3.Text = "Дата установки";
+            // 
+            // textBoxCourtOrderNum
+            // 
+            this.textBoxCourtOrderNum.Enabled = false;
+            this.textBoxCourtOrderNum.Location = new System.Drawing.Point(34, 310);
+            this.textBoxCourtOrderNum.MaxLength = 255;
+            this.textBoxCourtOrderNum.Name = "textBoxCourtOrderNum";
+            this.textBoxCourtOrderNum.Size = new System.Drawing.Size(352, 21);
+            this.textBoxCourtOrderNum.TabIndex = 8;
+            // 
+            // checkBoxCourtOrderNumEnable
+            // 
+            this.checkBoxCourtOrderNumEnable.AutoSize = true;
+            this.checkBoxCourtOrderNumEnable.Location = new System.Drawing.Point(13, 314);
+            this.checkBoxCourtOrderNumEnable.Name = "checkBoxCourtOrderNumEnable";
+            this.checkBoxCourtOrderNumEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxCourtOrderNumEnable.TabIndex = 7;
+            this.checkBoxCourtOrderNumEnable.UseVisualStyleBackColor = true;
+            this.checkBoxCourtOrderNumEnable.CheckedChanged += new System.EventHandler(this.checkBoxCourtOrderNumEnable_CheckedChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(10, 292);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(157, 15);
+            this.label13.TabIndex = 211;
+            this.label13.Text = "Номер судебного приказа";
+            // 
             // SimpleSearchClaimsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(402, 351);
+            this.ClientSize = new System.Drawing.Size(402, 383);
+            this.Controls.Add(this.textBoxCourtOrderNum);
+            this.Controls.Add(this.checkBoxCourtOrderNumEnable);
+            this.Controls.Add(this.label13);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.textBoxSRN);
             this.Controls.Add(this.checkBoxSRNEnable);
@@ -336,5 +370,8 @@ namespace Registry.Viewport.SearchForms
         private CheckBox checkBoxLastState;
         private Label label2;
         private Label label3;
+        private TextBox textBoxCourtOrderNum;
+        private CheckBox checkBoxCourtOrderNumEnable;
+        private Label label13;
     }
 }

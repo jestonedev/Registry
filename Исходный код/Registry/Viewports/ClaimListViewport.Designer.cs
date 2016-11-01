@@ -424,6 +424,7 @@ namespace Registry.Viewport
             this.dataGridViewClaims.Size = new System.Drawing.Size(996, 308);
             this.dataGridViewClaims.TabIndex = 0;
             this.dataGridViewClaims.VirtualMode = true;
+            this.dataGridViewClaims.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewClaims_CellDoubleClick);
             this.dataGridViewClaims.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridViewClaims_CellValueNeeded);
             this.dataGridViewClaims.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewClaims_ColumnHeaderMouseClick);
             this.dataGridViewClaims.SelectionChanged += new System.EventHandler(this.dataGridViewClaims_SelectionChanged);
