@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyOrderSettingsForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyOrderSettingsForm));
             this.vButtonOk = new VIBlend.WinForms.Controls.vButton();
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.textBoxGeneralNumber = new System.Windows.Forms.TextBox();
@@ -77,6 +77,8 @@
             this.textBoxResettleNumber = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tabPageProlong = new System.Windows.Forms.TabPage();
+            this.label18 = new System.Windows.Forms.Label();
             this.groupBoxAddress.SuspendLayout();
             this.tabControlExtInfo.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
@@ -85,6 +87,7 @@
             this.tabPageCourt.SuspendLayout();
             this.tabPageResettle2013to2017.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tabPageProlong.SuspendLayout();
             this.SuspendLayout();
             // 
             // vButtonOk
@@ -305,13 +308,13 @@
             // tabControlExtInfo
             // 
             this.tabControlExtInfo.Controls.Add(this.tabPageGeneral);
+            this.tabControlExtInfo.Controls.Add(this.tabPageProlong);
             this.tabControlExtInfo.Controls.Add(this.tabPageCheckanovskiy);
             this.tabControlExtInfo.Controls.Add(this.tabPageOrphans);
             this.tabControlExtInfo.Controls.Add(this.tabPageCourt);
             this.tabControlExtInfo.Controls.Add(this.tabPageResettle2013to2017);
             this.tabControlExtInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlExtInfo.Location = new System.Drawing.Point(5, 19);
-            this.tabControlExtInfo.Multiline = true;
             this.tabControlExtInfo.Name = "tabControlExtInfo";
             this.tabControlExtInfo.SelectedIndex = 0;
             this.tabControlExtInfo.Size = new System.Drawing.Size(368, 293);
@@ -323,10 +326,10 @@
             this.tabPageGeneral.Controls.Add(this.label2);
             this.tabPageGeneral.Controls.Add(this.textBoxGeneralNumber);
             this.tabPageGeneral.Controls.Add(this.label1);
-            this.tabPageGeneral.Location = new System.Drawing.Point(4, 44);
+            this.tabPageGeneral.Location = new System.Drawing.Point(4, 24);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneral.Size = new System.Drawing.Size(360, 245);
+            this.tabPageGeneral.Size = new System.Drawing.Size(360, 265);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Tag = "1";
             this.tabPageGeneral.Text = "Общее распоряжение";
@@ -335,10 +338,10 @@
             // tabPageCheckanovskiy
             // 
             this.tabPageCheckanovskiy.Controls.Add(this.label14);
-            this.tabPageCheckanovskiy.Location = new System.Drawing.Point(4, 44);
+            this.tabPageCheckanovskiy.Location = new System.Drawing.Point(4, 24);
             this.tabPageCheckanovskiy.Name = "tabPageCheckanovskiy";
             this.tabPageCheckanovskiy.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCheckanovskiy.Size = new System.Drawing.Size(360, 246);
+            this.tabPageCheckanovskiy.Size = new System.Drawing.Size(360, 265);
             this.tabPageCheckanovskiy.TabIndex = 2;
             this.tabPageCheckanovskiy.Tag = "2";
             this.tabPageCheckanovskiy.Text = "Чекановский (дело № 2-2355/2011)";
@@ -359,10 +362,10 @@
             this.tabPageOrphans.Controls.Add(this.label12);
             this.tabPageOrphans.Controls.Add(this.textBoxOrphansNumber);
             this.tabPageOrphans.Controls.Add(this.label13);
-            this.tabPageOrphans.Location = new System.Drawing.Point(4, 44);
+            this.tabPageOrphans.Location = new System.Drawing.Point(4, 24);
             this.tabPageOrphans.Name = "tabPageOrphans";
             this.tabPageOrphans.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOrphans.Size = new System.Drawing.Size(360, 246);
+            this.tabPageOrphans.Size = new System.Drawing.Size(360, 265);
             this.tabPageOrphans.TabIndex = 3;
             this.tabPageOrphans.Tag = "3";
             this.tabPageOrphans.Text = "Дети сироты";
@@ -408,10 +411,10 @@
             this.tabPageCourt.Controls.Add(this.label15);
             this.tabPageCourt.Controls.Add(this.textBoxCourtNumber);
             this.tabPageCourt.Controls.Add(this.label16);
-            this.tabPageCourt.Location = new System.Drawing.Point(4, 44);
+            this.tabPageCourt.Location = new System.Drawing.Point(4, 24);
             this.tabPageCourt.Name = "tabPageCourt";
             this.tabPageCourt.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCourt.Size = new System.Drawing.Size(360, 245);
+            this.tabPageCourt.Size = new System.Drawing.Size(360, 265);
             this.tabPageCourt.TabIndex = 4;
             this.tabPageCourt.Tag = "4";
             this.tabPageCourt.Text = "По решению суда";
@@ -480,10 +483,10 @@
             this.tabPageResettle2013to2017.Controls.Add(this.label7);
             this.tabPageResettle2013to2017.Controls.Add(this.textBoxResettleNumber);
             this.tabPageResettle2013to2017.Controls.Add(this.label8);
-            this.tabPageResettle2013to2017.Location = new System.Drawing.Point(4, 44);
+            this.tabPageResettle2013to2017.Location = new System.Drawing.Point(4, 24);
             this.tabPageResettle2013to2017.Name = "tabPageResettle2013to2017";
             this.tabPageResettle2013to2017.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageResettle2013to2017.Size = new System.Drawing.Size(360, 246);
+            this.tabPageResettle2013to2017.Size = new System.Drawing.Size(360, 265);
             this.tabPageResettle2013to2017.TabIndex = 1;
             this.tabPageResettle2013to2017.Tag = "5";
             this.tabPageResettle2013to2017.Text = "Переселение 2013-2017";
@@ -564,6 +567,27 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Вид распоряжения";
             // 
+            // tabPageProlong
+            // 
+            this.tabPageProlong.Controls.Add(this.label18);
+            this.tabPageProlong.Location = new System.Drawing.Point(4, 24);
+            this.tabPageProlong.Name = "tabPageProlong";
+            this.tabPageProlong.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageProlong.Size = new System.Drawing.Size(360, 265);
+            this.tabPageProlong.TabIndex = 5;
+            this.tabPageProlong.Tag = "6";
+            this.tabPageProlong.Text = "Продление найма";
+            this.tabPageProlong.UseVisualStyleBackColor = true;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(66, 10);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(232, 15);
+            this.label18.TabIndex = 62;
+            this.label18.Text = "Нет дополнительных полей для ввода";
+            // 
             // TenancyOrderSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -608,6 +632,8 @@
             this.tabPageResettle2013to2017.ResumeLayout(false);
             this.tabPageResettle2013to2017.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.tabPageProlong.ResumeLayout(false);
+            this.tabPageProlong.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -663,5 +689,7 @@
         private System.Windows.Forms.TextBox textBoxCourtNumber;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.RadioButton radioButtonGeneral;
+        private System.Windows.Forms.TabPage tabPageProlong;
+        private System.Windows.Forms.Label label18;
     }
 }
