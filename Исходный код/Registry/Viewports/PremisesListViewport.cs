@@ -367,8 +367,8 @@ namespace Registry.Viewport
             {
                 {"type", "2"},
                 {"filter", Presenter.ViewModel["general"].BindingSource.Filter.Trim() == "" ? "(1=1)" : Presenter.ViewModel["general"].BindingSource.Filter},
-                {"columnHeaders", "["+columnHeaders+",{\"columnHeader\":\"Дополнительные сведения\"}]"},
-                {"columnPatterns", "["+columnPatterns+",{\"columnPattern\":\"$description$\"}]"}
+                {"columnHeaders", "["+columnHeaders+",{\"columnHeader\":\"Номер и дата включения в фонд\"},{\"columnHeader\":\"Дополнительные сведения\"}]"},
+                {"columnPatterns", "["+columnPatterns+",{\"columnPattern\":\"$fund_info$\"},{\"columnPattern\":\"$description$\"}]"}
             };
             return arguments;
         }
