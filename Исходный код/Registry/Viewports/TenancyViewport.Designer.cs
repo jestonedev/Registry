@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using CustomControls;
 using VIBlend.Utilities;
 using VIBlend.WinForms.Controls;
 
@@ -95,7 +96,7 @@ namespace Registry.Viewport
             this.vButtonRentPeriodDelete = new VIBlend.WinForms.Controls.vButton();
             this.vButtonRentPeriodAdd = new VIBlend.WinForms.Controls.vButton();
             this.groupBox31 = new System.Windows.Forms.GroupBox();
-            this.numericUpDownPayment = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownPayment = new FixedNumericUpDown();
             this.labelPayment = new System.Windows.Forms.Label();
             this.labelDuplicateContract = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
@@ -404,6 +405,16 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownPayment.DecimalPlaces = 2;
             this.numericUpDownPayment.Location = new System.Drawing.Point(178, 69);
+            this.numericUpDownPayment.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownPayment.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownPayment.Name = "numericUpDownPayment";
             this.numericUpDownPayment.ReadOnly = true;
             this.numericUpDownPayment.Size = new System.Drawing.Size(338, 21);
@@ -1109,7 +1120,7 @@ namespace Registry.Viewport
         private Panel panel1;
         private vButton vButtonRentPeriodDelete;
         private vButton vButtonRentPeriodAdd;
-        private NumericUpDown numericUpDownPayment;
+        private FixedNumericUpDown numericUpDownPayment;
         private Label labelPayment;
         private Label labelDuplicateContract;
         private CheckBox checkBoxSubTenancyEnable;

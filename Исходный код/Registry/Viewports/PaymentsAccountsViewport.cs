@@ -110,8 +110,6 @@ namespace Registry.Viewport
             })
             {
                 keyValuePair.Value.DataBindings.Clear();
-                keyValuePair.Value.DataBindings.Add("Minimum", bindingSource, keyValuePair.Key, true, DataSourceUpdateMode.Never, 0m);
-                keyValuePair.Value.DataBindings.Add("Maximum", bindingSource, keyValuePair.Key, true, DataSourceUpdateMode.Never, 0m);
                 keyValuePair.Value.DataBindings.Add("Value", bindingSource, keyValuePair.Key, true, DataSourceUpdateMode.Never, 0m);
             }
 

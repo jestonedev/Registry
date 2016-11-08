@@ -83,14 +83,10 @@ namespace Registry.Viewport
                 if (position != -1)
                 {
                     var value = Convert.ToDecimal((double)((DataRowView)subPremisesSumArea[position])["sum_area"]);
-                    numericUpDownMunicipalArea.Minimum = value;
-                    numericUpDownMunicipalArea.Maximum = value;
                     numericUpDownMunicipalArea.Value = value;
                 }
                 else
                 {
-                    numericUpDownMunicipalArea.Minimum = 0;
-                    numericUpDownMunicipalArea.Maximum = 0;
                     numericUpDownMunicipalArea.Value = 0;
                 }
             }
@@ -100,8 +96,6 @@ namespace Registry.Viewport
         private void ClearPremiseCalcInfo()
         {
             comboBoxCurrentFundType.SelectedValue = DBNull.Value;
-            numericUpDownMunicipalArea.Minimum = 0;
-            numericUpDownMunicipalArea.Maximum = 0;
             numericUpDownMunicipalArea.Value = 0;
         }
 

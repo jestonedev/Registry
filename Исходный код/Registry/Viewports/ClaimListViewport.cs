@@ -737,9 +737,7 @@ namespace Registry.Viewport
         {
             numericUpDownAmountTotal.Minimum = decimal.MinValue;
             numericUpDownAmountTotal.Maximum = decimal.MaxValue;
-            numericUpDownAmountTotal.Value =
-                numericUpDownAmountTotal.Minimum =
-                    numericUpDownAmountTotal.Maximum = numericUpDownAmountDGI.Value + numericUpDownAmountTenancy.Value +
+            numericUpDownAmountTotal.Value = numericUpDownAmountDGI.Value + numericUpDownAmountTenancy.Value +
                     numericUpDownAmountPenalties.Value;
         }
 

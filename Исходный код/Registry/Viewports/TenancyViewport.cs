@@ -476,8 +476,6 @@ namespace Registry.Viewport
             var currentRow = Presenter.ViewModel["general"].CurrentRow;
             if (currentRow == null || currentRow["id_process"] == DBNull.Value)
             {
-                numericUpDownPayment.Minimum = 0;
-                numericUpDownPayment.Maximum = 0;
                 numericUpDownPayment.Value = 0;
                 return;
             }
@@ -486,8 +484,6 @@ namespace Registry.Viewport
                 where (int)row["id_process"] == (int)currentRow["id_process"]
                 select (decimal) row["payment"];
             var payment = payments.Sum(v => v);
-            numericUpDownPayment.Minimum = payment;
-            numericUpDownPayment.Maximum = payment;
             numericUpDownPayment.Value = payment;
         }
 

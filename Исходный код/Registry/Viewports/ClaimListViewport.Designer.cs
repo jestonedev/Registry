@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using CustomControls;
 
 namespace Registry.Viewport
 {
@@ -16,8 +17,8 @@ namespace Registry.Viewport
         Panel panel8;
         Panel panel9;
         GroupBox groupBox34;
-        NumericUpDown numericUpDownAmountDGI;
-        NumericUpDown numericUpDownAmountTenancy;
+        FixedNumericUpDown numericUpDownAmountDGI;
+        FixedNumericUpDown numericUpDownAmountTenancy;
         Label label91;
         Label label94;
         Label label95;
@@ -55,14 +56,14 @@ namespace Registry.Viewport
             this.dateTimePickerStartDeptPeriod = new System.Windows.Forms.DateTimePicker();
             this.label97 = new System.Windows.Forms.Label();
             this.panel9 = new System.Windows.Forms.Panel();
-            this.numericUpDownAmountPenalties = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownAmountPenalties = new FixedNumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.numericUpDownAmountTotal = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownAmountTotal = new FixedNumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
-            this.numericUpDownAmountDGI = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownAmountDGI = new FixedNumericUpDown();
             this.label95 = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.numericUpDownAmountTenancy = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownAmountTenancy = new FixedNumericUpDown();
             this.label99 = new System.Windows.Forms.Label();
             this.label94 = new System.Windows.Forms.Label();
             this.dataGridViewClaims = new System.Windows.Forms.DataGridView();
@@ -301,10 +302,15 @@ namespace Registry.Viewport
             this.numericUpDownAmountTotal.DecimalPlaces = 2;
             this.numericUpDownAmountTotal.Location = new System.Drawing.Point(172, 92);
             this.numericUpDownAmountTotal.Maximum = new decimal(new int[] {
-            0,
+            1000000000,
             0,
             0,
             0});
+            this.numericUpDownAmountTotal.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownAmountTotal.Name = "numericUpDownAmountTotal";
             this.numericUpDownAmountTotal.ReadOnly = true;
             this.numericUpDownAmountTotal.Size = new System.Drawing.Size(316, 21);
@@ -565,9 +571,9 @@ namespace Registry.Viewport
         }
         private TextBox textBoxAccount;
         private Button buttonShowAttachments;
-        private NumericUpDown numericUpDownAmountTotal;
+        private FixedNumericUpDown numericUpDownAmountTotal;
         private Label label1;
-        private NumericUpDown numericUpDownAmountPenalties;
+        private FixedNumericUpDown numericUpDownAmountPenalties;
         private Label label2;
         private DataGridViewTextBoxColumn id_claim;
         private DataGridViewTextBoxColumn account;

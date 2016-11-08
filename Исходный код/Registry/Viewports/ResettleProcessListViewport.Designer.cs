@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using CustomControls;
 
 namespace Registry.Viewport
 {
@@ -15,7 +16,7 @@ namespace Registry.Viewport
         private GroupBox groupBox15;
         private TextBox textBoxDescription;
         private GroupBox groupBox14;
-        private NumericUpDown numericUpDownDebts;
+        private FixedNumericUpDown numericUpDownDebts;
         private DateTimePicker dateTimePickerResettleDate;
         private Label label37;
         private Label label36;
@@ -35,7 +36,7 @@ namespace Registry.Viewport
             this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.textBoxDocNumber = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.numericUpDownDebts = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDebts = new FixedNumericUpDown();
             this.dateTimePickerResettleDate = new System.Windows.Forms.DateTimePicker();
             this.label37 = new System.Windows.Forms.Label();
             this.label36 = new System.Windows.Forms.Label();
