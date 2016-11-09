@@ -257,10 +257,11 @@ namespace Registry.Viewport
                 Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
             var columnPatterns = DataGridView.Columns.Cast<DataGridViewColumn>().
                 Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnPattern\":\"$column" + column.DisplayIndex + "$\"}");
+            var filter = Presenter.ViewModel["general"].BindingSource.Filter ?? "";
             var arguments = new Dictionary<string, string>
             {
                 {"type", "5"},
-                {"filter", Presenter.ViewModel["general"].BindingSource.Filter.Trim() == "" ? "(1=1)" : Presenter.ViewModel["general"].BindingSource.Filter},
+                {"filter", filter.Trim() == "" ? "(1=1)" : filter },
                 {"columnHeaders", "["+columnHeaders+"]"},
                 {"columnPatterns", "["+columnPatterns+"]"}
             };

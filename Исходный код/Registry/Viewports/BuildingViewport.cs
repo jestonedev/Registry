@@ -347,7 +347,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
-            return EntityConverter<Building>.FromRow(row);
+            return row == null ? new Building() : EntityConverter<Building>.FromRow(row);
         }
 
         private void ViewportFromBuilding(Building building)

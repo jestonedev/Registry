@@ -181,7 +181,8 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromView()
         {
-            return EntityConverter<FundHistory>.FromRow(Presenter.ViewModel["general"].CurrentRow);
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            return row == null ? new FundHistory() : EntityConverter<FundHistory>.FromRow(row);
         }
 
         private void ViewportFromFundHistory(FundHistory fundHistory)

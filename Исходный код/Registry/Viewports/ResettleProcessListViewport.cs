@@ -93,7 +93,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
-            return EntityConverter<ResettleProcess>.FromRow(row);
+            return row == null ? new ResettleProcess() : EntityConverter<ResettleProcess>.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()

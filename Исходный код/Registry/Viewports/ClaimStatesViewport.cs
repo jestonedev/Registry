@@ -288,8 +288,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
-            var entity = EntityConverter<ClaimState>.FromRow(row);
-            return entity;
+            return row == null ? new ClaimState() : EntityConverter<ClaimState>.FromRow(row);
         }
 
         public override bool CanLoadData()

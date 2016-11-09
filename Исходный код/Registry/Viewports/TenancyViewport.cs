@@ -301,6 +301,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
+            if (row == null) return new TenancyProcess();
             var process = EntityConverter<TenancyProcess>.FromRow(row);
             if (Presenter.ViewModel["executors"].Model.FilterDeletedRows().Where(v => v.Field<short?>("is_inactive") == 0).
                         All(v => v.Field<int?>("id_executor") != process.IdExecutor))

@@ -221,7 +221,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
-            return EntityConverter<TenancyPerson>.FromRow(row);
+            return row == null ? new TenancyPerson() : EntityConverter<TenancyPerson>.FromRow(row);
         }
 
         private bool ValidateTenancyPerson(TenancyPerson tenancyPerson)

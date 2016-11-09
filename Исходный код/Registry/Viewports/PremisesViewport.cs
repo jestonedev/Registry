@@ -427,7 +427,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
-            return EntityConverter<Premise>.FromRow(row);
+            return row == null ? new Premise() : EntityConverter<Premise>.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()

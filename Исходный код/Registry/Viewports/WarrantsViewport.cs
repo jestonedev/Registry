@@ -88,7 +88,8 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromView()
         {
-            return EntityConverter<Warrant>.FromRow(Presenter.ViewModel["general"].CurrentRow);
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            return row == null ? new Warrant() : EntityConverter<Warrant>.FromRow(row);
         }
 
         private bool ValidateWarrant(Warrant warrant)

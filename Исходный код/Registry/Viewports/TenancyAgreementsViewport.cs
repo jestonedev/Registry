@@ -173,7 +173,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
-            return EntityConverter<TenancyAgreement>.FromRow(row);
+            return row == null ? new TenancyAgreement() : EntityConverter<TenancyAgreement>.FromRow(row);
         }
 
         private bool ValidateAgreement(TenancyAgreement tenancyAgreement)
