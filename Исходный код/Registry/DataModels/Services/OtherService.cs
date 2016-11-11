@@ -20,13 +20,13 @@ namespace Registry.DataModels.Services
                 var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
                 var result = from buildingsRow in buildings
                              join premisesRow in premises
-                             on buildingsRow.Field<int>("id_building") equals premisesRow.Field<int>("id_building") into bp
+                             on buildingsRow.Field<int?>("id_building") equals premisesRow.Field<int?>("id_building") into bp
                              from bpRow in bp.DefaultIfEmpty()
                              join subPremisesRow in subPremises
                              on bpRow == null ? null : bpRow.Field<int?>("id_premises") equals subPremisesRow.Field<int?>("id_premises") into ps
                              from psRow in ps.DefaultIfEmpty()
-                             where (bpRow != null && states.Contains(bpRow.Field<int>("id_state"))) ||
-                                   (psRow != null && states.Contains(psRow.Field<int>("id_state")))
+                             where (bpRow != null && states.Contains(bpRow.Field<int?>("id_state") ?? -1)) ||
+                                   (psRow != null && states.Contains(psRow.Field<int?>("id_state") ?? -1))
                              select buildingsRow.Field<int>("id_building");
                 return result;
             }
@@ -36,9 +36,9 @@ namespace Registry.DataModels.Services
                 var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
                 var result = from premisesRow in premises
                              join subPremisesRow in subPremises
-                             on premisesRow.Field<int>("id_premises") equals subPremisesRow.Field<int>("id_premises") into ps
+                             on premisesRow.Field<int?>("id_premises") equals subPremisesRow.Field<int?>("id_premises") into ps
                              from psRow in ps.DefaultIfEmpty()
-                             where psRow != null && states.Contains(psRow.Field<int>("id_state"))
+                             where psRow != null && states.Contains(psRow.Field<int?>("id_state") ?? -1)
                              select premisesRow.Field<int>("id_premises");
                 return result;
             }
