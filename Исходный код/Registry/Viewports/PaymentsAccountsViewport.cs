@@ -43,21 +43,22 @@ namespace Registry.Viewport
             Presenter.ParentType = ParentType;
 
             StaticFilter = ((PaymentsAccountsPresenter)Presenter).GetStaticFilter(StaticFilter);
+
             Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
-            
+
             var title = "Лицевые счета";
             if (ParentRow != null)
             {
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Premises:
-                        title = string.Format("Лицевой счет помещение №{0}", ParentRow["id_premises"]);
+                        title = string.Format("Лицевые счета помещение №{0}", ParentRow["id_premises"]);
                         break;
                     case ParentTypeEnum.SubPremises:
-                        title = string.Format("Лицевой счет комнаты {0} помещения №{1}", ParentRow["sub_premises_num"], ParentRow["id_premises"]);
+                        title = string.Format("Лицевые счета комнаты {0} помещения №{1}", ParentRow["sub_premises_num"], ParentRow["id_premises"]);
                         break;
                     case ParentTypeEnum.Claim:
-                        title = string.Format("Лицевой счет для исковой работы №{0}", ParentRow["id_claim"]);
+                        title = string.Format("Лицевые счета исковой работы №{0}", ParentRow["id_claim"]);
                         break;
                 }
             }

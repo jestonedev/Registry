@@ -40,6 +40,9 @@ namespace Registry.Viewport
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClaimListViewport));
             this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox34 = new System.Windows.Forms.GroupBox();
@@ -56,14 +59,14 @@ namespace Registry.Viewport
             this.dateTimePickerStartDeptPeriod = new System.Windows.Forms.DateTimePicker();
             this.label97 = new System.Windows.Forms.Label();
             this.panel9 = new System.Windows.Forms.Panel();
-            this.numericUpDownAmountPenalties = new FixedNumericUpDown();
+            this.numericUpDownAmountPenalties = new CustomControls.FixedNumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.numericUpDownAmountTotal = new FixedNumericUpDown();
+            this.numericUpDownAmountTotal = new CustomControls.FixedNumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
-            this.numericUpDownAmountDGI = new FixedNumericUpDown();
+            this.numericUpDownAmountDGI = new CustomControls.FixedNumericUpDown();
             this.label95 = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.numericUpDownAmountTenancy = new FixedNumericUpDown();
+            this.numericUpDownAmountTenancy = new CustomControls.FixedNumericUpDown();
             this.label99 = new System.Windows.Forms.Label();
             this.label94 = new System.Windows.Forms.Label();
             this.dataGridViewClaims = new System.Windows.Forms.DataGridView();
@@ -79,6 +82,9 @@ namespace Registry.Viewport
             this.amount_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.balance_output_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.balance_output_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.balance_output_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel15.SuspendLayout();
             this.groupBox34.SuspendLayout();
             this.tableLayoutPanel16.SuspendLayout();
@@ -418,7 +424,10 @@ namespace Registry.Viewport
             this.end_dept_period,
             this.amount_tenancy,
             this.amount_dgi,
-            this.amount_penalties});
+            this.amount_penalties,
+            this.balance_output_tenancy,
+            this.balance_output_dgi,
+            this.balance_output_penalties});
             this.dataGridViewClaims.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewClaims.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridViewClaims.Location = new System.Drawing.Point(3, 174);
@@ -542,6 +551,36 @@ namespace Registry.Viewport
             this.amount_penalties.ReadOnly = true;
             this.amount_penalties.Width = 110;
             // 
+            // balance_output_tenancy
+            // 
+            dataGridViewCellStyle4.Format = "#0.0# руб.";
+            this.balance_output_tenancy.DefaultCellStyle = dataGridViewCellStyle4;
+            this.balance_output_tenancy.HeaderText = "Тек. сальдо исх. найм";
+            this.balance_output_tenancy.MinimumWidth = 110;
+            this.balance_output_tenancy.Name = "balance_output_tenancy";
+            this.balance_output_tenancy.ReadOnly = true;
+            this.balance_output_tenancy.Width = 110;
+            // 
+            // balance_output_dgi
+            // 
+            dataGridViewCellStyle5.Format = "#0.0# руб.";
+            this.balance_output_dgi.DefaultCellStyle = dataGridViewCellStyle5;
+            this.balance_output_dgi.HeaderText = "Тек. сальдо исх. ДГИ";
+            this.balance_output_dgi.MinimumWidth = 110;
+            this.balance_output_dgi.Name = "balance_output_dgi";
+            this.balance_output_dgi.ReadOnly = true;
+            this.balance_output_dgi.Width = 110;
+            // 
+            // balance_output_penalties
+            // 
+            dataGridViewCellStyle6.Format = "#0.0# руб.";
+            this.balance_output_penalties.DefaultCellStyle = dataGridViewCellStyle6;
+            this.balance_output_penalties.HeaderText = "Тек. сальдо исх. пени";
+            this.balance_output_penalties.MinimumWidth = 110;
+            this.balance_output_penalties.Name = "balance_output_penalties";
+            this.balance_output_penalties.ReadOnly = true;
+            this.balance_output_penalties.Width = 110;
+            // 
             // ClaimListViewport
             // 
             this.AutoScroll = true;
@@ -587,5 +626,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn amount_tenancy;
         private DataGridViewTextBoxColumn amount_dgi;
         private DataGridViewTextBoxColumn amount_penalties;
+        private DataGridViewTextBoxColumn balance_output_tenancy;
+        private DataGridViewTextBoxColumn balance_output_dgi;
+        private DataGridViewTextBoxColumn balance_output_penalties;
     }
 }

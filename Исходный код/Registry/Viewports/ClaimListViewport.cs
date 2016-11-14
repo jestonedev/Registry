@@ -610,6 +610,9 @@ namespace Registry.Viewport
                 case "account":
                 case "raw_address":
                 case "tenant":
+                case "balance_output_tenancy":
+                case "balance_output_dgi":
+                case "balance_output_penalties":
                     if (row["id_account"] == DBNull.Value) return;
                     if ((int)row["id_claim"] != _idClaim || 
                         _accountList.Any(entry => entry.RowState == DataRowState.Deleted || entry.RowState == DataRowState.Detached))
@@ -619,7 +622,7 @@ namespace Registry.Viewport
                     }
                     if (_accountList != null && _accountList.Any())
                     {
-                        e.Value = _accountList.First().Field<string>(DataGridView.Columns[e.ColumnIndex].Name);
+                        e.Value = _accountList.First().Field<object>(DataGridView.Columns[e.ColumnIndex].Name);
                     }
                     break;
                 case "state_type":

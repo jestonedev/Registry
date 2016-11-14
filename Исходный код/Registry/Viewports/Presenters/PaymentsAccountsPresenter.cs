@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Registry.DataModels.Services;
 using Registry.Entities.Infrastructure;
@@ -30,7 +31,16 @@ namespace Registry.Viewport.Presenters
                     ids = PaymentService.GetAccountIdsBySubPremiseFilter(filter);
                     break;
                 case ParentTypeEnum.Claim:
-                    ids = new List<int> { (int)ParentRow["id_account"] };
+                    var currentPaymentAccount = (from row in ViewModel["general"].Model.FilterDeletedRows()
+                        where row.Field<int>("id_account") == (int) ParentRow["id_account"]
+                        select row).FirstOrDefault();
+                    if (currentPaymentAccount != null)
+                    {
+                        ids = from row in ViewModel["general"].Model.FilterDeletedRows()
+                            where row.Field<string>("raw_address") == currentPaymentAccount["raw_address"].ToString() ||
+                                  row.Field<string>("parsed_address") == currentPaymentAccount["parsed_address"].ToString()
+                            select row.Field<int>("id_account");
+                    }
                     break;
             }
             if (ids.Any())
