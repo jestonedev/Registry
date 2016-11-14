@@ -99,5 +99,8 @@ namespace Registry.Entities
         public string RoomsBTI { get; set; }
         public string HousingCooperative { get; set; }
         public DateTime? RegDate { get; set; }
+
+        [DataColumn(DefaultValue = 0)]
+        public decimal? RentCoefficient { get; set; }
     }
 }

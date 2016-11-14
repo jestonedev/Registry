@@ -126,30 +126,44 @@ namespace Registry.DataModels.Services
                 select ownershipBuildingsAssocRow.Field<int>("id_building");
         }
 
-        public static IEnumerable<int> EmergencyExcludedBuildingIDs()
-        {
-            var ownershipRights = EntityDataModel<OwnershipRight>.GetInstance().FilterDeletedRows();
-            var ownershipBuildingdsAssoc = EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().FilterDeletedRows();
-            return from ownershipBuildingsAssocRow in ownershipBuildingdsAssoc
-                join ownershipRightsRow in ownershipRights
-                    on ownershipBuildingsAssocRow.Field<int>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
-                where ownershipRightsRow.Field<int>("id_ownership_right_type") == 6
-                select ownershipBuildingsAssocRow.Field<int>("id_building");
-        }
-
         public static IEnumerable<int> BuildingIDsByOwnershipType(int idOwnershipType)
         {
-            var ownershipRights = EntityDataModel<OwnershipRight>.GetInstance().FilterDeletedRows();
-            var ownershipBuildingdsAssoc = EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().FilterDeletedRows();
+            var ownershipRights = EntityDataModel<OwnershipRight>.GetInstance().FilterDeletedRows().ToList();
+            var ownershipBuildingdsAssoc = EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().FilterDeletedRows().ToList();
             // Если используется непользовательское ограничение "Аварийное", то не выводить здания еще и снесеные
-            var demolishedBuildings = DemolishedBuildingIDs().ToList();
-            var emergencyExcludedBuilding = EmergencyExcludedBuildingIDs().ToList();
+            var demolishedBuildings = DemolishedBuildingIDs().Distinct().ToList();
+            if (idOwnershipType == 2)
+            {
+                var emergencyExcludedBuildings = from ownershipBuildingsAssocRow in ownershipBuildingdsAssoc
+                    join ownershipRightsRow in ownershipRights
+                        on ownershipBuildingsAssocRow.Field<int>("id_ownership_right") equals
+                        ownershipRightsRow.Field<int>("id_ownership_right")
+                    where ownershipRightsRow.Field<int>("id_ownership_right_type") == 6
+                    select
+                        new
+                        {
+                            id_building = ownershipBuildingsAssocRow.Field<int>("id_building"),
+                            date = ownershipRightsRow.Field<DateTime>("date")
+                        };
+
+                return from ownershipRightsRow in ownershipRights
+                    join ownershipBuildingdsAssocRow in ownershipBuildingdsAssoc
+                        on ownershipRightsRow.Field<int>("id_ownership_right") equals
+                        ownershipBuildingdsAssocRow.Field<int>("id_ownership_right")
+                    join demolishedBuildingsRow in demolishedBuildings
+                        on ownershipBuildingdsAssocRow.Field<int>("id_building") equals demolishedBuildingsRow into dBuildings
+                    from dBuildingsRow in dBuildings.DefaultIfEmpty()
+                    join emergencyExcludedBuildingRow in emergencyExcludedBuildings
+                        on ownershipBuildingdsAssocRow.Field<int>("id_building") equals emergencyExcludedBuildingRow.id_building into eeBuildings
+                    from eeBuildingsRow in eeBuildings.DefaultIfEmpty()
+                       where ownershipRightsRow.Field<int>("id_ownership_right_type") == 2 &&
+                            dBuildingsRow == 0 && (eeBuildingsRow == null || eeBuildingsRow.date < ownershipRightsRow.Field<DateTime>("date"))
+                    select ownershipBuildingdsAssocRow.Field<int>("id_building");
+            }
             return from ownershipRightsRow in ownershipRights
                 join ownershipBuildingdsAssocRow in ownershipBuildingdsAssoc
                     on ownershipRightsRow.Field<int>("id_ownership_right") equals ownershipBuildingdsAssocRow.Field<int>("id_ownership_right")
-                where (idOwnershipType != 2 || !demolishedBuildings.Contains(ownershipBuildingdsAssocRow.Field<int>("id_building")) &&
-                       !emergencyExcludedBuilding.Contains(ownershipBuildingdsAssocRow.Field<int>("id_building"))) &&
-                      ownershipRightsRow.Field<int>("id_ownership_right_type") == idOwnershipType
+                where ownershipRightsRow.Field<int>("id_ownership_right_type") == idOwnershipType
                 select ownershipBuildingdsAssocRow.Field<int>("id_building");
         }
 
@@ -261,6 +275,35 @@ namespace Registry.DataModels.Services
                 select new RestrictionBuildingAssoc(restrictionsAssocRow.Field<int?>("id_building"),
                     restrictionsRow.Field<int?>("id_restriction"),
                     restrictionsRow.Field<DateTime?>("date"));
+        }
+
+        public static int GetRentCategory(DataRow buildingRow, bool isEmergency)
+        {
+            if (isEmergency)
+                return 4;
+            if (buildingRow.Field<short?>("improvement") == 1 && buildingRow.Field<short>("floors") <= 6)
+                return 1;
+            if (buildingRow.Field<short?>("improvement") == 1 && buildingRow.Field<short>("floors") > 6)
+                return 2;
+            if (buildingRow.Field<short?>("improvement") != 1 && buildingRow.Field<int>("id_structure_type") == 5)
+                return 3;
+            return -1;
+        }
+
+        public static decimal GetRentCoefficient(int rentCategory)
+        {
+            switch (rentCategory)
+            {
+                case 1:
+                    return 6.07m;
+                case 2:
+                    return 8.39m;
+                case 3:
+                    return 0.69m;
+                case 4:
+                    return 0.36m;
+            }
+            return 0;
         }
     }
 }

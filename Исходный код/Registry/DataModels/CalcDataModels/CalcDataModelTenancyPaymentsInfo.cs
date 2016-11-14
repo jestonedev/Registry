@@ -54,35 +54,6 @@ namespace Registry.DataModels.CalcDataModels
             var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
             var emergencyPremises = PremisesService.PremiseIDsByOwnershipType(2).Distinct().ToList();
 
-            Func<DataRow, bool, int> getRentCategory = (buildingRow, isEmergency) =>
-            {
-                if (isEmergency)
-                    return 4;
-                if (buildingRow.Field<short?>("improvement") == 1 && buildingRow.Field<short>("floors") <= 6)
-                    return 1;
-                if (buildingRow.Field<short?>("improvement") == 1 && buildingRow.Field<short>("floors") > 6)
-                    return 2;
-                if (buildingRow.Field<short?>("improvement") != 1 && buildingRow.Field<int>("id_structure_type") == 5)
-                    return 3;
-                return -1;
-            };
-
-            Func<int, double, decimal> getRentPayment = (rentCategory, rentArea) =>
-            {
-                switch (rentCategory)
-                {
-                    case 1:
-                        return (decimal) (rentArea*6.07);
-                    case 2:
-                        return (decimal) (rentArea*8.39);
-                    case 3:
-                        return (decimal) (rentArea*0.69);
-                    case 4:
-                        return (decimal) (rentArea*0.36);
-                }
-                return 0;
-            };
-
             var aSubPremises = from assocSubPremisesRow in assocSubPremises
                                     join subPremisesRow in subPremises
                                     on assocSubPremisesRow.Field<int>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
@@ -139,8 +110,10 @@ namespace Registry.DataModels.CalcDataModels
                     rentObjectsRow.id_premises,
                     rentObjectsRow.id_sub_premises,
                     rent_area = rentObjectsRow.rent_area ?? rentObjectsRow.total_area,
-                    id_rent_category = getRentCategory(buildingsRow, eprRow != 0),
-                    payment = getRentPayment(getRentCategory(buildingsRow, eprRow != 0), rentObjectsRow.rent_area ?? rentObjectsRow.total_area)
+                    id_rent_category = BuildingService.GetRentCategory(buildingsRow, eprRow != 0),
+                    payment = (buildingsRow.Field<decimal>("rent_coefficient") != 0 ? buildingsRow.Field<decimal>("rent_coefficient") : 
+                        BuildingService.GetRentCoefficient(BuildingService.GetRentCategory(buildingsRow, eprRow != 0))) * 
+                            (decimal)(rentObjectsRow.rent_area ?? rentObjectsRow.total_area)
                 };
 
             // Заполняем таблицу изменений

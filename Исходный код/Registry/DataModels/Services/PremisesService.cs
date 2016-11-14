@@ -113,22 +113,54 @@ namespace Registry.DataModels.Services
 
         public static IEnumerable<int> PremiseIDsByOwnershipType(int idOwnershipType)
         {
-            var ownershipRights = EntityDataModel<OwnershipRight>.GetInstance().FilterDeletedRows();
-            var ownershipPremisesAssoc = EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var ownershipRights = EntityDataModel<OwnershipRight>.GetInstance().FilterDeletedRows().ToList();
+            var ownershipPremisesAssoc = EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance().FilterDeletedRows().ToList();
             var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows();
             var buildingdIds = BuildingService.BuildingIDsByOwnershipType(idOwnershipType);
             // Если используется ограничение "Аварийное", то не выводить помещения, если они или их здание имеют ограничение "Снесено"
-            var demolishedPremises = DemolishedPremisesIDs().ToList();
-            var emergencyExcludedPremises = EmergencyExcludedPremisesIDs().ToList();
+            var demolishedPremises = DemolishedPremisesIDs().Distinct().ToList();
+            IEnumerable<int> premisesIds;
             //Выбираются помещения с установленным ограничением и помещения, находящиеся в зданиях с установленным ограничением
-            var premisesIds = from ownershipRightsRow in ownershipRights
-                join ownershipPremisesAssocRow in ownershipPremisesAssoc
-                    on ownershipRightsRow.Field<int>("id_ownership_right") equals ownershipPremisesAssocRow.Field<int>("id_ownership_right")
-                where (idOwnershipType != 2 || !demolishedPremises.Contains(ownershipPremisesAssocRow.Field<int>("id_premises")) &&
-                       !emergencyExcludedPremises.Contains(ownershipPremisesAssocRow.Field<int>("id_premises"))) &&
-                      ownershipRightsRow.Field<int>("id_ownership_right_type") == idOwnershipType
-                select ownershipPremisesAssocRow.Field<int>("id_premises");
+            if (idOwnershipType == 2)
+            {
+                var emergencyExcludedPremises = from ownershipPremisessAssocRow in ownershipPremisesAssoc
+                    join ownershipRightsRow in ownershipRights
+                        on ownershipPremisessAssocRow.Field<int>("id_ownership_right") equals
+                        ownershipRightsRow.Field<int>("id_ownership_right")
+                    where ownershipRightsRow.Field<int>("id_ownership_right_type") == 6
+                    select
+                        new
+                        {
+                            id_premises = ownershipPremisessAssocRow.Field<int>("id_premises"),
+                            date = ownershipRightsRow.Field<DateTime>("date")
+                        };
 
+                premisesIds = from ownershipRightsRow in ownershipRights
+                    join ownershipPremisessAssocRow in ownershipPremisesAssoc
+                        on ownershipRightsRow.Field<int>("id_ownership_right") equals
+                        ownershipPremisessAssocRow.Field<int>("id_ownership_right")
+                    join demolishedPremisesRow in demolishedPremises
+                        on ownershipPremisessAssocRow.Field<int>("id_premises") equals demolishedPremisesRow into dPremises
+                    from dPremisesRow in dPremises.DefaultIfEmpty()
+                    join emergencyExcludedPremisesRow in emergencyExcludedPremises
+                        on ownershipPremisessAssocRow.Field<int>("id_premises") equals
+                        emergencyExcludedPremisesRow.id_premises into eePremises
+                    from eePremisesRow in eePremises.DefaultIfEmpty()
+                    where ownershipRightsRow.Field<int>("id_ownership_right_type") == 2 &&
+                          dPremisesRow == 0 &&
+                          (eePremisesRow == null || eePremisesRow.date < ownershipRightsRow.Field<DateTime>("date"))
+                    select ownershipPremisessAssocRow.Field<int>("id_premises");
+            }
+            else
+            {
+                premisesIds =
+                    from ownershipRightsRow in ownershipRights
+                    join ownershipPremisesAssocRow in ownershipPremisesAssoc
+                        on ownershipRightsRow.Field<int>("id_ownership_right") equals
+                        ownershipPremisesAssocRow.Field<int>("id_ownership_right")
+                    where ownershipRightsRow.Field<int>("id_ownership_right_type") == idOwnershipType
+                    select ownershipPremisesAssocRow.Field<int>("id_premises");
+            }
 
             return
                 from premisesRow in premises

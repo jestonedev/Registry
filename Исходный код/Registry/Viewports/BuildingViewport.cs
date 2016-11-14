@@ -103,17 +103,15 @@ namespace Registry.Viewport
             {
                 label19.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
-                tableLayoutPanel.RowStyles[0].Height = 295;
             }
             else
             {
                 label19.Visible = false;
                 comboBoxCurrentFundType.Visible = false;
-                tableLayoutPanel.RowStyles[0].Height = 265;
             }
         }
 
-        private void UnbindedCheckBoxesUpdate()
+        private void UnbindedUpdate()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
             IsEditable = false;
@@ -124,6 +122,20 @@ namespace Registry.Viewport
                 dateTimePickerStateDate.Value = DateTime.Now.Date;
                 dateTimePickerStateDate.Checked = false;
             }
+
+            if (row == null)
+            {
+                numericUpDownRentCoefficientAuto.Value = 0;
+            }
+            else
+            {
+                var isEmergency = (from emergencyId in BuildingService.BuildingIDsByOwnershipType(2)
+                    where emergencyId == (int) row["id_building"]
+                    select emergencyId).Any();
+                numericUpDownRentCoefficientAuto.Value =
+                    BuildingService.GetRentCoefficient(BuildingService.GetRentCategory(row.Row, isEmergency));
+            }
+
             IsEditable = true;
         }
 
@@ -160,6 +172,7 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(numericUpDownWear, "Value", bindingSource, "wear", 0m);
             ViewportHelper.BindProperty(dateTimePickerStateDate, "Value", bindingSource, "state_date", DateTime.Now.Date);
             ViewportHelper.BindProperty(dateTimePickerRegDate, "Value", bindingSource, "reg_date", DateTime.Now.Date);
+            ViewportHelper.BindProperty(numericUpDownRentCoefficient, "Value", bindingSource, "rent_coefficient", 0m);
 
 
             ViewportHelper.BindSource(comboBoxStructureType, Presenter.ViewModel["structure_types"].BindingSource, "structure_type",
@@ -339,7 +352,8 @@ namespace Registry.Viewport
                 RadioNetwork = checkBoxRadioNetwork.Checked,
                 IdHeatingType =ViewportHelper.ValueOrNull<int>(comboBoxHeatingType),
                 RoomsBTI = ViewportHelper.ValueOrNull(textBoxRoomsBTI),
-                HousingCooperative = ViewportHelper.ValueOrNull(textBoxHousingCooperative)
+                HousingCooperative = ViewportHelper.ValueOrNull(textBoxHousingCooperative),
+                RentCoefficient = numericUpDownRentCoefficient.Value
             };
             return building;
         }
@@ -368,6 +382,7 @@ namespace Registry.Viewport
             numericUpDownCadastralCost.Value = ViewportHelper.ValueOrDefault(building.CadastralCost);
             numericUpDownBalanceCost.Value = ViewportHelper.ValueOrDefault(building.BalanceCost);
             numericUpDownWear.Value = (decimal)ViewportHelper.ValueOrDefault(building.Wear);
+            numericUpDownRentCoefficient.Value = ViewportHelper.ValueOrDefault(building.RentCoefficient);
             textBoxHouse.Text = building.House;
             textBoxCadastralNum.Text = building.CadastralNum;
             textBoxDescription.Text = building.Description;
@@ -504,7 +519,7 @@ namespace Registry.Viewport
                     }
                     break;
             }
-            UnbindedCheckBoxesUpdate();
+            UnbindedUpdate();
             IsEditable = true;
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
@@ -537,7 +552,7 @@ namespace Registry.Viewport
                     DataBind();
                     break;
             }
-            UnbindedCheckBoxesUpdate();
+            UnbindedUpdate();
             IsEditable = true;
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
@@ -557,7 +572,7 @@ namespace Registry.Viewport
             IsEditable = false;
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
             Presenter.ViewModel["general"].BindingSource.AddNew();
-            UnbindedCheckBoxesUpdate();
+            UnbindedUpdate();
             IsEditable = true;
         }
 
@@ -634,7 +649,7 @@ namespace Registry.Viewport
 
         protected override void OnVisibleChanged(EventArgs e)
         {
-            UnbindedCheckBoxesUpdate();
+            UnbindedUpdate();
             dataGridViewRestrictions.Focus();
             base.OnVisibleChanged(e);
         }
@@ -657,7 +672,7 @@ namespace Registry.Viewport
         private void BuildingViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
-                UnbindedCheckBoxesUpdate();
+                UnbindedUpdate();
             MenuCallback.ForceCloseDetachedViewports();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
@@ -666,7 +681,7 @@ namespace Registry.Viewport
         private void BuildingViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             ShowOrHideCurrentFund();
-            UnbindedCheckBoxesUpdate();
+            UnbindedUpdate();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
             CheckViewportModifications();
@@ -702,7 +717,7 @@ namespace Registry.Viewport
             SetViewportCaption();
             FiltersRebuild();
             Presenter.ViewModel["kladr"].BindingSource.Filter = "";
-            UnbindedCheckBoxesUpdate();
+            UnbindedUpdate();
             IsEditable = isEditable;
 
             if (!Selected) return;
@@ -969,6 +984,6 @@ namespace Registry.Viewport
             if (row[columnName] != DBNull.Value)
                 return (int)row[columnName];
             return -1;
-        }   
+        }
     }
 }
