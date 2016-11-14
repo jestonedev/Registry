@@ -35,11 +35,11 @@ namespace Registry.Viewport
             this.groupBoxGeneralInfo = new System.Windows.Forms.GroupBox();
             this.textBoxTenant = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
-            this.numericUpDownPrescribed = new FixedNumericUpDown();
+            this.numericUpDownPrescribed = new CustomControls.FixedNumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
-            this.numericUpDownLivingArea = new FixedNumericUpDown();
+            this.numericUpDownLivingArea = new CustomControls.FixedNumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
-            this.numericUpDownTotalArea = new FixedNumericUpDown();
+            this.numericUpDownTotalArea = new CustomControls.FixedNumericUpDown();
             this.label92 = new System.Windows.Forms.Label();
             this.dateTimePickerAtDate = new System.Windows.Forms.DateTimePicker();
             this.label91 = new System.Windows.Forms.Label();
@@ -53,49 +53,49 @@ namespace Registry.Viewport
             this.label99 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.numericUpDownPaymentPenalties = new FixedNumericUpDown();
-            this.numericUpDownPaymentDGI = new FixedNumericUpDown();
+            this.numericUpDownPaymentPenalties = new CustomControls.FixedNumericUpDown();
+            this.numericUpDownPaymentDGI = new CustomControls.FixedNumericUpDown();
             this.label20 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
-            this.numericUpDownPaymentTenancy = new FixedNumericUpDown();
+            this.numericUpDownPaymentTenancy = new CustomControls.FixedNumericUpDown();
             this.label24 = new System.Windows.Forms.Label();
             this.groupBoxChargings = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.numericUpDownChargingPenalties = new FixedNumericUpDown();
-            this.numericUpDownChargingDGI = new FixedNumericUpDown();
+            this.numericUpDownChargingPenalties = new CustomControls.FixedNumericUpDown();
+            this.numericUpDownChargingDGI = new CustomControls.FixedNumericUpDown();
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.numericUpDownChargingTotal = new FixedNumericUpDown();
-            this.numericUpDownChargingTenancy = new FixedNumericUpDown();
+            this.numericUpDownChargingTotal = new CustomControls.FixedNumericUpDown();
+            this.numericUpDownChargingTenancy = new CustomControls.FixedNumericUpDown();
             this.label15 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.groupBoxRecalcs = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.numericUpDownRecalcPenalties = new FixedNumericUpDown();
-            this.numericUpDownTransferBalance = new FixedNumericUpDown();
-            this.numericUpDownRecalcDGI = new FixedNumericUpDown();
+            this.numericUpDownRecalcPenalties = new CustomControls.FixedNumericUpDown();
+            this.numericUpDownTransferBalance = new CustomControls.FixedNumericUpDown();
+            this.numericUpDownRecalcDGI = new CustomControls.FixedNumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
-            this.numericUpDownRecalcTenancy = new FixedNumericUpDown();
+            this.numericUpDownRecalcTenancy = new CustomControls.FixedNumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.groupBoxBalanceOutput = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.numericUpDownPenaltiesOutput = new FixedNumericUpDown();
-            this.numericUpDownBalanceDGIOutput = new FixedNumericUpDown();
+            this.numericUpDownPenaltiesOutput = new CustomControls.FixedNumericUpDown();
+            this.numericUpDownBalanceDGIOutput = new CustomControls.FixedNumericUpDown();
             this.label11 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.numericUpDownBalanceTotalOutput = new FixedNumericUpDown();
-            this.numericUpDownBalanceTenancyOutput = new FixedNumericUpDown();
+            this.numericUpDownBalanceTotalOutput = new CustomControls.FixedNumericUpDown();
+            this.numericUpDownBalanceTenancyOutput = new CustomControls.FixedNumericUpDown();
             this.label10 = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
             this.groupBoxBalanceInput = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.numericUpDownPenaltiesInput = new FixedNumericUpDown();
-            this.numericUpDownBalanceDGIInput = new FixedNumericUpDown();
+            this.numericUpDownPenaltiesInput = new CustomControls.FixedNumericUpDown();
+            this.numericUpDownBalanceDGIInput = new CustomControls.FixedNumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
-            this.numericUpDownBalanceTotalInput = new FixedNumericUpDown();
-            this.numericUpDownBalanceTenancyInput = new FixedNumericUpDown();
+            this.numericUpDownBalanceTotalInput = new CustomControls.FixedNumericUpDown();
+            this.numericUpDownBalanceTenancyInput = new CustomControls.FixedNumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
@@ -461,6 +461,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownPaymentPenalties.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownPaymentPenalties.Name = "numericUpDownPaymentPenalties";
             this.numericUpDownPaymentPenalties.Size = new System.Drawing.Size(160, 20);
             this.numericUpDownPaymentPenalties.TabIndex = 2;
@@ -478,6 +483,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownPaymentDGI.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownPaymentDGI.Name = "numericUpDownPaymentDGI";
             this.numericUpDownPaymentDGI.Size = new System.Drawing.Size(160, 20);
             this.numericUpDownPaymentDGI.TabIndex = 1;
@@ -515,6 +525,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownPaymentTenancy.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownPaymentTenancy.Name = "numericUpDownPaymentTenancy";
             this.numericUpDownPaymentTenancy.Size = new System.Drawing.Size(160, 20);
             this.numericUpDownPaymentTenancy.TabIndex = 0;
@@ -580,6 +595,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownChargingPenalties.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownChargingPenalties.Name = "numericUpDownChargingPenalties";
             this.numericUpDownChargingPenalties.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownChargingPenalties.TabIndex = 3;
@@ -597,6 +617,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownChargingDGI.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownChargingDGI.Name = "numericUpDownChargingDGI";
             this.numericUpDownChargingDGI.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownChargingDGI.TabIndex = 2;
@@ -634,6 +659,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownChargingTotal.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownChargingTotal.Name = "numericUpDownChargingTotal";
             this.numericUpDownChargingTotal.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownChargingTotal.TabIndex = 0;
@@ -651,6 +681,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownChargingTenancy.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownChargingTenancy.Name = "numericUpDownChargingTenancy";
             this.numericUpDownChargingTenancy.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownChargingTenancy.TabIndex = 1;
@@ -727,6 +762,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownRecalcPenalties.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownRecalcPenalties.Name = "numericUpDownRecalcPenalties";
             this.numericUpDownRecalcPenalties.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownRecalcPenalties.TabIndex = 2;
@@ -744,6 +784,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownTransferBalance.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownTransferBalance.Name = "numericUpDownTransferBalance";
             this.numericUpDownTransferBalance.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownTransferBalance.TabIndex = 3;
@@ -761,6 +806,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownRecalcDGI.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownRecalcDGI.Name = "numericUpDownRecalcDGI";
             this.numericUpDownRecalcDGI.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownRecalcDGI.TabIndex = 1;
@@ -788,6 +838,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownRecalcTenancy.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownRecalcTenancy.Name = "numericUpDownRecalcTenancy";
             this.numericUpDownRecalcTenancy.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownRecalcTenancy.TabIndex = 0;
@@ -873,6 +928,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownPenaltiesOutput.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownPenaltiesOutput.Name = "numericUpDownPenaltiesOutput";
             this.numericUpDownPenaltiesOutput.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownPenaltiesOutput.TabIndex = 3;
@@ -890,6 +950,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownBalanceDGIOutput.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceDGIOutput.Name = "numericUpDownBalanceDGIOutput";
             this.numericUpDownBalanceDGIOutput.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownBalanceDGIOutput.TabIndex = 2;
@@ -927,6 +992,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownBalanceTotalOutput.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceTotalOutput.Name = "numericUpDownBalanceTotalOutput";
             this.numericUpDownBalanceTotalOutput.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownBalanceTotalOutput.TabIndex = 0;
@@ -944,6 +1014,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownBalanceTenancyOutput.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceTenancyOutput.Name = "numericUpDownBalanceTenancyOutput";
             this.numericUpDownBalanceTenancyOutput.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownBalanceTenancyOutput.TabIndex = 1;
@@ -1019,6 +1094,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownPenaltiesInput.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownPenaltiesInput.Name = "numericUpDownPenaltiesInput";
             this.numericUpDownPenaltiesInput.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownPenaltiesInput.TabIndex = 3;
@@ -1035,6 +1115,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownBalanceDGIInput.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceDGIInput.Name = "numericUpDownBalanceDGIInput";
             this.numericUpDownBalanceDGIInput.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownBalanceDGIInput.TabIndex = 2;
@@ -1062,6 +1147,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownBalanceTotalInput.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceTotalInput.Name = "numericUpDownBalanceTotalInput";
             this.numericUpDownBalanceTotalInput.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownBalanceTotalInput.TabIndex = 0;
@@ -1078,6 +1168,11 @@ namespace Registry.Viewport
             0,
             0,
             0});
+            this.numericUpDownBalanceTenancyInput.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceTenancyInput.Name = "numericUpDownBalanceTenancyInput";
             this.numericUpDownBalanceTenancyInput.Size = new System.Drawing.Size(119, 20);
             this.numericUpDownBalanceTenancyInput.TabIndex = 1;
