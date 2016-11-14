@@ -123,7 +123,7 @@ namespace Registry.Viewport
                 dateTimePickerStateDate.Checked = false;
             }
 
-            if (row == null)
+            if (row == null || row["id_building"] == DBNull.Value)
             {
                 numericUpDownRentCoefficientAuto.Value = 0;
             }
