@@ -38,7 +38,8 @@ namespace Registry.Viewport.Presenters
                     {
                         ids = from row in ViewModel["general"].Model.FilterDeletedRows()
                             where row.Field<string>("raw_address") == currentPaymentAccount["raw_address"].ToString() ||
-                                  row.Field<string>("parsed_address") == currentPaymentAccount["parsed_address"].ToString()
+                                  (!string.IsNullOrEmpty(currentPaymentAccount["parsed_address"].ToString()) &&
+                                    row.Field<string>("parsed_address") == currentPaymentAccount["parsed_address"].ToString())
                             select row.Field<int>("id_account");
                     }
                     break;

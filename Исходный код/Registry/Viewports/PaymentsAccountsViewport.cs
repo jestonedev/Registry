@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -162,6 +163,16 @@ namespace Registry.Viewport
                 default:
                     e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
                     break;
+            }
+            if (ParentType == ParentTypeEnum.Claim && (int)ParentRow["id_account"] == (int)row["id_account"])
+            {
+                DataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
+                DataGridView.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.Green;
+            }
+            else
+            {
+                DataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+                DataGridView.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
             }
         }
 

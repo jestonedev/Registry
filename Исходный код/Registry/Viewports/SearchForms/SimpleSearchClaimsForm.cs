@@ -28,6 +28,9 @@ namespace Registry.Viewport.SearchForms
             comboBoxState.DisplayMember = "state_type";
             comboBoxState.ValueMember = "id_state_type";
             comboBoxDateStartStateExpr.SelectedIndex = 2;
+            comboBoxBalanceOutputDgiExpr.SelectedIndex = 2;
+            comboBoxBalanceOutputTenancyExpr.SelectedIndex = 2;
+            comboBoxBalanceOutputPenaltiesExpr.SelectedIndex = 2;
 
             HandleHotKeys(Controls, vButtonSearch_Click);
         }
@@ -119,6 +122,27 @@ namespace Registry.Viewport.SearchForms
                     r.Field<string>("court_order_num").Contains(textBoxCourtOrderNum.Text.Trim()) && r.Field<int>("id_state_type") == 4);
                 includedClaims = DataModelHelper.Intersect(includedClaims, claims);
             }
+            if (checkBoxBalanceOutputTenancyChecked.Checked)
+            {
+                var accountIds =
+                    AccountIdsByFilter(BuildFilter("balance_output_tenancy", comboBoxBalanceOutputTenancyExpr.Text,
+                        numericUpDownBalanceOutputTenancyFrom.Value, numericUpDownBalanceOutputTenancyTo.Value));
+                includedAccounts = DataModelHelper.Intersect(includedAccounts, accountIds);
+            }
+            if (checkBoxBalanceOutputDgiChecked.Checked)
+            {
+                var accountIds =
+                    AccountIdsByFilter(BuildFilter("balance_output_dgi", comboBoxBalanceOutputDgiExpr.Text,
+                            numericUpDownBalanceOutputDgiFrom.Value, numericUpDownBalanceOutputDgiTo.Value));
+                includedAccounts = DataModelHelper.Intersect(includedAccounts, accountIds);
+            }
+            if (checkBoxBalanceOutputPenaltiesChecked.Checked)
+            {
+                var accountIds =
+                    AccountIdsByFilter(BuildFilter("balance_output_penalties", comboBoxBalanceOutputPenaltiesExpr.Text,
+                            numericUpDownBalanceOutputPenaltiesFrom.Value, numericUpDownBalanceOutputPenaltiesTo.Value));
+                includedAccounts = DataModelHelper.Intersect(includedAccounts, accountIds);
+            }
             if (includedClaims != null)
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
@@ -138,6 +162,23 @@ namespace Registry.Viewport.SearchForms
                 filter = filter.TrimEnd(',') + ")";
             }
             return filter;
+        }
+
+        private static IEnumerable<int> AccountIdsByFilter(string filter)
+        {
+            var accounts = new BindingSource
+            {
+                DataSource = DataModel.GetInstance<PaymentsAccountsDataModel>().Select(),
+                Filter = filter
+            };
+            var accountIds = new List<int>();
+            for (var i = 0; i < accounts.Count; i++)
+            {
+                var idAccount = (int?)((DataRowView)accounts[i])["id_account"];
+                if (idAccount != null)
+                    accountIds.Add(idAccount.Value);
+            }
+            return accountIds;
         }
 
         private static bool DateSatisfiesExpression(DateTime? dateStartState, string rawOperator, DateTime dateStartStateFrom, DateTime dateStartStateTo)
@@ -170,6 +211,20 @@ namespace Registry.Viewport.SearchForms
             return string.Format(format, field,
                 from.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture),
                 to.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+        }
+
+        private string BuildFilter(string field, string rawOperator, decimal from, decimal to)
+        {
+            var op = ConvertDisplayEqExprToSql(rawOperator);
+            var format = "{0} {1} {2}";
+            if (op != "BETWEEN")
+                return string.Format(format, field, op,
+                    from.ToString(CultureInfo.InvariantCulture),
+                    to.ToString(CultureInfo.InvariantCulture));
+            format = "{0} >= {1} AND {0} <= {2}";
+            return string.Format(format, field,
+                from.ToString(CultureInfo.InvariantCulture),
+                to.ToString(CultureInfo.InvariantCulture));
         }
 
         private static string ConvertDisplayEqExprToSql(string expr)
@@ -239,6 +294,27 @@ namespace Registry.Viewport.SearchForms
         private void checkBoxCourtOrderNumEnable_CheckedChanged(object sender, EventArgs e)
         {
             textBoxCourtOrderNum.Enabled = checkBoxCourtOrderNumEnable.Checked;
+        }
+
+        private void checkBoxBalanceOutputTenancyChecked_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxBalanceOutputTenancyExpr.Enabled = checkBoxBalanceOutputTenancyChecked.Checked;
+            numericUpDownBalanceOutputTenancyFrom.Enabled = checkBoxBalanceOutputTenancyChecked.Checked;
+            numericUpDownBalanceOutputTenancyTo.Enabled = checkBoxBalanceOutputTenancyChecked.Checked;
+        }
+
+        private void checkBoxBalanceOutputDgiChecked_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxBalanceOutputDgiExpr.Enabled = checkBoxBalanceOutputDgiChecked.Checked;
+            numericUpDownBalanceOutputDgiFrom.Enabled = checkBoxBalanceOutputDgiChecked.Checked;
+            numericUpDownBalanceOutputDgiTo.Enabled = checkBoxBalanceOutputDgiChecked.Checked;
+        }
+
+        private void checkBoxBalanceOutputPenaltiesChecked_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxBalanceOutputPenaltiesExpr.Enabled = checkBoxBalanceOutputPenaltiesChecked.Checked;
+            numericUpDownBalanceOutputPenaltiesFrom.Enabled = checkBoxBalanceOutputPenaltiesChecked.Checked;
+            numericUpDownBalanceOutputPenaltiesTo.Enabled = checkBoxBalanceOutputPenaltiesChecked.Checked;
         }
     }
 }

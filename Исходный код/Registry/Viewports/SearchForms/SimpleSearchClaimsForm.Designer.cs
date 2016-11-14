@@ -57,7 +57,28 @@ namespace Registry.Viewport.SearchForms
             this.textBoxCourtOrderNum = new System.Windows.Forms.TextBox();
             this.checkBoxCourtOrderNumEnable = new System.Windows.Forms.CheckBox();
             this.label13 = new System.Windows.Forms.Label();
+            this.numericUpDownBalanceOutputDgiTo = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBalanceOutputDgiFrom = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxBalanceOutputDgiExpr = new System.Windows.Forms.ComboBox();
+            this.checkBoxBalanceOutputDgiChecked = new System.Windows.Forms.CheckBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.numericUpDownBalanceOutputTenancyTo = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBalanceOutputTenancyFrom = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxBalanceOutputTenancyExpr = new System.Windows.Forms.ComboBox();
+            this.checkBoxBalanceOutputTenancyChecked = new System.Windows.Forms.CheckBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.numericUpDownBalanceOutputPenaltiesTo = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBalanceOutputPenaltiesFrom = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxBalanceOutputPenaltiesExpr = new System.Windows.Forms.ComboBox();
+            this.checkBoxBalanceOutputPenaltiesChecked = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputDgiTo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputDgiFrom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputTenancyTo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputTenancyFrom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputPenaltiesTo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputPenaltiesFrom)).BeginInit();
             this.SuspendLayout();
             // 
             // vButtonCancel
@@ -65,11 +86,11 @@ namespace Registry.Viewport.SearchForms
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(212, 343);
+            this.vButtonCancel.Location = new System.Drawing.Point(214, 470);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
-            this.vButtonCancel.TabIndex = 10;
+            this.vButtonCancel.TabIndex = 22;
             this.vButtonCancel.Text = "Отмена";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -78,11 +99,11 @@ namespace Registry.Viewport.SearchForms
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(74, 343);
+            this.vButtonSearch.Location = new System.Drawing.Point(76, 470);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
-            this.vButtonSearch.TabIndex = 9;
+            this.vButtonSearch.TabIndex = 21;
             this.vButtonSearch.Text = "Поиск";
             this.vButtonSearch.UseVisualStyleBackColor = false;
             this.vButtonSearch.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -311,12 +332,213 @@ namespace Registry.Viewport.SearchForms
             this.label13.TabIndex = 211;
             this.label13.Text = "Номер судебного приказа";
             // 
+            // numericUpDownBalanceOutputDgiTo
+            // 
+            this.numericUpDownBalanceOutputDgiTo.DecimalPlaces = 2;
+            this.numericUpDownBalanceOutputDgiTo.Enabled = false;
+            this.numericUpDownBalanceOutputDgiTo.Location = new System.Drawing.Point(245, 395);
+            this.numericUpDownBalanceOutputDgiTo.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBalanceOutputDgiTo.Name = "numericUpDownBalanceOutputDgiTo";
+            this.numericUpDownBalanceOutputDgiTo.Size = new System.Drawing.Size(141, 21);
+            this.numericUpDownBalanceOutputDgiTo.TabIndex = 16;
+            // 
+            // numericUpDownBalanceOutputDgiFrom
+            // 
+            this.numericUpDownBalanceOutputDgiFrom.DecimalPlaces = 2;
+            this.numericUpDownBalanceOutputDgiFrom.Enabled = false;
+            this.numericUpDownBalanceOutputDgiFrom.Location = new System.Drawing.Point(94, 395);
+            this.numericUpDownBalanceOutputDgiFrom.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBalanceOutputDgiFrom.Name = "numericUpDownBalanceOutputDgiFrom";
+            this.numericUpDownBalanceOutputDgiFrom.Size = new System.Drawing.Size(141, 21);
+            this.numericUpDownBalanceOutputDgiFrom.TabIndex = 15;
+            // 
+            // comboBoxBalanceOutputDgiExpr
+            // 
+            this.comboBoxBalanceOutputDgiExpr.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBalanceOutputDgiExpr.Enabled = false;
+            this.comboBoxBalanceOutputDgiExpr.FormattingEnabled = true;
+            this.comboBoxBalanceOutputDgiExpr.Items.AddRange(new object[] {
+            "≥",
+            "≤",
+            "=",
+            "между"});
+            this.comboBoxBalanceOutputDgiExpr.Location = new System.Drawing.Point(33, 394);
+            this.comboBoxBalanceOutputDgiExpr.Name = "comboBoxBalanceOutputDgiExpr";
+            this.comboBoxBalanceOutputDgiExpr.Size = new System.Drawing.Size(52, 23);
+            this.comboBoxBalanceOutputDgiExpr.TabIndex = 14;
+            // 
+            // checkBoxBalanceOutputDgiChecked
+            // 
+            this.checkBoxBalanceOutputDgiChecked.AutoSize = true;
+            this.checkBoxBalanceOutputDgiChecked.Location = new System.Drawing.Point(12, 399);
+            this.checkBoxBalanceOutputDgiChecked.Name = "checkBoxBalanceOutputDgiChecked";
+            this.checkBoxBalanceOutputDgiChecked.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxBalanceOutputDgiChecked.TabIndex = 13;
+            this.checkBoxBalanceOutputDgiChecked.UseVisualStyleBackColor = true;
+            this.checkBoxBalanceOutputDgiChecked.CheckedChanged += new System.EventHandler(this.checkBoxBalanceOutputDgiChecked_CheckedChanged);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(9, 377);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(196, 15);
+            this.label21.TabIndex = 221;
+            this.label21.Text = "Текущее сальдо исходящее  ДГИ";
+            // 
+            // numericUpDownBalanceOutputTenancyTo
+            // 
+            this.numericUpDownBalanceOutputTenancyTo.DecimalPlaces = 2;
+            this.numericUpDownBalanceOutputTenancyTo.Enabled = false;
+            this.numericUpDownBalanceOutputTenancyTo.Location = new System.Drawing.Point(245, 352);
+            this.numericUpDownBalanceOutputTenancyTo.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBalanceOutputTenancyTo.Name = "numericUpDownBalanceOutputTenancyTo";
+            this.numericUpDownBalanceOutputTenancyTo.Size = new System.Drawing.Size(141, 21);
+            this.numericUpDownBalanceOutputTenancyTo.TabIndex = 12;
+            // 
+            // numericUpDownBalanceOutputTenancyFrom
+            // 
+            this.numericUpDownBalanceOutputTenancyFrom.DecimalPlaces = 2;
+            this.numericUpDownBalanceOutputTenancyFrom.Enabled = false;
+            this.numericUpDownBalanceOutputTenancyFrom.Location = new System.Drawing.Point(94, 352);
+            this.numericUpDownBalanceOutputTenancyFrom.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBalanceOutputTenancyFrom.Name = "numericUpDownBalanceOutputTenancyFrom";
+            this.numericUpDownBalanceOutputTenancyFrom.Size = new System.Drawing.Size(141, 21);
+            this.numericUpDownBalanceOutputTenancyFrom.TabIndex = 11;
+            // 
+            // comboBoxBalanceOutputTenancyExpr
+            // 
+            this.comboBoxBalanceOutputTenancyExpr.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBalanceOutputTenancyExpr.Enabled = false;
+            this.comboBoxBalanceOutputTenancyExpr.FormattingEnabled = true;
+            this.comboBoxBalanceOutputTenancyExpr.Items.AddRange(new object[] {
+            "≥",
+            "≤",
+            "=",
+            "между"});
+            this.comboBoxBalanceOutputTenancyExpr.Location = new System.Drawing.Point(33, 351);
+            this.comboBoxBalanceOutputTenancyExpr.Name = "comboBoxBalanceOutputTenancyExpr";
+            this.comboBoxBalanceOutputTenancyExpr.Size = new System.Drawing.Size(52, 23);
+            this.comboBoxBalanceOutputTenancyExpr.TabIndex = 10;
+            // 
+            // checkBoxBalanceOutputTenancyChecked
+            // 
+            this.checkBoxBalanceOutputTenancyChecked.AutoSize = true;
+            this.checkBoxBalanceOutputTenancyChecked.Location = new System.Drawing.Point(12, 356);
+            this.checkBoxBalanceOutputTenancyChecked.Name = "checkBoxBalanceOutputTenancyChecked";
+            this.checkBoxBalanceOutputTenancyChecked.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxBalanceOutputTenancyChecked.TabIndex = 9;
+            this.checkBoxBalanceOutputTenancyChecked.UseVisualStyleBackColor = true;
+            this.checkBoxBalanceOutputTenancyChecked.CheckedChanged += new System.EventHandler(this.checkBoxBalanceOutputTenancyChecked_CheckedChanged);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(9, 334);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(198, 15);
+            this.label22.TabIndex = 220;
+            this.label22.Text = "Текущее сальдо исходящее найм";
+            // 
+            // numericUpDownBalanceOutputPenaltiesTo
+            // 
+            this.numericUpDownBalanceOutputPenaltiesTo.DecimalPlaces = 2;
+            this.numericUpDownBalanceOutputPenaltiesTo.Enabled = false;
+            this.numericUpDownBalanceOutputPenaltiesTo.Location = new System.Drawing.Point(245, 437);
+            this.numericUpDownBalanceOutputPenaltiesTo.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBalanceOutputPenaltiesTo.Name = "numericUpDownBalanceOutputPenaltiesTo";
+            this.numericUpDownBalanceOutputPenaltiesTo.Size = new System.Drawing.Size(141, 21);
+            this.numericUpDownBalanceOutputPenaltiesTo.TabIndex = 20;
+            // 
+            // numericUpDownBalanceOutputPenaltiesFrom
+            // 
+            this.numericUpDownBalanceOutputPenaltiesFrom.DecimalPlaces = 2;
+            this.numericUpDownBalanceOutputPenaltiesFrom.Enabled = false;
+            this.numericUpDownBalanceOutputPenaltiesFrom.Location = new System.Drawing.Point(94, 437);
+            this.numericUpDownBalanceOutputPenaltiesFrom.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBalanceOutputPenaltiesFrom.Name = "numericUpDownBalanceOutputPenaltiesFrom";
+            this.numericUpDownBalanceOutputPenaltiesFrom.Size = new System.Drawing.Size(141, 21);
+            this.numericUpDownBalanceOutputPenaltiesFrom.TabIndex = 19;
+            // 
+            // comboBoxBalanceOutputPenaltiesExpr
+            // 
+            this.comboBoxBalanceOutputPenaltiesExpr.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBalanceOutputPenaltiesExpr.Enabled = false;
+            this.comboBoxBalanceOutputPenaltiesExpr.FormattingEnabled = true;
+            this.comboBoxBalanceOutputPenaltiesExpr.Items.AddRange(new object[] {
+            "≥",
+            "≤",
+            "=",
+            "между"});
+            this.comboBoxBalanceOutputPenaltiesExpr.Location = new System.Drawing.Point(33, 436);
+            this.comboBoxBalanceOutputPenaltiesExpr.Name = "comboBoxBalanceOutputPenaltiesExpr";
+            this.comboBoxBalanceOutputPenaltiesExpr.Size = new System.Drawing.Size(52, 23);
+            this.comboBoxBalanceOutputPenaltiesExpr.TabIndex = 18;
+            // 
+            // checkBoxBalanceOutputPenaltiesChecked
+            // 
+            this.checkBoxBalanceOutputPenaltiesChecked.AutoSize = true;
+            this.checkBoxBalanceOutputPenaltiesChecked.Location = new System.Drawing.Point(12, 441);
+            this.checkBoxBalanceOutputPenaltiesChecked.Name = "checkBoxBalanceOutputPenaltiesChecked";
+            this.checkBoxBalanceOutputPenaltiesChecked.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxBalanceOutputPenaltiesChecked.TabIndex = 17;
+            this.checkBoxBalanceOutputPenaltiesChecked.UseVisualStyleBackColor = true;
+            this.checkBoxBalanceOutputPenaltiesChecked.CheckedChanged += new System.EventHandler(this.checkBoxBalanceOutputPenaltiesChecked_CheckedChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 419);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(196, 15);
+            this.label1.TabIndex = 226;
+            this.label1.Text = "Текущее сальдо исходящее пени";
+            // 
             // SimpleSearchClaimsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(402, 383);
+            this.ClientSize = new System.Drawing.Size(402, 511);
+            this.Controls.Add(this.numericUpDownBalanceOutputPenaltiesTo);
+            this.Controls.Add(this.numericUpDownBalanceOutputPenaltiesFrom);
+            this.Controls.Add(this.comboBoxBalanceOutputPenaltiesExpr);
+            this.Controls.Add(this.checkBoxBalanceOutputPenaltiesChecked);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.numericUpDownBalanceOutputDgiTo);
+            this.Controls.Add(this.numericUpDownBalanceOutputDgiFrom);
+            this.Controls.Add(this.comboBoxBalanceOutputDgiExpr);
+            this.Controls.Add(this.checkBoxBalanceOutputDgiChecked);
+            this.Controls.Add(this.label21);
+            this.Controls.Add(this.numericUpDownBalanceOutputTenancyTo);
+            this.Controls.Add(this.numericUpDownBalanceOutputTenancyFrom);
+            this.Controls.Add(this.comboBoxBalanceOutputTenancyExpr);
+            this.Controls.Add(this.checkBoxBalanceOutputTenancyChecked);
+            this.Controls.Add(this.label22);
             this.Controls.Add(this.textBoxCourtOrderNum);
             this.Controls.Add(this.checkBoxCourtOrderNumEnable);
             this.Controls.Add(this.label13);
@@ -342,6 +564,12 @@ namespace Registry.Viewport.SearchForms
             this.Text = "Фильтрация претензионно-исковых работ";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputDgiTo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputDgiFrom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputTenancyTo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputTenancyFrom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputPenaltiesTo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputPenaltiesFrom)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -373,5 +601,20 @@ namespace Registry.Viewport.SearchForms
         private TextBox textBoxCourtOrderNum;
         private CheckBox checkBoxCourtOrderNumEnable;
         private Label label13;
+        private NumericUpDown numericUpDownBalanceOutputDgiTo;
+        private NumericUpDown numericUpDownBalanceOutputDgiFrom;
+        private ComboBox comboBoxBalanceOutputDgiExpr;
+        private CheckBox checkBoxBalanceOutputDgiChecked;
+        private Label label21;
+        private NumericUpDown numericUpDownBalanceOutputTenancyTo;
+        private NumericUpDown numericUpDownBalanceOutputTenancyFrom;
+        private ComboBox comboBoxBalanceOutputTenancyExpr;
+        private CheckBox checkBoxBalanceOutputTenancyChecked;
+        private Label label22;
+        private NumericUpDown numericUpDownBalanceOutputPenaltiesTo;
+        private NumericUpDown numericUpDownBalanceOutputPenaltiesFrom;
+        private ComboBox comboBoxBalanceOutputPenaltiesExpr;
+        private CheckBox checkBoxBalanceOutputPenaltiesChecked;
+        private Label label1;
     }
 }

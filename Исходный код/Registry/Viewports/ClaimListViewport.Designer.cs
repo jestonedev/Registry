@@ -559,6 +559,7 @@ namespace Registry.Viewport
             this.balance_output_tenancy.MinimumWidth = 110;
             this.balance_output_tenancy.Name = "balance_output_tenancy";
             this.balance_output_tenancy.ReadOnly = true;
+            this.balance_output_tenancy.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.balance_output_tenancy.Width = 110;
             // 
             // balance_output_dgi
@@ -569,6 +570,7 @@ namespace Registry.Viewport
             this.balance_output_dgi.MinimumWidth = 110;
             this.balance_output_dgi.Name = "balance_output_dgi";
             this.balance_output_dgi.ReadOnly = true;
+            this.balance_output_dgi.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.balance_output_dgi.Width = 110;
             // 
             // balance_output_penalties
@@ -579,6 +581,7 @@ namespace Registry.Viewport
             this.balance_output_penalties.MinimumWidth = 110;
             this.balance_output_penalties.Name = "balance_output_penalties";
             this.balance_output_penalties.ReadOnly = true;
+            this.balance_output_penalties.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.balance_output_penalties.Width = 110;
             // 
             // ClaimListViewport
