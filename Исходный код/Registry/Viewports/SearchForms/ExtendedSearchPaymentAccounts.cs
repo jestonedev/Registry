@@ -286,7 +286,55 @@ namespace Registry.Viewport.SearchForms
 
         private void vButtonSearch_Click(object sender, EventArgs e)
         {
-            // TODO: валидация ввода данных
+            if (checkBoxCRNEnable.Checked && string.IsNullOrEmpty(textBoxCRN.Text.Trim()))
+            {
+                MessageBox.Show(@"Укажите СРН или уберите галочку фильтрации по СРН", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxCRN.Focus();
+                return;
+            }
+            if (checkBoxAccountEnable.Checked && string.IsNullOrEmpty(textBoxAccount.Text.Trim()))
+            {
+                MessageBox.Show(@"Укажите лицевой счет или уберите галочку фильтрации по лицевому счету", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxAccount.Focus();
+                return;
+            }
+            if (checkBoxTenantSNPEnable.Checked && string.IsNullOrEmpty(textBoxTenantSNP.Text.Trim()))
+            {
+                MessageBox.Show(@"Укажите ФИО нанимателя или уберите галочку фильтрации по ФИО нанемателя", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxTenantSNP.Focus();
+                return;
+            }
+            if (checkBoxRawAddressEnable.Checked && string.IsNullOrEmpty(textBoxRawAddress.Text.Trim()))
+            {
+                MessageBox.Show(@"Укажите адрес по БКС или уберите галочку фильтрации по адресу БКС", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxRawAddress.Focus();
+                return;
+            }
+            if (checkBoxStreetEnable.Checked && comboBoxStreet.SelectedValue == null)
+            {
+                MessageBox.Show(@"Укажите улицу или уберите галочку фильтрации по улице", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                comboBoxStreet.Focus();
+                return;
+            }
+            if (checkBoxHouseEnable.Checked && string.IsNullOrEmpty(textBoxHouse.Text.Trim()))
+            {
+                MessageBox.Show(@"Укажите номер дома или уберите галочку фильтрации по номеру дома", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxHouse.Focus();
+                return;
+            }
+            if (checkBoxPremisesNumEnable.Checked && string.IsNullOrEmpty(textBoxPremisesNum.Text.Trim()))
+            {
+                MessageBox.Show(@"Укажите номер помещения или уберите галочку фильтрации по номеру помещения", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxPremisesNum.Focus();
+                return;
+            }
             DialogResult = DialogResult.OK;
         }
 
