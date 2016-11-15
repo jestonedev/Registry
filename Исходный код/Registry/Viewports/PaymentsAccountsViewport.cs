@@ -65,6 +65,12 @@ namespace Registry.Viewport
             }
             Text = title;
 
+            if (ParentType == ParentTypeEnum.Claim)
+            {
+                Presenter.ViewModel["general"].BindingSource.Sort = "date";
+                date.HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+            }
+
             AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
 
             DataBind();
@@ -133,6 +139,10 @@ namespace Registry.Viewport
             switch (searchFormType)
             {
                 case SearchFormType.SimpleSearchForm:
+                    if (Presenter.SimpleSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = Presenter.SimpleSearchForm.GetFilter();
+                    break;
                 case SearchFormType.ExtendedSearchForm:
                     if (Presenter.ExtendedSearchForm.ShowDialog() != DialogResult.OK)
                         return;

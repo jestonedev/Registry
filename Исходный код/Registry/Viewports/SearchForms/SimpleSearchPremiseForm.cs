@@ -76,7 +76,7 @@ namespace Registry.Viewport.SearchForms
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "id_premises IN (0";
-                filter = includedPremises.Aggregate(filter, (current, id) => current + (id.ToString(CultureInfo.InvariantCulture) + ","));
+                filter = includedPremises.Aggregate(filter, (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
                 filter = filter.TrimEnd(',') + ")";
             }
             if (includedBuildings != null)
@@ -84,7 +84,7 @@ namespace Registry.Viewport.SearchForms
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "id_building IN (0";
-                filter = includedBuildings.Aggregate(filter, (current, id) => current + (id.ToString(CultureInfo.InvariantCulture) + ","));
+                filter = includedBuildings.Aggregate(filter, (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
                 filter = filter.TrimEnd(',') + ")";
             }
             if (!checkBoxMunicipalOnly.Checked) return filter;

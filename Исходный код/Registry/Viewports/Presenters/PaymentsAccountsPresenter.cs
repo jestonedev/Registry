@@ -12,7 +12,7 @@ namespace Registry.Viewport.Presenters
     {
         public PaymentsAccountsPresenter()
             : base(
-                new PaymentsAccountsViewModel(), new ExtendedSearchPaymentAccounts(),
+                new PaymentsAccountsViewModel(), new SimpleSearchPaymentAccounts(),
                 new ExtendedSearchPaymentAccounts())
         {
             

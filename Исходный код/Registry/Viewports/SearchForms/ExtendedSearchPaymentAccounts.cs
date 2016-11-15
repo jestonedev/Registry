@@ -53,13 +53,13 @@ namespace Registry.Viewport.SearchForms
             {
                 if (!string.IsNullOrEmpty(filter))
                     filter += " AND ";
-                filter += string.Format("crn LIKE '%{0}%'", textBoxCRN.Text);
+                filter += string.Format("crn LIKE '%{0}%'", textBoxCRN.Text.Trim().Replace("'", ""));
             }
             if (checkBoxAccountEnable.Checked)
             {
                 if (!string.IsNullOrEmpty(filter))
                     filter += " AND ";
-                filter += string.Format("account LIKE '%{0}%'", textBoxAccount.Text);
+                filter += string.Format("account LIKE '%{0}%'", textBoxAccount.Text.Trim().Replace("'", ""));
             }
             if (checkBoxRawAddressEnable.Checked)
             {
@@ -71,7 +71,7 @@ namespace Registry.Viewport.SearchForms
                 {
                     if (!string.IsNullOrEmpty(addressFilter))
                         addressFilter += " AND ";
-                    addressFilter += addressFilter + string.Format("raw_address LIKE '%{0}%'", part);
+                    addressFilter += addressFilter + string.Format("raw_address LIKE '%{0}%'", part.Replace("'", ""));
                 }
                 filter += string.Format("({0})", addressFilter);
             }
@@ -100,7 +100,7 @@ namespace Registry.Viewport.SearchForms
             {
                 if (checkBoxTenantSNPEnable.Checked)
                     includedAccounts =
-                        PaymentService.GetAccountIdsByPaymentFilter(string.Format("tenant LIKE '%{0}%'", textBoxTenantSNP.Text.Trim()));
+                        PaymentService.GetAccountIdsByPaymentFilter(string.Format("tenant LIKE '%{0}%'", textBoxTenantSNP.Text.Trim().Replace("'", "")));
                 if (checkBoxBalanceInputEnable.Checked)
                     includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_input",
                         comboBoxBalanceInputExpr.Text, numericUpDownBalanceInputFrom.Value, numericUpDownBalanceInputTo.Value);
