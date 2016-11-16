@@ -749,7 +749,6 @@ namespace Registry.Viewport
                 return;
             if (!TenancyValidForReportGenerate())
                 return;
-            var reporter = ReporterFactory.CreateReporter(reporterType);
             var arguments = new Dictionary<string, string>();
             switch (reporterType)
             {
@@ -776,7 +775,7 @@ namespace Registry.Viewport
                     arguments = TenancyAgreementReporterArguments();
                     break;
             }
-            reporter.Run(arguments);
+            MenuCallback.RunReport(reporterType, arguments);
         }
         
         private Dictionary<string, string> TenancyContractReporterArguments()

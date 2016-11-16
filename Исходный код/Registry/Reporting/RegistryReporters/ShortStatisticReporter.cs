@@ -10,9 +10,11 @@ namespace Registry.Reporting.RegistryReporters
         public override void Run()
         {
             ReportTitle = "Краткая статистика по жилому фонду";
-            var arguments = new Dictionary<string, string>();
-            arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "registry\\short_statistic.xml"));
-            arguments.Add("connectionString", RegistrySettings.ConnectionString);
+            var arguments = new Dictionary<string, string>
+            {
+                {"config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "registry\\short_statistic.xml")},
+                {"connectionString", RegistrySettings.ConnectionString}
+            };
             using (var srForm = new SelectRegionsForm())
             {
                 if (srForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)

@@ -237,7 +237,6 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            var reporter = ReporterFactory.CreateReporter(reporterType);
             var arguments = new Dictionary<string, string>();
             switch (reporterType)
             {
@@ -251,7 +250,7 @@ namespace Registry.Viewport
                     arguments = RegistryExcerptReporterAllMunSubPremisesArguments();
                     break;
             }
-            reporter.Run(arguments);
+            MenuCallback.RunReport(reporterType, arguments);
         }
 
         private Dictionary<string, string> RegistryExcerptPremiseReportArguments()

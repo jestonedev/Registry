@@ -9,6 +9,7 @@ namespace Registry.Reporting.TenancyReporters
     {
         public override void Run(Dictionary<string, string> arguments)
         {
+            ReportTitle = "Формирование акта";
             if (arguments == null)
                 arguments = new Dictionary<string, string>();
             var dialogResult =

@@ -11,6 +11,7 @@ namespace Registry.Reporting.ClaimsAndPaymentsReporters
     {
         public override void Run(Dictionary<string, string> arguments)
         {
+            ReportTitle = "Передача в юр. отдел";
             if (arguments == null)
                 arguments = new Dictionary<string, string>();
             arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "claims\\transfer_JD.xml"));

@@ -10,6 +10,7 @@ namespace Registry.Reporting.ClaimsAndPaymentsReporters
     {
         public override void Run(Dictionary<string, string> arguments)
         {
+            ReportTitle = "Судебные приказы";
             if (arguments == null)
                 arguments = new Dictionary<string, string>();
             arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "claims\\judicial_order.xml"));

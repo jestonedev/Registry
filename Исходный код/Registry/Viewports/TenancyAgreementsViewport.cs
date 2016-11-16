@@ -430,7 +430,7 @@ namespace Registry.Viewport
             switch (reporterType)
             {
                 case ReporterType.TenancyAgreementReporter:
-                    ReporterFactory.CreateReporter(reporterType).Run(new Dictionary<string, string> { { "id_agreement", row["id_agreement"].ToString() } });
+                    MenuCallback.RunReport(reporterType, new Dictionary<string, string> { { "id_agreement", row["id_agreement"].ToString() } });
                     break;
                 case ReporterType.TenancyNotifyContractAgreement:
                     var arguments = new Dictionary<string, string>
@@ -438,7 +438,7 @@ namespace Registry.Viewport
                         {"id_process", row["id_process"].ToString()},
                         {"report_type", "2"}
                     };
-                    ReporterFactory.CreateReporter(reporterType).Run(arguments);
+                    MenuCallback.RunReport(reporterType, arguments);
                     break;
             }
         }

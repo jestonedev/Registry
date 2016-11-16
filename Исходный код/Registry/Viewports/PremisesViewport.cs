@@ -778,7 +778,6 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            var reporter = ReporterFactory.CreateReporter(reporterType);
             var arguments = new Dictionary<string, string>();
             switch (reporterType)
             {
@@ -792,7 +791,7 @@ namespace Registry.Viewport
                     arguments = RegistryExcerptReporterSubPremiseArguments();
                     break;
             }
-            reporter.Run(arguments);
+            MenuCallback.RunReport(reporterType, arguments);
         }
 
         private Dictionary<string, string> RegistryExcerptPremiseReportArguments()

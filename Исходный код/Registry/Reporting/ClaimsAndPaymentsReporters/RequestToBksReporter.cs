@@ -11,6 +11,7 @@ namespace Registry.Reporting.ClaimsAndPaymentsReporters
     {
         public override void Run(Dictionary<string, string> arguments)
         {
+            ReportTitle = "Запрос в БКС";
             if (arguments == null)
                 arguments = new Dictionary<string, string>();
             arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "claims\\request_BKS.xml"));

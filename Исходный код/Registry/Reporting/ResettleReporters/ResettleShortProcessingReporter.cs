@@ -11,9 +11,11 @@ namespace Registry.Reporting.ResettleReporters
         public override void Run()
         {
             ReportTitle = "Отчет по процессам переселения";
-            var arguments = new Dictionary<string, string>();
-            arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "resettle\\short_processing.xml"));
-            arguments.Add("connectionString", RegistrySettings.ConnectionString);
+            var arguments = new Dictionary<string, string>
+            {
+                {"config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "resettle\\short_processing.xml")},
+                {"connectionString", RegistrySettings.ConnectionString}
+            };
             using (var drForm = new DateRangeForm())
             {
                 if (drForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)

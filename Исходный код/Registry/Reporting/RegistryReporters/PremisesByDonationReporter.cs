@@ -10,9 +10,14 @@ namespace Registry.Reporting.RegistryReporters
         public override void Run()
         {
             ReportTitle = "Помещения по дарению";
-            var arguments = new Dictionary<string, string>();
-            arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "registry\\premises_by_donation.xml"));
-            arguments.Add("connectionString", RegistrySettings.ConnectionString);
+            var arguments = new Dictionary<string, string>
+            {
+                {
+                    "config",
+                    Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "registry\\premises_by_donation.xml")
+                },
+                {"connectionString", RegistrySettings.ConnectionString}
+            };
             using (var srForm = new SelectRegionsForm())
             {
                 if (srForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)

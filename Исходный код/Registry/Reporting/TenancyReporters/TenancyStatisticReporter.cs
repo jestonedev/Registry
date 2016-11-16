@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Registry.Reporting.SettingForms;
 using Settings;
@@ -11,18 +10,17 @@ namespace Registry.Reporting.TenancyReporters
         public override void Run()
         {
             ReportTitle = "Статистика по найму жилья";
-            var arguments = new Dictionary<string, string>();
-            arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "tenancy\\statistic.xml"));
-            arguments.Add("connectionString", RegistrySettings.ConnectionString);
+            var arguments = new Dictionary<string, string>
+            {
+                {"config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "tenancy\\statistic.xml")},
+                {"connectionString", RegistrySettings.ConnectionString}
+            };
             using (var tsfForm = new TenancyStatisticFilterForm())
             {
                 if (tsfForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     var filter = tsfForm.GetFilter();
-                    if (String.IsNullOrEmpty(filter.Trim()))
-                        arguments.Add("filter", "1=1");
-                    else
-                        arguments.Add("filter", filter);
+                    arguments.Add("filter", string.IsNullOrEmpty(filter.Trim()) ? "1=1" : filter);
                     base.Run(arguments);
                 }
                 else

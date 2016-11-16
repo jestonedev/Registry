@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -825,14 +826,17 @@ namespace Registry
             DocumentsStateUpdate();
         }
 
-        private void RunReport(ReporterType reporterType)
+        public void RunReport(ReporterType reporterType, Dictionary<string, string> arguments = null)
         {
             var reporter = ReporterFactory.CreateReporter(reporterType);
             reporter.ReportOutputStreamResponse += reporter_ReportOutputStreamResponse;
             reporter.ReportComplete += reporter_ReportComplete;
             reporter.ReportCanceled += reporter_ReportCanceled;
             _reportCounter++;
-            reporter.Run();
+            if (arguments == null)
+                reporter.Run();
+            else
+                reporter.Run(arguments);
         }
 
         void reporter_ReportCanceled(object sender, EventArgs e)

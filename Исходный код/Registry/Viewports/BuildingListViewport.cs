@@ -198,7 +198,6 @@ namespace Registry.Viewport
 
         public override void GenerateReport(ReporterType reporterType)
         {
-            var reporter = ReporterFactory.CreateReporter(reporterType);
             var arguments = new Dictionary<string, string>();
             switch (reporterType)
             {
@@ -206,7 +205,7 @@ namespace Registry.Viewport
                     arguments = ExportReportArguments();
                     break;
             }
-            reporter.Run(arguments);
+            MenuCallback.RunReport(reporterType, arguments);
         }
 
         private Dictionary<string,string> ExportReportArguments()

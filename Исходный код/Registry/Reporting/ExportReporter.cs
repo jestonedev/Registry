@@ -8,6 +8,7 @@ namespace Registry.Reporting
     {
         public override void Run(Dictionary<string, string> arguments)
         {
+            ReportTitle = "Экспорт данных";
             if (arguments == null)
                 arguments = new Dictionary<string, string>();
             var filter = arguments["filter"];

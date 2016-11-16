@@ -1,4 +1,7 @@
-﻿namespace Registry.Viewport
+﻿using System.Collections.Generic;
+using Registry.Reporting;
+
+namespace Registry.Viewport
 {
     public interface IMenuCallback
     {
@@ -11,6 +14,7 @@
         void ForceCloseDetachedViewports();
         void AddViewport(Viewport viewport);
         void SwitchToPreviousViewport();
+        void RunReport(ReporterType reporterType, Dictionary<string, string> arguments = null);
         Viewport GetCurrentViewport();
     }
 }

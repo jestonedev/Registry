@@ -11,6 +11,7 @@ namespace Registry.Reporting.RegistryReporters
     {
         public override void Run(Dictionary<string, string> arguments)
         {
+            ReportTitle = "Массовая выписка";
             if (arguments == null)
                 arguments = new Dictionary<string, string>();
             arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "registry\\premises_mx.xml"));

@@ -9,9 +9,14 @@ namespace Registry.Reporting.ResettleReporters
         public override void Run()
         {
             ReportTitle = "Сводный список переселения";
-            var arguments = new Dictionary<string, string>();
-            arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "resettle\\emergency_buildings.xml"));
-            arguments.Add("connectionString", RegistrySettings.ConnectionString);
+            var arguments = new Dictionary<string, string>
+            {
+                {
+                    "config",
+                    Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "resettle\\emergency_buildings.xml")
+                },
+                {"connectionString", RegistrySettings.ConnectionString}
+            };
             base.Run(arguments);
         }
     }
