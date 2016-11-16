@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
+using Registry.Reporting.SettingForms;
 using Settings;
 
 namespace Registry.Reporting.RegistryReporters
 {
-    class MunicipalPremisesReporter: Reporter
+    internal class MunicipalPremisesReporter: Reporter
     {
         public override void Run()
         {
@@ -17,7 +19,22 @@ namespace Registry.Reporting.RegistryReporters
                 },
                 {"connectionString", RegistrySettings.ConnectionString}
             };
-            base.Run(arguments);
+            using (var srdForm = new StatisticReportDialog())
+            {
+                if (srdForm.ShowDialog() == DialogResult.OK)
+                {
+                    if (srdForm.StatisticReportType == null)
+                    {
+                        throw new ReporterException("Не задан тип формируемой статистики");
+                    }
+                    arguments.Add("reportType", srdForm.StatisticReportType.ToString());
+                    base.Run(arguments);
+                }
+                else
+                {
+                    Cancel();
+                }
+            }
         }
     }
 }

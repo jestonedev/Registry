@@ -62,45 +62,51 @@
     <Compile Include="ClaimsReporters\RequestToBksReporter.cs" />
     <Compile Include="ClaimsReporters\TransfertToLegalDepartmentReporter.cs" />
     <Compile Include="ClaimsReporters\ClaimsStatesReporter.cs" />
-    <Compile Include="ClaimStatesSettingsForm.cs">
+    <Compile Include="SettingForms\ClaimStatesSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ClaimStatesSettingsForm.Designer.cs">
+    <Compile Include="SettingForms\ClaimStatesSettingsForm.Designer.cs">
       <DependentUpon>ClaimStatesSettingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="JudicialOrderSettingsForm.cs">
+    <Compile Include="SettingForms\JudicialOrderSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="JudicialOrderSettingsForm.Designer.cs">
+    <Compile Include="SettingForms\JudicialOrderSettingsForm.Designer.cs">
       <DependentUpon>JudicialOrderSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="RegistryReporters\MunicipalBuildingsReporter.cs" />
     <Compile Include="RegistryReporters\MunicipalPremisesReporter.cs" />
-    <Compile Include="TenancyReporters\TenancyNotifyContractAgreement.cs" />
-    <Compile Include="TransferToLegalDepartment.cs">
+    <Compile Include="SettingForms\StatisticReportDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TransferToLegalDepartment.Designer.cs">
+    <Compile Include="SettingForms\StatisticReportDialog.Designer.cs">
+      <DependentUpon>StatisticReportDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TenancyReporters\TenancyNotifyContractAgreement.cs" />
+    <Compile Include="SettingForms\TransferToLegalDepartment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingForms\TransferToLegalDepartment.Designer.cs">
       <DependentUpon>TransferToLegalDepartment.cs</DependentUpon>
     </Compile>
-    <Compile Include="RequestToBksSettingsForm.cs">
+    <Compile Include="SettingForms\RequestToBksSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="RequestToBksSettingsForm.Designer.cs">
+    <Compile Include="SettingForms\RequestToBksSettingsForm.Designer.cs">
       <DependentUpon>RequestToBksSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="RegistryReporters\AllPremisesReporter.cs" />
-    <Compile Include="ClaimsFilterForm.cs">
+    <Compile Include="SettingForms\ClaimsFilterForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ClaimsFilterForm.Designer.cs">
+    <Compile Include="SettingForms\ClaimsFilterForm.Designer.cs">
       <DependentUpon>ClaimsFilterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ClaimsReporters\ClaimsStatisticReporter.cs" />
-    <Compile Include="DateRangeForm.cs">
+    <Compile Include="SettingForms\DateRangeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DateRangeForm.Designer.cs">
+    <Compile Include="SettingForms\DateRangeForm.Designer.cs">
       <DependentUpon>DateRangeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
@@ -125,32 +131,32 @@
     <Compile Include="ResettleReporters\ResettleFullProcessingReporter.cs" />
     <Compile Include="ResettleReporters\ResettleShortProcessingReporter.cs" />
     <Compile Include="ResettleReporters\ResettleTotalStatisticReporter.cs" />
-    <Compile Include="SelectRegionsForm.cs">
+    <Compile Include="SettingForms\SelectRegionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SelectRegionsForm.Designer.cs">
+    <Compile Include="SettingForms\SelectRegionsForm.Designer.cs">
       <DependentUpon>SelectRegionsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="RegistryReporters\SocialFundReporter.cs" />
     <Compile Include="RegistryReporters\SpecialFundReporter.cs" />
-    <Compile Include="RegistryExcerptSettingsForm.cs">
+    <Compile Include="SettingForms\RegistryExcerptSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="RegistryExcerptSettingsForm.Designer.cs">
+    <Compile Include="SettingForms\RegistryExcerptSettingsForm.Designer.cs">
       <DependentUpon>RegistryExcerptSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ExportReporter.cs" />
-    <Compile Include="TenancyNotifiesSettingsForm.cs">
+    <Compile Include="SettingForms\TenancyNotifiesSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TenancyNotifiesSettingsForm.Designer.cs">
+    <Compile Include="SettingForms\TenancyNotifiesSettingsForm.Designer.cs">
       <DependentUpon>TenancyNotifiesSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TenancyReporters\TenancyNotifiesReporter.cs" />
-    <Compile Include="TenancyOrderSettingsForm.cs">
+    <Compile Include="SettingForms\TenancyOrderSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TenancyOrderSettingsForm.Designer.cs">
+    <Compile Include="SettingForms\TenancyOrderSettingsForm.Designer.cs">
       <DependentUpon>TenancyOrderSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TenancyReporters\TenancyAgreementReporter.cs" />
@@ -163,10 +169,10 @@
     <Compile Include="TenancyReporters\TenancyOrderReporter.cs" />
     <Compile Include="TenancyReporters\TenancyStatisticForCoMSReporter.cs" />
     <Compile Include="TenancyReporters\TenancyStatisticReporter.cs" />
-    <Compile Include="TenancyStatisticFilterForm.cs">
+    <Compile Include="SettingForms\TenancyStatisticFilterForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TenancyStatisticFilterForm.Designer.cs">
+    <Compile Include="SettingForms\TenancyStatisticFilterForm.Designer.cs">
       <DependentUpon>TenancyStatisticFilterForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -189,37 +195,40 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ClaimsFilterForm.resx">
+    <EmbeddedResource Include="SettingForms\ClaimsFilterForm.resx">
       <DependentUpon>ClaimsFilterForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ClaimStatesSettingsForm.resx">
+    <EmbeddedResource Include="SettingForms\ClaimStatesSettingsForm.resx">
       <DependentUpon>ClaimStatesSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DateRangeForm.resx">
+    <EmbeddedResource Include="SettingForms\DateRangeForm.resx">
       <DependentUpon>DateRangeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="JudicialOrderSettingsForm.resx">
+    <EmbeddedResource Include="SettingForms\JudicialOrderSettingsForm.resx">
       <DependentUpon>JudicialOrderSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TransferToLegalDepartment.resx">
+    <EmbeddedResource Include="SettingForms\StatisticReportDialog.resx">
+      <DependentUpon>StatisticReportDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingForms\TransferToLegalDepartment.resx">
       <DependentUpon>TransferToLegalDepartment.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="RequestToBksSettingsForm.resx">
+    <EmbeddedResource Include="SettingForms\RequestToBksSettingsForm.resx">
       <DependentUpon>RequestToBksSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SelectRegionsForm.resx">
+    <EmbeddedResource Include="SettingForms\SelectRegionsForm.resx">
       <DependentUpon>SelectRegionsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="RegistryExcerptSettingsForm.resx">
+    <EmbeddedResource Include="SettingForms\RegistryExcerptSettingsForm.resx">
       <DependentUpon>RegistryExcerptSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TenancyNotifiesSettingsForm.resx">
+    <EmbeddedResource Include="SettingForms\TenancyNotifiesSettingsForm.resx">
       <DependentUpon>TenancyNotifiesSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TenancyOrderSettingsForm.resx">
+    <EmbeddedResource Include="SettingForms\TenancyOrderSettingsForm.resx">
       <DependentUpon>TenancyOrderSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TenancyStatisticFilterForm.resx">
+    <EmbeddedResource Include="SettingForms\TenancyStatisticFilterForm.resx">
       <DependentUpon>TenancyStatisticFilterForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

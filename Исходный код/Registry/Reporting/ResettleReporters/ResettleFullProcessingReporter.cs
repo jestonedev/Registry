@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Registry.Reporting.SettingForms;
 using Settings;
 
 namespace Registry.Reporting.ResettleReporters

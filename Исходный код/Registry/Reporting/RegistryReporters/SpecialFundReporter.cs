@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Registry.Reporting.SettingForms;
 using Settings;
 
 namespace Registry.Reporting.RegistryReporters

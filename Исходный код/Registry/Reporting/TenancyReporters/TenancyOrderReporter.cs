@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Globalization;
+using Registry.Reporting.SettingForms;
 using Settings;
 
 namespace Registry.Reporting.TenancyReporters

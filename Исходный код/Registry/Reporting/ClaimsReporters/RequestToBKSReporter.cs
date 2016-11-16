@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
+using Registry.Reporting.SettingForms;
 using Settings;
 
 namespace Registry.Reporting.ClaimsReporters
