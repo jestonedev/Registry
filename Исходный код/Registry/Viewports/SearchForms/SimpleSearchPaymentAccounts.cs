@@ -33,13 +33,13 @@ namespace Registry.Viewport.SearchForms
             {
                 if (!string.IsNullOrEmpty(filter))
                     filter += " AND ";
-                filter += string.Format("crn LIKE '%{0}%'", textBoxCriteria.Text.Trim().Replace("'", ""));
+                filter += string.Format("account LIKE '%{0}%'", textBoxCriteria.Text.Trim().Replace("'", ""));
             }
             if (comboBoxCriteriaType.SelectedIndex == 1)
             {
                 if (!string.IsNullOrEmpty(filter))
                     filter += " AND ";
-                filter += string.Format("account LIKE '%{0}%'", textBoxCriteria.Text.Trim().Replace("'", ""));
+                filter += string.Format("crn LIKE '%{0}%'", textBoxCriteria.Text.Trim().Replace("'", ""));
             }
             if (comboBoxCriteriaType.SelectedIndex == 2)
             {

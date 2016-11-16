@@ -1,8 +1,8 @@
 ﻿using System;
 using Registry.Reporting.RegistryReporters;
-using Registry.Reporting.ClaimsReporters;
 using Registry.Reporting.TenancyReporters;
 using System.Globalization;
+using Registry.Reporting.ClaimsAndPaymentsReporters;
 using Registry.Reporting.ResettleReporters;
 
 namespace Registry.Reporting
@@ -89,8 +89,10 @@ namespace Registry.Reporting
                     return new MunicipalPremisesReporter();
                 case ReporterType.RegistryMunicipalBuildingsReporter:
                     return new MunicipalBuildingsReporter();
+                case ReporterType.AccountsDuplicateStatistic:
+                    return new AccountsDuplicateStatistic();
             }
-            throw new ReporterException(String.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType.ToString()));
+            throw new ReporterException(String.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType));
         }
     }
 }

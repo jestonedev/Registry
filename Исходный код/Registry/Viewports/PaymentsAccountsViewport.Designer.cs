@@ -101,6 +101,7 @@ namespace Registry.Viewport
             this.label21 = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.charging_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.crn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.raw_address = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.parsed_address = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -1217,6 +1218,7 @@ namespace Registry.Viewport
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.date,
+            this.charging_date,
             this.crn,
             this.raw_address,
             this.parsed_address,
@@ -1262,6 +1264,14 @@ namespace Registry.Viewport
             this.date.HeaderText = "Состояние на дату";
             this.date.Name = "date";
             this.date.ReadOnly = true;
+            this.date.Width = 130;
+            // 
+            // charging_date
+            // 
+            this.charging_date.HeaderText = "Дата последнего начисления";
+            this.charging_date.Name = "charging_date";
+            this.charging_date.ReadOnly = true;
+            this.charging_date.Width = 130;
             // 
             // crn
             // 
@@ -1564,6 +1574,7 @@ namespace Registry.Viewport
         private FixedNumericUpDown numericUpDownPenaltiesOutput;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.DataGridViewTextBoxColumn date;
+        private System.Windows.Forms.DataGridViewTextBoxColumn charging_date;
         private System.Windows.Forms.DataGridViewTextBoxColumn crn;
         private System.Windows.Forms.DataGridViewTextBoxColumn raw_address;
         private System.Windows.Forms.DataGridViewTextBoxColumn parsed_address;

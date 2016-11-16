@@ -40,6 +40,7 @@
         JudicialOrderReporter,
         TransfertToLegalDepartmentReporter,
         TenancyNotifyContractAgreement,
-        ClaimsStatesReporter
+        ClaimsStatesReporter,
+        AccountsDuplicateStatistic
     }
 }

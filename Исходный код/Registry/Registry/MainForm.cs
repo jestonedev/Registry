@@ -973,6 +973,11 @@ namespace Registry
             RunReport(ReporterType.RegistryMunicipalPremisesReporter);
         }
 
+        private void ribbonButtonAccountsDuplicateStatistic_Click(object sender, EventArgs e)
+        {
+            RunReport(ReporterType.AccountsDuplicateStatistic);
+        }
+
         private void ribbonButton1711_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;

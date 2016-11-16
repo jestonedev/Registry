@@ -12,6 +12,7 @@ namespace Registry.DataModels.DataModels
                   pa.account,
                   pm.tenant,
                   pm.date,
+                  vplcd.charging_date AS charging_date,
                   pm.total_area,
                   pm.living_area,
                   pm.prescribed,
@@ -57,7 +58,8 @@ namespace Registry.DataModels.DataModels
                 SELECT p.id_account, MAX(p.date) AS date
                 FROM payments p
                 GROUP BY p.id_account) v ON p.id_account = v.id_account AND p.date = v.date
-                GROUP BY p.id_account) pm ON pa.id_account = pm.id_account";
+                GROUP BY p.id_account) pm ON pa.id_account = pm.id_account
+                  LEFT JOIN v_payments_last_charging_date vplcd ON pa.id_account = vplcd.id_account";
         private const string TableName = "payments_accounts";
 
         private PaymentsAccountsDataModel(Action afterLoadHandler)

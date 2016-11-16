@@ -81,8 +81,8 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxCriteriaType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCriteriaType.FormattingEnabled = true;
             this.comboBoxCriteriaType.Items.AddRange(new object[] {
-            "по СРН",
             "по лицевому счету",
+            "по СРН",
             "по ФИО",
             "по адресу БКС"});
             this.comboBoxCriteriaType.Location = new System.Drawing.Point(10, 9);

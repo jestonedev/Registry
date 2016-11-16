@@ -58,10 +58,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClaimsReporters\JudicialOrderReporter.cs" />
-    <Compile Include="ClaimsReporters\RequestToBksReporter.cs" />
-    <Compile Include="ClaimsReporters\TransfertToLegalDepartmentReporter.cs" />
-    <Compile Include="ClaimsReporters\ClaimsStatesReporter.cs" />
+    <Compile Include="ClaimsAndPaymentsReporters\AccountsDuplicateStatistic.cs" />
+    <Compile Include="ClaimsAndPaymentsReporters\JudicialOrderReporter.cs" />
+    <Compile Include="ClaimsAndPaymentsReporters\RequestToBksReporter.cs" />
+    <Compile Include="ClaimsAndPaymentsReporters\TransfertToLegalDepartmentReporter.cs" />
+    <Compile Include="ClaimsAndPaymentsReporters\ClaimsStatesReporter.cs" />
     <Compile Include="SettingForms\ClaimStatesSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,7 +103,7 @@
     <Compile Include="SettingForms\ClaimsFilterForm.Designer.cs">
       <DependentUpon>ClaimsFilterForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ClaimsReporters\ClaimsStatisticReporter.cs" />
+    <Compile Include="ClaimsAndPaymentsReporters\ClaimsStatisticReporter.cs" />
     <Compile Include="SettingForms\DateRangeForm.cs">
       <SubType>Form</SubType>
     </Compile>

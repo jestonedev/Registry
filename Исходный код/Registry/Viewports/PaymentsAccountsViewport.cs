@@ -168,7 +168,12 @@ namespace Registry.Viewport
             switch (DataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "date":
-                    e.Value = ((DateTime)row["date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                case "charging_date":
+                    DateTime dateValue;
+                    if (DateTime.TryParse(row[DataGridView.Columns[e.ColumnIndex].Name].ToString(), out dateValue))
+                    {
+                        e.Value = dateValue.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    }
                     break;
                 default:
                     e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];

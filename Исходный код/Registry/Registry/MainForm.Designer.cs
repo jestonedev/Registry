@@ -29,7 +29,6 @@ namespace Registry
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
             WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin2 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
             WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
@@ -45,6 +44,7 @@ namespace Registry
             WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient6 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
             WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient13 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient14 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.ribbon1 = new System.Windows.Forms.Ribbon();
             this.ribbonOrbMenuItemBuildings = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonOrbMenuItemPremises = new System.Windows.Forms.RibbonOrbMenuItem();
@@ -175,6 +175,7 @@ namespace Registry
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonAccountsDuplicateStatistic = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -1390,11 +1391,11 @@ namespace Registry
             // 
             this.ribbonTabClaims.Panels.Add(this.ribbonPanel4);
             this.ribbonTabClaims.Panels.Add(this.ribbonPanel5);
-            this.ribbonTabClaims.Text = "Исковая работа";
+            this.ribbonTabClaims.Text = "Исковая работа и ЛС";
             this.ribbonTabClaims.ToolTip = "На данной вкладке расположены справочники и отчеты по претензионно-исковой работе" +
-    "";
+    " и лицевым счетам";
             this.ribbonTabClaims.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonTabClaims.ToolTipImage")));
-            this.ribbonTabClaims.ToolTipTitle = "Претензионно-исковая работа";
+            this.ribbonTabClaims.ToolTipTitle = "Претензионно-исковая работа и ЛС";
             // 
             // ribbonPanel4
             // 
@@ -1402,6 +1403,7 @@ namespace Registry
             this.ribbonPanel4.ButtonMoreVisible = false;
             this.ribbonPanel4.Items.Add(this.ribbonButtonClaimsStatistic);
             this.ribbonPanel4.Items.Add(this.ribbonButtonClaimStatesReport);
+            this.ribbonPanel4.Items.Add(this.ribbonButtonAccountsDuplicateStatistic);
             this.ribbonPanel4.Text = "Отчеты";
             // 
             // ribbonButtonClaimsStatistic
@@ -1641,6 +1643,14 @@ namespace Registry
             this.ribbonButton3.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.SmallImage")));
             this.ribbonButton3.Text = "Лицевые счета";
             // 
+            // ribbonButtonAccountsDuplicateStatistic
+            // 
+            this.ribbonButtonAccountsDuplicateStatistic.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAccountsDuplicateStatistic.Image")));
+            this.ribbonButtonAccountsDuplicateStatistic.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAccountsDuplicateStatistic.SmallImage")));
+            this.ribbonButtonAccountsDuplicateStatistic.Text = "Статистика по разделенным ЛС";
+            this.ribbonButtonAccountsDuplicateStatistic.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAccountsDuplicateStatistic.ToolTipImage")));
+            this.ribbonButtonAccountsDuplicateStatistic.Click += new System.EventHandler(this.ribbonButtonAccountsDuplicateStatistic_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1796,6 +1806,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonClaimStatesReport;
         private System.Windows.Forms.RibbonButton ribbonButtonMunicipalBuildings;
         private System.Windows.Forms.RibbonButton ribbonButtonMunicipalPremises;
+        private System.Windows.Forms.RibbonButton ribbonButtonAccountsDuplicateStatistic;
     }
 }
 
