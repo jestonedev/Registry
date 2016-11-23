@@ -447,8 +447,8 @@ namespace Registry.Viewport
                 case "rooms_area":
                     var subPremises =
                         (from subPremisesRow in Presenter.ViewModel["sub_premises"].Model.FilterDeletedRows()
-                            where subPremisesRow.Field<int>("id_premises") == (int) row["id_premises"] &&
-                                    new List<int> {4, 5, 9, 11, 12}.Contains((int) subPremisesRow["id_state"])
+                            where subPremisesRow.Field<int?>("id_premises") == (int?) row["id_premises"] &&
+                                    new List<int?> {4, 5, 9, 11, 12}.Contains((int?) subPremisesRow["id_state"])
                             select subPremisesRow).ToList();
                     if (subPremises.Any())
                     e.Value = subPremises.Select(sp => sp["total_area"].ToString()).Aggregate((v, acc) => v + " / " + acc);         
