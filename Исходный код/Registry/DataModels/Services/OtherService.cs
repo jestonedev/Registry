@@ -54,18 +54,18 @@ namespace Registry.DataModels.Services
                         var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows().ToList();
                         var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
                         var mBuilding = (from buildingRow in buildings
-                                         where buildingRow.Field<int>("id_building") == id &&
-                                               states.Contains(buildingRow.Field<int>("id_state"))
+                                         where buildingRow.Field<int?>("id_building") == id &&
+                                               states.Contains(buildingRow.Field<int?>("id_state") ?? 0)
                                          select buildingRow).Any();
                         var mPremises = (from premisesRow in premises
-                                         where premisesRow.Field<int>("id_building") == id &&
-                                               states.Contains(premisesRow.Field<int>("id_state"))
+                                         where premisesRow.Field<int?>("id_building") == id &&
+                                               states.Contains(premisesRow.Field<int?>("id_state") ?? 0)
                                          select premisesRow).Any();
                         var mSubPremises = (from premisesRow in premises
                                             join subPremisesRow in subPremises
-                                                on premisesRow.Field<int>("id_premises") equals subPremisesRow.Field<int>("id_premises")
-                                            where premisesRow.Field<int>("id_building") == id &&
-                                                  states.Contains(subPremisesRow.Field<int>("id_state"))
+                                                on premisesRow.Field<int?>("id_premises") equals subPremisesRow.Field<int?>("id_premises")
+                                            where premisesRow.Field<int?>("id_building") == id &&
+                                                  states.Contains(subPremisesRow.Field<int?>("id_state") ?? 0)
                                             select subPremisesRow).Any();
                         return mBuilding || mPremises || mSubPremises;
                     }
@@ -74,12 +74,12 @@ namespace Registry.DataModels.Services
                         var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows();
                         var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
                         var mPremises = (from premisesRow in premises
-                                         where premisesRow.Field<int>("id_premises") == id &&
-                                               states.Contains(premisesRow.Field<int>("id_state"))
+                                         where premisesRow.Field<int?>("id_premises") == id &&
+                                               states.Contains(premisesRow.Field<int?>("id_state") ?? 0)
                                          select premisesRow).Any();
                         var mSubPremises = (from subPremisesRow in subPremises
-                                            where subPremisesRow.Field<int>("id_premises") == id &&
-                                                  states.Contains(subPremisesRow.Field<int>("id_state"))
+                                            where subPremisesRow.Field<int?>("id_premises") == id &&
+                                                  states.Contains(subPremisesRow.Field<int?>("id_state") ?? 0)
                                             select subPremisesRow).Any();
                         return mPremises || mSubPremises;
                     }
@@ -87,8 +87,8 @@ namespace Registry.DataModels.Services
                     {
                         var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
                         return (from subPremisesRow in subPremises
-                                where subPremisesRow.Field<int>("id_sub_premises") == id &&
-                                      states.Contains(subPremisesRow.Field<int>("id_state"))
+                                where subPremisesRow.Field<int?>("id_sub_premises") == id &&
+                                      states.Contains(subPremisesRow.Field<int?>("id_state") ?? 0)
                                 select subPremisesRow).Any();
                     }
                 default:
