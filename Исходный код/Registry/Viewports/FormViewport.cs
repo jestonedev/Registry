@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Registry.Entities;
@@ -223,6 +224,11 @@ namespace Registry.Viewport
                         numUpDown.Text = @"0";
                         numUpDown.Value = 0;
                     };
+                    numUpDown.MouseWheel += (sender, args) =>
+                    {
+                        OnMouseWheel(args);
+                        ((HandledMouseEventArgs)args).Handled = true;
+                    };
                 } else
                 if (control is DateTimePicker)
                     (control as DateTimePicker).ValueChanged += (sender, args) => CheckViewportModifications();
@@ -231,6 +237,15 @@ namespace Registry.Viewport
                 {
                     (control as ComboBox).SelectedValueChanged += (sender, args) => CheckViewportModifications();
                     (control as ComboBox).Enter += (sender, args) => ViewportHelper.SelectAllText(sender);
+                    (control as ComboBox).MouseWheel += (sender, args) =>
+                    {
+                        var component = (ComboBox)sender;
+                        if (!component.DroppedDown)
+                        {
+                            OnMouseWheel(args);
+                            ((HandledMouseEventArgs)args).Handled = true;
+                        }
+                    };
                 }
                 else
                 if (control is CheckBox)
