@@ -16,9 +16,9 @@ namespace Registry.DataModels.Services
             var claimStateTypeRelations = EntityDataModel<ClaimStateTypeRelation>.GetInstance().FilterDeletedRows();
             return from claimStateTypesRow in claimStateTypes
                    join claimStateTypesRelRow in claimStateTypeRelations
-                       on claimStateTypesRow.Field<int>("id_state_type") equals claimStateTypesRelRow.Field<int>("id_state_from")
+                       on claimStateTypesRow.Field<int>("id_state_type") equals claimStateTypesRelRow.Field<int?>("id_state_from")
                    where Convert.ToBoolean(claimStateTypesRow.Field<object>("is_start_state_type"), CultureInfo.InvariantCulture) &&
-                         (claimStateTypesRelRow.Field<int>("id_state_to") == nextStateType)
+                         (claimStateTypesRelRow.Field<int?>("id_state_to") == nextStateType)
                    select claimStateTypesRow.Field<int>("id_state_type");
         }
 
@@ -28,8 +28,9 @@ namespace Registry.DataModels.Services
             var claimStateTypeRelations = EntityDataModel<ClaimStateTypeRelation>.GetInstance().FilterDeletedRows();
             return from claimStateTypesRow in claimStateTypes
                    join claimStateTypesRelRow in claimStateTypeRelations
-                       on claimStateTypesRow.Field<int>("id_state_type") equals claimStateTypesRelRow.Field<int>("id_state_from")
-                   where claimStateTypesRelRow.Field<int>("id_state_from") == prevStateType
+                       on claimStateTypesRow.Field<int>("id_state_type") equals claimStateTypesRelRow.Field<int?>("id_state_from")
+                   where claimStateTypesRelRow.Field<int?>("id_state_from") == prevStateType &&
+                            claimStateTypesRelRow.Field<int?>("id_state_to") != null
                    select claimStateTypesRelRow.Field<int>("id_state_to");
         }
 
@@ -37,10 +38,12 @@ namespace Registry.DataModels.Services
         {
             var claimStateTypeRelations = EntityDataModel<ClaimStateTypeRelation>.GetInstance().FilterDeletedRows().ToList();
             var fromStates = from claimStateTypesRelRow in claimStateTypeRelations
-                             where claimStateTypesRelRow.Field<int>("id_state_from") == prevStateType
+                             where claimStateTypesRelRow.Field<int?>("id_state_from") == prevStateType &&
+                                   claimStateTypesRelRow.Field<int?>("id_state_to") != null
                              select claimStateTypesRelRow.Field<int>("id_state_to");
             var toStates = from claimStateTypesRelRow in claimStateTypeRelations
-                           where claimStateTypesRelRow.Field<int>("id_state_to") == nextStateType
+                           where claimStateTypesRelRow.Field<int?>("id_state_to") == nextStateType &&
+                                 claimStateTypesRelRow.Field<int?>("id_state_from") != null
                            select claimStateTypesRelRow.Field<int>("id_state_from");
             return fromStates.Intersect(toStates);
         }
@@ -57,7 +60,7 @@ namespace Registry.DataModels.Services
         {
             var claimStates = EntityDataModel<ClaimState>.GetInstance().FilterDeletedRows();
             return (from claimStatesRow in claimStates
-                    where condition(claimStatesRow)
+                    where condition(claimStatesRow) && claimStatesRow.Field<int?>("id_claim") != null
                     select claimStatesRow.Field<int>("id_claim")).Distinct();
         }
     }

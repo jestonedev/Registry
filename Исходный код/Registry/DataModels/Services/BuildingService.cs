@@ -17,14 +17,14 @@ namespace Registry.DataModels.Services
             return
             (from tenancyBuildingsAssocRow in tenancyBuildingsAssoc
              join tenancyPersonsRow in tenancyPersons
-             on tenancyBuildingsAssocRow.Field<int>("id_process") equals tenancyPersonsRow.Field<int>("id_process")
+             on tenancyBuildingsAssocRow.Field<int?>("id_process") equals tenancyPersonsRow.Field<int?>("id_process")
              where snp.Any() && tenancyPersonsRow.Field<string>("surname") != null && 
                     string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
                     ((snp.Length < 2) || tenancyPersonsRow.Field<string>("name") != null &&
                      string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase)) &&
                     ((snp.Length < 3) || tenancyPersonsRow.Field<string>("patronymic") != null &&
                      string.Equals(tenancyPersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase)) &&
-                    condition(tenancyPersonsRow)
+                    condition(tenancyPersonsRow) && tenancyBuildingsAssocRow.Field<int?>("id_building") != null
              select tenancyBuildingsAssocRow.Field<int>("id_building")).Distinct();
         }
 
@@ -48,8 +48,9 @@ namespace Registry.DataModels.Services
             var tenancyProcesses = EntityDataModel<TenancyProcess>.GetInstance().FilterDeletedRows();
             return from tenancyProcessesRow in tenancyProcesses
                 join tenancyBuildingsAssocRow in tenancyBuildingsAssoc
-                    on tenancyProcessesRow.Field<int>("id_process") equals tenancyBuildingsAssocRow.Field<int>("id_process")
-                where tenancyProcessesRow.Field<string>("registration_num") == number
+                    on tenancyProcessesRow.Field<int?>("id_process") equals tenancyBuildingsAssocRow.Field<int?>("id_process")
+                where tenancyProcessesRow.Field<string>("registration_num") == number &&
+                      tenancyBuildingsAssocRow.Field<int?>("id_building") != null
                 select tenancyBuildingsAssocRow.Field<int>("id_building");
         }
 
@@ -61,23 +62,26 @@ namespace Registry.DataModels.Services
             var subPremisesFunds = CalcDataModelSubPremisesCurrentFunds.GetInstance().Select();
             var premisesIds = from subPremisesFundsRow in subPremisesFunds.AsEnumerable()
                               join subPremisesRow in EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows()
-                              on subPremisesFundsRow.Field<int>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
-                              where DataModelHelper.MunicipalAndUnknownObjectStates().Contains(subPremisesRow.Field<int>("id_state")) &&
-                              subPremisesFundsRow.Field<int>("id_fund_type") == idFund
+                              on subPremisesFundsRow.Field<int?>("id_sub_premises") equals subPremisesRow.Field<int?>("id_sub_premises")
+                              where DataModelHelper.MunicipalAndUnknownObjectStates().Contains(subPremisesRow.Field<int?>("id_state") ?? 0) &&
+                              subPremisesFundsRow.Field<int?>("id_fund_type") == idFund &&
+                              subPremisesRow.Field<int?>("id_premises") != null
                               select subPremisesRow.Field<int>("id_premises");
             var buildingsIds = from premisesFundsRow in premisesFunds.AsEnumerable()
                                join premisesRow in EntityDataModel<Premise>.GetInstance().FilterDeletedRows()
-                               on premisesFundsRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
-                               where DataModelHelper.MunicipalAndUnknownObjectStates().Contains(premisesRow.Field<int>("id_state")) &&
-                                premisesFundsRow.Field<int>("id_fund_type") == idFund ||
-                                (premisesFundsRow.Field<int>("id_fund_type") == 4 && premisesIds.Contains(premisesFundsRow.Field<int>("id_premises")))
+                               on premisesFundsRow.Field<int?>("id_premises") equals premisesRow.Field<int?>("id_premises")
+                               where DataModelHelper.MunicipalAndUnknownObjectStates().Contains(premisesRow.Field<int?>("id_state") ?? 0) &&
+                                premisesFundsRow.Field<int?>("id_fund_type") == idFund ||
+                                premisesFundsRow.Field<int?>("id_fund_type") == 4 && premisesIds.Contains(premisesFundsRow.Field<int?>("id_premises") ?? 0) &&
+                                premisesRow.Field<int?>("id_building") != null
                                select premisesRow.Field<int>("id_building");
             return from buildingsFundsRow in buildingsFunds.AsEnumerable()
                    join buildingsRow in DataModel.GetInstance<EntityDataModel<Building>>().FilterDeletedRows()
-                    on buildingsFundsRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
-                   where DataModelHelper.MunicipalAndUnknownObjectStates().Contains(buildingsRow.Field<int>("id_state")) &&
-                         buildingsFundsRow.Field<int>("id_fund_type") == idFund ||
-                         (buildingsFundsRow.Field<int>("id_fund_type") == 4 && buildingsIds.Contains(buildingsFundsRow.Field<int>("id_building")))
+                    on buildingsFundsRow.Field<int?>("id_building") equals buildingsRow.Field<int?>("id_building")
+                   where DataModelHelper.MunicipalAndUnknownObjectStates().Contains(buildingsRow.Field<int?>("id_state") ?? 0) &&
+                         buildingsFundsRow.Field<int?>("id_fund_type") == idFund ||
+                         buildingsFundsRow.Field<int?>("id_fund_type") == 4 && buildingsIds.Contains(buildingsFundsRow.Field<int?>("id_building") ?? 0) &&
+                         buildingsFundsRow.Field<int?>("id_building") != null
                    select buildingsFundsRow.Field<int>("id_building");
         }
 
@@ -85,7 +89,7 @@ namespace Registry.DataModels.Services
         {
             var buildings = DataModel.GetInstance<EntityDataModel<Building>>().FilterDeletedRows();
             return from buildingRow in buildings
-                where buildingRow.Field<string>("id_street").StartsWith(region, StringComparison.Ordinal)
+                where buildingRow.Field<string>("id_street") != null && buildingRow.Field<string>("id_street").StartsWith(region, StringComparison.Ordinal)
                 select buildingRow.Field<int>("id_building");
         }
 
@@ -101,7 +105,8 @@ namespace Registry.DataModels.Services
         {
             var buildings = DataModel.GetInstance<EntityDataModel<Building>>().FilterDeletedRows();
             return from buildingRow in buildings
-                where buildingRow.Field<string>("house").ToUpper().Contains(house.ToUpper())
+                where buildingRow.Field<string>("house") != null && 
+                      buildingRow.Field<string>("house").ToUpper().Contains(house.ToUpper())
                 select buildingRow.Field<int>("id_building");
         }
 
@@ -111,7 +116,7 @@ namespace Registry.DataModels.Services
             return (from buildingsRow in buildings
                 where buildingsRow.Field<string>("id_street") == building.IdStreet &&
                       buildingsRow.Field<string>("house") == building.House &&
-                      buildingsRow.Field<int>("id_building") != building.IdBuilding
+                      buildingsRow.Field<int?>("id_building") != building.IdBuilding
                 select buildingsRow).Count();
         }
 
@@ -121,8 +126,8 @@ namespace Registry.DataModels.Services
             var ownershipBuildingdsAssoc = EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().FilterDeletedRows();
             return from ownershipBuildingsAssocRow in ownershipBuildingdsAssoc
                 join ownershipRightsRow in ownershipRights
-                    on ownershipBuildingsAssocRow.Field<int>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
-                where ownershipRightsRow.Field<int>("id_ownership_right_type") == 1
+                    on ownershipBuildingsAssocRow.Field<int?>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
+                where ownershipRightsRow.Field<int?>("id_ownership_right_type") == 1
                 select ownershipBuildingsAssocRow.Field<int>("id_building");
         }
 
@@ -136,9 +141,11 @@ namespace Registry.DataModels.Services
             {
                 var emergencyExcludedBuildings = from ownershipBuildingsAssocRow in ownershipBuildingdsAssoc
                     join ownershipRightsRow in ownershipRights
-                        on ownershipBuildingsAssocRow.Field<int>("id_ownership_right") equals
+                        on ownershipBuildingsAssocRow.Field<int?>("id_ownership_right") equals
                         ownershipRightsRow.Field<int>("id_ownership_right")
-                    where ownershipRightsRow.Field<int>("id_ownership_right_type") == 6
+                    where ownershipRightsRow.Field<int?>("id_ownership_right_type") == 6 &&
+                          ownershipBuildingsAssocRow.Field<int?>("id_building") != null &&
+                          ownershipRightsRow.Field<DateTime?>("date") != null
                     select
                         new
                         {
@@ -149,21 +156,24 @@ namespace Registry.DataModels.Services
                 return from ownershipRightsRow in ownershipRights
                     join ownershipBuildingdsAssocRow in ownershipBuildingdsAssoc
                         on ownershipRightsRow.Field<int>("id_ownership_right") equals
-                        ownershipBuildingdsAssocRow.Field<int>("id_ownership_right")
+                        ownershipBuildingdsAssocRow.Field<int?>("id_ownership_right")
                     join demolishedBuildingsRow in demolishedBuildings
-                        on ownershipBuildingdsAssocRow.Field<int>("id_building") equals demolishedBuildingsRow into dBuildings
+                        on ownershipBuildingdsAssocRow.Field<int?>("id_building") equals demolishedBuildingsRow into dBuildings
                     from dBuildingsRow in dBuildings.DefaultIfEmpty()
                     join emergencyExcludedBuildingRow in emergencyExcludedBuildings
-                        on ownershipBuildingdsAssocRow.Field<int>("id_building") equals emergencyExcludedBuildingRow.id_building into eeBuildings
+                        on ownershipBuildingdsAssocRow.Field<int?>("id_building") equals emergencyExcludedBuildingRow.id_building into eeBuildings
                     from eeBuildingsRow in eeBuildings.DefaultIfEmpty()
-                       where ownershipRightsRow.Field<int>("id_ownership_right_type") == 2 &&
-                            dBuildingsRow == 0 && (eeBuildingsRow == null || eeBuildingsRow.date < ownershipRightsRow.Field<DateTime>("date"))
+                       where ownershipRightsRow.Field<int?>("id_ownership_right_type") == 2 &&
+                            dBuildingsRow == 0 && (eeBuildingsRow == null || 
+                            (ownershipRightsRow.Field<DateTime?>("date") != null && eeBuildingsRow.date < ownershipRightsRow.Field<DateTime>("date"))) &&
+                            ownershipBuildingdsAssocRow.Field<int?>("id_building") != null
                     select ownershipBuildingdsAssocRow.Field<int>("id_building");
             }
             return from ownershipRightsRow in ownershipRights
                 join ownershipBuildingdsAssocRow in ownershipBuildingdsAssoc
-                    on ownershipRightsRow.Field<int>("id_ownership_right") equals ownershipBuildingdsAssocRow.Field<int>("id_ownership_right")
-                where ownershipRightsRow.Field<int>("id_ownership_right_type") == idOwnershipType
+                    on ownershipRightsRow.Field<int>("id_ownership_right") equals ownershipBuildingdsAssocRow.Field<int?>("id_ownership_right")
+                where ownershipRightsRow.Field<int?>("id_ownership_right_type") == idOwnershipType &&
+                    ownershipBuildingdsAssocRow.Field<int?>("id_building") != null
                 select ownershipBuildingdsAssocRow.Field<int>("id_building");
         }
 
@@ -174,9 +184,9 @@ namespace Registry.DataModels.Services
             var buildings = EntityDataModel<Building>.GetInstance().FilterDeletedRows();
             return from buildingsRow in buildings
                    join ownershipBuildingsAssocRow in ownershipBuildingsAssoc
-                   on buildingsRow.Field<int>("id_building") equals ownershipBuildingsAssocRow.Field<int>("id_building")
+                   on buildingsRow.Field<int>("id_building") equals ownershipBuildingsAssocRow.Field<int?>("id_building")
                    join ownershipRightsRow in ownershipRights
-                   on ownershipBuildingsAssocRow.Field<int>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
+                   on ownershipBuildingsAssocRow.Field<int?>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
                    where ownershipRightsRow.Field<string>("number") == ownershipNumber
                    select buildingsRow.Field<int>("id_building");
         }
@@ -188,9 +198,9 @@ namespace Registry.DataModels.Services
             var buildings = EntityDataModel<Building>.GetInstance().FilterDeletedRows();
             return from buildingsRow in buildings
                    join restrictionBuildingsAssocRow in restrictionBuildingsAssoc
-                   on buildingsRow.Field<int>("id_building") equals restrictionBuildingsAssocRow.Field<int>("id_building")
+                   on buildingsRow.Field<int>("id_building") equals restrictionBuildingsAssocRow.Field<int?>("id_building")
                    join restrictionsRow in restricitons
-                   on restrictionBuildingsAssocRow.Field<int>("id_restriction") equals restrictionsRow.Field<int>("id_restriction")
+                   on restrictionBuildingsAssocRow.Field<int?>("id_restriction") equals restrictionsRow.Field<int>("id_restriction")
                    where restrictionsRow.Field<string>("number") == restrictionNumber
                    select buildingsRow.Field<int>("id_building");
         }
@@ -202,10 +212,10 @@ namespace Registry.DataModels.Services
             var buildings = EntityDataModel<Building>.GetInstance().FilterDeletedRows();
             return from buildingsRow in buildings
                    join restrictionBuildingsAssocRow in restrictionBuildingsAssoc
-                   on buildingsRow.Field<int>("id_building") equals restrictionBuildingsAssocRow.Field<int>("id_building")
+                   on buildingsRow.Field<int>("id_building") equals restrictionBuildingsAssocRow.Field<int?>("id_building")
                    join restrictionsRow in restricitons
-                   on restrictionBuildingsAssocRow.Field<int>("id_restriction") equals restrictionsRow.Field<int>("id_restriction")
-                   where restrictionsRow.Field<int>("id_restriction_type") == idRestrictionType
+                   on restrictionBuildingsAssocRow.Field<int?>("id_restriction") equals restrictionsRow.Field<int>("id_restriction")
+                   where restrictionsRow.Field<int?>("id_restriction_type") == idRestrictionType
                    select buildingsRow.Field<int>("id_building");
         }
 
@@ -214,8 +224,9 @@ namespace Registry.DataModels.Services
             var restrictions = EntityDataModel<Restriction>.GetInstance().FilterDeletedRows().ToList();
             var restrictionsMaxDate = from restrictionsAssocRow in buildingAssocDataRows
                 join restrictionsRow in restrictions
-                    on restrictionsAssocRow.Field<int>("id_restriction") equals restrictionsRow.Field<int>("id_restriction")
-                where new[] { 1, 2 }.Contains(restrictionsRow.Field<int>("id_restriction_type"))
+                    on restrictionsAssocRow.Field<int?>("id_restriction") equals restrictionsRow.Field<int>("id_restriction")
+                where new[] { 1, 2 }.Contains(restrictionsRow.Field<int?>("id_restriction_type") ?? 0) &&
+                    restrictionsRow.Field<DateTime?>("date") != null && restrictionsAssocRow.Field<int?>("id_building") != null
                 group restrictionsRow.Field<DateTime>("date") by restrictionsAssocRow.Field<int>("id_building") into gs
                 select new
                 {
@@ -225,19 +236,19 @@ namespace Registry.DataModels.Services
             return from restrictionsRow in restrictions
                 join restrictionsAssocRow in buildingAssocDataRows
                     on restrictionsRow.Field<int>("id_restriction")
-                    equals restrictionsAssocRow.Field<int>("id_restriction")
+                    equals restrictionsAssocRow.Field<int?>("id_restriction")
                 join rmdRow in restrictionsMaxDate
                     on new
                     {
-                        id = restrictionsAssocRow.Field<int>("id_building"),
-                        date = restrictionsRow.Field<DateTime>("date")
+                        id = restrictionsAssocRow.Field<int?>("id_building"),
+                        date = restrictionsRow.Field<DateTime?>("date")
                     } equals
                     new
                     {
-                        rmdRow.id,
-                        rmdRow.date
+                        id = (int?)rmdRow.id,
+                        date = (DateTime?)rmdRow.date
                     }
-                where restrictionsRow.Field<int>("id_restriction_type") == 2
+                where restrictionsRow.Field<int?>("id_restriction_type") == 2
                 select new RestrictionBuildingAssoc(restrictionsAssocRow.Field<int?>("id_building"),
                     restrictionsRow.Field<int?>("id_restriction"),
                     restrictionsRow.Field<DateTime?>("date"));
@@ -248,8 +259,9 @@ namespace Registry.DataModels.Services
             var restrictions = EntityDataModel<Restriction>.GetInstance().FilterDeletedRows().ToList();
             var restrictionsMaxDate = from restrictionsAssocRow in buildingAssocDataRows
                 join restrictionsRow in restrictions
-                    on restrictionsAssocRow.Field<int>("id_restriction") equals restrictionsRow.Field<int>("id_restriction")
-                where new[] { 1, 2 }.Contains(restrictionsRow.Field<int>("id_restriction_type"))
+                    on restrictionsAssocRow.Field<int?>("id_restriction") equals restrictionsRow.Field<int>("id_restriction")
+                where new[] { 1, 2 }.Contains(restrictionsRow.Field<int?>("id_restriction_type") ?? 0) &&
+                    restrictionsRow.Field<DateTime?>("date") != null && restrictionsAssocRow.Field<int?>("id_building") != null
                 group restrictionsRow.Field<DateTime>("date") by restrictionsAssocRow.Field<int>("id_building") into gs
                 select new
                 {
@@ -259,19 +271,19 @@ namespace Registry.DataModels.Services
             return from restrictionsRow in restrictions
                 join restrictionsAssocRow in buildingAssocDataRows
                     on restrictionsRow.Field<int>("id_restriction")
-                    equals restrictionsAssocRow.Field<int>("id_restriction")
+                    equals restrictionsAssocRow.Field<int?>("id_restriction")
                 join rmdRow in restrictionsMaxDate
                     on new
                     {
-                        id = restrictionsAssocRow.Field<int>("id_building"),
-                        date = restrictionsRow.Field<DateTime>("date")
+                        id = restrictionsAssocRow.Field<int?>("id_building"),
+                        date = restrictionsRow.Field<DateTime?>("date")
                     } equals
                     new
                     {
-                        rmdRow.id,
-                        rmdRow.date
+                        id = (int?)rmdRow.id,
+                        date = (DateTime?)rmdRow.date
                     }
-                where restrictionsRow.Field<int>("id_restriction_type") == 1
+                where restrictionsRow.Field<int?>("id_restriction_type") == 1
                 select new RestrictionBuildingAssoc(restrictionsAssocRow.Field<int?>("id_building"),
                     restrictionsRow.Field<int?>("id_restriction"),
                     restrictionsRow.Field<DateTime?>("date"));
@@ -281,11 +293,11 @@ namespace Registry.DataModels.Services
         {
             if (isEmergency)
                 return 4;
-            if (buildingRow.Field<short?>("improvement") == 1 && buildingRow.Field<short>("floors") <= 6)
+            if (buildingRow.Field<short?>("improvement") == 1 && buildingRow.Field<short?>("floors") <= 6)
                 return 1;
-            if (buildingRow.Field<short?>("improvement") == 1 && buildingRow.Field<short>("floors") > 6)
+            if (buildingRow.Field<short?>("improvement") == 1 && buildingRow.Field<short?>("floors") > 6)
                 return 2;
-            if (buildingRow.Field<short?>("improvement") != 1 && buildingRow.Field<int>("id_structure_type") == 5)
+            if (buildingRow.Field<short?>("improvement") != 1 && buildingRow.Field<int?>("id_structure_type") == 5)
                 return 3;
             return -1;
         }

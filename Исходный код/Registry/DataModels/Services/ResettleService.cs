@@ -14,11 +14,13 @@ namespace Registry.DataModels.Services
             var resettlePersons = EntityDataModel<ResettlePerson>.GetInstance().FilterDeletedRows();
             return
             (from resettlePersonsRow in resettlePersons
-             where snp.Any() && resettlePersonsRow.Field<string>("surname") != null && string.Equals(resettlePersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
+             where snp.Any() && resettlePersonsRow.Field<string>("surname") != null && 
+                    string.Equals(resettlePersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
                 ((snp.Length < 2) || resettlePersonsRow.Field<string>("name") != null &&
                     string.Equals(resettlePersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase)) &&
                 ((snp.Length < 3) || resettlePersonsRow.Field<string>("patronymic") != null &&
-                    string.Equals(resettlePersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase))
+                    string.Equals(resettlePersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase)) &&
+                resettlePersonsRow.Field<int?>("id_process") != null
              select resettlePersonsRow.Field<int>("id_process")).Distinct();
         }
 
@@ -38,25 +40,28 @@ namespace Registry.DataModels.Services
                 EntityDataModel<ResettleSubPremisesToAssoc>.GetInstance().FilterDeletedRows();
             var resettleBuildings = from resettleBuildingsRow in resettleBuildingsAssoc
                                     join buildingsRow in buildings
-                                    on resettleBuildingsRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                                    on resettleBuildingsRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
                                     where
-                                    (conditionType != DataModelHelper.ConditionType.PremisesCondition) && condition(buildingsRow)
+                                    (conditionType != DataModelHelper.ConditionType.PremisesCondition) && condition(buildingsRow) &&
+                                    resettleBuildingsRow.Field<int?>("id_process") != null
                                     select resettleBuildingsRow.Field<int>("id_process");
             var resettlePremises = from resettlePremisesRow in resettlePremisesAssoc
                                    join premisesRow in premises
-                                   on resettlePremisesRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                                   on resettlePremisesRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
                                    join buildingsRow in buildings
-                                   on premisesRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
-                                   where conditionType == DataModelHelper.ConditionType.PremisesCondition ? condition(premisesRow) : condition(buildingsRow)
+                                   on premisesRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
+                                   where (conditionType == DataModelHelper.ConditionType.PremisesCondition ? condition(premisesRow) : condition(buildingsRow)) &&
+                                          resettlePremisesRow.Field<int?>("id_process") != null
                                    select resettlePremisesRow.Field<int>("id_process");
             var resettleSubPremises = from resettleSubPremisesRow in resettleSubPremisesAssoc
                                       join subPremisesRow in subPremises
-                                      on resettleSubPremisesRow.Field<int>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
+                                      on resettleSubPremisesRow.Field<int?>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
                                       join premisesRow in premises
-                                      on subPremisesRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                                      on subPremisesRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
                                       join buildingsRow in buildings
-                                      on premisesRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
-                                      where conditionType == DataModelHelper.ConditionType.PremisesCondition ? condition(premisesRow) : condition(buildingsRow)
+                                      on premisesRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
+                                      where (conditionType == DataModelHelper.ConditionType.PremisesCondition ? condition(premisesRow) : condition(buildingsRow)) &&
+                                             resettleSubPremisesRow.Field<int?>("id_process") != null
                                       select resettleSubPremisesRow.Field<int>("id_process");
             return resettleBuildings.Union(resettlePremises).Union(resettleSubPremises);
         }
@@ -78,45 +83,53 @@ namespace Registry.DataModels.Services
                 EntityDataModel<ResettleSubPremisesToAssoc>.GetInstance().FilterDeletedRows();
             var resettleBuildings = from resettleBuildingsRow in resettleBuildingsAssoc
                                     join buildingsRow in buildings
-                                    on resettleBuildingsRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                                    on resettleBuildingsRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
                                     join kladrRow in kladrStreets
                                     on buildingsRow.Field<string>("id_street") equals kladrRow.Field<string>("id_street")
-                                    where addressParts.Length == 1 ? kladrRow.Field<string>("street_name").ToUpperInvariant().
+                                    where (addressParts.Length == 1 ? kladrRow.Field<string>("street_name").ToUpperInvariant().
                                                 Contains(addressParts[0].ToUpperInvariant()) :
                                           (addressParts.Length >= 2) && kladrRow.Field<string>("street_name").ToUpperInvariant().
-                                              Contains(addressParts[0].ToUpperInvariant()) && string.Equals(buildingsRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase)
+                                              Contains(addressParts[0].ToUpperInvariant()) && string.Equals(buildingsRow.Field<string>("house"), 
+                                              addressParts[1], StringComparison.InvariantCultureIgnoreCase)) &&
+                                              resettleBuildingsRow.Field<int?>("id_process") != null
                                     select resettleBuildingsRow.Field<int>("id_process");
             var resettlePremises = from resettlePremisesRow in resettlePremisesAssoc
                                    join premisesRow in premises
-                                   on resettlePremisesRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                                   on resettlePremisesRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
                                    join buildingsRow in buildings
-                                   on premisesRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                                   on premisesRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
                                    join kladrRow in kladrStreets
                                     on buildingsRow.Field<string>("id_street") equals kladrRow.Field<string>("id_street")
-                                   where addressParts.Length == 1 ? kladrRow.Field<string>("street_name").ToUpperInvariant().
+                                   where (addressParts.Length == 1 ? kladrRow.Field<string>("street_name").ToUpperInvariant().
                                        Contains(addressParts[0].ToUpperInvariant()) :
                                          addressParts.Length == 2 ? kladrRow.Field<string>("street_name").ToUpperInvariant().
                                              Contains(addressParts[0].ToUpperInvariant()) &&
                                          string.Equals(buildingsRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase) :
                                          (addressParts.Length == 3) && kladrRow.Field<string>("street_name").ToUpperInvariant().
-                                             Contains(addressParts[0].ToUpperInvariant()) && string.Equals(buildingsRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase) && string.Equals(premisesRow.Field<string>("premises_num"), addressParts[2], StringComparison.InvariantCultureIgnoreCase)
+                                             Contains(addressParts[0].ToUpperInvariant()) && 
+                                         string.Equals(buildingsRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase) && 
+                                         string.Equals(premisesRow.Field<string>("premises_num"), addressParts[2], StringComparison.InvariantCultureIgnoreCase)) &&
+                                         resettlePremisesRow.Field<int?>("id_process") != null
                                    select resettlePremisesRow.Field<int>("id_process");
             var resettleSubPremises = from resettleSubPremisesRow in resettleSubPremisesAssoc
                                       join subPremisesRow in subPremises
-                                      on resettleSubPremisesRow.Field<int>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
+                                      on resettleSubPremisesRow.Field<int?>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
                                       join premisesRow in premises
-                                      on subPremisesRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                                      on subPremisesRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
                                       join buildingsRow in buildings
-                                      on premisesRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                                      on premisesRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
                                       join kladrRow in kladrStreets
                                       on buildingsRow.Field<string>("id_street") equals kladrRow.Field<string>("id_street")
-                                      where addressParts.Length == 1 ? kladrRow.Field<string>("street_name").ToUpperInvariant().
+                                      where (addressParts.Length == 1 ? kladrRow.Field<string>("street_name").ToUpperInvariant().
                                           Contains(addressParts[0].ToUpperInvariant()) :
                                         addressParts.Length == 2 ? kladrRow.Field<string>("street_name").ToUpperInvariant().
                                             Contains(addressParts[0].ToUpperInvariant()) &&
                                         string.Equals(buildingsRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase) :
                                         (addressParts.Length == 3) && kladrRow.Field<string>("street_name").ToUpperInvariant().
-                                            Contains(addressParts[0].ToUpperInvariant()) && string.Equals(buildingsRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase) && string.Equals(premisesRow.Field<string>("premises_num"), addressParts[2], StringComparison.InvariantCultureIgnoreCase)
+                                            Contains(addressParts[0].ToUpperInvariant()) && 
+                                            string.Equals(buildingsRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase) && 
+                                            string.Equals(premisesRow.Field<string>("premises_num"), addressParts[2], StringComparison.InvariantCultureIgnoreCase)) &&
+                                            resettleSubPremisesRow.Field<int?>("id_process") != null
                                       select resettleSubPremisesRow.Field<int>("id_process");
             return resettleBuildings.Union(resettlePremises).Union(resettleSubPremises);
         }

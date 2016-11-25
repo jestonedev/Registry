@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
-using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -22,15 +21,15 @@ namespace Registry.DataModels.Services
                 (from tenancyPersonsRow in tenancyPersons
                     where
                         snp.Any() && tenancyPersonsRow.Field<string>("surname") != null &&
-                        String.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0],
+                        string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0],
                             StringComparison.InvariantCultureIgnoreCase) &&
                         ((snp.Length < 2) || tenancyPersonsRow.Field<string>("name") != null &&
-                         String.Equals(tenancyPersonsRow.Field<string>("name"), snp[1],
+                         string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1],
                              StringComparison.InvariantCultureIgnoreCase)) &&
                         ((snp.Length < 3) || tenancyPersonsRow.Field<string>("patronymic") != null &&
-                         String.Equals(tenancyPersonsRow.Field<string>("patronymic"), snp[2],
+                         string.Equals(tenancyPersonsRow.Field<string>("patronymic"), snp[2],
                              StringComparison.InvariantCultureIgnoreCase)) &&
-                        condition(tenancyPersonsRow)
+                        condition(tenancyPersonsRow) && tenancyPersonsRow.Field<int?>("id_process") != null
                     select tenancyPersonsRow.Field<int>("id_process")).Distinct();
         }
 
@@ -45,49 +44,49 @@ namespace Registry.DataModels.Services
             var tenancySubPremisesAssoc = EntityDataModel<TenancySubPremisesAssoc>.GetInstance().FilterDeletedRows();
             var tenancyBuildings = from tenancyBuildingsRow in tenancyBuildingsAssoc
                 join buildingsRow in buildings
-                    on tenancyBuildingsRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                    on tenancyBuildingsRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
                 join kladrRow in kladrStreets
                     on buildingsRow.Field<string>("id_street") equals kladrRow.Field<string>("id_street")
-                where addressParts.Length == 1
+                where buildingsRow.Field<string>("house") != null && tenancyBuildingsRow.Field<int?>("id_process") != null &&
+                    (addressParts.Length == 1
                     ? kladrRow.Field<string>("street_name").ToUpperInvariant().
                         Contains(addressParts[0].ToUpperInvariant())
                     : (addressParts.Length >= 2) && kladrRow.Field<string>("street_name").ToUpperInvariant().
                         Contains(addressParts[0].ToUpperInvariant()) &&
-                      buildingsRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper())
+                      buildingsRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper()))
                 select tenancyBuildingsRow.Field<int>("id_process");
             var tenancyPremises = from tenancyPremisesRow in tenancyPremisesAssoc
                 join premisesRow in premises
-                    on tenancyPremisesRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                    on tenancyPremisesRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
                 join buildingsRow in buildings
-                    on premisesRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                    on premisesRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
                 join kladrRow in kladrStreets
                     on buildingsRow.Field<string>("id_street") equals kladrRow.Field<string>("id_street")
-                where addressParts.Length == 1
-                    ? kladrRow.Field<string>("street_name").ToUpperInvariant().
-                        Contains(addressParts[0].ToUpperInvariant())
-                    : addressParts.Length == 2
-                        ? kladrRow.Field<string>("street_name").ToUpperInvariant().
-                            Contains(addressParts[0].ToUpperInvariant()) &&
+                where buildingsRow.Field<string>("house") != null && premisesRow.Field<string>("premises_num") != null &&
+                    tenancyPremisesRow.Field<int?>("id_process") != null &&
+                    (addressParts.Length == 1 ? kladrRow.Field<string>("street_name").ToUpperInvariant().
+                        Contains(addressParts[0].ToUpperInvariant()) : addressParts.Length == 2
+                        ? kladrRow.Field<string>("street_name").ToUpperInvariant().Contains(addressParts[0].ToUpperInvariant()) &&
                           buildingsRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper())
-                        : (addressParts.Length == 3) && kladrRow.Field<string>("street_name").ToUpperInvariant().
-                            Contains(addressParts[0].ToUpperInvariant()) &&
+                        : (addressParts.Length == 3) && 
+                          kladrRow.Field<string>("street_name").ToUpperInvariant().Contains(addressParts[0].ToUpperInvariant()) &&
                           buildingsRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper()) &&
-                          premisesRow.Field<string>("premises_num").ToUpperInvariant().Equals(
-                              addressParts[2].ToUpperInvariant())
+                          premisesRow.Field<string>("premises_num").ToUpperInvariant().Equals(addressParts[2].ToUpperInvariant()))
                 select tenancyPremisesRow.Field<int>("id_process");
             var tenancySubPremises = from tenancySubPremisesRow in tenancySubPremisesAssoc
                 join subPremisesRow in subPremises
-                    on tenancySubPremisesRow.Field<int>("id_sub_premises") equals
+                    on tenancySubPremisesRow.Field<int?>("id_sub_premises") equals
                     subPremisesRow.Field<int>("id_sub_premises")
                 join premisesRow in premises
-                    on subPremisesRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                    on subPremisesRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
                 join buildingsRow in buildings
-                    on premisesRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                    on premisesRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
                 join kladrRow in kladrStreets
                     on buildingsRow.Field<string>("id_street") equals kladrRow.Field<string>("id_street")
-                where addressParts.Length == 1
-                    ? kladrRow.Field<string>("street_name").ToUpperInvariant().
-                        Contains(addressParts[0].ToUpperInvariant())
+                where buildingsRow.Field<string>("house") != null && premisesRow.Field<string>("premises_num") != null &&
+                    tenancySubPremisesRow.Field<int?>("id_process") != null &&
+                    (addressParts.Length == 1
+                    ? kladrRow.Field<string>("street_name").ToUpperInvariant().Contains(addressParts[0].ToUpperInvariant())
                     : addressParts.Length == 2
                         ? kladrRow.Field<string>("street_name").ToUpperInvariant().
                             Contains(addressParts[0].ToUpperInvariant()) &&
@@ -95,7 +94,7 @@ namespace Registry.DataModels.Services
                         : (addressParts.Length == 3) && kladrRow.Field<string>("street_name").ToUpperInvariant().
                             Contains(addressParts[0].ToUpperInvariant()) &&
                           buildingsRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper()) &&
-                          premisesRow.Field<string>("premises_num").ToUpper().Equals(addressParts[2].ToUpper())
+                          premisesRow.Field<string>("premises_num").ToUpper().Equals(addressParts[2].ToUpper()))
                 select tenancySubPremisesRow.Field<int>("id_process");
             return tenancyBuildings.Union(tenancyPremises).Union(tenancySubPremises);
         }
@@ -111,32 +110,32 @@ namespace Registry.DataModels.Services
             var tenancySubPremisesAssoc = EntityDataModel<TenancySubPremisesAssoc>.GetInstance().FilterDeletedRows();
             var tenancyBuildings = from tenancyBuildingsRow in tenancyBuildingsAssoc
                 join buildingsRow in buildings
-                    on tenancyBuildingsRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
-                where
-                    (conditionType != DataModelHelper.ConditionType.PremisesCondition) && condition(buildingsRow)
+                    on tenancyBuildingsRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
+                where (conditionType != DataModelHelper.ConditionType.PremisesCondition) && condition(buildingsRow) &&
+                       tenancyBuildingsRow.Field<int?>("id_process") != null
                 select tenancyBuildingsRow.Field<int>("id_process");
             var tenancyPremises = from tenancyPremisesRow in tenancyPremisesAssoc
                 join premisesRow in premises
-                    on tenancyPremisesRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                    on tenancyPremisesRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
                 join buildingsRow in buildings
-                    on premisesRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                    on premisesRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
                 where
-                    conditionType == DataModelHelper.ConditionType.PremisesCondition
+                    (conditionType == DataModelHelper.ConditionType.PremisesCondition
                         ? condition(premisesRow)
-                        : condition(buildingsRow)
+                        : condition(buildingsRow)) && tenancyPremisesRow.Field<int?>("id_process") != null
                 select tenancyPremisesRow.Field<int>("id_process");
             var tenancySubPremises = from tenancySubPremisesRow in tenancySubPremisesAssoc
                 join subPremisesRow in subPremises
-                    on tenancySubPremisesRow.Field<int>("id_sub_premises") equals
+                    on tenancySubPremisesRow.Field<int?>("id_sub_premises") equals
                     subPremisesRow.Field<int>("id_sub_premises")
                 join premisesRow in premises
-                    on subPremisesRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                    on subPremisesRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
                 join buildingsRow in buildings
-                    on premisesRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                    on premisesRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
                 where
-                    conditionType == DataModelHelper.ConditionType.PremisesCondition
+                    (conditionType == DataModelHelper.ConditionType.PremisesCondition
                         ? condition(premisesRow)
-                        : condition(buildingsRow)
+                        : condition(buildingsRow)) && tenancySubPremisesRow.Field<int?>("id_process") != null
                 select tenancySubPremisesRow.Field<int>("id_process");
             return tenancyBuildings.Union(tenancyPremises).Union(tenancySubPremises);
         }
@@ -145,7 +144,8 @@ namespace Registry.DataModels.Services
         {
             var tenancyBuildingsAssoc = EntityDataModel<TenancyBuildingAssoc>.GetInstance().FilterDeletedRows();
             var tenancyBuildings = from tenancyBuildingsRow in tenancyBuildingsAssoc
-                where tenancyBuildingsRow.Field<int?>("id_building") == id
+                where tenancyBuildingsRow.Field<int?>("id_building") == id && 
+                      tenancyBuildingsRow.Field<int?>("id_process") != null
                 select tenancyBuildingsRow.Field<int>("id_process");
             return tenancyBuildings;
         }
@@ -154,7 +154,8 @@ namespace Registry.DataModels.Services
         {
             var tenancyPremisesAssoc = EntityDataModel<TenancyPremisesAssoc>.GetInstance().FilterDeletedRows();
             var tenancyPremises = from tenancyPremisesRow in tenancyPremisesAssoc
-                where tenancyPremisesRow.Field<int?>("id_premises") == id
+                where tenancyPremisesRow.Field<int?>("id_premises") == id &&
+                      tenancyPremisesRow.Field<int?>("id_process") != null
                 select tenancyPremisesRow.Field<int>("id_process");
             return tenancyPremises;
         }
@@ -163,7 +164,8 @@ namespace Registry.DataModels.Services
         {
             var tenancySubPremisesAssoc = EntityDataModel<TenancySubPremisesAssoc>.GetInstance().FilterDeletedRows();
             var tenancySubPremises = from tenancySubPremisesRow in tenancySubPremisesAssoc
-                where tenancySubPremisesRow.Field<int?>("id_sub_premises") == id
+                where tenancySubPremisesRow.Field<int?>("id_sub_premises") == id &&
+                      tenancySubPremisesRow.Field<int?>("id_process") != null
                 select tenancySubPremisesRow.Field<int>("id_process");
             return tenancySubPremises;
         }
@@ -173,7 +175,7 @@ namespace Registry.DataModels.Services
             var persons = EntityDataModel<TenancyPerson>.GetInstance().FilterDeletedRows();
             return (from personsRow in persons
                 where
-                    (personsRow.Field<int?>("id_kinship") == 1) && personsRow.Field<int>("id_process") == idProcess &&
+                    (personsRow.Field<int?>("id_kinship") == 1) && personsRow.Field<int?>("id_process") == idProcess &&
                     (personsRow.Field<DateTime?>("exclude_date") == null)
                 select personsRow).Any();
         }
@@ -182,7 +184,7 @@ namespace Registry.DataModels.Services
         {
             var agreements = EntityDataModel<TenancyAgreement>.GetInstance().FilterDeletedRows();
             return (from agreementsRow in agreements
-                where agreementsRow.Field<int>("id_process") == idProcess
+                where agreementsRow.Field<int?>("id_process") == idProcess
                 select agreementsRow).Count();
         }
 
@@ -200,6 +202,8 @@ namespace Registry.DataModels.Services
             // Собираем строку проверки уникальности сдаваемой группы помещений. Выглядеть эта строка будет примерно подобным образом з1з12п23п122к32 и т.п.
             var assocSubPremises =
                 from assocSubPremisesRow in EntityDataModel<TenancySubPremisesAssoc>.GetInstance().FilterDeletedRows()
+                where assocSubPremisesRow.Field<int?>("id_sub_premises") != null &&
+                      assocSubPremisesRow.Field<int?>("id_process") != null
                 group assocSubPremisesRow.Field<int>("id_sub_premises").ToString(CultureInfo.InvariantCulture)
                     by assocSubPremisesRow.Field<int>("id_process")
                 into gs
@@ -213,6 +217,8 @@ namespace Registry.DataModels.Services
                 };
             var assocPremises =
                 from assocPremisesRow in EntityDataModel<TenancyPremisesAssoc>.GetInstance().FilterDeletedRows()
+                where assocPremisesRow.Field<int?>("id_premises") != null &&
+                      assocPremisesRow.Field<int?>("id_process") != null
                 group assocPremisesRow.Field<int>("id_premises").ToString(CultureInfo.InvariantCulture)
                     by assocPremisesRow.Field<int>("id_process")
                 into gs
@@ -226,6 +232,8 @@ namespace Registry.DataModels.Services
                 };
             var assocBuildings =
                 from assocBuildingsRow in EntityDataModel<TenancyBuildingAssoc>.GetInstance().FilterDeletedRows()
+                where assocBuildingsRow.Field<int?>("id_building") != null &&
+                      assocBuildingsRow.Field<int?>("id_process") != null
                 group assocBuildingsRow.Field<int>("id_building").ToString(CultureInfo.InvariantCulture)
                     by assocBuildingsRow.Field<int>("id_process")
                 into gs
@@ -292,10 +300,14 @@ namespace Registry.DataModels.Services
             var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
             var aSubPremisesGc = from assocSubPremisesRow in assocSubPremises
                 join subPremisesRow in subPremises
-                    on assocSubPremisesRow.Field<int>("id_sub_premises") equals
+                    on assocSubPremisesRow.Field<int?>("id_sub_premises") equals
                     subPremisesRow.Field<int>("id_sub_premises")
                 join premisesRow in premises.AsEnumerable()
-                    on subPremisesRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                    on subPremisesRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
+                where assocSubPremisesRow.Field<int?>("id_process") != null &&
+                      premisesRow.Field<int?>("id_building") != null &&
+                      subPremisesRow.Field<int?>("id_premises") != null &&
+                      premisesRow.Field<int?>("id_premises_type") != null
                 group subPremisesRow.Field<string>("sub_premises_num") by
                     new
                     {
@@ -319,7 +331,11 @@ namespace Registry.DataModels.Services
                 };
             var aPremises = from assocPremisesRow in assocPremises
                 join premisesRow in premises
-                    on assocPremisesRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                    on assocPremisesRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
+                  where assocPremisesRow.Field<int?>("id_process") != null &&
+                      premisesRow.Field<int?>("id_building") != null &&
+                      assocPremisesRow.Field<int?>("id_premises") != null &&
+                      premisesRow.Field<int?>("id_premises_type") != null
                 select new
                 {
                     id_process = assocPremisesRow.Field<int>("id_process"),
@@ -331,6 +347,8 @@ namespace Registry.DataModels.Services
                                  premisesRow.Field<string>("premises_num")
                 };
             var aBuildings = from assocBuildingsRow in assocBuildings
+                             where assocBuildingsRow.Field<int?>("id_process") != null &&
+                                   assocBuildingsRow.Field<int?>("id_building") != null
                 select new
                 {
                     id_process = assocBuildingsRow.Field<int>("id_process"),
@@ -377,12 +395,12 @@ namespace Registry.DataModels.Services
             var tenancyPersons = new List<TenancyPerson>();
             var currentPremise = (from premisesAssocRow in premisesAssoc.FilterDeletedRows()
                 join premisesRow in premises.FilterDeletedRows()
-                    on premisesAssocRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                    on premisesAssocRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
                 join buildingsRow in buildings.FilterDeletedRows()
-                    on premisesRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                    on premisesRow.Field<int?>("id_building") equals buildingsRow.Field<int>("id_building")
                 join streetsRow in streets.FilterDeletedRows()
                     on buildingsRow.Field<string>("id_street") equals streetsRow.Field<string>("id_street")
-                where premisesAssocRow.Field<int>("id_process") == idProcess
+                where premisesAssocRow.Field<int?>("id_process") == idProcess
                 select new
                 {
                     premises_num = premisesRow.Field<string>("premises_num"),
