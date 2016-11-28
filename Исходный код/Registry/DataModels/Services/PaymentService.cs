@@ -50,6 +50,30 @@ namespace Registry.DataModels.Services
             }
         }
 
+        public static IEnumerable<int> GetAccountIdsByRegion(string idRegion)
+        {
+            using (var connection = new DBConnection())
+            using (var command = DBConnection.CreateCommand())
+            {
+                command.CommandText = @"SELECT id_account
+                                    FROM payments_accounts pa
+                                    WHERE pa.id_account IN (
+                                      SELECT v.id_account
+                                      FROM
+                                      (SELECT sp.id_premises, paspa.id_account
+                                      FROM payments_account_sub_premises_assoc paspa
+                                      INNER JOIN sub_premises sp ON paspa.id_sub_premises = sp.id_sub_premises
+                                      UNION ALL
+                                      SELECT papa.id_premises, papa.id_account
+                                      FROM payments_account_premises_assoc papa) v
+                                      INNER JOIN premises p ON p.id_premises = v.id_premises
+                                      INNER JOIN buildings b ON p.id_building = b.id_building
+                                      WHERE b.id_street LIKE ?)";
+                command.Parameters.Add(DBConnection.CreateParameter("id_street", idRegion+"%"));
+                return connection.SqlSelectTable("ids", command).AsEnumerable().Select(row => row.Field<int>("id_account"));
+            }
+        }
+
         public static IEnumerable<int> GetAccountIdsByHouse(string house)
         {
             using (var connection = new DBConnection())

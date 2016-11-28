@@ -345,38 +345,7 @@ namespace Registry.Viewport
             var index = Presenter.ViewModel["executors"].BindingSource.Find("executor_login", login);
             if (index != -1)
                 comboBoxExecutor.SelectedValue = ((DataRowView)Presenter.ViewModel["executors"].BindingSource[index])["id_executor"];
-            var rentRow = Presenter.ViewModel["rent_types"].DataSource.Rows.Find(ParentRow["id_rent_type"]);
-            var rent = "";
-            if (rentRow != null)
-            {
-                rent = rentRow["rent_type_genetive"].ToString();
-            }
-            var premisesInfoRow = (from row in Presenter.ViewModel["tenancy_premises_info"].Model.FilterDeletedRows()
-                                  where row.Field<int>("id_process") == (int?)ParentRow["id_process"]
-                                  select row).FirstOrDefault();
-            var address = "";
-            if (premisesInfoRow != null)
-            {
-                address = premisesInfoRow["address"].ToString()
-                    .Replace("жилрайон.", "жилой район")
-                    .Replace("ул.", "улица")
-                    .Replace("пр-кт.", "проспект")
-                    .Replace("б-р.", "бульвар")
-                    .Replace("туп.", "тупик")
-                    .Replace("д.", "дом")
-                    .Replace("кв.", "квартира")
-                    .Replace("пом.", "помещение")
-                    .Replace("ком.", "комната(ы)");
-            }
-            textBoxAgreementContent.Text = string.Format(CultureInfo.InvariantCulture,
-                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {2} найма жилого помещения, расположенного по адресу: {3}, договорились:",
-                ParentRow["registration_num"],
-                ParentRow["registration_date"] != DBNull.Value
-                    ? Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture)
-                        .ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)
-                    : "",
-                rent,
-                address);
+            textBoxAgreementContent.Text = ((TenancyAgreementsPresenter) Presenter).GetDefaultAgreementPoint();
             IsEditable = true;
         }
 

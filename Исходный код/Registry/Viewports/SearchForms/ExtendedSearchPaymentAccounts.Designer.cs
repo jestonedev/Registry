@@ -136,6 +136,9 @@ namespace Registry.Viewport.SearchForms
             this.radioButtonWithUncompletedClaims = new System.Windows.Forms.RadioButton();
             this.radioButtonWithoutUncompletedClaims = new System.Windows.Forms.RadioButton();
             this.checkBoxByClaimsChecked = new System.Windows.Forms.CheckBox();
+            this.comboBoxRegion = new System.Windows.Forms.ComboBox();
+            this.checkBoxRegionEnable = new System.Windows.Forms.CheckBox();
+            this.label23 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceInputFrom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceInputTo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceInputTenancyTo)).BeginInit();
@@ -172,7 +175,7 @@ namespace Registry.Viewport.SearchForms
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(17, 544);
+            this.vButtonCancel.Location = new System.Drawing.Point(145, 547);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -185,7 +188,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(17, 503);
+            this.vButtonSearch.Location = new System.Drawing.Point(17, 547);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
@@ -282,7 +285,7 @@ namespace Registry.Viewport.SearchForms
             // textBoxHouse
             // 
             this.textBoxHouse.Enabled = false;
-            this.textBoxHouse.Location = new System.Drawing.Point(42, 230);
+            this.textBoxHouse.Location = new System.Drawing.Point(42, 275);
             this.textBoxHouse.Name = "textBoxHouse";
             this.textBoxHouse.Size = new System.Drawing.Size(311, 21);
             this.textBoxHouse.TabIndex = 11;
@@ -291,7 +294,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxPremisesNumEnable
             // 
             this.checkBoxPremisesNumEnable.AutoSize = true;
-            this.checkBoxPremisesNumEnable.Location = new System.Drawing.Point(17, 272);
+            this.checkBoxPremisesNumEnable.Location = new System.Drawing.Point(17, 317);
             this.checkBoxPremisesNumEnable.Name = "checkBoxPremisesNumEnable";
             this.checkBoxPremisesNumEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxPremisesNumEnable.TabIndex = 12;
@@ -301,7 +304,7 @@ namespace Registry.Viewport.SearchForms
             // textBoxPremisesNum
             // 
             this.textBoxPremisesNum.Enabled = false;
-            this.textBoxPremisesNum.Location = new System.Drawing.Point(42, 269);
+            this.textBoxPremisesNum.Location = new System.Drawing.Point(42, 314);
             this.textBoxPremisesNum.MaxLength = 4;
             this.textBoxPremisesNum.Name = "textBoxPremisesNum";
             this.textBoxPremisesNum.Size = new System.Drawing.Size(311, 21);
@@ -311,7 +314,7 @@ namespace Registry.Viewport.SearchForms
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 252);
+            this.label7.Location = new System.Drawing.Point(10, 297);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(193, 15);
             this.label7.TabIndex = 67;
@@ -320,7 +323,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxHouseEnable
             // 
             this.checkBoxHouseEnable.AutoSize = true;
-            this.checkBoxHouseEnable.Location = new System.Drawing.Point(17, 233);
+            this.checkBoxHouseEnable.Location = new System.Drawing.Point(17, 278);
             this.checkBoxHouseEnable.Name = "checkBoxHouseEnable";
             this.checkBoxHouseEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxHouseEnable.TabIndex = 10;
@@ -330,7 +333,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxStreetEnable
             // 
             this.checkBoxStreetEnable.AutoSize = true;
-            this.checkBoxStreetEnable.Location = new System.Drawing.Point(17, 191);
+            this.checkBoxStreetEnable.Location = new System.Drawing.Point(17, 236);
             this.checkBoxStreetEnable.Name = "checkBoxStreetEnable";
             this.checkBoxStreetEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxStreetEnable.TabIndex = 8;
@@ -340,7 +343,7 @@ namespace Registry.Viewport.SearchForms
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(10, 213);
+            this.label10.Location = new System.Drawing.Point(10, 258);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(156, 15);
             this.label10.TabIndex = 66;
@@ -349,7 +352,7 @@ namespace Registry.Viewport.SearchForms
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(10, 170);
+            this.label11.Location = new System.Drawing.Point(10, 215);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(120, 15);
             this.label11.TabIndex = 65;
@@ -359,7 +362,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.comboBoxStreet.Enabled = false;
             this.comboBoxStreet.FormattingEnabled = true;
-            this.comboBoxStreet.Location = new System.Drawing.Point(42, 187);
+            this.comboBoxStreet.Location = new System.Drawing.Point(42, 232);
             this.comboBoxStreet.Name = "comboBoxStreet";
             this.comboBoxStreet.Size = new System.Drawing.Size(311, 23);
             this.comboBoxStreet.TabIndex = 9;
@@ -371,7 +374,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxDateEnable
             // 
             this.checkBoxDateEnable.AutoSize = true;
-            this.checkBoxDateEnable.Location = new System.Drawing.Point(17, 313);
+            this.checkBoxDateEnable.Location = new System.Drawing.Point(17, 358);
             this.checkBoxDateEnable.Name = "checkBoxDateEnable";
             this.checkBoxDateEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDateEnable.TabIndex = 14;
@@ -381,7 +384,7 @@ namespace Registry.Viewport.SearchForms
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(15, 293);
+            this.label12.Location = new System.Drawing.Point(15, 338);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(95, 15);
             this.label12.TabIndex = 74;
@@ -390,7 +393,7 @@ namespace Registry.Viewport.SearchForms
             // dateTimePickerDate
             // 
             this.dateTimePickerDate.Enabled = false;
-            this.dateTimePickerDate.Location = new System.Drawing.Point(98, 310);
+            this.dateTimePickerDate.Location = new System.Drawing.Point(98, 355);
             this.dateTimePickerDate.Name = "dateTimePickerDate";
             this.dateTimePickerDate.Size = new System.Drawing.Size(255, 21);
             this.dateTimePickerDate.TabIndex = 16;
@@ -404,7 +407,7 @@ namespace Registry.Viewport.SearchForms
             "≥",
             "≤",
             "="});
-            this.comboBoxDateExpr.Location = new System.Drawing.Point(42, 310);
+            this.comboBoxDateExpr.Location = new System.Drawing.Point(42, 355);
             this.comboBoxDateExpr.Name = "comboBoxDateExpr";
             this.comboBoxDateExpr.Size = new System.Drawing.Size(48, 23);
             this.comboBoxDateExpr.TabIndex = 15;
@@ -1480,7 +1483,7 @@ namespace Registry.Viewport.SearchForms
             this.groupBox1.Controls.Add(this.radioButtonWithUncompletedClaims);
             this.groupBox1.Controls.Add(this.radioButtonWithoutUncompletedClaims);
             this.groupBox1.Enabled = false;
-            this.groupBox1.Location = new System.Drawing.Point(8, 341);
+            this.groupBox1.Location = new System.Drawing.Point(8, 386);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(356, 137);
             this.groupBox1.TabIndex = 18;
@@ -1531,7 +1534,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxByClaimsChecked
             // 
             this.checkBoxByClaimsChecked.AutoSize = true;
-            this.checkBoxByClaimsChecked.Location = new System.Drawing.Point(17, 340);
+            this.checkBoxByClaimsChecked.Location = new System.Drawing.Point(17, 385);
             this.checkBoxByClaimsChecked.Name = "checkBoxByClaimsChecked";
             this.checkBoxByClaimsChecked.Size = new System.Drawing.Size(229, 19);
             this.checkBoxByClaimsChecked.TabIndex = 17;
@@ -1539,12 +1542,44 @@ namespace Registry.Viewport.SearchForms
             this.checkBoxByClaimsChecked.UseVisualStyleBackColor = true;
             this.checkBoxByClaimsChecked.CheckedChanged += new System.EventHandler(this.checkBoxByClaimsChecked_CheckedChanged);
             // 
+            // comboBoxRegion
+            // 
+            this.comboBoxRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxRegion.Enabled = false;
+            this.comboBoxRegion.FormattingEnabled = true;
+            this.comboBoxRegion.Location = new System.Drawing.Point(42, 189);
+            this.comboBoxRegion.Name = "comboBoxRegion";
+            this.comboBoxRegion.Size = new System.Drawing.Size(311, 23);
+            this.comboBoxRegion.TabIndex = 168;
+            // 
+            // checkBoxRegionEnable
+            // 
+            this.checkBoxRegionEnable.AutoSize = true;
+            this.checkBoxRegionEnable.Location = new System.Drawing.Point(17, 193);
+            this.checkBoxRegionEnable.Name = "checkBoxRegionEnable";
+            this.checkBoxRegionEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxRegionEnable.TabIndex = 167;
+            this.checkBoxRegionEnable.UseVisualStyleBackColor = true;
+            this.checkBoxRegionEnable.CheckedChanged += new System.EventHandler(this.checkBoxRegionEnable_CheckedChanged);
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(10, 172);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(161, 15);
+            this.label23.TabIndex = 169;
+            this.label23.Text = "Жилой район (только ЖФ)";
+            // 
             // ExtendedSearchPaymentAccounts
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             this.ClientSize = new System.Drawing.Size(786, 591);
+            this.Controls.Add(this.comboBoxRegion);
+            this.Controls.Add(this.checkBoxRegionEnable);
+            this.Controls.Add(this.label23);
             this.Controls.Add(this.checkBoxByClaimsChecked);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.numericUpDownBalanceOutputDGITo);
@@ -1792,5 +1827,8 @@ namespace Registry.Viewport.SearchForms
         private RadioButton radioButtonWithUncompletedClaims;
         private RadioButton radioButtonWithoutUncompletedClaims;
         private CheckBox checkBoxByClaimsChecked;
+        private ComboBox comboBoxRegion;
+        private CheckBox checkBoxRegionEnable;
+        private Label label23;
     }
 }

@@ -22,9 +22,17 @@ namespace Registry.Viewport.SearchForms
             {
                 DataSource = DataModel.GetInstance<KladrStreetsDataModel>().Select()
             };
+
+            var regions = DataModel.GetInstance<KladrRegionsDataModel>();
+            var vRegions = new BindingSource { DataSource = regions.Select() };
+
             comboBoxStreet.DataSource = _vKladr;
             comboBoxStreet.ValueMember = "id_street";
             comboBoxStreet.DisplayMember = "street_name";
+
+            comboBoxRegion.DataSource = vRegions;
+            comboBoxRegion.ValueMember = "id_region";
+            comboBoxRegion.DisplayMember = "region";
 
             comboBoxDateExpr.SelectedIndex = 2;
             comboBoxBalanceInputExpr.SelectedIndex = 2;
@@ -77,6 +85,8 @@ namespace Registry.Viewport.SearchForms
             }
             if (checkBoxStreetEnable.Checked)
                 includedAccounts = DataModelHelper.Intersect(null, PaymentService.GetAccountIdsByStreet(comboBoxStreet.SelectedValue.ToString()));
+            if (checkBoxRegionEnable.Checked)
+                includedAccounts = DataModelHelper.Intersect(null, PaymentService.GetAccountIdsByRegion(comboBoxRegion.SelectedValue.ToString()));
             if (checkBoxHouseEnable.Checked)
                 includedAccounts = DataModelHelper.Intersect(includedAccounts, PaymentService.GetAccountIdsByHouse(textBoxHouse.Text));
             if (checkBoxPremisesNumEnable.Checked)
@@ -517,6 +527,11 @@ namespace Registry.Viewport.SearchForms
         private void checkBoxByClaimsChecked_CheckedChanged(object sender, EventArgs e)
         {
             groupBox1.Enabled = checkBoxByClaimsChecked.Checked;
+        }
+
+        private void checkBoxRegionEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxRegion.Enabled = checkBoxRegionEnable.Checked;
         }
     }
 }

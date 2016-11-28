@@ -396,14 +396,11 @@ namespace Registry.Viewport.Presenters
         {
             var tenantChangeTenant = ViewModel["tenant_change_tenant"].BindingSource;
             var personsChangeTenant = ViewModel["persons_change_tenant"].BindingSource;
-            var regDateStr = ParentRow["registration_date"] != DBNull.Value
-                ? Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture)
-                .ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "";
             var registrationNumber = ParentRow["registration_num"];
 
             var result = string.Format(CultureInfo.InvariantCulture,
-                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1}, ",
-                registrationNumber, regDateStr);
+                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {2} найма жилого помещения, распложенного по адресу {3}, ",
+                registrationNumber, GetFormatedRegistrationDate(), GetTenancyRent(), GetTenancyAddress());
 
             // Исключаем старого нанимателя
             var oldTenantRow = (DataRowView)tenantChangeTenant[0];
@@ -457,9 +454,6 @@ namespace Registry.Viewport.Presenters
         public string ProlongSpecialStringBuilder(
             DateTime? prolongFrom, DateTime? prolongTo, bool untilDismissal, string prolongPoint, string prolongGeneralPoint)
         {
-            var regDateStr = ParentRow["registration_date"] != DBNull.Value
-                ? Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture)
-                .ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "";
             var registrationNumber = ParentRow["registration_num"];
 
             var rentPeriodStr = "";
@@ -479,20 +473,17 @@ namespace Registry.Viewport.Presenters
                     rentPeriodStr += " ";
                 rentPeriodStr += "по " + prolongTo.Value.ToString("dd.MM.yyy", CultureInfo.InvariantCulture);
             }
-            return string.Format(@"1.1. По настоящему Соглашению Стороны по договору № {0} от {1} договорились:" +
+            return string.Format(@"1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {5} найма жилого помещения, расположенного по адресу {6}, договорились:" +
                 "\r\n\u200B1) изложить в новой редакции:" +
                 "\r\nподпункт {2} пункта {3}: \"Срок найма жилого помещения устанавливается {4}\".",
-                registrationNumber, regDateStr,
-                prolongPoint, prolongGeneralPoint, rentPeriodStr);
+                registrationNumber, GetFormatedRegistrationDate(),
+                prolongPoint, prolongGeneralPoint, rentPeriodStr, GetTenancyRent(), GetTenancyAddress());
         }
 
         public string ProlongCommercialStringBuilder(
             DateTime? prolongFrom, DateTime? prolongTo, bool untilDismissal, DateTime requestDate,
             string prolongGeneralPoint)
         {
-            var regDateStr = ParentRow["registration_date"] != DBNull.Value
-                ? Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture)
-                .ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "";
             var registrationNumber = ParentRow["registration_num"];
 
             var rentPeriodStr = "";
@@ -518,10 +509,10 @@ namespace Registry.Viewport.Presenters
             }
 
             return string.Format(@"1.1. По настоящему Соглашению на основании личного заявления нанимателя от {3}. Стороны договорились:" +
-                "\r\n\u200B1) продлить срок действия  договора  № {0} от {1} {2}." +
+                "\r\n\u200B1) продлить срок действия  договора  № {0} от {1} {5} найма жилого помещения, расположенного по адресу {6}, {2}." +
                 "\r\n\u200B2) пункт {4} исключить.",
-                registrationNumber, regDateStr, rentPeriodStr,
-                requestDate.ToString("dd.MM.yyyy"), prolongGeneralPoint);
+                registrationNumber, GetFormatedRegistrationDate(), rentPeriodStr,
+                requestDate.ToString("dd.MM.yyyy"), prolongGeneralPoint, GetTenancyRent(), GetTenancyAddress());
         }
 
         internal void AddProlongModification(DateTime? prolongFrom, DateTime? prolongTo, bool untilDismissal, ExtModificationTypes prolongType)
@@ -638,14 +629,65 @@ namespace Registry.Viewport.Presenters
         internal string TerminateStringBuilder(string terminateReason, DateTime terminateDate)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "1.1. По настоящему Соглашению Стороны договорились расторгнуть с {3} договор № {0} от {1} {4} найма жилого помещения (далее - договор) по {2}.\r\n" +
+                "1.1. По настоящему Соглашению Стороны договорились расторгнуть с {3} договор № {0} от {1} {4} найма жилого помещения, расположенного по адресу {5}, (далее - договор) по {2}.\r\n" +
                 "1.2. Обязательства, возникшие из указанного договора до момента расторжения, подлежат исполнению в соответствии с указанным договором. Стороны не имеют взаимных претензий по исполнению условий договора № {0} от {1}.",
                 ParentRow["registration_num"],
-                ParentRow["registration_date"] != DBNull.Value ? 
-                    Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "",
+                GetFormatedRegistrationDate(),
                 terminateReason.StartsWith("по ") ? terminateReason.Substring(3).Trim() : terminateReason.Trim(),
                 terminateDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
-                ViewModel["rent_types"].DataSource.Rows.Find(ParentRow["id_rent_type"])["rent_type_genetive"]);
+                GetTenancyRent(),
+                GetTenancyAddress());
+        }
+
+        internal string GetDefaultAgreementPoint()
+        {           
+            return string.Format(CultureInfo.InvariantCulture,
+                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {2} найма жилого помещения, расположенного по адресу: {3}, договорились:",
+                ParentRow["registration_num"],
+                GetFormatedRegistrationDate(),
+                GetTenancyRent(),
+                GetTenancyAddress());
+        }
+
+        private string GetFormatedRegistrationDate()
+        {
+            return ParentRow["registration_date"] != DBNull.Value
+                ? Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture)
+                    .ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)
+                : "";
+        }
+
+        private string GetTenancyRent()
+        {
+            var rentRow = ViewModel["rent_types"].DataSource.Rows.Find(ParentRow["id_rent_type"]);
+            var rent = "";
+            if (rentRow != null)
+            {
+                rent = rentRow["rent_type_genetive"].ToString();
+            }
+            return rent;
+        }
+
+        private string GetTenancyAddress()
+        {
+            var premisesInfoRow = (from row in ViewModel["tenancy_premises_info"].Model.FilterDeletedRows()
+                                   where row.Field<int>("id_process") == (int?)ParentRow["id_process"]
+                                   select row).FirstOrDefault();
+            var address = "";
+            if (premisesInfoRow != null)
+            {
+                address = premisesInfoRow["address"].ToString()
+                    .Replace("жилрайон.", "жилой район")
+                    .Replace("ул.", "улица")
+                    .Replace("пр-кт.", "проспект")
+                    .Replace("б-р.", "бульвар")
+                    .Replace("туп.", "тупик")
+                    .Replace("д.", "дом")
+                    .Replace("кв.", "квартира")
+                    .Replace("пом.", "помещение")
+                    .Replace("ком.", "комната(ы)");
+            }
+            return address;
         }
     }
 }
