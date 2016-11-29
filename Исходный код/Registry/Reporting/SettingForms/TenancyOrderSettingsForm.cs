@@ -257,7 +257,7 @@ namespace Registry.Reporting.SettingForms
         {
             if (tabControlExtInfo.SelectedTab.Tag.ToString() == "6")
             {
-                label11.Text = @"Дата начала действия договора";
+                label11.Text = @"Дата соглашения";
             }
             else
             {
