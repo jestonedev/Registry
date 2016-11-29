@@ -252,5 +252,17 @@ namespace Registry.Reporting.SettingForms
         {
             groupBoxAddress.Enabled = checkBoxEnableAddress.Checked;
         }
+
+        private void tabControlExtInfo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControlExtInfo.SelectedTab.Tag.ToString() == "6")
+            {
+                label11.Text = @"Дата начала действия договора";
+            }
+            else
+            {
+                label11.Text = @"Дата регистрации";
+            }
+        }
     }
 }

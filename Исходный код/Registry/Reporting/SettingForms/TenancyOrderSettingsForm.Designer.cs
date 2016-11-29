@@ -54,6 +54,8 @@
             this.checkBoxEnableAddress = new System.Windows.Forms.CheckBox();
             this.tabControlExtInfo = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.tabPageProlong = new System.Windows.Forms.TabPage();
+            this.label18 = new System.Windows.Forms.Label();
             this.tabPageCheckanovskiy = new System.Windows.Forms.TabPage();
             this.label14 = new System.Windows.Forms.Label();
             this.tabPageOrphans = new System.Windows.Forms.TabPage();
@@ -77,17 +79,15 @@
             this.textBoxResettleNumber = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.tabPageProlong = new System.Windows.Forms.TabPage();
-            this.label18 = new System.Windows.Forms.Label();
             this.groupBoxAddress.SuspendLayout();
             this.tabControlExtInfo.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
+            this.tabPageProlong.SuspendLayout();
             this.tabPageCheckanovskiy.SuspendLayout();
             this.tabPageOrphans.SuspendLayout();
             this.tabPageCourt.SuspendLayout();
             this.tabPageResettle2013to2017.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.tabPageProlong.SuspendLayout();
             this.SuspendLayout();
             // 
             // vButtonOk
@@ -319,6 +319,7 @@
             this.tabControlExtInfo.SelectedIndex = 0;
             this.tabControlExtInfo.Size = new System.Drawing.Size(368, 293);
             this.tabControlExtInfo.TabIndex = 0;
+            this.tabControlExtInfo.SelectedIndexChanged += new System.EventHandler(this.tabControlExtInfo_SelectedIndexChanged);
             // 
             // tabPageGeneral
             // 
@@ -335,13 +336,34 @@
             this.tabPageGeneral.Text = "Общее распоряжение";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
             // 
+            // tabPageProlong
+            // 
+            this.tabPageProlong.Controls.Add(this.label18);
+            this.tabPageProlong.Location = new System.Drawing.Point(4, 24);
+            this.tabPageProlong.Name = "tabPageProlong";
+            this.tabPageProlong.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageProlong.Size = new System.Drawing.Size(360, 266);
+            this.tabPageProlong.TabIndex = 5;
+            this.tabPageProlong.Tag = "6";
+            this.tabPageProlong.Text = "Продление найма";
+            this.tabPageProlong.UseVisualStyleBackColor = true;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(66, 10);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(232, 15);
+            this.label18.TabIndex = 62;
+            this.label18.Text = "Нет дополнительных полей для ввода";
+            // 
             // tabPageCheckanovskiy
             // 
             this.tabPageCheckanovskiy.Controls.Add(this.label14);
             this.tabPageCheckanovskiy.Location = new System.Drawing.Point(4, 24);
             this.tabPageCheckanovskiy.Name = "tabPageCheckanovskiy";
             this.tabPageCheckanovskiy.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCheckanovskiy.Size = new System.Drawing.Size(360, 265);
+            this.tabPageCheckanovskiy.Size = new System.Drawing.Size(360, 266);
             this.tabPageCheckanovskiy.TabIndex = 2;
             this.tabPageCheckanovskiy.Tag = "2";
             this.tabPageCheckanovskiy.Text = "Чекановский (дело № 2-2355/2011)";
@@ -365,7 +387,7 @@
             this.tabPageOrphans.Location = new System.Drawing.Point(4, 24);
             this.tabPageOrphans.Name = "tabPageOrphans";
             this.tabPageOrphans.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOrphans.Size = new System.Drawing.Size(360, 265);
+            this.tabPageOrphans.Size = new System.Drawing.Size(360, 266);
             this.tabPageOrphans.TabIndex = 3;
             this.tabPageOrphans.Tag = "3";
             this.tabPageOrphans.Text = "Дети сироты";
@@ -414,7 +436,7 @@
             this.tabPageCourt.Location = new System.Drawing.Point(4, 24);
             this.tabPageCourt.Name = "tabPageCourt";
             this.tabPageCourt.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCourt.Size = new System.Drawing.Size(360, 265);
+            this.tabPageCourt.Size = new System.Drawing.Size(360, 266);
             this.tabPageCourt.TabIndex = 4;
             this.tabPageCourt.Tag = "4";
             this.tabPageCourt.Text = "По решению суда";
@@ -486,7 +508,7 @@
             this.tabPageResettle2013to2017.Location = new System.Drawing.Point(4, 24);
             this.tabPageResettle2013to2017.Name = "tabPageResettle2013to2017";
             this.tabPageResettle2013to2017.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageResettle2013to2017.Size = new System.Drawing.Size(360, 265);
+            this.tabPageResettle2013to2017.Size = new System.Drawing.Size(360, 266);
             this.tabPageResettle2013to2017.TabIndex = 1;
             this.tabPageResettle2013to2017.Tag = "5";
             this.tabPageResettle2013to2017.Text = "Переселение 2013-2017";
@@ -567,27 +589,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Вид распоряжения";
             // 
-            // tabPageProlong
-            // 
-            this.tabPageProlong.Controls.Add(this.label18);
-            this.tabPageProlong.Location = new System.Drawing.Point(4, 24);
-            this.tabPageProlong.Name = "tabPageProlong";
-            this.tabPageProlong.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageProlong.Size = new System.Drawing.Size(360, 265);
-            this.tabPageProlong.TabIndex = 5;
-            this.tabPageProlong.Tag = "6";
-            this.tabPageProlong.Text = "Продление найма";
-            this.tabPageProlong.UseVisualStyleBackColor = true;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(66, 10);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(232, 15);
-            this.label18.TabIndex = 62;
-            this.label18.Text = "Нет дополнительных полей для ввода";
-            // 
             // TenancyOrderSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -623,6 +624,8 @@
             this.tabControlExtInfo.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
             this.tabPageGeneral.PerformLayout();
+            this.tabPageProlong.ResumeLayout(false);
+            this.tabPageProlong.PerformLayout();
             this.tabPageCheckanovskiy.ResumeLayout(false);
             this.tabPageCheckanovskiy.PerformLayout();
             this.tabPageOrphans.ResumeLayout(false);
@@ -632,8 +635,6 @@
             this.tabPageResettle2013to2017.ResumeLayout(false);
             this.tabPageResettle2013to2017.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.tabPageProlong.ResumeLayout(false);
-            this.tabPageProlong.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

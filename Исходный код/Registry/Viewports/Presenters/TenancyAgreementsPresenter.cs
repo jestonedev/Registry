@@ -235,20 +235,35 @@ namespace Registry.Viewport.Presenters
             Modifications.Clear();
         }
 
-        public string ExplainContentModifier(string content, string generalPoint, string point, string explainContent)
+        private static int GetNextPointHeaderNumber(string content)
         {
             var contentList = content.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
-            var headersCount = 0;
+            var lastValue = 0;
             for (var i = 0; i < contentList.Count; i++)
             {
-                if (Regex.IsMatch(contentList[i], "^\u200B"))
-                    headersCount++;
+                var match = Regex.Match(contentList[i], "^\u200B?\\s*([0-9]+)\\s*[)]");
+                if (match.Success && match.Groups.Count > 1)
+                {
+                    int.TryParse(match.Groups[1].Value, out lastValue);
+                }
             }
+            return lastValue + 1;
+        }
+
+        private static bool IsHeaderInserted(string content, string headerWildcard)
+        {
+            var contentList = content.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
+            return contentList.Any(line => Regex.IsMatch(line, headerWildcard));
+        }
+
+        private static int GetIndexForInsert(string content, string headerWildcard)
+        {
+            var contentList = content.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
             var headerIndex = -1;
             var lastPointIndex = -1;
             for (var i = 0; i < contentList.Count; i++)
             {
-                if (Regex.IsMatch(contentList[i], "^\u200B.*изложить"))
+                if (Regex.IsMatch(contentList[i], headerWildcard))
                 {
                     headerIndex = i;
                 }
@@ -260,6 +275,11 @@ namespace Registry.Viewport.Presenters
                         break;
                     }
             }
+            return lastPointIndex;
+        }
+
+        public string ExplainContentModifier(string content, string generalPoint, string point, string explainContent)
+        {
             if (!string.IsNullOrEmpty(point.Trim()) && !string.IsNullOrEmpty(generalPoint.Trim()))
             {
                 point = string.Format("подпункт {0} пункта {1}", point.Trim(), generalPoint.Trim());
@@ -273,14 +293,20 @@ namespace Registry.Viewport.Presenters
                 point = string.Format("пункт {0}", generalPoint.Trim());
             }
             var element = string.Format(CultureInfo.InvariantCulture, "{0}. {1}", point, explainContent.Trim());
-            if (headerIndex == -1)
+
+            var contentList = content.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
+            const string headerWildcard = "^\u200B.*изложить";
+            if (!IsHeaderInserted(content, headerWildcard))
             {
-                contentList.Add(string.Format("\u200B{0}) изложить в новой редакции:", ++headersCount));
+                contentList.Add(string.Format("\u200B{0}) изложить в новой редакции:", GetNextPointHeaderNumber(content)));
             }
+
+            var lastPointIndex = GetIndexForInsert(content, headerWildcard);
             if (lastPointIndex == -1)
                 contentList.Add(element);
             else
                 contentList.Insert(lastPointIndex, element);
+
             return contentList.Aggregate((v, acc) => v + "\r\n" + acc);
         }
 
@@ -288,29 +314,6 @@ namespace Registry.Viewport.Presenters
             string patronymic, string kinship, DateTime dateOfBirth)
         {
             var contentList = content.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
-            var headersCount = 0;
-            for (var i = 0; i < contentList.Count; i++)
-            {
-                if (Regex.IsMatch(contentList[i], "^\u200B"))
-                    headersCount++;
-            }
-            var headerIndex = -1;
-            var lastPointIndex = -1;
-            for (var i = 0; i < contentList.Count; i++)
-            {
-                if (Regex.IsMatch(contentList[i], string.Format("^\u200B.*пункт {0} договора дополнить", generalPoint)))
-                {
-                    headerIndex = i;
-                }
-                else
-                    if (headerIndex != -1 && Regex.IsMatch(contentList[i],
-                        "^(\u200B.*из пункта .+ договора исключить|\u200B.*пункт .+ договора дополнить|\u200B.*изложить|\u200B.*расторгнуть|\u200B.*считать.+нанимателем)"))
-                    {
-                        lastPointIndex = i;
-                        break;
-                    }
-            }
-
             var snp = (surname + " " + name + " " + patronymic).Trim();
             var element = string.Format(CultureInfo.InvariantCulture, "«{0}. {1}, {2} - {3} г.р.»;", point,
                 snp, kinship, dateOfBirth.Date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
@@ -319,20 +322,21 @@ namespace Registry.Viewport.Presenters
                 var gender = Declension.GetGender(patronymic);
                 contentList.Add(string.Format("\u200B{4}) считать по договору № {0} от {1} нанимателем - «{2} - {3} г.р.»;",
                     ParentRow["registration_num"],
-                    ParentRow["registration_date"] != DBNull.Value ?
-                        Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "",
-                        gender == Gender.NotDefind ? snp :
-                            Declension.GetSNPDeclension(snp, gender, DeclensionCase.Vinit),
-                        dateOfBirth.Date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
-                        ++headersCount));
+                    GetFormatedRegistrationDate(),
+                    gender == Gender.NotDefind ? snp : Declension.GetSNPDeclension(snp, gender, DeclensionCase.Vinit),
+                    dateOfBirth.Date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
+                    GetNextPointHeaderNumber(content)));
             }
             else
             {
-                if (headerIndex == -1)
+                var headerWildcard = string.Format("^\u200B.*пункт {0} договора дополнить", generalPoint);
+                if (!IsHeaderInserted(content, headerWildcard))
                 {
                     contentList.Add(string.Format("\u200B{2}) пункт {0} договора дополнить подпунктом {1} следующего содержания:",
-                        generalPoint, point, ++headersCount));
+                        generalPoint, point, GetNextPointHeaderNumber(content)));
                 }
+
+                var lastPointIndex = GetIndexForInsert(content, headerWildcard);
                 if (lastPointIndex == -1)
                     contentList.Add(element);
                 else
@@ -344,30 +348,6 @@ namespace Registry.Viewport.Presenters
 
         public string ExcludePersonsContentModifier(string content, string generalPoint, string point)
         {
-            var contentList = content.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
-            var headerIndex = -1;
-            var lastPointIndex = -1;
-            var headersCount = 0;
-            for (var i = 0; i < contentList.Count; i++)
-            {
-                if (Regex.IsMatch(contentList[i], "^\u200B"))
-                    headersCount++;
-            }
-            for (var i = 0; i < contentList.Count; i++)
-            {
-                if (Regex.IsMatch(contentList[i], string.Format("^\u200B.*из пункта {0} договора исключить",
-                    generalPoint)))
-                {
-                    headerIndex = i;
-                }
-                else
-                    if (headerIndex != -1 && Regex.IsMatch(contentList[i],
-                        "^(\u200B.*из пункта .+ договора исключить|\u200B.*пункт .+ договора дополнить|\u200B.*изложить|\u200B.*расторгнуть|\u200B.*считать.+нанимателем)"))
-                    {
-                        lastPointIndex = i;
-                        break;
-                    }
-            }
             var tenancyPerson = ViewModel["persons_exclude"].CurrentRow;
 
             var kinship = tenancyPerson["id_kinship"] != DBNull.Value ?
@@ -380,11 +360,14 @@ namespace Registry.Viewport.Presenters
                 kinship,
                 tenancyPerson["date_of_birth"] != DBNull.Value ?
                     Convert.ToDateTime(tenancyPerson["date_of_birth"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "");
-            if (headerIndex == -1)
+            var contentList = content.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
+            var headerWildcard = string.Format("^\u200B.*из пункта {0} договора исключить", generalPoint);
+            if (!IsHeaderInserted(content, headerWildcard))
             {
                 contentList.Add(string.Format("\u200B{2}) из пункта {0} договора исключить подпункт {1} следующего содержания:",
-                    generalPoint, point, ++headersCount));
+                    generalPoint, point, GetNextPointHeaderNumber(content)));
             }
+            var lastPointIndex = GetIndexForInsert(content, headerWildcard);
             if (lastPointIndex == -1)
                 contentList.Add(element);
             else
@@ -424,12 +407,12 @@ namespace Registry.Viewport.Presenters
             return result;
         }
 
-        public string PaymentStringBuilder(int pointNum)
+        public string PaymentStringBuilder(string content)
         {
             switch ((int)ParentRow["id_rent_type"])
             {
                 case 3:
-                    return "\u200B" + pointNum + @") изложить подпункт ""з"" пункта ___ в следующей редакции:
+                    return "\u200B" + GetNextPointHeaderNumber(content) + @") изложить подпункт ""з"" пункта ___ в следующей редакции:
 «з) вносить плату:
 • за пользование жилым помещением (плата за наем) на расчетный счет Наймодателя в размере, установленном муниципальным правовым актом города Братска в соответствии с Жилищным кодексом Российской Федерации; 
 • за содержание и ремонт жилого помещения лицам, осуществляющим соответствующий вид деятельности, в размере установленном муниципальным правовым актом города Братска в соответствии с Жилищным кодексом Российской Федерации;
@@ -439,7 +422,7 @@ namespace Registry.Viewport.Presenters
 В случае невнесения в установленный срок платы за жилое помещение и (или) коммунальные услуги Наниматель уплачивает Наймодателю пени в размере, установленном Жилищным кодексом Российской Федерации, что не освобождает Нанимателя от уплаты причитающихся платежей».";
                 case 1:
                 case 2:
-                    return "\u200B" + pointNum + @") главу ___ изложить в следующей редакции:
+                    return "\u200B" + GetNextPointHeaderNumber(content) + @") главу ___ изложить в следующей редакции:
 Наниматель вносит плату:
 • за пользование жилым помещением (плата за наем) на расчетный счет Наймодателя в размере, установленном решением органа местного самоуправления в соответствии с Жилищным кодексом Российской Федерации;
 • за содержание и ремонт жилого помещения лицам, осуществляющим соответствующий вид деятельности, в размере установленном решением органа местного самоуправления, в соответствии с Жилищным кодексом Российской Федерации;
@@ -451,11 +434,9 @@ namespace Registry.Viewport.Presenters
             return "";
         }
 
-        public string ProlongSpecialStringBuilder(
+        public string ProlongSpecialStringBuilder(string content, 
             DateTime? prolongFrom, DateTime? prolongTo, bool untilDismissal, string prolongPoint, string prolongGeneralPoint)
         {
-            var registrationNumber = ParentRow["registration_num"];
-
             var rentPeriodStr = "";
             if (prolongFrom != null)
             {
@@ -473,11 +454,23 @@ namespace Registry.Viewport.Presenters
                     rentPeriodStr += " ";
                 rentPeriodStr += "по " + prolongTo.Value.ToString("dd.MM.yyy", CultureInfo.InvariantCulture);
             }
-            return string.Format(@"1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {5} найма жилого помещения, расположенного по адресу {6}, договорились:" +
-                "\r\n\u200B1) изложить в новой редакции:" +
-                "\r\nподпункт {2} пункта {3}: \"Срок найма жилого помещения устанавливается {4}\".",
-                registrationNumber, GetFormatedRegistrationDate(),
-                prolongPoint, prolongGeneralPoint, rentPeriodStr, GetTenancyRent(), GetTenancyAddress());
+
+            var contentList = content.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
+            const string headerWildcard = "^\u200B.*изложить";
+            if (!IsHeaderInserted(content, headerWildcard))
+            {
+                contentList.Add(string.Format("\u200B{0}) изложить в новой редакции:", GetNextPointHeaderNumber(content)));
+            }
+            var element = string.Format("подпункт {0} пункта {1}: \"Срок найма жилого помещения устанавливается {2}\".",
+                    prolongPoint, prolongGeneralPoint, rentPeriodStr);
+
+            var lastPointIndex = GetIndexForInsert(content, headerWildcard);
+            if (lastPointIndex == -1)
+                contentList.Add(element);
+            else
+                contentList.Insert(lastPointIndex, element);
+
+            return contentList.Aggregate((v, acc) => v + "\r\n" + acc);
         }
 
         public string ProlongCommercialStringBuilder(

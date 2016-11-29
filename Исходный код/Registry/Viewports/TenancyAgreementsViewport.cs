@@ -641,8 +641,7 @@ namespace Registry.Viewport
 
         private void vButtonPaymentInsert_Click(object sender, EventArgs e)
         {
-            var pointCount = textBoxAgreementContent.Lines.Count(v => Regex.IsMatch(v, "^\u200B?[0-9]+\\)"));
-            var text = ((TenancyAgreementsPresenter)Presenter).PaymentStringBuilder(pointCount + 1);
+            var text = ((TenancyAgreementsPresenter)Presenter).PaymentStringBuilder(textBoxAgreementContent.Text);
             textBoxAgreementContent.Text += textBoxAgreementContent.Text.EndsWith("\n") ? text : Environment.NewLine + text;                                       
         }
 
@@ -665,7 +664,7 @@ namespace Registry.Viewport
 
             ((TenancyAgreementsPresenter)Presenter).AddProlongModification(
                 ViewportHelper.ValueOrNull(dateTimePickerCommercialProlongFrom),
-                ViewportHelper.ValueOrNull(dateTimePickerCommercialProlongTo),
+                checkBoxCommercialProlongUntilDismissal.Checked ? null : ViewportHelper.ValueOrNull(dateTimePickerCommercialProlongTo),
                 checkBoxCommercialProlongUntilDismissal.Checked,
                 TenancyAgreementsPresenter.ExtModificationTypes.CommercialProlong
             );
@@ -674,6 +673,7 @@ namespace Registry.Viewport
         private void vButtonProlongSpecial_Click(object sender, EventArgs e)
         {
             var text = ((TenancyAgreementsPresenter)Presenter).ProlongSpecialStringBuilder(
+                textBoxAgreementContent.Text,
                 dateTimePickerSpecialProlongFrom.Checked ? (DateTime?)dateTimePickerSpecialProlongFrom.Value : null,
                 dateTimePickerSpecialProlongTo.Checked ? (DateTime?)dateTimePickerSpecialProlongTo.Value : null,
                 checkBoxSpecialProlongUntilDismissal.Checked,
@@ -685,7 +685,7 @@ namespace Registry.Viewport
 
             ((TenancyAgreementsPresenter)Presenter).AddProlongModification(
                 ViewportHelper.ValueOrNull(dateTimePickerSpecialProlongFrom),
-                ViewportHelper.ValueOrNull(dateTimePickerSpecialProlongTo),
+                checkBoxSpecialProlongUntilDismissal.Checked ? null : ViewportHelper.ValueOrNull(dateTimePickerSpecialProlongTo),
                 checkBoxSpecialProlongUntilDismissal.Checked, 
                 TenancyAgreementsPresenter.ExtModificationTypes.SpecialProlong);
         }
