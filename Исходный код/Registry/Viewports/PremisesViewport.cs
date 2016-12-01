@@ -186,7 +186,7 @@ namespace Registry.Viewport
             var row = Presenter.ViewModel["general"].CurrentRow;
             if (row != null)
             {
-                if (ParentRow == null)
+                if (ParentRow == null || ParentType == ParentTypeEnum.Tenancy || ParentType == ParentTypeEnum.ResettleProcess)
                 {
                     Text = string.Format(CultureInfo.InvariantCulture, "Помещение №{0}", row["id_premises"]);
                     return;
@@ -202,7 +202,7 @@ namespace Registry.Viewport
                 }
                 return;
             }
-            if (ParentRow == null)
+            if (ParentRow == null || ParentType == ParentTypeEnum.Tenancy || ParentType == ParentTypeEnum.ResettleProcess)
             {
                 Text = @"Помещения отсутствуют";
                 return;
