@@ -643,6 +643,19 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
+            var hasResettles = ((PremisesPresenter)Presenter).HasResettles();
+            var hasTenancies = ((PremisesPresenter)Presenter).HasTenancies();
+            if (hasResettles || hasTenancies)
+            {
+                if (MessageBox.Show(@"К помещению или одной из его комнат привязаны процессы" +
+                    (hasTenancies ? " найма" : "") +
+                    (hasTenancies && hasResettles ? " и" : "") +
+                    (hasResettles ? " переселения" : "") +
+                    @". Вы действительно хотите удалить это помещение?", @"Внимание",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                    return;
+            }
+            else
             if (MessageBox.Show(@"Вы действительно хотите удалить это помещение?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;

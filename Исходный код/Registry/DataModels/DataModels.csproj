@@ -106,6 +106,7 @@
     <Compile Include="Services\PaymentService.cs" />
     <Compile Include="Services\PremisesService.cs" />
     <Compile Include="Services\ResettleService.cs" />
+    <Compile Include="Services\SubPremisesService.cs" />
     <Compile Include="Services\TenancyService.cs" />
   </ItemGroup>
   <ItemGroup>

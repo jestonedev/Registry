@@ -319,5 +319,37 @@ namespace Registry.DataModels.Services
                         restrictionsRow.Field<int?>("id_restriction"),
                         restrictionsRow.Field<DateTime?>("date"));
         }
+
+        public static bool HasTenancies(int idPremise)
+        {
+            var premisesTenancies = EntityDataModel<TenancyPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
+            var subPremisesTenancies = EntityDataModel<TenancySubPremisesAssoc>.GetInstance().FilterDeletedRows();
+            return (from tPremiseRow in premisesTenancies
+                    where tPremiseRow.Field<int?>("id_premises") == idPremise
+                    select tPremiseRow).Any() ||
+                   (from tSubPremisesRow in subPremisesTenancies
+                    join subPremisesRow in subPremises
+                    on tSubPremisesRow.Field<int?>("id_sub_premises") equals  subPremisesRow.Field<int>("id_sub_premises")
+                    where subPremisesRow.Field<int?>("id_premises") == idPremise
+                    select tSubPremisesRow).Any();
+        }
+
+        public static bool HasResettles(int idPremise)
+        {
+            var premisesResettleFrom = EntityDataModel<ResettlePremisesFromAssoc>.GetInstance().FilterDeletedRows();
+            var premisesResettleTo = EntityDataModel<ResettlePremisesToAssoc>.GetInstance().FilterDeletedRows();
+            var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
+            var subPremisesResettleFrom = EntityDataModel<ResettleSubPremisesFromAssoc>.GetInstance().FilterDeletedRows();
+            var subPremisesResettleTo = EntityDataModel<ResettleSubPremisesToAssoc>.GetInstance().FilterDeletedRows();
+            return (from rPremiseRow in premisesResettleFrom.Union(premisesResettleTo)
+                    where rPremiseRow.Field<int?>("id_premises") == idPremise
+                    select rPremiseRow).Any() ||
+                   (from rSubPremisesRow in subPremisesResettleFrom.Union(subPremisesResettleTo)
+                    join subPremisesRow in subPremises
+                    on rSubPremisesRow.Field<int?>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
+                    where subPremisesRow.Field<int?>("id_premises") == idPremise
+                    select rSubPremisesRow).Any();
+        }
     }
 }

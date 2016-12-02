@@ -132,7 +132,7 @@ namespace Registry.Viewport.Presenters
             return true;
         }
 
-        private void RebuildFilterAfterSave(IBindingListView bindingSource, int? idPremise)
+        private static void RebuildFilterAfterSave(IBindingListView bindingSource, int? idPremise)
         {
             var filter = "";
             if (!string.IsNullOrEmpty(bindingSource.Filter))
@@ -141,6 +141,18 @@ namespace Registry.Viewport.Presenters
                 filter += "(1 = 1) OR ";
             filter += string.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", idPremise);
             bindingSource.Filter += filter;
+        }
+
+        public bool HasResettles()
+        {
+            var row = ViewModel["general"].CurrentRow;
+            return row != null && PremisesService.HasResettles((int)row["id_premises"]);
+        }
+
+        public bool HasTenancies()
+        {
+            var row = ViewModel["general"].CurrentRow;
+            return row != null && PremisesService.HasTenancies((int)row["id_premises"]);
         }
     }
 }

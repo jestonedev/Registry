@@ -95,6 +95,21 @@ namespace Registry.Viewport.Presenters
                     break;
                 }
                 if (rowIndex != -1) continue;
+                if (subPremise.IdSubPremises != null)
+                {
+                    var hasResettles = SubPremisesService.HasResettles(subPremise.IdSubPremises.Value);
+                    var hasTenancies = SubPremisesService.HasTenancies(subPremise.IdSubPremises.Value);
+                    if (!hasResettles && !hasTenancies) continue;
+                    if (MessageBox.Show(
+                        string.Format(@"К комнате {0} привязаны процессы", subPremise.SubPremisesNum) +
+                        (hasTenancies ? " найма" : "") +
+                        (hasTenancies && hasResettles ? " и" : "") +
+                        (hasResettles ? " переселения" : "") +
+                        @". Вы действительно хотите удалить эту комнату?", @"Внимание",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
+                        DialogResult.Yes)
+                        return false;
+                }
                 if (subPremise.IdSubPremises != null && OtherService.HasMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise) &&
                     !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {

@@ -100,6 +100,19 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
+            var hasResettles = ((BuildingListPresenter)Presenter).HasResettles();
+            var hasTenancies = ((BuildingListPresenter)Presenter).HasTenancies();
+            if (hasResettles || hasTenancies)
+            {
+                if (MessageBox.Show(@"К зданию или одному из его помещений привязаны процессы" +
+                    (hasTenancies ? " найма" : "") +
+                    (hasTenancies && hasResettles ? " и" : "") +
+                    (hasResettles ? " переселения" : "") +
+                    @". Вы действительно хотите удалить это здание?", @"Внимание",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                    return;
+            }
+            else
             if (MessageBox.Show(@"Вы действительно хотите удалить это здание?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;

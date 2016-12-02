@@ -147,6 +147,8 @@ namespace Registry.Viewport
             {
                 AddEventHandler<EventArgs>(Presenter.ViewModel["tenancy_payments_info"].Model, "RefreshEvent",
                     (s, e) => DataGridView.Refresh());
+                AddEventHandler<EventArgs>(Presenter.ViewModel["premises_tenancies_info"].Model, "RefreshEvent",
+                    (s, e) => DataGridView.Refresh());
             }
 
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["ownership_buildings_assoc"].DataSource, "RowChanged", BuildingsOwnershipChanged);
@@ -191,6 +193,19 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
+            var hasResettles = ((PremisesListPresenter)Presenter).HasResettles();
+            var hasTenancies = ((PremisesListPresenter)Presenter).HasTenancies();
+            if (hasResettles || hasTenancies)
+            {
+                if (MessageBox.Show(@"К помещению или одной из его комнат привязаны процессы" +
+                    (hasTenancies ? " найма" : "") +
+                    (hasTenancies && hasResettles ? " и" : "") +
+                    (hasResettles ? " переселения" : "") +
+                    @". Вы действительно хотите удалить это помещение?", @"Внимание",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                    return;
+            }
+            else
             if (MessageBox.Show(@"Вы действительно хотите удалить это помещение?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;

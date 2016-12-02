@@ -317,5 +317,57 @@ namespace Registry.DataModels.Services
             }
             return 0;
         }
+
+        public static bool HasTenancies(int idBuilding)
+        {
+            var buildingsTenancies = EntityDataModel<TenancyBuildingAssoc>.GetInstance().FilterDeletedRows();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows().ToList();
+            var premisesTenancies = EntityDataModel<TenancyPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
+            var subPremisesTenancies = EntityDataModel<TenancySubPremisesAssoc>.GetInstance().FilterDeletedRows();
+            return (from tBuildingRow in buildingsTenancies
+                    where tBuildingRow.Field<int?>("id_building") == idBuilding
+                    select tBuildingRow).Any() ||
+                   (from tPremiseRow in premisesTenancies
+                    join premisesRow in premises
+                    on tPremiseRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
+                    where premisesRow.Field<int?>("id_building") == idBuilding
+                    select tPremiseRow).Any() ||
+                   (from tSubPremisesRow in subPremisesTenancies
+                    join subPremisesRow in subPremises
+                    on tSubPremisesRow.Field<int?>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
+                    join premisesRow in premises
+                    on subPremisesRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
+                    where premisesRow.Field<int?>("id_building") == idBuilding
+                    select tSubPremisesRow).Any();
+        }
+
+        public static bool HasResettles(int idBuilding)
+        {
+            var buildingsResettleFrom = EntityDataModel<ResettleBuildingFromAssoc>.GetInstance().FilterDeletedRows();
+            var buildingsResettleTo = EntityDataModel<ResettleBuildingToAssoc>.GetInstance().FilterDeletedRows();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows().ToList();
+            var premisesResettleFrom = EntityDataModel<ResettlePremisesFromAssoc>.GetInstance().FilterDeletedRows();
+            var premisesResettleTo = EntityDataModel<ResettlePremisesToAssoc>.GetInstance().FilterDeletedRows();
+            var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
+            var subPremisesResettleFrom = EntityDataModel<ResettleSubPremisesFromAssoc>.GetInstance().FilterDeletedRows();
+            var subPremisesResettleTo = EntityDataModel<ResettleSubPremisesToAssoc>.GetInstance().FilterDeletedRows();
+            return (from rBuildingRow in buildingsResettleFrom.Union(buildingsResettleTo)
+                    where rBuildingRow.Field<int?>("id_building") == idBuilding
+                    select rBuildingRow).Any() ||
+                   (from rPremiseRow in premisesResettleFrom.Union(premisesResettleTo)
+                    join premisesRow in premises
+                    on rPremiseRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
+                    where premisesRow.Field<int?>("id_building") == idBuilding
+                    select rPremiseRow).Any() ||
+                   (from rSubPremisesRow in subPremisesResettleFrom.Union(subPremisesResettleTo)
+                    join subPremisesRow in subPremises
+                    on rSubPremisesRow.Field<int?>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
+                    join premisesRow in premises
+                    on subPremisesRow.Field<int?>("id_premises") equals premisesRow.Field<int>("id_premises")
+                    where premisesRow.Field<int?>("id_building") == idBuilding
+                    select rSubPremisesRow).Any();
+
+        }
     }
 }

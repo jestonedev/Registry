@@ -32,5 +32,17 @@ namespace Registry.Viewport.Presenters
             }
             return ViewModel["general"].Delete(id);
         }
+
+        public bool HasResettles()
+        {
+            var row = ViewModel["general"].CurrentRow;
+            return row != null && PremisesService.HasResettles((int)row["id_premises"]);
+        }
+
+        public bool HasTenancies()
+        {
+            var row = ViewModel["general"].CurrentRow;
+            return row != null && PremisesService.HasTenancies((int)row["id_premises"]);
+        }
     }
 }

@@ -100,6 +100,18 @@ namespace Registry.Viewport.Presenters
             return ViewModel["general"].Delete((int)row[columnName]);
         }
 
+        public bool HasResettles()
+        {
+            var row = ViewModel["general"].CurrentRow;
+            return row != null && BuildingService.HasResettles((int)row["id_building"]);
+        }
+
+        public bool HasTenancies()
+        {
+            var row = ViewModel["general"].CurrentRow;
+            return row != null && BuildingService.HasTenancies((int)row["id_building"]);
+        }
+
         private static void RebuildFilterAfterSave(IBindingListView bindingSource, int? idBuilding)
         {
             var filter = "";
