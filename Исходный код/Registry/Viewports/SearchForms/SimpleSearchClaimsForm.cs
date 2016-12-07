@@ -112,7 +112,7 @@ namespace Registry.Viewport.SearchForms
             {
                 var addressParts = textBoxRawAddress.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var accounts = from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
-                               where addressParts.All(a => accountRow.Field<string>("raw_address").Contains(a))
+                               where addressParts.All(a => accountRow.Field<string>("raw_address").ToUpper().Contains(a.ToUpper()))
                                select accountRow.Field<int>("id_account");
                 includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);
             }
