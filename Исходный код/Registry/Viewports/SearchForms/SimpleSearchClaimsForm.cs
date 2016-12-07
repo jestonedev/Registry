@@ -96,16 +96,23 @@ namespace Registry.Viewport.SearchForms
             }
             if (checkBoxAccountChecked.Checked && !string.IsNullOrEmpty(textBoxAccount.Text.Trim()))
             {
-                var accounts =
-                    from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
-                    where accountRow.Field<string>("account").Contains(textBoxAccount.Text.Trim())
-                    select accountRow.Field<int>("id_account");
+                var accounts = from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
+                               where accountRow.Field<string>("account").Contains(textBoxAccount.Text.Trim())
+                               select accountRow.Field<int>("id_account");
                 includedAccounts = DataModelHelper.Intersect(null, accounts);
             }
             if (checkBoxSRNEnable.Checked && !string.IsNullOrEmpty(textBoxSRN.Text.Trim()))
             {
                 var accounts = from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
                                where accountRow.Field<string>("crn").Contains(textBoxSRN.Text.Trim())
+                               select accountRow.Field<int>("id_account");
+                includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);
+            }
+            if (checkBoxRawAddressEnabled.Checked && !string.IsNullOrEmpty(textBoxRawAddress.Text.Trim()))
+            {
+                var addressParts = textBoxRawAddress.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var accounts = from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
+                               where addressParts.All(a => accountRow.Field<string>("raw_address").Contains(a))
                                select accountRow.Field<int>("id_account");
                 includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);
             }
@@ -247,18 +254,28 @@ namespace Registry.Viewport.SearchForms
             {
                 MessageBox.Show(@"Выберите лицевой счет или уберите галочку фильтрации по лицевому счету",@"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxAccount.Focus();
                 return;
             }
             if (checkBoxSRNEnable.Checked && string.IsNullOrEmpty(textBoxSRN.Text.Trim()))
             {
                 MessageBox.Show(@"Укажите СРН или уберите галочку фильтрации по СРН", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxSRN.Focus();
+                return;
+            }
+            if (checkBoxRawAddressEnabled.Checked && string.IsNullOrEmpty(textBoxRawAddress.Text.Trim()))
+            {
+                MessageBox.Show(@"Укажите адрес по БКС или уберите галочку фильтрации по адресу БКС", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxRawAddress.Focus();
                 return;
             }
             if (checkBoxStateEnable.Checked && comboBoxState.SelectedValue == null)
             {
                 MessageBox.Show(@"Выберите состояние исковой работы или уберите галочку фильтрации по последнему состоянию исковой работы", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                comboBoxState.Focus();
                 return;
             }
             DialogResult = DialogResult.OK;
@@ -315,6 +332,11 @@ namespace Registry.Viewport.SearchForms
             comboBoxBalanceOutputPenaltiesExpr.Enabled = checkBoxBalanceOutputPenaltiesChecked.Checked;
             numericUpDownBalanceOutputPenaltiesFrom.Enabled = checkBoxBalanceOutputPenaltiesChecked.Checked;
             numericUpDownBalanceOutputPenaltiesTo.Enabled = checkBoxBalanceOutputPenaltiesChecked.Checked;
+        }
+
+        private void checkBoxRawAddressEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxRawAddress.Enabled = checkBoxRawAddressEnabled.Checked;
         }
     }
 }

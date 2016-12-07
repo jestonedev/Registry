@@ -72,6 +72,9 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxBalanceOutputPenaltiesExpr = new System.Windows.Forms.ComboBox();
             this.checkBoxBalanceOutputPenaltiesChecked = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.textBoxRawAddress = new System.Windows.Forms.TextBox();
+            this.checkBoxRawAddressEnabled = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputDgiTo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputDgiFrom)).BeginInit();
@@ -86,7 +89,7 @@ namespace Registry.Viewport.SearchForms
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(214, 470);
+            this.vButtonCancel.Location = new System.Drawing.Point(214, 512);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -99,7 +102,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(76, 470);
+            this.vButtonSearch.Location = new System.Drawing.Point(76, 512);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
@@ -114,7 +117,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerAtDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerAtDate.Enabled = false;
-            this.dateTimePickerAtDate.Location = new System.Drawing.Point(34, 267);
+            this.dateTimePickerAtDate.Location = new System.Drawing.Point(34, 309);
             this.dateTimePickerAtDate.Name = "dateTimePickerAtDate";
             this.dateTimePickerAtDate.Size = new System.Drawing.Size(352, 21);
             this.dateTimePickerAtDate.TabIndex = 6;
@@ -131,7 +134,7 @@ namespace Registry.Viewport.SearchForms
             // label91
             // 
             this.label91.AutoSize = true;
-            this.label91.Location = new System.Drawing.Point(12, 249);
+            this.label91.Location = new System.Drawing.Point(12, 291);
             this.label91.Name = "label91";
             this.label91.Size = new System.Drawing.Size(130, 15);
             this.label91.TabIndex = 52;
@@ -151,7 +154,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxAtDateChecked
             // 
             this.checkBoxAtDateChecked.AutoSize = true;
-            this.checkBoxAtDateChecked.Location = new System.Drawing.Point(13, 271);
+            this.checkBoxAtDateChecked.Location = new System.Drawing.Point(13, 313);
             this.checkBoxAtDateChecked.Name = "checkBoxAtDateChecked";
             this.checkBoxAtDateChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAtDateChecked.TabIndex = 5;
@@ -307,7 +310,7 @@ namespace Registry.Viewport.SearchForms
             // textBoxCourtOrderNum
             // 
             this.textBoxCourtOrderNum.Enabled = false;
-            this.textBoxCourtOrderNum.Location = new System.Drawing.Point(34, 310);
+            this.textBoxCourtOrderNum.Location = new System.Drawing.Point(34, 352);
             this.textBoxCourtOrderNum.MaxLength = 255;
             this.textBoxCourtOrderNum.Name = "textBoxCourtOrderNum";
             this.textBoxCourtOrderNum.Size = new System.Drawing.Size(352, 21);
@@ -316,7 +319,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxCourtOrderNumEnable
             // 
             this.checkBoxCourtOrderNumEnable.AutoSize = true;
-            this.checkBoxCourtOrderNumEnable.Location = new System.Drawing.Point(13, 314);
+            this.checkBoxCourtOrderNumEnable.Location = new System.Drawing.Point(13, 356);
             this.checkBoxCourtOrderNumEnable.Name = "checkBoxCourtOrderNumEnable";
             this.checkBoxCourtOrderNumEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxCourtOrderNumEnable.TabIndex = 7;
@@ -326,7 +329,7 @@ namespace Registry.Viewport.SearchForms
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(10, 292);
+            this.label13.Location = new System.Drawing.Point(10, 334);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(157, 15);
             this.label13.TabIndex = 211;
@@ -336,7 +339,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.numericUpDownBalanceOutputDgiTo.DecimalPlaces = 2;
             this.numericUpDownBalanceOutputDgiTo.Enabled = false;
-            this.numericUpDownBalanceOutputDgiTo.Location = new System.Drawing.Point(245, 395);
+            this.numericUpDownBalanceOutputDgiTo.Location = new System.Drawing.Point(245, 437);
             this.numericUpDownBalanceOutputDgiTo.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -350,7 +353,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.numericUpDownBalanceOutputDgiFrom.DecimalPlaces = 2;
             this.numericUpDownBalanceOutputDgiFrom.Enabled = false;
-            this.numericUpDownBalanceOutputDgiFrom.Location = new System.Drawing.Point(94, 395);
+            this.numericUpDownBalanceOutputDgiFrom.Location = new System.Drawing.Point(94, 437);
             this.numericUpDownBalanceOutputDgiFrom.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -370,7 +373,7 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxBalanceOutputDgiExpr.Location = new System.Drawing.Point(33, 394);
+            this.comboBoxBalanceOutputDgiExpr.Location = new System.Drawing.Point(33, 436);
             this.comboBoxBalanceOutputDgiExpr.Name = "comboBoxBalanceOutputDgiExpr";
             this.comboBoxBalanceOutputDgiExpr.Size = new System.Drawing.Size(52, 23);
             this.comboBoxBalanceOutputDgiExpr.TabIndex = 14;
@@ -378,7 +381,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxBalanceOutputDgiChecked
             // 
             this.checkBoxBalanceOutputDgiChecked.AutoSize = true;
-            this.checkBoxBalanceOutputDgiChecked.Location = new System.Drawing.Point(12, 399);
+            this.checkBoxBalanceOutputDgiChecked.Location = new System.Drawing.Point(12, 441);
             this.checkBoxBalanceOutputDgiChecked.Name = "checkBoxBalanceOutputDgiChecked";
             this.checkBoxBalanceOutputDgiChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxBalanceOutputDgiChecked.TabIndex = 13;
@@ -388,7 +391,7 @@ namespace Registry.Viewport.SearchForms
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(9, 377);
+            this.label21.Location = new System.Drawing.Point(9, 419);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(196, 15);
             this.label21.TabIndex = 221;
@@ -398,7 +401,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.numericUpDownBalanceOutputTenancyTo.DecimalPlaces = 2;
             this.numericUpDownBalanceOutputTenancyTo.Enabled = false;
-            this.numericUpDownBalanceOutputTenancyTo.Location = new System.Drawing.Point(245, 352);
+            this.numericUpDownBalanceOutputTenancyTo.Location = new System.Drawing.Point(245, 394);
             this.numericUpDownBalanceOutputTenancyTo.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -412,7 +415,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.numericUpDownBalanceOutputTenancyFrom.DecimalPlaces = 2;
             this.numericUpDownBalanceOutputTenancyFrom.Enabled = false;
-            this.numericUpDownBalanceOutputTenancyFrom.Location = new System.Drawing.Point(94, 352);
+            this.numericUpDownBalanceOutputTenancyFrom.Location = new System.Drawing.Point(94, 394);
             this.numericUpDownBalanceOutputTenancyFrom.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -432,7 +435,7 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxBalanceOutputTenancyExpr.Location = new System.Drawing.Point(33, 351);
+            this.comboBoxBalanceOutputTenancyExpr.Location = new System.Drawing.Point(33, 393);
             this.comboBoxBalanceOutputTenancyExpr.Name = "comboBoxBalanceOutputTenancyExpr";
             this.comboBoxBalanceOutputTenancyExpr.Size = new System.Drawing.Size(52, 23);
             this.comboBoxBalanceOutputTenancyExpr.TabIndex = 10;
@@ -440,7 +443,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxBalanceOutputTenancyChecked
             // 
             this.checkBoxBalanceOutputTenancyChecked.AutoSize = true;
-            this.checkBoxBalanceOutputTenancyChecked.Location = new System.Drawing.Point(12, 356);
+            this.checkBoxBalanceOutputTenancyChecked.Location = new System.Drawing.Point(12, 398);
             this.checkBoxBalanceOutputTenancyChecked.Name = "checkBoxBalanceOutputTenancyChecked";
             this.checkBoxBalanceOutputTenancyChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxBalanceOutputTenancyChecked.TabIndex = 9;
@@ -450,7 +453,7 @@ namespace Registry.Viewport.SearchForms
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(9, 334);
+            this.label22.Location = new System.Drawing.Point(9, 376);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(198, 15);
             this.label22.TabIndex = 220;
@@ -460,7 +463,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.numericUpDownBalanceOutputPenaltiesTo.DecimalPlaces = 2;
             this.numericUpDownBalanceOutputPenaltiesTo.Enabled = false;
-            this.numericUpDownBalanceOutputPenaltiesTo.Location = new System.Drawing.Point(245, 437);
+            this.numericUpDownBalanceOutputPenaltiesTo.Location = new System.Drawing.Point(245, 479);
             this.numericUpDownBalanceOutputPenaltiesTo.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -474,7 +477,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.numericUpDownBalanceOutputPenaltiesFrom.DecimalPlaces = 2;
             this.numericUpDownBalanceOutputPenaltiesFrom.Enabled = false;
-            this.numericUpDownBalanceOutputPenaltiesFrom.Location = new System.Drawing.Point(94, 437);
+            this.numericUpDownBalanceOutputPenaltiesFrom.Location = new System.Drawing.Point(94, 479);
             this.numericUpDownBalanceOutputPenaltiesFrom.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -494,7 +497,7 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxBalanceOutputPenaltiesExpr.Location = new System.Drawing.Point(33, 436);
+            this.comboBoxBalanceOutputPenaltiesExpr.Location = new System.Drawing.Point(33, 478);
             this.comboBoxBalanceOutputPenaltiesExpr.Name = "comboBoxBalanceOutputPenaltiesExpr";
             this.comboBoxBalanceOutputPenaltiesExpr.Size = new System.Drawing.Size(52, 23);
             this.comboBoxBalanceOutputPenaltiesExpr.TabIndex = 18;
@@ -502,7 +505,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxBalanceOutputPenaltiesChecked
             // 
             this.checkBoxBalanceOutputPenaltiesChecked.AutoSize = true;
-            this.checkBoxBalanceOutputPenaltiesChecked.Location = new System.Drawing.Point(12, 441);
+            this.checkBoxBalanceOutputPenaltiesChecked.Location = new System.Drawing.Point(12, 483);
             this.checkBoxBalanceOutputPenaltiesChecked.Name = "checkBoxBalanceOutputPenaltiesChecked";
             this.checkBoxBalanceOutputPenaltiesChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxBalanceOutputPenaltiesChecked.TabIndex = 17;
@@ -512,18 +515,48 @@ namespace Registry.Viewport.SearchForms
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 419);
+            this.label1.Location = new System.Drawing.Point(9, 461);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(196, 15);
             this.label1.TabIndex = 226;
             this.label1.Text = "Текущее сальдо исходящее пени";
+            // 
+            // textBoxRawAddress
+            // 
+            this.textBoxRawAddress.Enabled = false;
+            this.textBoxRawAddress.Location = new System.Drawing.Point(34, 267);
+            this.textBoxRawAddress.Name = "textBoxRawAddress";
+            this.textBoxRawAddress.Size = new System.Drawing.Size(352, 21);
+            this.textBoxRawAddress.TabIndex = 228;
+            // 
+            // checkBoxRawAddressEnabled
+            // 
+            this.checkBoxRawAddressEnabled.AutoSize = true;
+            this.checkBoxRawAddressEnabled.Location = new System.Drawing.Point(13, 271);
+            this.checkBoxRawAddressEnabled.Name = "checkBoxRawAddressEnabled";
+            this.checkBoxRawAddressEnabled.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxRawAddressEnabled.TabIndex = 227;
+            this.checkBoxRawAddressEnabled.UseVisualStyleBackColor = true;
+            this.checkBoxRawAddressEnabled.CheckedChanged += new System.EventHandler(this.checkBoxRawAddressEnabled_CheckedChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(14, 249);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(85, 15);
+            this.label4.TabIndex = 229;
+            this.label4.Text = "Адрес по БКС";
             // 
             // SimpleSearchClaimsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(402, 511);
+            this.ClientSize = new System.Drawing.Size(402, 551);
+            this.Controls.Add(this.textBoxRawAddress);
+            this.Controls.Add(this.checkBoxRawAddressEnabled);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.numericUpDownBalanceOutputPenaltiesTo);
             this.Controls.Add(this.numericUpDownBalanceOutputPenaltiesFrom);
             this.Controls.Add(this.comboBoxBalanceOutputPenaltiesExpr);
@@ -616,5 +649,8 @@ namespace Registry.Viewport.SearchForms
         private ComboBox comboBoxBalanceOutputPenaltiesExpr;
         private CheckBox checkBoxBalanceOutputPenaltiesChecked;
         private Label label1;
+        private TextBox textBoxRawAddress;
+        private CheckBox checkBoxRawAddressEnabled;
+        private Label label4;
     }
 }
