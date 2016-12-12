@@ -1310,10 +1310,23 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (MessageBox.Show(@"Вы уверены, что хотите удалить эту комнату?", @"Внимание",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
-                return;
             var id = (int)subPremiseRow["id_sub_premises"];
+            var hasResettles = SubPremisesService.HasResettles(id);
+            var hasTenancies = SubPremisesService.HasTenancies(id);
+            if (hasResettles || hasTenancies)
+            {
+                if (MessageBox.Show(@"К комнате привязаны процессы" +
+                    (hasTenancies ? " найма" : "") +
+                    (hasTenancies && hasResettles ? " и" : "") +
+                    (hasResettles ? " переселения" : "") +
+                    @". Вы действительно хотите удалить эту комнату?", @"Внимание",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                    return;
+            }
+            else
+                if (MessageBox.Show(@"Вы действительно хотите удалить эту комнату?", @"Внимание",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                    return;
             Presenter.ViewModel["premises_sub_premises"].Delete(id);
         }
 
