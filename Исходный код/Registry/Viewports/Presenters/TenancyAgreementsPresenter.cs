@@ -382,7 +382,7 @@ namespace Registry.Viewport.Presenters
             var registrationNumber = ParentRow["registration_num"];
 
             var result = string.Format(CultureInfo.InvariantCulture,
-                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {2} найма жилого помещения, распложенного по адресу {3}, ",
+                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {2} найма жилого помещения, распложенного по адресу: {3}, ",
                 registrationNumber, GetFormatedRegistrationDate(), GetTenancyRent(), GetTenancyAddress());
 
             // Исключаем старого нанимателя
@@ -502,7 +502,7 @@ namespace Registry.Viewport.Presenters
             }
 
             return string.Format(@"1.1. По настоящему Соглашению на основании личного заявления нанимателя от {3}. Стороны договорились:" +
-                "\r\n\u200B1) продлить срок действия  договора  № {0} от {1} {5} найма жилого помещения, расположенного по адресу {6}, {2}." +
+                "\r\n\u200B1) продлить срок действия  договора  № {0} от {1} {5} найма жилого помещения, расположенного по адресу: {6}, {2}." +
                 "\r\n\u200B2) пункт {4} исключить.",
                 registrationNumber, GetFormatedRegistrationDate(), rentPeriodStr,
                 requestDate.ToString("dd.MM.yyyy"), prolongGeneralPoint, GetTenancyRent(), GetTenancyAddress());
@@ -622,7 +622,7 @@ namespace Registry.Viewport.Presenters
         internal string TerminateStringBuilder(string terminateReason, DateTime terminateDate)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "1.1. По настоящему Соглашению Стороны договорились расторгнуть с {3} договор № {0} от {1} {4} найма жилого помещения, расположенного по адресу {5}, (далее - договор) по {2}.\r\n" +
+                "1.1. По настоящему Соглашению Стороны договорились расторгнуть с {3} договор № {0} от {1} {4} найма жилого помещения, расположенного по адресу: {5}, (далее - договор) по {2}.\r\n" +
                 "1.2. Обязательства, возникшие из указанного договора до момента расторжения, подлежат исполнению в соответствии с указанным договором. Стороны не имеют взаимных претензий по исполнению условий договора № {0} от {1}.",
                 ParentRow["registration_num"],
                 GetFormatedRegistrationDate(),
@@ -669,7 +669,7 @@ namespace Registry.Viewport.Presenters
             var address = "";
             if (premisesInfoRow != null)
             {
-                address = premisesInfoRow["address"].ToString()
+                address = "Иркутская область, город Братск, " + premisesInfoRow["address"].ToString()
                     .Replace("жилрайон.", "жилой район")
                     .Replace("ул.", "улица")
                     .Replace("пр-кт.", "проспект")
