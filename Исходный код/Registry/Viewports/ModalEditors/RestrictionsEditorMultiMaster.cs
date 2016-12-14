@@ -9,20 +9,20 @@ namespace Registry.Viewport.ModalEditors
     {
         public DateTime? Date
         {
-            get { return dateTimePickerRestrictionDate.Value.Date; }
+            get { return ViewportHelper.ValueOrNull(dateTimePickerRestrictionDate); }
         }
 
         public DateTime? DateStateReg
         {
-            get { return dateTimePickerRestrictionDateStateReg.Value.Date; }
+            get { return ViewportHelper.ValueOrNull(dateTimePickerRestrictionDateStateReg); }
         }
 
         public string RestrictionNumber {
-            get { return string.IsNullOrEmpty(textBoxRestrictionNumber.Text) ? null : textBoxRestrictionNumber.Text; }
+            get { return ViewportHelper.ValueOrNull(textBoxRestrictionNumber); }
         }
         
         public string RestrictionDescription {
-            get { return string.IsNullOrEmpty(textBoxRestrictionDescription.Text) ? null : textBoxRestrictionDescription.Text; }
+            get { return ViewportHelper.ValueOrNull(textBoxRestrictionDescription); }
         }
 
         public int? IdRestrictionType
