@@ -264,7 +264,7 @@ namespace Registry.DataModels.Services
                     on identRow.id_process equals tenancyRow.Field<int>("id_process")
                 join moreOneIdentStringsRow in moreOneIdentStrings
                     on identRow.value equals moreOneIdentStringsRow
-                where tenancyRow.Field<string>("registration_num") != null
+                                      where tenancyRow.Field<string>("registration_num") != null && !tenancyRow.Field<string>("registration_num").EndsWith("н")
                 select new
                 {
                     id_process = tenancyRow.Field<int>("id_process"),

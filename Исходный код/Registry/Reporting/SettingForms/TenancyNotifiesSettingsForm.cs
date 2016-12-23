@@ -26,7 +26,7 @@ namespace Registry.Reporting.SettingForms
         private readonly BindingSource _vTenancyNotifiesMaxDate;
         #endregion Views
 
-        private readonly string _staticFilter = "registration_num IS NOT NULL AND end_date IS NOT NULL AND registration_num NOT LIKE '%н'";
+        private readonly string _staticFilter = "(registration_num IS NULL OR registration_num NOT LIKE '%н')";
 
         public Collection<int> TenancyProcessIds
         {
@@ -115,34 +115,67 @@ namespace Registry.Reporting.SettingForms
 
         private void RebuildFilter()
         {
-            var filter = _staticFilter;
-            if (checkBoxExpired.Checked || checkBoxExpiring.Checked || checkBoxWithoutRegNum.Checked)
+            var filter = "";
+            if (checkBoxExpired.Checked || checkBoxExpiring.Checked || 
+                checkBoxWithoutRegNum.Checked || checkBoxProlongContracts.Checked)
             {
-                if(checkBoxExpired.Checked && (!checkBoxExpiring.Checked))
-                {                   
-                    filter += string.Format(CultureInfo.InvariantCulture, " AND end_date < '{0:yyyy-MM-dd}'", DateTime.Now.Date);
+                if(checkBoxExpired.Checked && !checkBoxExpiring.Checked)
+                {
+                    if (!string.IsNullOrEmpty(filter))
+                    {
+                        filter += " AND ";
+                    }
+                    filter += "registration_num IS NOT NULL AND end_date IS NOT NULL AND " + 
+                        string.Format(CultureInfo.InvariantCulture, "end_date < '{0:yyyy-MM-dd}'", 
+                        DateTime.Now.Date);
                 }
-                if ((!checkBoxExpired.Checked) && checkBoxExpiring.Checked)
-                {                    
-                    filter += string.Format(CultureInfo.InvariantCulture, " AND end_date >= '{0:yyyy-MM-dd}' AND end_date < '{1:yyyy-MM-dd}'", DateTime.Now.Date, DateTime.Now.Date.AddMonths(4));
+                if (!checkBoxExpired.Checked && checkBoxExpiring.Checked)
+                {
+                    if (!string.IsNullOrEmpty(filter))
+                    {
+                        filter += " AND ";
+                    }
+                    filter += "registration_num IS NOT NULL AND end_date IS NOT NULL AND " + 
+                        string.Format(CultureInfo.InvariantCulture, "end_date >= '{0:yyyy-MM-dd}' AND end_date < '{1:yyyy-MM-dd}'", 
+                        DateTime.Now.Date, DateTime.Now.Date.AddMonths(4));
                 }
                 if (checkBoxExpired.Checked && checkBoxExpiring.Checked)
-                {                    
-                    filter += string.Format(CultureInfo.InvariantCulture, " AND end_date < '{0:yyyy-MM-dd}'", DateTime.Now.Date.AddMonths(4));
+                {
+                    if (!string.IsNullOrEmpty(filter))
+                    {
+                        filter += " AND ";
+                    }
+                    filter += "registration_num IS NOT NULL AND end_date IS NOT NULL AND " + 
+                        string.Format(CultureInfo.InvariantCulture, "end_date < '{0:yyyy-MM-dd}'", 
+                        DateTime.Now.Date.AddMonths(4));
                 }
                 if(checkBoxWithoutRegNum.Checked)
                 {
-                    if (!checkBoxExpired.Checked && !checkBoxExpiring.Checked)                
-                        filter = " registration_num IS NULL";
-                    else
-                        filter += " OR registration_num IS NULL";
+                    if (!string.IsNullOrEmpty(filter))
+                        filter += " OR ";
+                    filter += "registration_num IS NULL";
+                }
+                if (checkBoxProlongContracts.Checked)
+                {
+                    var prolongContractsIds =
+                        from row in EntityDataModel<TenancyRentPeriod>.GetInstance().FilterDeletedRows()
+                        where row.Field<int?>("id_process") != null
+                        select row.Field<int>("id_process");
+                    if (!string.IsNullOrEmpty(filter))
+                        filter += " OR ";
+                    filter += "id_process IN(0" + prolongContractsIds.Select(v => v.ToString()).
+                        Aggregate((v, acc) => v + "," + acc)+")";
                 }
             }
             else
             {
-                filter += "AND 1=0";
+                if (!string.IsNullOrEmpty(filter))
+                {
+                    filter += " AND ";
+                }
+                filter += "1=0";
             }
-             _vTenancies.Filter = filter;
+            _vTenancies.Filter = string.Format("({0}) AND ({1})", filter, _staticFilter);
             dataGridView.RowCount = _vTenancies.Count;
             dataGridView.Refresh();          
         }
@@ -342,6 +375,13 @@ namespace Registry.Reporting.SettingForms
             RebuildFilter();
         }
 
+        private void checkBoxProlongContracts_CheckedChanged(object sender, EventArgs e)
+        {
+            _checkedTenancies.Clear();
+            checkBoxCheckAll.CheckState = CheckState.Unchecked;
+            RebuildFilter();
+        }
+
         private void checkBoxCheckAll_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxCheckAll.CheckState != CheckState.Checked && checkBoxCheckAll.CheckState != CheckState.Unchecked)
@@ -363,10 +403,14 @@ namespace Registry.Reporting.SettingForms
         {
             ReportType = TenancyNotifiesReportType.PrintNotifiesSecondary;
             DialogResult = DialogResult.OK;
-        }        
+        }
 
-       
+        private void ответНаОбращениеПоПродлениюToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReportType = TenancyNotifiesReportType.PrintNotifiesProlongContract;
+            DialogResult = DialogResult.OK;
+        }
     }
 
-    public enum TenancyNotifiesReportType { ExportAsIs, PrintNotifiesPrimary, PrintNotifiesSecondary }
+    public enum TenancyNotifiesReportType { ExportAsIs, PrintNotifiesPrimary, PrintNotifiesSecondary, PrintNotifiesProlongContract }
 }

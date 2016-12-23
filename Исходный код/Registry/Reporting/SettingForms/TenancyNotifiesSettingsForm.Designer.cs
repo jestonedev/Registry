@@ -29,9 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            var dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyNotifiesSettingsForm));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyNotifiesSettingsForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkBoxProlongContracts = new System.Windows.Forms.CheckBox();
             this.checkBoxWithoutRegNum = new System.Windows.Forms.CheckBox();
             this.comboBoxExecutor = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -55,6 +56,8 @@
             this.contextMenuStripNotify = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.повторноеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.повторноеToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.ответНаОбращениеПоПродлениюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.contextMenuStripNotify.SuspendLayout();
@@ -62,6 +65,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.checkBoxProlongContracts);
             this.panel1.Controls.Add(this.checkBoxWithoutRegNum);
             this.panel1.Controls.Add(this.comboBoxExecutor);
             this.panel1.Controls.Add(this.label4);
@@ -71,19 +75,31 @@
             this.panel1.Controls.Add(this.vButtonNotify);
             this.panel1.Controls.Add(this.vButtonCancel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 631);
+            this.panel1.Location = new System.Drawing.Point(0, 606);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(994, 70);
+            this.panel1.Size = new System.Drawing.Size(946, 95);
             this.panel1.TabIndex = 0;
+            // 
+            // checkBoxProlongContracts
+            // 
+            this.checkBoxProlongContracts.AutoSize = true;
+            this.checkBoxProlongContracts.Location = new System.Drawing.Point(12, 71);
+            this.checkBoxProlongContracts.Margin = new System.Windows.Forms.Padding(2);
+            this.checkBoxProlongContracts.Name = "checkBoxProlongContracts";
+            this.checkBoxProlongContracts.Size = new System.Drawing.Size(187, 17);
+            this.checkBoxProlongContracts.TabIndex = 3;
+            this.checkBoxProlongContracts.Text = "Процессы найма с продлением";
+            this.checkBoxProlongContracts.UseVisualStyleBackColor = true;
+            this.checkBoxProlongContracts.CheckedChanged += new System.EventHandler(this.checkBoxProlongContracts_CheckedChanged);
             // 
             // checkBoxWithoutRegNum
             // 
             this.checkBoxWithoutRegNum.AutoSize = true;
             this.checkBoxWithoutRegNum.Location = new System.Drawing.Point(12, 50);
-            this.checkBoxWithoutRegNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBoxWithoutRegNum.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxWithoutRegNum.Name = "checkBoxWithoutRegNum";
             this.checkBoxWithoutRegNum.Size = new System.Drawing.Size(190, 17);
-            this.checkBoxWithoutRegNum.TabIndex = 76;
+            this.checkBoxWithoutRegNum.TabIndex = 2;
             this.checkBoxWithoutRegNum.Text = "Процессы найма без договоров";
             this.checkBoxWithoutRegNum.UseVisualStyleBackColor = true;
             this.checkBoxWithoutRegNum.CheckedChanged += new System.EventHandler(this.checkBoxWithoutRegNum_CheckedChanged);
@@ -92,15 +108,15 @@
             // 
             this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxExecutor.FormattingEnabled = true;
-            this.comboBoxExecutor.Location = new System.Drawing.Point(298, 24);
+            this.comboBoxExecutor.Location = new System.Drawing.Point(298, 45);
             this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(286, 21);
-            this.comboBoxExecutor.TabIndex = 2;
+            this.comboBoxExecutor.Size = new System.Drawing.Size(249, 21);
+            this.comboBoxExecutor.TabIndex = 4;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(295, 9);
+            this.label4.Location = new System.Drawing.Point(295, 29);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(74, 13);
             this.label4.TabIndex = 75;
@@ -111,11 +127,11 @@
             this.vButtonExport.AllowAnimations = true;
             this.vButtonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonExport.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonExport.Location = new System.Drawing.Point(597, 10);
+            this.vButtonExport.Location = new System.Drawing.Point(568, 38);
             this.vButtonExport.Name = "vButtonExport";
             this.vButtonExport.RoundedCornersMask = ((byte)(15));
             this.vButtonExport.Size = new System.Drawing.Size(117, 35);
-            this.vButtonExport.TabIndex = 3;
+            this.vButtonExport.TabIndex = 5;
             this.vButtonExport.Text = "Экспорт";
             this.vButtonExport.UseVisualStyleBackColor = false;
             this.vButtonExport.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -150,11 +166,11 @@
             this.vButtonNotify.AllowAnimations = true;
             this.vButtonNotify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonNotify.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonNotify.Location = new System.Drawing.Point(732, 10);
+            this.vButtonNotify.Location = new System.Drawing.Point(692, 38);
             this.vButtonNotify.Name = "vButtonNotify";
             this.vButtonNotify.RoundedCornersMask = ((byte)(15));
             this.vButtonNotify.Size = new System.Drawing.Size(117, 35);
-            this.vButtonNotify.TabIndex = 4;
+            this.vButtonNotify.TabIndex = 6;
             this.vButtonNotify.Text = "Уведомление";
             this.vButtonNotify.UseVisualStyleBackColor = false;
             this.vButtonNotify.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -166,7 +182,7 @@
             this.vButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(867, 10);
+            this.vButtonCancel.Location = new System.Drawing.Point(816, 38);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -211,7 +227,7 @@
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(994, 631);
+            this.dataGridView.Size = new System.Drawing.Size(946, 606);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.VirtualMode = true;
             this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
@@ -323,30 +339,44 @@
             this.contextMenuStripNotify.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripNotify.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.повторноеToolStripMenuItem,
-            this.повторноеToolStripMenuItem1});
+            this.повторноеToolStripMenuItem1,
+            this.toolStripMenuItem1,
+            this.ответНаОбращениеПоПродлениюToolStripMenuItem});
             this.contextMenuStripNotify.Name = "contextMenuStripNotify";
-            this.contextMenuStripNotify.Size = new System.Drawing.Size(137, 48);
+            this.contextMenuStripNotify.Size = new System.Drawing.Size(273, 76);
             // 
             // повторноеToolStripMenuItem
             // 
             this.повторноеToolStripMenuItem.Name = "повторноеToolStripMenuItem";
-            this.повторноеToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.повторноеToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
             this.повторноеToolStripMenuItem.Text = "Первичное";
             this.повторноеToolStripMenuItem.Click += new System.EventHandler(this.повторноеToolStripMenuItem_Click);
             // 
             // повторноеToolStripMenuItem1
             // 
             this.повторноеToolStripMenuItem1.Name = "повторноеToolStripMenuItem1";
-            this.повторноеToolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
+            this.повторноеToolStripMenuItem1.Size = new System.Drawing.Size(272, 22);
             this.повторноеToolStripMenuItem1.Text = "Повторное";
             this.повторноеToolStripMenuItem1.Click += new System.EventHandler(this.повторноеToolStripMenuItem1_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(269, 6);
+            // 
+            // ответНаОбращениеПоПродлениюToolStripMenuItem
+            // 
+            this.ответНаОбращениеПоПродлениюToolStripMenuItem.Name = "ответНаОбращениеПоПродлениюToolStripMenuItem";
+            this.ответНаОбращениеПоПродлениюToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.ответНаОбращениеПоПродлениюToolStripMenuItem.Text = "Ответ на обращение по продлению";
+            this.ответНаОбращениеПоПродлениюToolStripMenuItem.Click += new System.EventHandler(this.ответНаОбращениеПоПродлениюToolStripMenuItem_Click);
             // 
             // TenancyNotifiesSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(994, 701);
+            this.ClientSize = new System.Drawing.Size(946, 701);
             this.Controls.Add(this.checkBoxCheckAll);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.panel1);
@@ -391,6 +421,9 @@
         private System.Windows.Forms.ToolStripMenuItem повторноеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem повторноеToolStripMenuItem1;
         private System.Windows.Forms.CheckBox checkBoxWithoutRegNum;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem ответНаОбращениеПоПродлениюToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxProlongContracts;
 
 
     }

@@ -21,13 +21,29 @@ namespace Registry.Reporting.TenancyReporters
             {
                 if (tnsForm.ShowDialog() == DialogResult.OK)
                 {
+                    string reportType = null;
+                    switch (tnsForm.ReportType)
+                    {
+                        case TenancyNotifiesReportType.ExportAsIs:
+                            reportType = "1";
+                            break;
+                        case TenancyNotifiesReportType.PrintNotifiesPrimary:
+                            reportType = "2";
+                            break;
+                        case TenancyNotifiesReportType.PrintNotifiesSecondary:
+                            reportType = "3";
+                            break;
+                        case TenancyNotifiesReportType.PrintNotifiesProlongContract:
+                            reportType = "4";
+                            break;
+
+                    }
                     arguments.Add("id_executor", tnsForm.IdExecutor.ToString(CultureInfo.InvariantCulture));
-                    arguments.Add("report_type", tnsForm.ReportType == TenancyNotifiesReportType.ExportAsIs ? "1" : (
-                        tnsForm.ReportType == TenancyNotifiesReportType.PrintNotifiesPrimary ? "2" : "3"));
+                    arguments.Add("report_type", reportType);
                     var processesStr = "";
                     var processIds = tnsForm.TenancyProcessIds;
-                    foreach (var processID in processIds)
-                        processesStr += processID.ToString(CultureInfo.InvariantCulture) + ",";
+                    foreach (var processId in processIds)
+                        processesStr += processId.ToString(CultureInfo.InvariantCulture) + ",";
                     processesStr = processesStr.TrimEnd(',');
                     arguments.Add("process_ids", processesStr);
                     base.Run(arguments);
