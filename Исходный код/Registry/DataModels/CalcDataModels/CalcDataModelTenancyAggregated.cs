@@ -67,8 +67,8 @@ namespace Registry.DataModels.CalcDataModels
                          select new
                          {
                              id_process = tenanciesRow.Field<int>("id_process"),
-                             address = (spARow == null) ? "" : spARow.Address,
-                             tenant = (spTRow == null) ? "" : spTRow.tenant
+                             address = spARow == null ? "" : spARow.Address,
+                             tenant = spTRow == null ? "" : spTRow.tenant
                          };
             // Заполняем таблицу изменений
             var table = InitializeTable();

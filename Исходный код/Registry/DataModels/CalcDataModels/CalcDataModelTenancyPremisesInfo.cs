@@ -63,9 +63,9 @@ namespace Registry.DataModels.CalcDataModels
                                     {
                                         id_process = assocSubPremisesRow.Field<int>("id_process"),
                                         address = kladrStreetRow.Field<string>("street_name") + ", дом " + buildingsRow.Field<string>("house") +
-                                            (premisesRow.Field<int>("id_premises_type") == 2 ? " ком. " : 
-                                            (premisesRow.Field<int>("id_premises_type") == 4 ? " пом. " : " кв. ")) + premisesRow.Field<string>("premises_num") +
-                                            " ком. " + subPremisesRow.Field<string>("sub_premises_num"),
+                                            (premisesRow.Field<int>("id_premises_type") == 2 ? ", ком. " : 
+                                            (premisesRow.Field<int>("id_premises_type") == 4 ? ", пом. " : ", кв. ")) + premisesRow.Field<string>("premises_num") +
+                                            ", ком. " + subPremisesRow.Field<string>("sub_premises_num"),
                                         total_area = subPremisesRow.Field<double>("total_area"),
                                         living_area = subPremisesRow.Field<double>("living_area"),
                                         rent_area = assocSubPremisesRow.Field<double?>("rent_total_area")
@@ -81,8 +81,8 @@ namespace Registry.DataModels.CalcDataModels
                                     {
                                         id_process = assocPremisesRow.Field<int>("id_process"),
                                         address = kladrStreetRow.Field<string>("street_name") + ", дом " + buildingsRow.Field<string>("house") +
-                                            (premisesRow.Field<int>("id_premises_type") == 2 ? " ком. " :
-                                            (premisesRow.Field<int>("id_premises_type") == 4 ? " пом. " : " кв. ")) + premisesRow.Field<string>("premises_num"),
+                                            (premisesRow.Field<int>("id_premises_type") == 2 ? ", ком. " :
+                                            (premisesRow.Field<int>("id_premises_type") == 4 ? ", пом. " : ", кв. ")) + premisesRow.Field<string>("premises_num"),
                                         total_area = premisesRow.Field<double>("total_area"),
                                         living_area = premisesRow.Field<double>("living_area"),
                                         rent_area = assocPremisesRow.Field<double?>("rent_total_area")

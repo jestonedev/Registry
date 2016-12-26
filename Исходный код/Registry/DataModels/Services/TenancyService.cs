@@ -324,9 +324,9 @@ namespace Registry.DataModels.Services
                     gs.Key.id_building,
                     gs.Key.id_premises,
                     result_str =
-                        (gs.Key.id_premises_type == 2 ? " ком. " : (gs.Key.id_premises_type == 4 ? " пом. " : " кв. ")) +
+                        (gs.Key.id_premises_type == 2 ? ", ком. " : (gs.Key.id_premises_type == 4 ? ", пом. " : ", кв. ")) +
                         gs.Key.premises_num + (gs.Any()
-                            ? " ком. " + gs.Aggregate((a, b) => a + ", " + b)
+                            ? ", ком. " + gs.Aggregate((a, b) => a + ", " + b)
                             : "")
                 };
             var aPremises = from assocPremisesRow in assocPremises
@@ -342,8 +342,8 @@ namespace Registry.DataModels.Services
                     id_building = premisesRow.Field<int>("id_building"),
                     id_premises = assocPremisesRow.Field<int>("id_premises"),
                     result_str = (premisesRow.Field<int>("id_premises_type") == 2
-                        ? " ком. "
-                        : (premisesRow.Field<int>("id_premises_type") == 4 ? " пом. " : " кв. ")) +
+                        ? ", ком. "
+                        : (premisesRow.Field<int>("id_premises_type") == 4 ? ", пом. " : ", кв. ")) +
                                  premisesRow.Field<string>("premises_num")
                 };
             var aBuildings = from assocBuildingsRow in assocBuildings
