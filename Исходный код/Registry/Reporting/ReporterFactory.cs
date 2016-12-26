@@ -51,8 +51,10 @@ namespace Registry.Reporting
                     return new TenancyContractSpecial1711Reporter();
                 case ReporterType.TenancyContractSpecial1712Reporter:
                     return new TenancyContractSpecial1712Reporter();
-                case ReporterType.TenancyActReporter:
-                    return new TenancyActReporter();
+                case ReporterType.TenancyActToEmploymentReporter:
+                    return new TenancyActEmploymentReporter(ActEmploymentType.ToEmployment);
+                case ReporterType.TenancyActFromEmploymentReporter:
+                    return new TenancyActEmploymentReporter(ActEmploymentType.FromEmployment);
                 case ReporterType.TenancyAgreementReporter:
                     return new TenancyAgreementReporter();
                 case ReporterType.TenancyStatisticReporter:

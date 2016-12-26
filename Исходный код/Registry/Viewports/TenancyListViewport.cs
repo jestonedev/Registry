@@ -238,7 +238,8 @@ namespace Registry.Viewport
                 case ReporterType.TenancyContractSpecial1711Reporter:
                 case ReporterType.TenancyContractSpecial1712Reporter:
                     return idProcess != null && idRentType == 2;
-                case ReporterType.TenancyActReporter:
+                case ReporterType.TenancyActToEmploymentReporter:
+                case ReporterType.TenancyActFromEmploymentReporter:
                 case ReporterType.TenancyNotifyContractAgreement:
                     return idProcess != null;
                 case ReporterType.TenancyAgreementReporter:
@@ -267,7 +268,8 @@ namespace Registry.Viewport
                     arguments = TenancyContractReporterArguments();
                     arguments.Add("report_type", "1");
                     break;
-                case ReporterType.TenancyActReporter:
+                case ReporterType.TenancyActToEmploymentReporter:
+                case ReporterType.TenancyActFromEmploymentReporter:
                     arguments = TenancyActReporterArguments();
                     break;
             }

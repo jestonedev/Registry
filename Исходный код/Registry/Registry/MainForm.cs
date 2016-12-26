@@ -413,8 +413,10 @@ namespace Registry
             if (document.HasReport(ReporterType.TenancyContractCommercialReporter) ||
                 document.HasReport(ReporterType.TenancyContractSocialReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract);
-            if (document.HasReport(ReporterType.TenancyActReporter))
-                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAct);
+            if (document.HasReport(ReporterType.TenancyActToEmploymentReporter))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyActToEmployment);
+            if (document.HasReport(ReporterType.TenancyActFromEmploymentReporter))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyActFromEmployment);
             if (document.HasReport(ReporterType.TenancyAgreementReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAgreement);
             if (document.HasReport(ReporterType.TenancyNotifyContractAgreement))
@@ -996,11 +998,18 @@ namespace Registry
                 document.GenerateReport(ReporterType.TenancyContractSpecial1712Reporter); 
         }
 
-        private void ribbonButtonTenancyAct_Click(object sender, EventArgs e)
+        private void ribbonButtonTenancyActToEmployment_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.GenerateReport(ReporterType.TenancyActReporter); 
+                document.GenerateReport(ReporterType.TenancyActToEmploymentReporter);
+        }
+
+        private void ribbonButtonOrbTenancyActFromEmployment_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.TenancyActFromEmploymentReporter); 
         }
 
         private void ribbonButtonTenancyContract_Click(object sender, EventArgs e)

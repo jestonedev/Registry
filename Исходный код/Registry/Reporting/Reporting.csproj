@@ -83,6 +83,7 @@
     <Compile Include="SettingForms\StatisticReportDialog.Designer.cs">
       <DependentUpon>StatisticReportDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="TenancyReporters\ActEmploymentType.cs" />
     <Compile Include="TenancyReporters\TenancyNotifyContractAgreement.cs" />
     <Compile Include="SettingForms\TransferToLegalDepartment.cs">
       <SubType>Form</SubType>
@@ -162,7 +163,7 @@
     </Compile>
     <Compile Include="TenancyReporters\TenancyAgreementReporter.cs" />
     <Compile Include="TenancyContractTypes.cs" />
-    <Compile Include="TenancyReporters\TenancyActReporter.cs" />
+    <Compile Include="TenancyReporters\TenancyActEmploymentReporter.cs" />
     <Compile Include="TenancyReporters\TenancyContractCommercialReporter.cs" />
     <Compile Include="TenancyReporters\TenancyContractSocialReporter.cs" />
     <Compile Include="TenancyReporters\TenancyContractSpecial1711Reporter.cs" />
