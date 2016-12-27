@@ -739,7 +739,7 @@ namespace Registry.Viewport
                 case ReporterType.TenancyNotifyContractAgreement:
                     return idProcess != null;
                 case ReporterType.TenancyAgreementReporter:
-                    return idProcess != null && (TenancyService.TenancyAgreementsForProcess(idProcess.Value) > 0);
+                    return idProcess != null && (TenancyService.TenancyAgreementsCountForProcess(idProcess.Value) > 0);
             }
             return false;
         }

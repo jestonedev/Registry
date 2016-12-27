@@ -180,12 +180,20 @@ namespace Registry.DataModels.Services
                 select personsRow).Any();
         }
 
-        public static int TenancyAgreementsForProcess(int idProcess)
+        public static int TenancyAgreementsCountForProcess(int idProcess)
         {
             var agreements = EntityDataModel<TenancyAgreement>.GetInstance().FilterDeletedRows();
             return (from agreementsRow in agreements
                 where agreementsRow.Field<int?>("id_process") == idProcess
                 select agreementsRow).Count();
+        }
+
+        public static int TenancyAgreementLastIdForProcess(int idProcess)
+        {
+            var agreements = EntityDataModel<TenancyAgreement>.GetInstance().FilterDeletedRows();
+            return (from agreementsRow in agreements
+                    where agreementsRow.Field<int?>("id_process") == idProcess
+                    select agreementsRow.Field<int>("id_agreement")).LastOrDefault();
         }
 
         public static int TenancyProcessesDuplicateCount(TenancyProcess process)

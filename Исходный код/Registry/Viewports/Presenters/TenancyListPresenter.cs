@@ -65,10 +65,16 @@ namespace Registry.Viewport.Presenters
             return filter;
         }
 
-        internal bool DeleteRecord()
+        public bool DeleteRecord()
         {
             var id = (int)ViewModel["general"].CurrentRow[ViewModel["general"].PrimaryKeyFirst];
             return ViewModel["general"].Delete(id);
+        }
+
+        public int TenancyAgreementLastIdForProcess()
+        {
+            var id = (int)ViewModel["general"].CurrentRow[ViewModel["general"].PrimaryKeyFirst];
+            return TenancyService.TenancyAgreementLastIdForProcess(id);
         }
     }
 }

@@ -243,7 +243,7 @@ namespace Registry.Viewport
                 case ReporterType.TenancyNotifyContractAgreement:
                     return idProcess != null;
                 case ReporterType.TenancyAgreementReporter:
-                    return idProcess != null && (TenancyService.TenancyAgreementsForProcess(idProcess.Value) > 0);
+                    return idProcess != null && (TenancyService.TenancyAgreementsCountForProcess(idProcess.Value) > 0);
             }
             return false;
         }
@@ -271,6 +271,13 @@ namespace Registry.Viewport
                 case ReporterType.TenancyActToEmploymentReporter:
                 case ReporterType.TenancyActFromEmploymentReporter:
                     arguments = TenancyActReporterArguments();
+                    break;
+                case ReporterType.TenancyAgreementReporter:
+                    arguments = new Dictionary<string, string> {
+                        {
+                            "id_agreement", 
+                            ((TenancyListPresenter)Presenter).TenancyAgreementLastIdForProcess().ToString()
+                        }};
                     break;
             }
             MenuCallback.RunReport(reporterType, arguments);
