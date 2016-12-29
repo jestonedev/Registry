@@ -419,8 +419,12 @@ namespace Registry
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyActFromEmployment);
             if (document.HasReport(ReporterType.TenancyAgreementReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAgreement);
-            if (document.HasReport(ReporterType.TenancyNotifyContractAgreement))
+            if (document.HasReport(ReporterType.TenancyNotifyDocumentsPrepared))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyContractAgreement);
+            if (document.HasReport(ReporterType.TenancyNotifyIllegalResident))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyIllegalResident);
+            if (document.HasReport(ReporterType.TenancyNotifyContractViolation))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyCotractViolation);
             if (document.HasReport(ReporterType.RegistryExcerptReporterPremise))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptPremise);
             if (document.HasReport(ReporterType.RegistryExcerptReporterSubPremise))
@@ -1069,7 +1073,21 @@ namespace Registry
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.GenerateReport(ReporterType.TenancyNotifyContractAgreement);
+                document.GenerateReport(ReporterType.TenancyNotifyDocumentsPrepared);
+        }
+
+        private void ribbonButtonNotifyIllegalResident_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.TenancyNotifyIllegalResident);
+        }
+
+        private void ribbonButtonNotifyCotractViolation_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.TenancyNotifyContractViolation);
         }
 
         private void ribbonButtonOrbMultiPaymentAccount_Click(object sender, EventArgs e)

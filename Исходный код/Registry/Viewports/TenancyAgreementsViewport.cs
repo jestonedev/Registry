@@ -377,7 +377,7 @@ namespace Registry.Viewport
             switch (reporterType)
             {
                 case ReporterType.TenancyAgreementReporter:
-                case ReporterType.TenancyNotifyContractAgreement:
+                case ReporterType.TenancyNotifyDocumentsPrepared:
                     return idAgreement != null;
             }
             return false;
@@ -401,7 +401,7 @@ namespace Registry.Viewport
                 case ReporterType.TenancyAgreementReporter:
                     MenuCallback.RunReport(reporterType, new Dictionary<string, string> { { "id_agreement", row["id_agreement"].ToString() } });
                     break;
-                case ReporterType.TenancyNotifyContractAgreement:
+                case ReporterType.TenancyNotifyDocumentsPrepared:
                     var arguments = new Dictionary<string, string>
                     {
                         {"id_process", row["id_process"].ToString()},

@@ -84,7 +84,7 @@
       <DependentUpon>StatisticReportDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="TenancyReporters\ActEmploymentType.cs" />
-    <Compile Include="TenancyReporters\TenancyNotifyContractAgreement.cs" />
+    <Compile Include="TenancyReporters\TenancyNotifySingleDocumentReporter.cs" />
     <Compile Include="SettingForms\TransferToLegalDepartment.cs">
       <SubType>Form</SubType>
     </Compile>

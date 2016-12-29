@@ -40,8 +40,10 @@
         RequestToBksReporter,
         JudicialOrderReporter,
         TransfertToLegalDepartmentReporter,
-        TenancyNotifyContractAgreement,
         ClaimsStatesReporter,
-        AccountsDuplicateStatistic
+        AccountsDuplicateStatistic,
+        TenancyNotifyDocumentsPrepared,
+        TenancyNotifyIllegalResident,
+        TenancyNotifyContractViolation
     }
 }

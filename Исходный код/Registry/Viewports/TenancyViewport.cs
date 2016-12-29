@@ -736,7 +736,9 @@ namespace Registry.Viewport
                     return idProcess != null && idRentType == 2;
                 case ReporterType.TenancyActToEmploymentReporter:
                 case ReporterType.TenancyActFromEmploymentReporter:
-                case ReporterType.TenancyNotifyContractAgreement:
+                case ReporterType.TenancyNotifyDocumentsPrepared:
+                case ReporterType.TenancyNotifyContractViolation:
+                case ReporterType.TenancyNotifyIllegalResident:
                     return idProcess != null;
                 case ReporterType.TenancyAgreementReporter:
                     return idProcess != null && (TenancyService.TenancyAgreementsCountForProcess(idProcess.Value) > 0);
@@ -763,9 +765,17 @@ namespace Registry.Viewport
                 case ReporterType.TenancyActFromEmploymentReporter:
                     arguments = TenancyActReporterArguments();
                     break;
-                case ReporterType.TenancyNotifyContractAgreement:
+                case ReporterType.TenancyNotifyDocumentsPrepared:
                     arguments = TenancyContractReporterArguments();
                     arguments.Add("report_type", "1");
+                    break;
+                case ReporterType.TenancyNotifyContractViolation:
+                    arguments = TenancyContractReporterArguments();
+                    arguments.Add("report_type", "3");  // Report type 2 used into TenancyAgreementsViewport
+                    break;
+                case ReporterType.TenancyNotifyIllegalResident:
+                    arguments = TenancyContractReporterArguments();
+                    arguments.Add("report_type", "4");
                     break;
                 case ReporterType.TenancyAgreementReporter:
                     if (Presenter.ViewModel["tenancy_processes_tenancy_agreements"].CurrentRow == null)

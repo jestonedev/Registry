@@ -83,8 +83,10 @@ namespace Registry.Reporting
                     return new JudicialOrderReporter();
                 case ReporterType.TransfertToLegalDepartmentReporter:
                     return new TransfertToLegalDepartmentReporter();
-                case ReporterType.TenancyNotifyContractAgreement:
-                    return new TenancyNotifyContractAgreement();
+                case ReporterType.TenancyNotifyDocumentsPrepared:
+                case ReporterType.TenancyNotifyIllegalResident:
+                case ReporterType.TenancyNotifyContractViolation:
+                    return new TenancyNotifySingleDocumentReporter();
                 case ReporterType.RegistryMunicipalPremisesCurrentFundsReporter:
                     return new MunicipalPremisesCurrentFundsReporter();
                 case ReporterType.RegistryMunicipalPremisesReporter:
