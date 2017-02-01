@@ -84,7 +84,8 @@ namespace Registry.Viewport.SearchForms
             "по лицевому счету",
             "по СРН",
             "по ФИО",
-            "по адресу БКС"});
+            "по адресу БКС",
+            "по адресу ЖФ"});
             this.comboBoxCriteriaType.Location = new System.Drawing.Point(10, 9);
             this.comboBoxCriteriaType.Name = "comboBoxCriteriaType";
             this.comboBoxCriteriaType.Size = new System.Drawing.Size(178, 23);

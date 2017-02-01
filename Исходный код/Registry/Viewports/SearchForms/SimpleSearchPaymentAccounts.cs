@@ -60,6 +60,29 @@ namespace Registry.Viewport.SearchForms
                 }
                 filter += string.Format("({0})", addressFilter);
             }
+            if (comboBoxCriteriaType.SelectedIndex == 4)
+            {
+                if (!string.IsNullOrEmpty(filter))
+                    filter += " AND ";
+                var addressFilter = "";
+
+                if (string.IsNullOrEmpty(textBoxCriteria.Text))
+                {
+                    addressFilter += ("parsed_address is null");
+                }
+                else
+                {
+                    var addressParts = textBoxCriteria.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var part in addressParts)
+                    {
+                        if (!string.IsNullOrEmpty(addressFilter))
+                            addressFilter += " AND ";
+                        addressFilter += addressFilter + string.Format("parsed_address LIKE '%{0}%'", part.Replace("'", ""));
+                    }
+                }
+              
+                filter += string.Format("({0})", addressFilter);
+            }
             if (includedAccounts != null)
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
@@ -73,7 +96,7 @@ namespace Registry.Viewport.SearchForms
 
         private void vButtonSearch_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(textBoxCriteria.Text.Trim()))
+            if (string.IsNullOrEmpty(textBoxCriteria.Text.Trim()) && comboBoxCriteriaType.SelectedIndex != 4)
             {
                 MessageBox.Show(@"Не ввиден критерий поиска", @"Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
