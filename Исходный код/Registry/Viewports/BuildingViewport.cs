@@ -15,6 +15,8 @@ using Registry.Viewport.Presenters;
 using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
+using System.Drawing;
+
 
 namespace Registry.Viewport
 {
@@ -663,6 +665,7 @@ namespace Registry.Viewport
         {
             UnbindedUpdate();
             dataGridViewRestrictions.Focus();
+            RedrawOwnershipDataGridRows();
             base.OnVisibleChanged(e);
         }
 
@@ -997,5 +1000,35 @@ namespace Registry.Viewport
                 return (int)row[columnName];
             return -1;
         }
-    }
-}
+
+        private void RedrawOwnershipDataGridRows()
+        {
+            for (var i = 0; i < dataGridViewOwnerships.Rows.Count; i++)
+            {
+                var idOwnershipRightType = (int)dataGridViewOwnerships.Rows[i].Cells["id_ownership_type"].Value;
+                var style = dataGridViewOwnerships.Rows[i].DefaultCellStyle;
+
+                 if (idOwnershipRightType == 6)
+                    {
+                        style.BackColor = Color.LightBlue;
+                        style.SelectionBackColor = Color.Blue;
+                    }
+                    
+                 else
+                    {
+                        style.BackColor = Color.White;
+                        style.SelectionBackColor = SystemColors.Highlight;
+                    }
+                                   
+                }
+            }
+
+        private void dataGridViewOwnerships_Sorted(object sender, EventArgs e)
+        {
+            RedrawOwnershipDataGridRows();
+        }
+
+     
+        }
+
+     }

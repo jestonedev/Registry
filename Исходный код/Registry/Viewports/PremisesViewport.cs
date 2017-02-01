@@ -127,19 +127,41 @@ namespace Registry.Viewport
             for (var i = 0; i < dataGridViewOwnerships.Rows.Count; i++)
             {
                 var assoc = Presenter.ViewModel["ownership_buildings_assoc"].BindingSource;
+                var idOwnershipRightType = (int)dataGridViewOwnerships.Rows[i].Cells["id_ownership_type"].Value;
                 var style = dataGridViewOwnerships.Rows[i].DefaultCellStyle;
+
+                
+
                 if (
                     assoc.Find("id_ownership_right",
                         dataGridViewOwnerships.Rows[i].Cells["id_ownership_right"].Value) != -1)
                 {
-                    style.BackColor = Color.LightGreen;
-                    style.SelectionBackColor = Color.Green;
+                    if (idOwnershipRightType == 6)
+                    {
+                        style.BackColor = Color.LightBlue;
+                        style.SelectionBackColor = Color.Blue;
+                    }
+                    else
+                    {
+                        style.BackColor = Color.LightGreen;
+                        style.SelectionBackColor = Color.Green;
+                    }
+                    
                     dataGridViewOwnerships.Rows[i].Cells["ownership_relation"].Value = "Здание";
                 }
                 else
                 {
-                    style.BackColor = Color.White;
-                    style.SelectionBackColor = SystemColors.Highlight;
+                    if (idOwnershipRightType == 6)
+                    {
+                        style.BackColor = Color.SkyBlue;
+                        style.SelectionBackColor = Color.DeepSkyBlue;
+                    }
+                    else 
+                    {
+                        style.BackColor = Color.White;
+                        style.SelectionBackColor = SystemColors.Highlight;
+                    }
+                
                     dataGridViewOwnerships.Rows[i].Cells["ownership_relation"].Value = "Помещение";
                 }
             }
@@ -332,6 +354,7 @@ namespace Registry.Viewport
             ownership_description.DataPropertyName = "description";
             ViewportHelper.BindSource(id_ownership_type, Presenter.ViewModel["ownership_right_types"].BindingSource, "ownership_right_type",
                 Presenter.ViewModel["ownership_right_types"].PrimaryKeyFirst);
+            
 
             dataGridViewRooms.DataSource = Presenter.ViewModel["premises_sub_premises"].BindingSource;
             sub_premises_num.DataPropertyName = "sub_premises_num";
@@ -1384,6 +1407,11 @@ namespace Registry.Viewport
             if (!isDemolished) return;
             label20.Text = @"Номер дома (снесен)";
             label20.ForeColor = Color.Red;
+        }
+
+        private void dataGridViewOwnerships_Sorted(object sender, EventArgs e)
+        {
+            RedrawOwnershipDataGridRows();
         }
     }
 }

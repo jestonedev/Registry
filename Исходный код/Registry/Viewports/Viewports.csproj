@@ -627,6 +627,9 @@
     <EmbeddedResource Include="ClaimStateTypesViewport.resx">
       <DependentUpon>ClaimStateTypesViewport.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DataGridViewport.resx">
+      <DependentUpon>DataGridViewport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ModalEditors\PersonExcludeDateForm.resx">
       <DependentUpon>PersonExcludeDateForm.cs</DependentUpon>
     </EmbeddedResource>

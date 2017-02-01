@@ -1409,6 +1409,7 @@ namespace Registry.Viewport
             this.dataGridViewOwnerships.Size = new System.Drawing.Size(451, 120);
             this.dataGridViewOwnerships.TabIndex = 0;
             this.dataGridViewOwnerships.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOwnerships_CellDoubleClick);
+            this.dataGridViewOwnerships.Sorted += new System.EventHandler(this.dataGridViewOwnerships_Sorted);
             this.dataGridViewOwnerships.Resize += new System.EventHandler(this.dataGridViewOwnerships_Resize);
             // 
             // ownership_number
