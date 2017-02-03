@@ -627,9 +627,6 @@
     <EmbeddedResource Include="ClaimStateTypesViewport.resx">
       <DependentUpon>ClaimStateTypesViewport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DataGridViewport.resx">
-      <DependentUpon>DataGridViewport.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ModalEditors\PersonExcludeDateForm.resx">
       <DependentUpon>PersonExcludeDateForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -820,7 +817,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Resources\insert-object %28min%29.png" />
     <None Include="Viewports.snk" />
   </ItemGroup>
