@@ -44,6 +44,8 @@
         AccountsDuplicateStatistic,
         TenancyNotifyDocumentsPrepared,
         TenancyNotifyIllegalResident,
-        TenancyNotifyContractViolation
+        TenancyNotifyContractViolation,
+        TenancyNotifyNoProlongTrouble,
+        TenancyNotifyNoProlongCategory
     }
 }

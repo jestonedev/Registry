@@ -242,6 +242,8 @@ namespace Registry.Viewport
                 case ReporterType.TenancyActFromEmploymentReporter:
                 case ReporterType.TenancyNotifyDocumentsPrepared:
                 case ReporterType.TenancyNotifyIllegalResident:
+                case ReporterType.TenancyNotifyNoProlongTrouble:
+                case ReporterType.TenancyNotifyNoProlongCategory:
                 case ReporterType.TenancyNotifyContractViolation:
                     return idProcess != null;
                 case ReporterType.TenancyAgreementReporter:
@@ -277,6 +279,14 @@ namespace Registry.Viewport
                 case ReporterType.TenancyNotifyIllegalResident:
                     arguments = TenancyContractReporterArguments();
                     arguments.Add("report_type", "4");
+                    break;
+                case ReporterType.TenancyNotifyNoProlongTrouble:
+                    arguments = TenancyContractReporterArguments();
+                    arguments.Add("report_type", "5");
+                    break;
+                case ReporterType.TenancyNotifyNoProlongCategory:
+                    arguments = TenancyContractReporterArguments();
+                    arguments.Add("report_type", "6");
                     break;
                 case ReporterType.TenancyActToEmploymentReporter:
                 case ReporterType.TenancyActFromEmploymentReporter:

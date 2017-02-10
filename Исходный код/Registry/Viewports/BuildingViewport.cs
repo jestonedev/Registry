@@ -47,30 +47,43 @@ namespace Registry.Viewport
             }
             if (row[Presenter.ViewModel["general"].PrimaryKeyFirst] == DBNull.Value)
             {
-                ResetMunicipalInfo(); 
+                ResetMunicipalInfo();
                 return;
             }
             IsEditable = false;
-            var idBuilding = (int)row["id_building"];
+            var idBuilding = (int) row["id_building"];
 
             var currentFundBindingSource = Presenter.ViewModel["buildings_current_funds"].BindingSource;
             var position = currentFundBindingSource.Find("id_building", row["id_building"]);
-            comboBoxCurrentFundType.SelectedValue = position != -1 ? ((DataRowView)currentFundBindingSource[position])["id_fund_type"] : DBNull.Value;
+            comboBoxCurrentFundType.SelectedValue = position != -1
+                ? ((DataRowView) currentFundBindingSource[position])["id_fund_type"]
+                : DBNull.Value;
             ShowOrHideCurrentFund();
 
             var municipalPremises = Presenter.ViewModel["municipal_premises"].DataSource.AsEnumerable();
-            var socialCount = municipalPremises.Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 1);
-            var commercialCount = municipalPremises.Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 2);
-            var specialCount = municipalPremises.Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 3);
-            var otherCount = municipalPremises.Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 0);
+            var socialCount =
+                municipalPremises.Count(
+                    s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 1);
+            var commercialCount =
+                municipalPremises.Count(
+                    s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 2);
+            var specialCount =
+                municipalPremises.Count(
+                    s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 3);
+            var otherCount =
+                municipalPremises.Count(
+                    s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 0);
             numericUpDownSocialPremisesCount.Value = socialCount;
             numericUpDownSpecialPremisesCount.Value = specialCount;
             numericUpDownOtherPremisesCount.Value = otherCount;
             numericUpDownCommercialPremisesCount.Value = commercialCount;
-            var totalMunCount = Convert.ToDecimal(municipalPremises.Count(s => s.Field<int>("id_building") == idBuilding));
+            var totalMunCount =
+                Convert.ToDecimal(municipalPremises.Count(s => s.Field<int>("id_building") == idBuilding));
             var totalPremisesCount = Convert.ToDecimal(
-                Math.Max(Presenter.ViewModel["premises"].Model.FilterDeletedRows().Count(b => b.Field<int>("id_building") == idBuilding),
-                row["num_apartments"] == DBNull.Value ? 0 : (int)row["num_apartments"]));
+                Math.Max(
+                    Presenter.ViewModel["premises"].Model.FilterDeletedRows()
+                        .Count(b => b.Field<int>("id_building") == idBuilding),
+                    row["num_apartments"] == DBNull.Value ? 0 : (int) row["num_apartments"]));
             if (totalPremisesCount > 0)
             {
                 var percentage = (totalMunCount/totalPremisesCount)*100;
@@ -80,7 +93,10 @@ namespace Registry.Viewport
             {
                 numericUpDownMunPremisesPercentage.Value = 0;
             }
-            var sumArea = Convert.ToDecimal(municipalPremises.Where(s => s.Field<int>("id_building") == idBuilding).Sum(m => m.Field<double>("total_area")));
+            var sumArea =
+                Convert.ToDecimal(
+                    municipalPremises.Where(s => s.Field<int>("id_building") == idBuilding)
+                        .Sum(m => m.Field<double>("total_area")));
             numericUpDownMunicipalArea.Value = sumArea;
             numericUpDownMunPremisesCount.Value = totalMunCount;
             IsEditable = true;
@@ -94,14 +110,14 @@ namespace Registry.Viewport
             numericUpDownCommercialPremisesCount.Value = 0;
             numericUpDownMunPremisesPercentage.Value = 0;
             numericUpDownMunicipalArea.Value = 0;
-            numericUpDownMunPremisesCount.Value = 0;    
+            numericUpDownMunPremisesCount.Value = 0;
         }
 
         private void ShowOrHideCurrentFund()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
             if (comboBoxCurrentFundType.SelectedValue != null && row != null && row["id_state"] != DBNull.Value &&
-                DataModelHelper.MunicipalAndUnknownObjectStates().Contains((int)row["id_state"]))
+                DataModelHelper.MunicipalAndUnknownObjectStates().Contains((int) row["id_state"]))
             {
                 label19.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
@@ -144,14 +160,15 @@ namespace Registry.Viewport
         private void DataBind()
         {
             var bindingSource = Presenter.ViewModel["general"].BindingSource;
-            ViewportHelper.BindSource(comboBoxStreet, Presenter.ViewModel["kladr"].BindingSource, "street_name", 
+            ViewportHelper.BindSource(comboBoxStreet, Presenter.ViewModel["kladr"].BindingSource, "street_name",
                 Presenter.ViewModel["kladr"].PrimaryKeyFirst);
-            ViewportHelper.BindProperty(comboBoxStreet, "SelectedValue", bindingSource, 
+            ViewportHelper.BindProperty(comboBoxStreet, "SelectedValue", bindingSource,
                 Presenter.ViewModel["kladr"].PrimaryKeyFirst, DBNull.Value);
             ViewportHelper.BindProperty(textBoxDescription, "Text", bindingSource, "description", "");
             ViewportHelper.BindProperty(textBoxHouse, "Text", bindingSource, "house", "");
             ViewportHelper.BindProperty(numericUpDownFloors, "Value", bindingSource, "floors", 5m);
-            ViewportHelper.BindProperty(numericUpDownStartupYear, "Value", bindingSource, "startup_year", (decimal)DateTime.Now.Year);
+            ViewportHelper.BindProperty(numericUpDownStartupYear, "Value", bindingSource, "startup_year",
+                (decimal) DateTime.Now.Year);
             ViewportHelper.BindProperty(textBoxCadastralNum, "Text", bindingSource, "cadastral_num", "");
             ViewportHelper.BindProperty(numericUpDownCadastralCost, "Value", bindingSource, "cadastral_cost", 0m);
             ViewportHelper.BindProperty(numericUpDownBalanceCost, "Value", bindingSource, "balance_cost", 0m);
@@ -168,7 +185,8 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(numericUpDownPremisesCount, "Value", bindingSource, "num_premises", 0m);
             ViewportHelper.BindProperty(numericUpDownRoomsCount, "Value", bindingSource, "num_rooms", 0m);
             ViewportHelper.BindProperty(numericUpDownApartmentsCount, "Value", bindingSource, "num_apartments", 0m);
-            ViewportHelper.BindProperty(numericUpDownSharedApartmentsCount, "Value", bindingSource, "num_shared_apartments", 0m);
+            ViewportHelper.BindProperty(numericUpDownSharedApartmentsCount, "Value", bindingSource,
+                "num_shared_apartments", 0m);
             ViewportHelper.BindProperty(numericUpDownLivingArea, "Value", bindingSource, "living_area", 0m);
             ViewportHelper.BindProperty(numericUpDownTotalArea, "Value", bindingSource, "total_area", 0m);
             ViewportHelper.BindProperty(numericUpDownWear, "Value", bindingSource, "wear", 0m);
@@ -177,12 +195,14 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(numericUpDownRentCoefficient, "Value", bindingSource, "rent_coefficient", 0m);
 
 
-            ViewportHelper.BindSource(comboBoxStructureType, Presenter.ViewModel["structure_types"].BindingSource, "structure_type",
+            ViewportHelper.BindSource(comboBoxStructureType, Presenter.ViewModel["structure_types"].BindingSource,
+                "structure_type",
                 Presenter.ViewModel["structure_types"].PrimaryKeyFirst);
             ViewportHelper.BindProperty(comboBoxStructureType, "SelectedValue", bindingSource,
                 Presenter.ViewModel["structure_types"].PrimaryKeyFirst, DBNull.Value);
 
-            ViewportHelper.BindSource(comboBoxHeatingType, Presenter.ViewModel["heating_types"].BindingSource, "heating_type",
+            ViewportHelper.BindSource(comboBoxHeatingType, Presenter.ViewModel["heating_types"].BindingSource,
+                "heating_type",
                 Presenter.ViewModel["heating_types"].PrimaryKeyFirst);
             ViewportHelper.BindProperty(comboBoxHeatingType, "SelectedValue", bindingSource,
                 Presenter.ViewModel["heating_types"].PrimaryKeyFirst, DBNull.Value);
@@ -192,22 +212,25 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(comboBoxState, "SelectedValue", bindingSource,
                 Presenter.ViewModel["object_states"].PrimaryKeyFirst, DBNull.Value);
 
-            ViewportHelper.BindSource(comboBoxCurrentFundType, Presenter.ViewModel["fund_types"].BindingSource, "fund_type",
+            ViewportHelper.BindSource(comboBoxCurrentFundType, Presenter.ViewModel["fund_types"].BindingSource,
+                "fund_type",
                 Presenter.ViewModel["fund_types"].PrimaryKeyFirst);
-            
+
             dataGridViewRestrictions.DataSource = Presenter.ViewModel["restrictions"].BindingSource;
             restriction_number.DataPropertyName = "number";
             restriction_date.DataPropertyName = "date";
             restriction_date_state_reg.DataPropertyName = "date_state_reg";
             restriction_description.DataPropertyName = "description";
-            ViewportHelper.BindSource(id_restriction_type, Presenter.ViewModel["restriction_types"].BindingSource, "restriction_type",
+            ViewportHelper.BindSource(id_restriction_type, Presenter.ViewModel["restriction_types"].BindingSource,
+                "restriction_type",
                 Presenter.ViewModel["restriction_types"].PrimaryKeyFirst);
 
             dataGridViewOwnerships.DataSource = Presenter.ViewModel["ownership_rights"].BindingSource;
             ownership_number.DataPropertyName = "number";
             ownership_date.DataPropertyName = "date";
             ownership_description.DataPropertyName = "description";
-            ViewportHelper.BindSource(id_ownership_type, Presenter.ViewModel["ownership_right_types"].BindingSource, "ownership_right_type",
+            ViewportHelper.BindSource(id_ownership_type, Presenter.ViewModel["ownership_right_types"].BindingSource,
+                "ownership_right_type",
                 Presenter.ViewModel["ownership_right_types"].PrimaryKeyFirst);
         }
 
@@ -224,35 +247,37 @@ namespace Registry.Viewport
         {
             if (building.IdStreet == null)
             {
-                MessageBox.Show(@"Необходимо выбрать улицу", @"Ошибка", 
+                MessageBox.Show(@"Необходимо выбрать улицу", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxStreet.Focus();
                 return false;
             }
             if (building.IdState == null)
             {
-                MessageBox.Show(@"Необходимо выбрать состояние здания", @"Ошибка", 
+                MessageBox.Show(@"Необходимо выбрать состояние здания", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxState.Focus();
                 return false;
             }
             if ((building.House == null) || String.IsNullOrEmpty(building.House.Trim()))
             {
-                MessageBox.Show(@"Необходимо указать номер дома", @"Ошибка", 
+                MessageBox.Show(@"Необходимо указать номер дома", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxHouse.Focus();
                 return false;
             }
             if (!Regex.IsMatch(building.House, @"^[0-9]+[а-яА-Я]{0,1}([\/][0-9]+[а-яА-Я]{0,1}){0,1}$"))
             {
-                MessageBox.Show(@"Некорректно задан номер дома. Можно использовать только цифры, строчные и прописные буквы кириллицы буквы и дробный разделитель. Например: ""11а/3""", @"Ошибка",
+                MessageBox.Show(
+                    @"Некорректно задан номер дома. Можно использовать только цифры, строчные и прописные буквы кириллицы буквы и дробный разделитель. Например: ""11а/3""",
+                    @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxHouse.Focus();
                 return false;
             }
             if (building.IdStructureType == null)
             {
-                MessageBox.Show(@"Необходимо выбрать материал здания", @"Ошибка", 
+                MessageBox.Show(@"Необходимо выбрать материал здания", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxStructureType.Focus();
                 return false;
@@ -264,28 +289,34 @@ namespace Registry.Viewport
                 return false;
             }
             // Проверяем права на модификацию муниципального или не муниципального здания
-            var buildingFromView = (Building)EntityFromView();
-            if (buildingFromView.IdBuilding != null && OtherService.HasMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
+            var buildingFromView = (Building) EntityFromView();
+            if (buildingFromView.IdBuilding != null &&
+                OtherService.HasMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
-                MessageBox.Show(@"Вы не можете изменить информацию по данному зданию, т.к. оно является муниципальным или содержит в себе муниципальные помещения", 
+                MessageBox.Show(
+                    @"Вы не можете изменить информацию по данному зданию, т.к. оно является муниципальным или содержит в себе муниципальные помещения",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (buildingFromView.IdBuilding != null && OtherService.HasNotMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
+            if (buildingFromView.IdBuilding != null &&
+                OtherService.HasNotMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
-                MessageBox.Show(@"Вы не можете изменить информацию по данному зданию, т.к. оно является немуниципальным или содержит в себе немуниципальные помещения",
+                MessageBox.Show(
+                    @"Вы не можете изменить информацию по данному зданию, т.к. оно является немуниципальным или содержит в себе немуниципальные помещения",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (DataModelHelper.MunicipalObjectStates().Contains(building.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            if (DataModelHelper.MunicipalObjectStates().Contains(building.IdState.Value) &&
+                !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на добавление в базу муниципальных жилых зданий", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (DataModelHelper.NonMunicipalAndUnknownObjectStates().Contains(building.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+            if (DataModelHelper.NonMunicipalAndUnknownObjectStates().Contains(building.IdState.Value) &&
+                !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на добавление в базу немуниципальных жилых зданий", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -294,7 +325,8 @@ namespace Registry.Viewport
             // Подверждение на износ выше 100%
             if (building.Wear > 100)
                 if (MessageBox.Show(@"Вы задали износ здания выше 100%. Все равно продолжить сохранение?", @"Внимание",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
+                    DialogResult.Yes)
                 {
                     numericUpDownWear.Focus();
                     return false;
@@ -302,8 +334,10 @@ namespace Registry.Viewport
             // Проверяем дубликаты адресов домов
             if ((building.House != buildingFromView.House) || (building.IdStreet != buildingFromView.IdStreet))
                 if (BuildingService.BuildingsDuplicateCount(building) != 0 &&
-                    MessageBox.Show(@"В базе уже имеется здание с таким адресом. Все равно продолжить сохранение?", @"Внимание",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                    MessageBox.Show(@"В базе уже имеется здание с таким адресом. Все равно продолжить сохранение?",
+                        @"Внимание",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
+                    DialogResult.Yes)
                     return false;
             return true;
         }
@@ -352,7 +386,7 @@ namespace Registry.Viewport
                 Canalization = checkBoxCanalization.Checked,
                 Electricity = checkBoxElectricity.Checked,
                 RadioNetwork = checkBoxRadioNetwork.Checked,
-                IdHeatingType =ViewportHelper.ValueOrNull<int>(comboBoxHeatingType),
+                IdHeatingType = ViewportHelper.ValueOrNull<int>(comboBoxHeatingType),
                 RoomsBTI = ViewportHelper.ValueOrNull(textBoxRoomsBTI),
                 HousingCooperative = ViewportHelper.ValueOrNull(textBoxHousingCooperative),
                 RentCoefficient = numericUpDownRentCoefficient.Value
@@ -379,11 +413,11 @@ namespace Registry.Viewport
             numericUpDownPremisesCount.Value = ViewportHelper.ValueOrDefault(building.NumPremises);
             numericUpDownApartmentsCount.Value = ViewportHelper.ValueOrDefault(building.NumApartments);
             numericUpDownSharedApartmentsCount.Value = ViewportHelper.ValueOrDefault(building.NumSharedApartments);
-            numericUpDownLivingArea.Value = (decimal)ViewportHelper.ValueOrDefault(building.LivingArea);
-            numericUpDownTotalArea.Value = (decimal)ViewportHelper.ValueOrDefault(building.TotalArea);
+            numericUpDownLivingArea.Value = (decimal) ViewportHelper.ValueOrDefault(building.LivingArea);
+            numericUpDownTotalArea.Value = (decimal) ViewportHelper.ValueOrDefault(building.TotalArea);
             numericUpDownCadastralCost.Value = ViewportHelper.ValueOrDefault(building.CadastralCost);
             numericUpDownBalanceCost.Value = ViewportHelper.ValueOrDefault(building.BalanceCost);
-            numericUpDownWear.Value = (decimal)ViewportHelper.ValueOrDefault(building.Wear);
+            numericUpDownWear.Value = (decimal) ViewportHelper.ValueOrDefault(building.Wear);
             numericUpDownRentCoefficient.Value = ViewportHelper.ValueOrDefault(building.RentCoefficient);
             textBoxHouse.Text = building.House;
             textBoxCadastralNum.Text = building.CadastralNum;
@@ -420,17 +454,25 @@ namespace Registry.Viewport
             AddEventHandler<DataRowChangeEventArgs>(ownershipAssoc, "RowDeleted", OwnershipsAssoc_RowDeleted);
             AddEventHandler<DataRowChangeEventArgs>(ownershipAssoc, "RowChanged", OwnershipsAssoc_RowChanged);
 
-            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", BuildingViewport_RowDeleted);
-            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", BuildingViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted",
+                BuildingViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged",
+                BuildingViewport_RowChanged);
 
-            AddEventHandler<EventArgs>(Presenter.ViewModel["buildings_current_funds"].Model, "RefreshEvent", buildingsCurrentFund_RefreshEvent);
-            AddEventHandler<EventArgs>(Presenter.ViewModel["buildings_premises_funds"].Model, "RefreshEvent", buildingsPremisesFunds_RefreshEvent);
-            AddEventHandler<EventArgs>(Presenter.ViewModel["buildings_premises_sum_area"].Model, "RefreshEvent", buildingsPremisesSumArea_RefreshEvent);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["buildings_current_funds"].Model, "RefreshEvent",
+                buildingsCurrentFund_RefreshEvent);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["buildings_premises_funds"].Model, "RefreshEvent",
+                buildingsPremisesFunds_RefreshEvent);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["buildings_premises_sum_area"].Model, "RefreshEvent",
+                buildingsPremisesSumArea_RefreshEvent);
 
-            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", v_building_CurrentItemChanged);
-            AddEventHandler<EventArgs>(Presenter.ViewModel["buildings_ownership_buildings_assoc"].BindingSource, "CurrentItemChanged", 
+            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged",
+                v_building_CurrentItemChanged);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["buildings_ownership_buildings_assoc"].BindingSource,
+                "CurrentItemChanged",
                 v_ownershipBuildingsAssoc_CurrentItemChanged);
-            AddEventHandler<EventArgs>(Presenter.ViewModel["buildings_restrictions_buildings_assoc"].BindingSource, "CurrentItemChanged", 
+            AddEventHandler<EventArgs>(Presenter.ViewModel["buildings_restrictions_buildings_assoc"].BindingSource,
+                "CurrentItemChanged",
                 v_restrictionBuildingsAssoc_CurrentItemChanged);
 
             DataBind();
@@ -439,13 +481,13 @@ namespace Registry.Viewport
             v_ownershipBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
             v_restrictionBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
 
-            ((BuildingPresenter)Presenter).OwnershipsFilterRebuild();
-            ((BuildingPresenter)Presenter).RestrictionsFilterRebuild();
+            ((BuildingPresenter) Presenter).OwnershipsFilterRebuild();
+            ((BuildingPresenter) Presenter).RestrictionsFilterRebuild();
 
             DataChangeHandlersInit();
             IsEditable = true;
         }
-        
+
         public override bool CanSearchRecord()
         {
             return true;
@@ -491,7 +533,8 @@ namespace Registry.Viewport
         public override bool CanSaveRecord()
         {
             return ((ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState)) &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+                   (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) ||
+                    (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void SaveRecord()
@@ -503,7 +546,9 @@ namespace Registry.Viewport
             switch (ViewportState)
             {
                 case ViewportState.ReadState:
-                    MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
+                    MessageBox.Show(
+                        @"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору",
+                        @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
@@ -538,7 +583,8 @@ namespace Registry.Viewport
         {
             switch (ViewportState)
             {
-                case ViewportState.ReadState: return;
+                case ViewportState.ReadState:
+                    return;
                 case ViewportState.NewRowState:
                     Presenter.ViewModel["general"].Model.EditingNewRecord = false;
                     var row = Presenter.ViewModel["general"].CurrentRow;
@@ -564,7 +610,8 @@ namespace Registry.Viewport
         public override bool CanInsertRecord()
         {
             return !Presenter.ViewModel["general"].Model.EditingNewRecord &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
+                   (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) ||
+                    AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void InsertRecord()
@@ -580,8 +627,10 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return Presenter.ViewModel["general"].CurrentRow != null && !Presenter.ViewModel["general"].Model.EditingNewRecord &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
+            return Presenter.ViewModel["general"].CurrentRow != null &&
+                   !Presenter.ViewModel["general"].Model.EditingNewRecord &&
+                   (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) ||
+                    AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void CopyRecord()
@@ -590,7 +639,7 @@ namespace Registry.Viewport
                 return;
             IsEditable = false;
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
-            var building = (Building)EntityFromView();
+            var building = (Building) EntityFromView();
             building.RoomsBTI = null;
             Presenter.ViewModel["general"].BindingSource.AddNew();
             ViewportFromBuilding(building);
@@ -600,7 +649,8 @@ namespace Registry.Viewport
         public override bool CanDeleteRecord()
         {
             return (Presenter.ViewModel["general"].CurrentRow != null) && (ViewportState != ViewportState.NewRowState) &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
+                   (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) ||
+                    AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void DeleteRecord()
@@ -609,15 +659,16 @@ namespace Registry.Viewport
             var hasTenancies = ((BuildingPresenter) Presenter).HasTenancies();
             if (hasResettles || hasTenancies)
             {
-                if (MessageBox.Show(@"К зданию или одному из его помещений привязаны процессы"+
-                    (hasTenancies ? " найма" : "")+
-                    (hasTenancies && hasResettles ? " и" : "")+
-                    (hasResettles ? " переселения" : "") +
-                    @". Вы действительно хотите удалить это здание?", @"Внимание",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                if (MessageBox.Show(@"К зданию или одному из его помещений привязаны процессы" +
+                                    (hasTenancies ? " найма" : "") +
+                                    (hasTenancies && hasResettles ? " и" : "") +
+                                    (hasResettles ? " переселения" : "") +
+                                    @". Вы действительно хотите удалить это здание?", @"Внимание",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
+                    DialogResult.Yes)
                     return;
-            } else
-            if (MessageBox.Show(@"Вы действительно хотите удалить это здание?", @"Внимание",
+            }
+            else if (MessageBox.Show(@"Вы действительно хотите удалить это здание?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
             IsEditable = false;
@@ -653,11 +704,12 @@ namespace Registry.Viewport
             var columnName = Presenter.ViewModel["general"].PrimaryKeyFirst;
             if (row == null)
             {
-                MessageBox.Show(@"Не выбрано здание для отображения истории найма", @"Ошибка", 
+                MessageBox.Show(@"Не выбрано здание для отображения истории найма", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport<T>(MenuCallback, columnName+" = " + Convert.ToInt32(row[columnName], CultureInfo.InvariantCulture), 
+            ShowAssocViewport<T>(MenuCallback,
+                columnName + " = " + Convert.ToInt32(row[columnName], CultureInfo.InvariantCulture),
                 row.Row, ParentTypeEnum.Building);
         }
 
@@ -705,25 +757,25 @@ namespace Registry.Viewport
         private void RestrictionsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
-                ((BuildingPresenter)Presenter).RestrictionsFilterRebuild();
+                ((BuildingPresenter) Presenter).RestrictionsFilterRebuild();
         }
 
         private void RestrictionsAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Add)
-                ((BuildingPresenter)Presenter).RestrictionsFilterRebuild();
+                ((BuildingPresenter) Presenter).RestrictionsFilterRebuild();
         }
 
         private void OwnershipsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
-                ((BuildingPresenter)Presenter).OwnershipsFilterRebuild();
+                ((BuildingPresenter) Presenter).OwnershipsFilterRebuild();
         }
 
         private void OwnershipsAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Add)
-                ((BuildingPresenter)Presenter).OwnershipsFilterRebuild();
+                ((BuildingPresenter) Presenter).OwnershipsFilterRebuild();
         }
 
         private void v_building_CurrentItemChanged(object sender, EventArgs e)
@@ -742,18 +794,19 @@ namespace Registry.Viewport
 
         private void v_ownershipBuildingsAssoc_CurrentItemChanged(object sender, EventArgs e)
         {
-            ((BuildingPresenter)Presenter).OwnershipsFilterRebuild();
+            ((BuildingPresenter) Presenter).OwnershipsFilterRebuild();
         }
 
         private void v_restrictionBuildingsAssoc_CurrentItemChanged(object sender, EventArgs e)
         {
-            ((BuildingPresenter)Presenter).RestrictionsFilterRebuild();
+            ((BuildingPresenter) Presenter).RestrictionsFilterRebuild();
         }
 
         private void comboBoxStreet_KeyUp(object sender, KeyEventArgs e)
         {
             if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back) || (e.KeyCode == Keys.Delete) ||
-                (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) || (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
+                (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) ||
+                (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
             {
                 var text = comboBoxStreet.Text;
                 var selectionStart = comboBoxStreet.SelectionStart;
@@ -842,7 +895,7 @@ namespace Registry.Viewport
             if (Presenter.ViewModel["restrictions"].Model.EditingNewRecord)
             {
                 MessageBox.Show(@"Одна из вкладок реквизитов уже находится в режиме добавления новой записи. " +
-                    @"Одновременно можно добавлять не более одного реквизита.",
+                                @"Одновременно можно добавлять не более одного реквизита.",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
@@ -879,9 +932,11 @@ namespace Registry.Viewport
                 return;
             }
             if (MessageBox.Show(@"Вы уверены, что хотите удалить этот реквизит?", @"Внимание",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
-            var id = (int)Presenter.ViewModel["restrictions"].CurrentRow[Presenter.ViewModel["restrictions"].PrimaryKeyFirst];
+            var id =
+                (int)
+                    Presenter.ViewModel["restrictions"].CurrentRow[Presenter.ViewModel["restrictions"].PrimaryKeyFirst];
             Presenter.ViewModel["restrictions"].Delete(id);
         }
 
@@ -920,7 +975,7 @@ namespace Registry.Viewport
             if (Presenter.ViewModel["ownership_rights"].Model.EditingNewRecord)
             {
                 MessageBox.Show(@"Одна из вкладок ограничений уже находится в режиме добавления новой записи. " +
-                    @"Одновременно можно добавлять не более одного ограничения.",
+                                @"Одновременно можно добавлять не более одного ограничения.",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
@@ -957,9 +1012,9 @@ namespace Registry.Viewport
                 return;
             }
             if (MessageBox.Show(@"Вы уверены, что хотите удалить это ограничение?", @"Внимание",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
-            var id = (int)row[Presenter.ViewModel["ownership_rights"].PrimaryKeyFirst];
+            var id = (int) row[Presenter.ViewModel["ownership_rights"].PrimaryKeyFirst];
             Presenter.ViewModel["ownership_rights"].Delete(id);
         }
 
@@ -997,7 +1052,7 @@ namespace Registry.Viewport
             var columnName = Presenter.ViewModel["general"].PrimaryKeyFirst;
             if (row == null) return -1;
             if (row[columnName] != DBNull.Value)
-                return (int)row[columnName];
+                return (int) row[columnName];
             return -1;
         }
 
@@ -1005,30 +1060,27 @@ namespace Registry.Viewport
         {
             for (var i = 0; i < dataGridViewOwnerships.Rows.Count; i++)
             {
-                var idOwnershipRightType = (int)dataGridViewOwnerships.Rows[i].Cells["id_ownership_type"].Value;
+                var idOwnershipRightType = (int) dataGridViewOwnerships.Rows[i].Cells["id_ownership_type"].Value;
                 var style = dataGridViewOwnerships.Rows[i].DefaultCellStyle;
 
-                 if (idOwnershipRightType == 6)
-                    {
-                        style.BackColor = Color.LightBlue;
-                        style.SelectionBackColor = Color.Blue;
-                    }
-                    
-                 else
-                    {
-                        style.BackColor = Color.White;
-                        style.SelectionBackColor = SystemColors.Highlight;
-                    }
-                                   
+                if (idOwnershipRightType == 6)
+                {
+                    style.BackColor = Color.LightBlue;
+                    style.SelectionBackColor = Color.Blue;
                 }
+
+                else
+                {
+                    style.BackColor = Color.White;
+                    style.SelectionBackColor = SystemColors.Highlight;
+                }
+
             }
+        }
 
         private void dataGridViewOwnerships_Sorted(object sender, EventArgs e)
         {
             RedrawOwnershipDataGridRows();
         }
-
-     
-        }
-
-     }
+    }
+}

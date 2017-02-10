@@ -423,6 +423,10 @@ namespace Registry
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyContractAgreement);
             if (document.HasReport(ReporterType.TenancyNotifyIllegalResident))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyIllegalResident);
+            if (document.HasReport(ReporterType.TenancyNotifyNoProlongTrouble))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyNoProlongTrouble);
+            if (document.HasReport(ReporterType.TenancyNotifyNoProlongCategory))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyNoProlongCategory);
             if (document.HasReport(ReporterType.TenancyNotifyContractViolation))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyCotractViolation);
             if (document.HasReport(ReporterType.RegistryExcerptReporterPremise))
@@ -1088,6 +1092,22 @@ namespace Registry
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
                 document.GenerateReport(ReporterType.TenancyNotifyContractViolation);
+        }
+
+
+
+        private void ribbonButtonNotifyNoProlongTrouble_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.TenancyNotifyNoProlongTrouble);
+        }
+
+        private void ribbonButtonNotifyNoProlongCategory_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.TenancyNotifyNoProlongCategory);
         }
 
         private void ribbonButtonOrbMultiPaymentAccount_Click(object sender, EventArgs e)

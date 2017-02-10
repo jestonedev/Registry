@@ -85,6 +85,8 @@ namespace Registry.Reporting
                     return new TransfertToLegalDepartmentReporter();
                 case ReporterType.TenancyNotifyDocumentsPrepared:
                 case ReporterType.TenancyNotifyIllegalResident:
+                case ReporterType.TenancyNotifyNoProlongTrouble:
+                case ReporterType.TenancyNotifyNoProlongCategory:
                 case ReporterType.TenancyNotifyContractViolation:
                     return new TenancyNotifySingleDocumentReporter();
                 case ReporterType.RegistryMunicipalPremisesCurrentFundsReporter:
