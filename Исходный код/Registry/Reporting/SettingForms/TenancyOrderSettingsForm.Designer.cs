@@ -79,6 +79,10 @@
             this.textBoxResettleNumber = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBoxPremise = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.textBoxSubPremise = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
             this.groupBoxAddress.SuspendLayout();
             this.tabControlExtInfo.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
@@ -95,7 +99,7 @@
             this.vButtonOk.AllowAnimations = true;
             this.vButtonOk.BackColor = System.Drawing.Color.Transparent;
             this.vButtonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.vButtonOk.Location = new System.Drawing.Point(237, 338);
+            this.vButtonOk.Location = new System.Drawing.Point(136, 423);
             this.vButtonOk.Name = "vButtonOk";
             this.vButtonOk.RoundedCornersMask = ((byte)(15));
             this.vButtonOk.Size = new System.Drawing.Size(117, 35);
@@ -109,7 +113,7 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(370, 338);
+            this.vButtonCancel.Location = new System.Drawing.Point(269, 423);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -122,7 +126,7 @@
             // 
             this.textBoxGeneralNumber.Location = new System.Drawing.Point(6, 23);
             this.textBoxGeneralNumber.Name = "textBoxGeneralNumber";
-            this.textBoxGeneralNumber.Size = new System.Drawing.Size(349, 21);
+            this.textBoxGeneralNumber.Size = new System.Drawing.Size(472, 21);
             this.textBoxGeneralNumber.TabIndex = 0;
             // 
             // label2
@@ -147,7 +151,7 @@
             // 
             this.dateTimePickerGeneralDate.Location = new System.Drawing.Point(6, 64);
             this.dateTimePickerGeneralDate.Name = "dateTimePickerGeneralDate";
-            this.dateTimePickerGeneralDate.Size = new System.Drawing.Size(349, 21);
+            this.dateTimePickerGeneralDate.Size = new System.Drawing.Size(472, 21);
             this.dateTimePickerGeneralDate.TabIndex = 1;
             // 
             // comboBoxRentType
@@ -156,7 +160,7 @@
             this.comboBoxRentType.FormattingEnabled = true;
             this.comboBoxRentType.Location = new System.Drawing.Point(15, 24);
             this.comboBoxRentType.Name = "comboBoxRentType";
-            this.comboBoxRentType.Size = new System.Drawing.Size(339, 23);
+            this.comboBoxRentType.Size = new System.Drawing.Size(224, 23);
             this.comboBoxRentType.TabIndex = 0;
             // 
             // label73
@@ -172,8 +176,8 @@
             // 
             this.dateTimePickerRegistrationTo.Location = new System.Drawing.Point(44, 181);
             this.dateTimePickerRegistrationTo.Name = "dateTimePickerRegistrationTo";
-            this.dateTimePickerRegistrationTo.Size = new System.Drawing.Size(310, 21);
-            this.dateTimePickerRegistrationTo.TabIndex = 4;
+            this.dateTimePickerRegistrationTo.Size = new System.Drawing.Size(195, 21);
+            this.dateTimePickerRegistrationTo.TabIndex = 6;
             // 
             // label9
             // 
@@ -181,7 +185,7 @@
             this.label9.Location = new System.Drawing.Point(20, 184);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(21, 15);
-            this.label9.TabIndex = 7;
+            this.label9.TabIndex = 5;
             this.label9.Text = "по";
             // 
             // label10
@@ -190,15 +194,15 @@
             this.label10.Location = new System.Drawing.Point(22, 154);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(13, 15);
-            this.label10.TabIndex = 5;
+            this.label10.TabIndex = 3;
             this.label10.Text = "с";
             // 
             // dateTimePickerRegistrationFrom
             // 
             this.dateTimePickerRegistrationFrom.Location = new System.Drawing.Point(44, 151);
             this.dateTimePickerRegistrationFrom.Name = "dateTimePickerRegistrationFrom";
-            this.dateTimePickerRegistrationFrom.Size = new System.Drawing.Size(310, 21);
-            this.dateTimePickerRegistrationFrom.TabIndex = 3;
+            this.dateTimePickerRegistrationFrom.Size = new System.Drawing.Size(195, 21);
+            this.dateTimePickerRegistrationFrom.TabIndex = 4;
             // 
             // label11
             // 
@@ -215,7 +219,7 @@
             this.comboBoxExecutor.FormattingEnabled = true;
             this.comboBoxExecutor.Location = new System.Drawing.Point(15, 67);
             this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(339, 23);
+            this.comboBoxExecutor.Size = new System.Drawing.Size(224, 23);
             this.comboBoxExecutor.TabIndex = 1;
             // 
             // label4
@@ -241,21 +245,23 @@
             this.dateTimePickerOrderFrom.Location = new System.Drawing.Point(15, 110);
             this.dateTimePickerOrderFrom.MinDate = new System.DateTime(2005, 1, 1, 0, 0, 0, 0);
             this.dateTimePickerOrderFrom.Name = "dateTimePickerOrderFrom";
-            this.dateTimePickerOrderFrom.Size = new System.Drawing.Size(339, 21);
+            this.dateTimePickerOrderFrom.Size = new System.Drawing.Size(224, 21);
             this.dateTimePickerOrderFrom.TabIndex = 2;
             // 
             // textBoxHouse
             // 
-            this.textBoxHouse.Location = new System.Drawing.Point(14, 82);
+            this.textBoxHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxHouse.Location = new System.Drawing.Point(13, 82);
             this.textBoxHouse.MaxLength = 4;
             this.textBoxHouse.Name = "textBoxHouse";
-            this.textBoxHouse.Size = new System.Drawing.Size(327, 21);
+            this.textBoxHouse.Size = new System.Drawing.Size(240, 21);
             this.textBoxHouse.TabIndex = 1;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(14, 64);
+            this.label5.Location = new System.Drawing.Point(13, 64);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(79, 15);
             this.label5.TabIndex = 76;
@@ -264,7 +270,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(14, 20);
+            this.label6.Location = new System.Drawing.Point(13, 20);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(43, 15);
             this.label6.TabIndex = 75;
@@ -272,10 +278,12 @@
             // 
             // comboBoxStreet
             // 
+            this.comboBoxStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxStreet.FormattingEnabled = true;
-            this.comboBoxStreet.Location = new System.Drawing.Point(14, 38);
+            this.comboBoxStreet.Location = new System.Drawing.Point(13, 38);
             this.comboBoxStreet.Name = "comboBoxStreet";
-            this.comboBoxStreet.Size = new System.Drawing.Size(327, 23);
+            this.comboBoxStreet.Size = new System.Drawing.Size(240, 23);
             this.comboBoxStreet.TabIndex = 0;
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
             this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
@@ -283,25 +291,29 @@
             // 
             // groupBoxAddress
             // 
+            this.groupBoxAddress.Controls.Add(this.textBoxSubPremise);
+            this.groupBoxAddress.Controls.Add(this.label20);
+            this.groupBoxAddress.Controls.Add(this.textBoxPremise);
+            this.groupBoxAddress.Controls.Add(this.label19);
             this.groupBoxAddress.Controls.Add(this.textBoxHouse);
             this.groupBoxAddress.Controls.Add(this.comboBoxStreet);
             this.groupBoxAddress.Controls.Add(this.label5);
             this.groupBoxAddress.Controls.Add(this.label6);
             this.groupBoxAddress.Enabled = false;
-            this.groupBoxAddress.Location = new System.Drawing.Point(1, 208);
+            this.groupBoxAddress.Location = new System.Drawing.Point(248, 5);
             this.groupBoxAddress.Name = "groupBoxAddress";
-            this.groupBoxAddress.Size = new System.Drawing.Size(353, 116);
-            this.groupBoxAddress.TabIndex = 6;
+            this.groupBoxAddress.Size = new System.Drawing.Size(266, 197);
+            this.groupBoxAddress.TabIndex = 10;
             this.groupBoxAddress.TabStop = false;
             this.groupBoxAddress.Text = "      Адрес";
             // 
             // checkBoxEnableAddress
             // 
             this.checkBoxEnableAddress.AutoSize = true;
-            this.checkBoxEnableAddress.Location = new System.Drawing.Point(11, 210);
+            this.checkBoxEnableAddress.Location = new System.Drawing.Point(259, 7);
             this.checkBoxEnableAddress.Name = "checkBoxEnableAddress";
             this.checkBoxEnableAddress.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxEnableAddress.TabIndex = 5;
+            this.checkBoxEnableAddress.TabIndex = 8;
             this.checkBoxEnableAddress.UseVisualStyleBackColor = true;
             this.checkBoxEnableAddress.CheckedChanged += new System.EventHandler(this.checkBoxEnableAddress_CheckedChanged);
             // 
@@ -317,7 +329,7 @@
             this.tabControlExtInfo.Location = new System.Drawing.Point(5, 19);
             this.tabControlExtInfo.Name = "tabControlExtInfo";
             this.tabControlExtInfo.SelectedIndex = 0;
-            this.tabControlExtInfo.Size = new System.Drawing.Size(368, 293);
+            this.tabControlExtInfo.Size = new System.Drawing.Size(492, 181);
             this.tabControlExtInfo.TabIndex = 0;
             this.tabControlExtInfo.SelectedIndexChanged += new System.EventHandler(this.tabControlExtInfo_SelectedIndexChanged);
             // 
@@ -330,7 +342,7 @@
             this.tabPageGeneral.Location = new System.Drawing.Point(4, 24);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneral.Size = new System.Drawing.Size(360, 265);
+            this.tabPageGeneral.Size = new System.Drawing.Size(484, 153);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Tag = "1";
             this.tabPageGeneral.Text = "Общее распоряжение";
@@ -342,7 +354,7 @@
             this.tabPageProlong.Location = new System.Drawing.Point(4, 24);
             this.tabPageProlong.Name = "tabPageProlong";
             this.tabPageProlong.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageProlong.Size = new System.Drawing.Size(360, 266);
+            this.tabPageProlong.Size = new System.Drawing.Size(484, 153);
             this.tabPageProlong.TabIndex = 5;
             this.tabPageProlong.Tag = "6";
             this.tabPageProlong.Text = "Продление найма";
@@ -351,7 +363,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(66, 10);
+            this.label18.Location = new System.Drawing.Point(130, 17);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(232, 15);
             this.label18.TabIndex = 62;
@@ -363,7 +375,7 @@
             this.tabPageCheckanovskiy.Location = new System.Drawing.Point(4, 24);
             this.tabPageCheckanovskiy.Name = "tabPageCheckanovskiy";
             this.tabPageCheckanovskiy.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCheckanovskiy.Size = new System.Drawing.Size(360, 266);
+            this.tabPageCheckanovskiy.Size = new System.Drawing.Size(484, 153);
             this.tabPageCheckanovskiy.TabIndex = 2;
             this.tabPageCheckanovskiy.Tag = "2";
             this.tabPageCheckanovskiy.Text = "Чекановский (дело № 2-2355/2011)";
@@ -372,7 +384,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(63, 23);
+            this.label14.Location = new System.Drawing.Point(130, 17);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(232, 15);
             this.label14.TabIndex = 61;
@@ -387,7 +399,7 @@
             this.tabPageOrphans.Location = new System.Drawing.Point(4, 24);
             this.tabPageOrphans.Name = "tabPageOrphans";
             this.tabPageOrphans.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOrphans.Size = new System.Drawing.Size(360, 266);
+            this.tabPageOrphans.Size = new System.Drawing.Size(484, 153);
             this.tabPageOrphans.TabIndex = 3;
             this.tabPageOrphans.Tag = "3";
             this.tabPageOrphans.Text = "Дети сироты";
@@ -397,7 +409,7 @@
             // 
             this.dateTimePickerOrphansDate.Location = new System.Drawing.Point(6, 64);
             this.dateTimePickerOrphansDate.Name = "dateTimePickerOrphansDate";
-            this.dateTimePickerOrphansDate.Size = new System.Drawing.Size(349, 21);
+            this.dateTimePickerOrphansDate.Size = new System.Drawing.Size(472, 21);
             this.dateTimePickerOrphansDate.TabIndex = 60;
             // 
             // label12
@@ -413,7 +425,7 @@
             // 
             this.textBoxOrphansNumber.Location = new System.Drawing.Point(6, 23);
             this.textBoxOrphansNumber.Name = "textBoxOrphansNumber";
-            this.textBoxOrphansNumber.Size = new System.Drawing.Size(349, 21);
+            this.textBoxOrphansNumber.Size = new System.Drawing.Size(472, 21);
             this.textBoxOrphansNumber.TabIndex = 59;
             // 
             // label13
@@ -436,7 +448,7 @@
             this.tabPageCourt.Location = new System.Drawing.Point(4, 24);
             this.tabPageCourt.Name = "tabPageCourt";
             this.tabPageCourt.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCourt.Size = new System.Drawing.Size(360, 266);
+            this.tabPageCourt.Size = new System.Drawing.Size(484, 153);
             this.tabPageCourt.TabIndex = 4;
             this.tabPageCourt.Tag = "4";
             this.tabPageCourt.Text = "По решению суда";
@@ -461,14 +473,14 @@
             "Иркутского областного суда"});
             this.comboBoxCourt.Location = new System.Drawing.Point(6, 111);
             this.comboBoxCourt.Name = "comboBoxCourt";
-            this.comboBoxCourt.Size = new System.Drawing.Size(348, 23);
+            this.comboBoxCourt.Size = new System.Drawing.Size(471, 23);
             this.comboBoxCourt.TabIndex = 2;
             // 
             // dateTimePickerCourtDate
             // 
             this.dateTimePickerCourtDate.Location = new System.Drawing.Point(6, 64);
             this.dateTimePickerCourtDate.Name = "dateTimePickerCourtDate";
-            this.dateTimePickerCourtDate.Size = new System.Drawing.Size(349, 21);
+            this.dateTimePickerCourtDate.Size = new System.Drawing.Size(472, 21);
             this.dateTimePickerCourtDate.TabIndex = 1;
             // 
             // label15
@@ -484,7 +496,7 @@
             // 
             this.textBoxCourtNumber.Location = new System.Drawing.Point(6, 23);
             this.textBoxCourtNumber.Name = "textBoxCourtNumber";
-            this.textBoxCourtNumber.Size = new System.Drawing.Size(349, 21);
+            this.textBoxCourtNumber.Size = new System.Drawing.Size(472, 21);
             this.textBoxCourtNumber.TabIndex = 0;
             // 
             // label16
@@ -508,7 +520,7 @@
             this.tabPageResettle2013to2017.Location = new System.Drawing.Point(4, 24);
             this.tabPageResettle2013to2017.Name = "tabPageResettle2013to2017";
             this.tabPageResettle2013to2017.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageResettle2013to2017.Size = new System.Drawing.Size(360, 266);
+            this.tabPageResettle2013to2017.Size = new System.Drawing.Size(484, 153);
             this.tabPageResettle2013to2017.TabIndex = 1;
             this.tabPageResettle2013to2017.Tag = "5";
             this.tabPageResettle2013to2017.Text = "Переселение 2013-2017";
@@ -529,7 +541,7 @@
             // radioButtonResettleRetransfer
             // 
             this.radioButtonResettleRetransfer.AutoSize = true;
-            this.radioButtonResettleRetransfer.Location = new System.Drawing.Point(9, 149);
+            this.radioButtonResettleRetransfer.Location = new System.Drawing.Point(294, 98);
             this.radioButtonResettleRetransfer.Name = "radioButtonResettleRetransfer";
             this.radioButtonResettleRetransfer.Size = new System.Drawing.Size(145, 19);
             this.radioButtonResettleRetransfer.TabIndex = 4;
@@ -550,7 +562,7 @@
             // 
             this.dateTimePickerResettleDate.Location = new System.Drawing.Point(6, 64);
             this.dateTimePickerResettleDate.Name = "dateTimePickerResettleDate";
-            this.dateTimePickerResettleDate.Size = new System.Drawing.Size(349, 21);
+            this.dateTimePickerResettleDate.Size = new System.Drawing.Size(472, 21);
             this.dateTimePickerResettleDate.TabIndex = 1;
             // 
             // label7
@@ -566,7 +578,7 @@
             // 
             this.textBoxResettleNumber.Location = new System.Drawing.Point(6, 23);
             this.textBoxResettleNumber.Name = "textBoxResettleNumber";
-            this.textBoxResettleNumber.Size = new System.Drawing.Size(349, 21);
+            this.textBoxResettleNumber.Size = new System.Drawing.Size(472, 21);
             this.textBoxResettleNumber.TabIndex = 0;
             // 
             // label8
@@ -581,20 +593,58 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.tabControlExtInfo);
-            this.groupBox1.Location = new System.Drawing.Point(370, 7);
+            this.groupBox1.Location = new System.Drawing.Point(12, 208);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(5);
-            this.groupBox1.Size = new System.Drawing.Size(378, 317);
-            this.groupBox1.TabIndex = 7;
+            this.groupBox1.Size = new System.Drawing.Size(502, 205);
+            this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Вид распоряжения";
+            // 
+            // textBoxPremise
+            // 
+            this.textBoxPremise.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPremise.Location = new System.Drawing.Point(13, 124);
+            this.textBoxPremise.MaxLength = 4;
+            this.textBoxPremise.Name = "textBoxPremise";
+            this.textBoxPremise.Size = new System.Drawing.Size(240, 21);
+            this.textBoxPremise.TabIndex = 2;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(13, 106);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(106, 15);
+            this.label19.TabIndex = 78;
+            this.label19.Text = "Номер квартиры";
+            // 
+            // textBoxSubPremise
+            // 
+            this.textBoxSubPremise.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSubPremise.Location = new System.Drawing.Point(13, 166);
+            this.textBoxSubPremise.MaxLength = 4;
+            this.textBoxSubPremise.Name = "textBoxSubPremise";
+            this.textBoxSubPremise.Size = new System.Drawing.Size(240, 21);
+            this.textBoxSubPremise.TabIndex = 3;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(13, 148);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(101, 15);
+            this.label20.TabIndex = 80;
+            this.label20.Text = "Номер комнаты";
             // 
             // TenancyOrderSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(752, 377);
+            this.ClientSize = new System.Drawing.Size(520, 463);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.checkBoxEnableAddress);
             this.Controls.Add(this.groupBoxAddress);
@@ -692,5 +742,9 @@
         private System.Windows.Forms.RadioButton radioButtonGeneral;
         private System.Windows.Forms.TabPage tabPageProlong;
         private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox textBoxSubPremise;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox textBoxPremise;
+        private System.Windows.Forms.Label label19;
     }
 }

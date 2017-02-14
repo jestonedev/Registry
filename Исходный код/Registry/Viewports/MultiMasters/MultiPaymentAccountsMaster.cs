@@ -154,22 +154,49 @@ namespace Registry.Viewport.MultiMasters
                     id_claim = stateRow.Field<int>("id_claim"),
                     id_state_type = stateRow.Field<int>("id_state_type")
                 }).ToList();
+            var notCompletedClaims = (from lastStateTypeRow in lastStateTypes
+                join claimsRow in claimsDataModel.FilterDeletedRows()
+                    on lastStateTypeRow.id_claim equals claimsRow.Field<int>("id_claim")
+                join accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
+                    on claimsRow.Field<int?>("id_account") equals accountRow.Field<int?>("id_account")
+                where ClaimsService.ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
+                select new
+                {
+                    id_claim = claimsRow.Field<int?>("id_claim"),
+                    id_account = accountRow.Field<int?>("id_account"),
+                    account = accountRow.Field<string>("account"),
+                    raw_address = accountRow.Field<string>("raw_address"),
+                    parsed_address = accountRow.Field<string>("parsed_address")
+                }).ToList();
             // Check duplicates
             for (var i = 0; i < _paymentAccount.Count; i++)
             {
                 var row = (DataRowView)_paymentAccount[i];
                 if (row["id_account"] == DBNull.Value) continue;
-                var isDuplicate = (from lastStateTypeRow in lastStateTypes
-                    join claimsRow in claimsDataModel.FilterDeletedRows()
-                        on lastStateTypeRow.id_claim equals claimsRow.Field<int>("id_claim")
-                    where claimsRow.Field<int?>("id_account") == (int?) row["id_account"] &&
-                        ClaimsService.ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
-                    select claimsRow).Any();
-                if (isDuplicate && MessageBox.Show(string.Format(
+                var isAccountDuplicate = notCompletedClaims.Any(r => r.account == (string) row["account"]);
+                if (isAccountDuplicate && MessageBox.Show(string.Format(
                     @"По лицевому счету {0} уже заведена незавершенная претензионно-исковая работа. Все равно продолжить?",
                     row["account"]), @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
                     DialogResult.Yes)
                     return;
+                var isRawAddressDuplicate = false;
+                if (!isAccountDuplicate)
+                {
+                    isRawAddressDuplicate = notCompletedClaims.Any(r => r.raw_address == (string) row["raw_address"]);
+                    if (isRawAddressDuplicate && MessageBox.Show(string.Format(
+                        @"По адресу БКС ""{0}"" уже заведена незавершенная претензионно-исковая работа. Все равно продолжить?",
+                        row["raw_address"]), @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
+                        MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                        return;
+                }
+                if (isAccountDuplicate || isRawAddressDuplicate) continue;
+                var isParsedAddressDuplicate = notCompletedClaims.Any(r => r.parsed_address == (string)row["parsed_address"]);
+                if (isParsedAddressDuplicate && MessageBox.Show(string.Format(
+                    @"По адресу ЖФ ""{0}"" уже заведена незавершенная претензионно-исковая работа. Все равно продолжить?",
+                    row["parsed_address"]), @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                    return;
+                
             }
             var atDateForm = new MultiPaymentAccountsAtDateForm();
             if (atDateForm.ShowDialog() != DialogResult.OK)

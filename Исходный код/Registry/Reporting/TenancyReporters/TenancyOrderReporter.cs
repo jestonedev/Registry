@@ -39,6 +39,8 @@ namespace Registry.Reporting.TenancyReporters
                     arguments.Add("show_address", tosForm.AddressFilter == "(1=1)" ? "0" : "1");
                     arguments.Add("id_street", tosForm.IdStreet.Trim());
                     arguments.Add("house", tosForm.House.Trim());
+                    arguments.Add("premise", tosForm.Premise.Trim());
+                    arguments.Add("sub_premise", tosForm.SubPremise.Trim());
                     arguments.Add("address_filter", tosForm.AddressFilter);
                     base.Run(arguments);
                 }

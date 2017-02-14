@@ -137,10 +137,24 @@ namespace Registry.Reporting.SettingForms
                 var filter = "";
                 if (comboBoxStreet.SelectedValue != null)
                     filter += string.Format("v.id_street = '{0}'", comboBoxStreet.SelectedValue);
-                if (string.IsNullOrEmpty(textBoxHouse.Text.Trim())) return string.IsNullOrEmpty(filter) ? "(1=0)" : filter;
-                if (!string.IsNullOrEmpty(filter))
-                    filter += " AND ";
-                filter += string.Format("v.house = '{0}'", textBoxHouse.Text.Trim());
+                if (!string.IsNullOrEmpty(textBoxHouse.Text.Trim()))
+                {
+                    if (!string.IsNullOrEmpty(filter))
+                        filter += " AND ";
+                    filter += string.Format("v.house = '{0}'", textBoxHouse.Text.Trim());    
+                }
+                if (!string.IsNullOrEmpty(textBoxPremise.Text.Trim()))
+                {
+                    if (!string.IsNullOrEmpty(filter))
+                        filter += " AND ";
+                    filter += string.Format("v.premises_num = '{0}'", textBoxPremise.Text.Trim());
+                }
+                if (!string.IsNullOrEmpty(textBoxSubPremise.Text.Trim()))
+                {
+                    if (!string.IsNullOrEmpty(filter))
+                        filter += " AND ";
+                    filter += string.Format("v.sub_premises_num = '{0}'", textBoxSubPremise.Text.Trim());
+                }
                 return string.IsNullOrEmpty(filter) ? "(1=0)" : filter;
             }
         }
@@ -152,7 +166,17 @@ namespace Registry.Reporting.SettingForms
 
         public string House
         {
-            get { return textBoxHouse.Text; }
+            get { return textBoxHouse.Text.Trim(); }
+        }
+
+        public string Premise
+        {
+            get { return textBoxPremise.Text.Trim(); }
+        }
+
+        public string SubPremise
+        {
+            get { return textBoxSubPremise.Text.Trim(); }
         }
 
         public TenancyOrderSettingsForm()
