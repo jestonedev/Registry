@@ -34,6 +34,7 @@
             this.vButtonSave = new VIBlend.WinForms.Controls.vButton();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.charging_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.crn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.raw_address = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -110,6 +111,7 @@
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.date,
+            this.charging_date,
             this.id_account,
             this.crn,
             this.raw_address,
@@ -140,12 +142,21 @@
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(784, 208);
             this.dataGridView.TabIndex = 11;
+            this.dataGridView.VisibleChanged += new System.EventHandler(this.dataGridView_VisibleChanged);
             // 
             // date
             // 
             this.date.HeaderText = "Состояние на дату";
             this.date.Name = "date";
             this.date.ReadOnly = true;
+            this.date.Width = 130;
+            // 
+            // charging_date
+            // 
+            this.charging_date.HeaderText = "Дата последнего начисления";
+            this.charging_date.Name = "charging_date";
+            this.charging_date.ReadOnly = true;
+            this.charging_date.Width = 130;
             // 
             // id_account
             // 
@@ -305,7 +316,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SelectAccountForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Указанный лицевой счет имеет дубли. Выберите необходимый лицевой счет";
+            this.Text = "Выберите необходимый лицевой счет";
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
@@ -319,6 +330,7 @@
         private VIBlend.WinForms.Controls.vButton vButtonSave;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn date;
+        private System.Windows.Forms.DataGridViewTextBoxColumn charging_date;
         private System.Windows.Forms.DataGridViewTextBoxColumn id_account;
         private System.Windows.Forms.DataGridViewTextBoxColumn crn;
         private System.Windows.Forms.DataGridViewTextBoxColumn raw_address;

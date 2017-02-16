@@ -5,12 +5,14 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using System.Drawing;
 
 namespace Registry.Viewport.ModalEditors
 {
     internal partial class SelectAccountForm : Form
     {
         private readonly BindingSource _viewModel;
+        private readonly int? _idAccountCurrent;
         public int? IdAccount
         {
             get
@@ -21,7 +23,7 @@ namespace Registry.Viewport.ModalEditors
             }
         }
 
-        public SelectAccountForm(IEnumerable<int> idAccounts)
+        public SelectAccountForm(IEnumerable<int> idAccounts, int? idAccountCurrent)
         {
             InitializeComponent();
             dataGridView.AutoGenerateColumns = false;
@@ -37,6 +39,7 @@ namespace Registry.Viewport.ModalEditors
             };
             dataGridView.DataSource = _viewModel;
             date.DataPropertyName = "date";
+            charging_date.DataPropertyName = "charging_date";
             id_account.DataPropertyName = "id_account";
             crn.DataPropertyName = "crn";
             raw_address.DataPropertyName = "raw_address";
@@ -62,6 +65,7 @@ namespace Registry.Viewport.ModalEditors
             balance_output_dgi.DataPropertyName = "balance_output_dgi";
             if (_viewModel.Count > 0)
                 _viewModel.Position = 0;
+            _idAccountCurrent = idAccountCurrent;
         }
 
         public SelectAccountForm()
@@ -78,6 +82,28 @@ namespace Registry.Viewport.ModalEditors
                 return;
             }
             DialogResult = DialogResult.OK;
+        }
+
+        private void dataGridView_VisibleChanged(object sender, EventArgs e)
+        {
+            if (_idAccountCurrent == null)
+            {
+                return;
+            }
+            for (var i = 0; i < _viewModel.Count; i++)
+            {
+                if (((DataRowView)_viewModel[i])["id_account"] != DBNull.Value &&
+                    (int)((DataRowView)_viewModel[i])["id_account"] == _idAccountCurrent.Value)
+                {
+                    dataGridView.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                    dataGridView.Rows[i].DefaultCellStyle.SelectionBackColor = Color.Green;
+                }
+                else
+                {
+                    dataGridView.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                    dataGridView.Rows[i].DefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
+                }
+            }
         }
     }
 }

@@ -5,7 +5,6 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
 using Registry.Viewport.EntityConverters;
@@ -41,11 +40,47 @@ namespace Registry.Viewport.Presenters
                     select row.Field<string>("account")).FirstOrDefault();
         }
 
-        public List<int> IdsByAccount(string account)
+        public List<int> AccountIdsByAccount(string account)
         {
             return (from row in ViewModel["payments_accounts"].Model.FilterDeletedRows()
                 where row.Field<string>("account") == account
                 select row.Field<int>("id_account")).ToList();
+        }
+
+        public List<int> AccountIdsByRawAddress(string rawAddress)
+        {
+            return (from row in ViewModel["payments_accounts"].Model.FilterDeletedRows()
+                    where row.Field<string>("raw_address") == rawAddress
+                    select row.Field<int>("id_account")).ToList();
+        }
+
+        public List<int> AccountIdsByParsedAddress(string parsedAddress)
+        {
+            return (from row in ViewModel["payments_accounts"].Model.FilterDeletedRows()
+                    where row.Field<string>("parsed_address") == parsedAddress
+                    select row.Field<int>("id_account")).ToList();
+        }
+
+        public List<int> SameAccountIdsByAccountId(int? idAccount)
+        {
+            if (idAccount == null)
+            {
+                return new List<int>();
+            }
+            var account = (from row in ViewModel["payments_accounts"].Model.FilterDeletedRows()
+                where row.Field<int>("id_account") == idAccount
+                select row).FirstOrDefault();
+            if (account == null)
+            {
+                return new List<int>();
+            }
+            var accountNumber = account["account"] != DBNull.Value ? (string)account["account"] : null;
+            var accounts = AccountIdsByAccount(accountNumber);
+            var rawAddress = account["raw_address"] != DBNull.Value ? (string)account["raw_address"] : null;
+            accounts = accounts.Concat(AccountIdsByRawAddress(rawAddress)).ToList();
+            var parsedAddress = account["parsed_address"] != DBNull.Value ? (string)account["parsed_address"] : null; 
+            accounts = accounts.Concat(AccountIdsByParsedAddress(parsedAddress)).ToList();
+            return accounts.Concat(new List<int> { idAccount.Value }).Distinct().ToList();
         }
 
         public List<DataRow> AccountRowsById(int? idAccount)
@@ -134,15 +169,15 @@ namespace Registry.Viewport.Presenters
             bindingSource.Filter += filter;
         }
 
-        public void UpdateBalance(Claim claim)
+        public void UpdateBalance(Claim claim, int? idAccountFrom)
         {
-            if (claim.IdAccount == null) return;
+            if (idAccountFrom == null) return;
             if (claim.EndDeptPeriod == null) return;
             var balanceInfoTable = PaymentService.GetBalanceInfoOnDate(
-                new List<int> { claim.IdAccount.Value }, claim.EndDeptPeriod.Value.Year,
+                new List<int> { idAccountFrom.Value }, claim.EndDeptPeriod.Value.Year,
                 claim.EndDeptPeriod.Value.Month);
             var balanceInfoList = (from row in balanceInfoTable.Select()
-                                   where row.Field<int>("id_account") == claim.IdAccount.Value
+                                   where row.Field<int>("id_account") == idAccountFrom.Value
                                    select new
                                    {
                                        BalanceOutputTenancy = row.Field<decimal>("balance_output_tenancy"),

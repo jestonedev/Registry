@@ -303,13 +303,13 @@ namespace Registry.Viewport
         {
             if (textBoxAccount.Enabled)
             {
-                var accounts = ((ClaimListPresenter) Presenter).IdsByAccount(textBoxAccount.Text.Trim());
+                var accounts = ((ClaimListPresenter) Presenter).AccountIdsByAccount(textBoxAccount.Text.Trim());
                 if (accounts.Count == 1)
                     _idAccount = accounts.First();
                 else
                 if (accounts.Count > 1)
                 {
-                    using (var form = new SelectAccountForm(accounts))
+                    using (var form = new SelectAccountForm(accounts, _idAccount))
                     {
                         if (form.ShowDialog() != DialogResult.OK) return;
                         _idAccount = form.IdAccount;
@@ -319,7 +319,8 @@ namespace Registry.Viewport
             var claim = (Claim) EntityFromViewport();
             if (!ValidateClaim(claim))
                 return;
-            UpdateBalance(claim);
+            if (!UpdateBalance(claim))
+                return;
             IsEditable = false;
             switch (ViewportState)
             {
@@ -351,17 +352,31 @@ namespace Registry.Viewport
             SetViewportCaption();
         }
 
-        private void UpdateBalance(Claim claim)
+        private bool UpdateBalance(Claim claim)
         {
             if ((ViewportState != ViewportState.ModifyRowState ||
                  ((Claim) EntityFromView()).EndDeptPeriod == claim.EndDeptPeriod) &&
-                ViewportState != ViewportState.NewRowState) return;               
-            if (claim.EndDeptPeriod == null) return;
-            if (claim.IdAccount == null) return;
+                ViewportState != ViewportState.NewRowState) return true;
+            if (claim.EndDeptPeriod == null) return true;
+            if (claim.IdAccount == null) return true;
             if (MessageBox.Show(@"Вы хотите обновить суммы взыскания на предъявленный период?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
-                DialogResult.Yes) return;
-            ((ClaimListPresenter) Presenter).UpdateBalance(claim);
+                DialogResult.Yes) return true;
+
+            var accounts = ((ClaimListPresenter)Presenter).SameAccountIdsByAccountId(_idAccount);
+            var idAccountFrom = (int?) null;
+            if (accounts.Count == 1)
+                idAccountFrom = accounts.First();
+            else if (accounts.Count > 1)
+            {
+                using (var form = new SelectAccountForm(accounts, claim.IdAccount))
+                {
+                    if (form.ShowDialog() != DialogResult.OK) return false;
+                    idAccountFrom = form.IdAccount;
+                }
+            }
+            ((ClaimListPresenter)Presenter).UpdateBalance(claim, idAccountFrom);
+            return true;
         }
 
         public override bool CanCancelRecord()
@@ -698,7 +713,7 @@ namespace Registry.Viewport
 
         private void textBoxAccount_Leave(object sender, EventArgs e)
         {
-            _idAccount = ((ClaimListPresenter) Presenter).IdsByAccount(textBoxAccount.Text.Trim()).LastOrDefault();
+            _idAccount = ((ClaimListPresenter) Presenter).AccountIdsByAccount(textBoxAccount.Text.Trim()).LastOrDefault();
             BindAccount(_idAccount);
             CheckViewportModifications();
         }
