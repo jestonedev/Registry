@@ -18,18 +18,19 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonPremisesDeleteAll = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonGenerateExcerpt = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonExport = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRestrictions = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonOwnerships = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonObjectStates = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRegDate = new System.Windows.Forms.ToolStripButton();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_street = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.house = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -46,6 +47,7 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonPremisesDeleteAll,
             this.toolStripSeparator2,
             this.toolStripButtonGenerateExcerpt,
+            this.toolStripButtonExport,
             this.toolStripButtonRestrictions,
             this.toolStripButtonOwnerships,
             this.toolStripButtonObjectStates,
@@ -86,7 +88,7 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonPremisesCurrent.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonPremisesCurrent.Name = "toolStripButtonPremisesCurrent";
             this.toolStripButtonPremisesCurrent.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonPremisesCurrent.Text = "Добавить текущее помещение";
+            this.toolStripButtonPremisesCurrent.Text = "Добавить выбранные помещения";
             this.toolStripButtonPremisesCurrent.Click += new System.EventHandler(this.toolStripButtonPremisesCurrent_Click);
             // 
             // toolStripButtonPremisesByFilter
@@ -140,6 +142,16 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonGenerateExcerpt.Text = "Сформировать выписку";
             this.toolStripButtonGenerateExcerpt.Click += new System.EventHandler(this.toolStripButtonGenerateExcerpt_Click);
             // 
+            // toolStripButtonExport
+            // 
+            this.toolStripButtonExport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonExport.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonExport.Image")));
+            this.toolStripButtonExport.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonExport.Name = "toolStripButtonExport";
+            this.toolStripButtonExport.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonExport.Text = "Экспортировать помещения в табличный процессор";
+            this.toolStripButtonExport.Click += new System.EventHandler(this.toolStripButtonExport_Click);
+            // 
             // toolStripButtonRestrictions
             // 
             this.toolStripButtonRestrictions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -185,6 +197,17 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 22);
             this.toolStripProgressBar1.Visible = false;
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabelRowCount
+            // 
+            this.toolStripLabelRowCount.Name = "toolStripLabelRowCount";
+            this.toolStripLabelRowCount.Size = new System.Drawing.Size(154, 15);
+            this.toolStripLabelRowCount.Text = "Всего записей в мастере: 0";
             // 
             // dataGridView
             // 
@@ -249,17 +272,6 @@ namespace Registry.Viewport.MultiMasters
             this.premises_num.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.premises_num.Width = 75;
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripLabelRowCount
-            // 
-            this.toolStripLabelRowCount.Name = "toolStripLabelRowCount";
-            this.toolStripLabelRowCount.Size = new System.Drawing.Size(154, 22);
-            this.toolStripLabelRowCount.Text = "Всего записей в мастере: 0";
-            // 
             // MultiPremisesMaster
             // 
             this.ClientSize = new System.Drawing.Size(570, 157);
@@ -301,6 +313,7 @@ namespace Registry.Viewport.MultiMasters
         private ToolStripButton toolStripButtonRegDate;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripLabel toolStripLabelRowCount;
+        private ToolStripButton toolStripButtonExport;
 
     }
 }

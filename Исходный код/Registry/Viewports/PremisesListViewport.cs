@@ -570,5 +570,18 @@ namespace Registry.Viewport
                     id_street.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
+
+        internal IEnumerable<int> GetCurrentIds()
+        {
+            var ids = new List<int>();
+            if (Presenter.ViewModel["general"].BindingSource.Position < 0) return ids;
+            for (var i = 0; i < DataGridView.SelectedRows.Count; i++)
+            {
+                var row = (DataRowView)Presenter.ViewModel["general"].BindingSource[DataGridView.SelectedRows[i].Index];
+                if (row["id_premises"] != DBNull.Value)
+                    ids.Add((int)row["id_premises"]);
+            }
+            return ids;
+        }
     }
 }

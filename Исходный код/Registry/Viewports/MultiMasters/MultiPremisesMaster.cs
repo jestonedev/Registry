@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
@@ -143,15 +144,13 @@ namespace Registry.Viewport.MultiMasters
             var viewport = _menuCallback.GetCurrentViewport();
             if (viewport == null)
                 return;
-            var idPremises = -1;
-            var premisesListViewport = viewport as PremisesListViewport;
-            if (premisesListViewport != null)
-                idPremises = premisesListViewport.GetCurrentId();
-            var premisesViewport = viewport as PremisesViewport;
+            IEnumerable<int> idPremises = new List<int>();
+            var premisesViewport = viewport as PremisesListViewport;
             if (premisesViewport != null)
-                idPremises = premisesViewport.GetCurrentId();
-            if (idPremises == -1) return;
-            _premises.Filter = string.Format("({0}) OR (id_premises = {1})", _premises.Filter, idPremises);
+                idPremises = premisesViewport.GetCurrentIds();
+            if (!idPremises.Any()) return;
+            _premises.Filter = string.Format("({0}) OR (id_premises IN ({1}))", _premises.Filter,
+                idPremises.Select(x => x.ToString()).Aggregate((x, y) => x + "," + y));
             dataGridView.RowCount = _premises.Count;
         }
 
@@ -174,7 +173,6 @@ namespace Registry.Viewport.MultiMasters
 
         private void toolStripButtonGenerateExcerpt_Click(object sender, EventArgs e)
         {
-            var reporter = ReporterFactory.CreateReporter(ReporterType.MultiExcerptReporter);
             var arguments = new Dictionary<string, string>();
             var filter = "";
             for (var i = 0; i < _premises.Count; i++)
@@ -185,7 +183,7 @@ namespace Registry.Viewport.MultiMasters
             }
             filter = filter.TrimEnd(',');
             arguments.Add("filter", filter);
-            reporter.Run(arguments);
+            _menuCallback.RunReport(ReporterType.MultiExcerptReporter, arguments);
         }
 
         public void UpdateToolbar()
@@ -474,6 +472,49 @@ namespace Registry.Viewport.MultiMasters
         private void RowCountChanged()
         {
             toolStripLabelRowCount.Text = string.Format("Всего записей в мастере: {0}", dataGridView.RowCount);
+        }
+
+        private void toolStripButtonExport_Click(object sender, EventArgs e)
+        {
+            string columnHeaders;
+            string columnPatterns;
+            if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
+            {
+                columnHeaders = "{\"columnHeader\":\"№ по реестру\"},{\"columnHeader\":\"Адрес\"},{\"columnHeader\":\"Дом\"},"+
+                    "{\"columnHeader\":\"Пом.\"},{\"columnHeader\":\"Тип помещения\"},{\"columnHeader\":\"Кадастровый номер\"},"+
+                    "{\"columnHeader\":\"Общая площадь\"},{\"columnHeader\":\"Текущее состояние\"},{\"columnHeader\":\"Текущий фонд\"},"+
+                    "{\"columnHeader\":\"№ договора найма\"},{\"columnHeader\":\"Дата регистрации договора\"},"+
+                    "{\"columnHeader\":\"Дата окончания договора\"},{\"columnHeader\":\"№ ордера найма\"},{\"columnHeader\":\"Дата ордера найма\"},"+
+                    "{\"columnHeader\":\"Наниматель\"},{\"columnHeader\":\"Размер платы\"},{\"columnHeader\":\"Номер и дата включения в фонд\"},"+
+                    "{\"columnHeader\":\"Дополнительные сведения\"}";
+                columnPatterns = "{\"columnPattern\":\"$column0$\"},{\"columnPattern\":\"$column1$\"},{\"columnPattern\":\"$column2$\"}," +
+                    "{\"columnPattern\":\"$column3$\"},{\"columnPattern\":\"$column4$\"},{\"columnPattern\":\"$column5$\"}," +
+                    "{\"columnPattern\":\"$column6$\"},{\"columnPattern\":\"$column8$\"},{\"columnPattern\":\"$column9$\"}," +
+                    "{\"columnPattern\":\"$column10$\"},{\"columnPattern\":\"$column11$\"}," +
+                    "{\"columnPattern\":\"$column12$\"},{\"columnPattern\":\"$column13$\"},{\"columnPattern\":\"$column14$\"}," +
+                    "{\"columnPattern\":\"$column15$\"},{\"columnPattern\":\"$column16$\"},{\"columnPattern\":\"$fund_info$\"}," +
+                    "{\"columnPattern\":\"$description$\"}";
+            }
+            else
+            {
+                columnHeaders = "{\"columnHeader\":\"№ по реестру\"},{\"columnHeader\":\"Адрес\"},{\"columnHeader\":\"Дом\"}," +
+                    "{\"columnHeader\":\"Пом.\"},{\"columnHeader\":\"Тип помещения\"},{\"columnHeader\":\"Кадастровый номер\"}," +
+                    "{\"columnHeader\":\"Общая площадь\"},{\"columnHeader\":\"Текущее состояние\"},{\"columnHeader\":\"Текущий фонд\"}," +
+                    "{\"columnHeader\":\"Дополнительные сведения\"}";
+                columnPatterns = "{\"columnPattern\":\"$column0$\"},{\"columnPattern\":\"$column1$\"},{\"columnPattern\":\"$column2$\"}," +
+                    "{\"columnPattern\":\"$column3$\"},{\"columnPattern\":\"$column4$\"},{\"columnPattern\":\"$column5$\"}," +
+                    "{\"columnPattern\":\"$column6$\"},{\"columnPattern\":\"$column8$\"},{\"columnPattern\":\"$fund_info$\"}," +
+                    "{\"columnPattern\":\"$description$\"}";
+            }
+            var filter = _premises.Filter ?? "";   
+            var arguments = new Dictionary<string, string>
+            {
+                {"type", "2"},
+                {"filter", filter.Trim() == "" ? "(1=1)" : filter },
+                {"columnHeaders", "["+columnHeaders+"]"},
+                {"columnPatterns", "["+columnPatterns+"]"}
+            };
+            _menuCallback.RunReport(ReporterType.ExportReporter, arguments);
         }
     }
 }

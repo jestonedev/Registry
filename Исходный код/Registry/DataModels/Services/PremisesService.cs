@@ -60,6 +60,33 @@ namespace Registry.DataModels.Services
                    select tenancyPremisesAssocRow.Field<int>("id_premises");
         }
 
+        public static IEnumerable<int> PremiseIDsByReasonNumber(string number)
+        {
+            var tenancyPremisesAssoc = EntityDataModel<TenancyPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var tenancyProcesses = EntityDataModel<TenancyProcess>.GetInstance().FilterDeletedRows();
+            var tenancyReason = EntityDataModel<TenancyReason>.GetInstance().FilterDeletedRows();
+            return from tenancyProcessesRow in tenancyProcesses
+                   join tenancyPremisesAssocRow in tenancyPremisesAssoc
+                       on tenancyProcessesRow.Field<int>("id_process") equals tenancyPremisesAssocRow.Field<int?>("id_process")
+                   join tenancyReasonRow in tenancyReason
+                       on tenancyProcessesRow.Field<int>("id_process") equals tenancyReasonRow.Field<int?>("id_process")
+                   where tenancyReasonRow.Field<string>("reason_number") == number &&
+                         tenancyPremisesAssocRow.Field<int?>("id_premises") != null
+                   select tenancyPremisesAssocRow.Field<int>("id_premises");
+        }
+
+        public static IEnumerable<int> PremiseIDsByProtocolNumber(string number)
+        {
+            var tenancyPremisesAssoc = EntityDataModel<TenancyPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var tenancyProcesses = EntityDataModel<TenancyProcess>.GetInstance().FilterDeletedRows();
+            return from tenancyProcessesRow in tenancyProcesses
+                   join tenancyPremisesAssocRow in tenancyPremisesAssoc
+                       on tenancyProcessesRow.Field<int>("id_process") equals tenancyPremisesAssocRow.Field<int?>("id_process")
+                   where tenancyProcessesRow.Field<string>("protocol_num") == number &&
+                         tenancyPremisesAssocRow.Field<int?>("id_premises") != null
+                   select tenancyPremisesAssocRow.Field<int>("id_premises");
+        }
+
         public static IEnumerable<int> PremiseIDsByCurrentFund(int idFund)
         {
             // Ищем помещения указанного фонда, а также помещения, в которых присутствуют комнаты указанного фонда

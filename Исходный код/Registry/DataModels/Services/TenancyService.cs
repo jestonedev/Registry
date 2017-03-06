@@ -170,6 +170,14 @@ namespace Registry.DataModels.Services
             return tenancySubPremises;
         }
 
+        public static IEnumerable<int> TenancyProcessIdsByReasonNumber(string number)
+        {
+            var tenancyReasons = EntityDataModel<TenancyReason>.GetInstance().FilterDeletedRows();
+            return from row in tenancyReasons
+                where row.Field<string>("reason_number") == number && row.Field<int?>("id_process") != null
+                select row.Field<int>("id_process");
+        }
+
         public static bool TenancyProcessHasTenant(int idProcess)
         {
             var persons = EntityDataModel<TenancyPerson>.GetInstance().FilterDeletedRows();

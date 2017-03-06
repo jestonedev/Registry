@@ -37,19 +37,33 @@ namespace Registry.Viewport.SearchForms
             }
             if (comboBoxCriteriaType.SelectedIndex == 1)
             {
+                //по номеру документ-основания
+                var num = textBoxCriteria.Text.Trim().Replace("'", "");
+                var processesIds = TenancyService.TenancyProcessIdsByReasonNumber(num);
+                includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
+            }
+            if (comboBoxCriteriaType.SelectedIndex == 2)
+            {
+                //по номеру протокола ЖК
+                if (!string.IsNullOrEmpty(filter.Trim()))
+                    filter += " AND ";
+                filter += "protocol_num LIKE '%" + textBoxCriteria.Text.Trim() + "%'";
+            }
+            if (comboBoxCriteriaType.SelectedIndex == 3)
+            {
                 //по ФИО нанимателя
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
                 var processesIds = TenancyService.TenancyProcessIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
-            if (comboBoxCriteriaType.SelectedIndex == 2)
+            if (comboBoxCriteriaType.SelectedIndex == 4)
             {
                 //по ФИО участника
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
                 var processesIds = TenancyService.TenancyProcessIdsBySnp(snp, row => true);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
-            if (comboBoxCriteriaType.SelectedIndex == 3)
+            if (comboBoxCriteriaType.SelectedIndex == 5)
             {
                 //по адресу
                 var addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);

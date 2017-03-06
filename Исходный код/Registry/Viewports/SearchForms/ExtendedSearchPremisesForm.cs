@@ -83,6 +83,16 @@ namespace Registry.Viewport.SearchForms
                 var premisesIds = PremisesService.PremiseIDsByRegistrationNumber(textBoxContractNumber.Text.Trim().Replace("'", ""));
                 includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);    
             }
+            if (checkBoxProtocolNumberEnable.Checked)
+            {
+                var premisesIds = PremisesService.PremiseIDsByProtocolNumber(textBoxProtocolNumber.Text.Trim().Replace("'", ""));
+                includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
+            }
+            if (checkBoxReasonNumberEnable.Checked)
+            {
+                var premisesIds = PremisesService.PremiseIDsByReasonNumber(textBoxReasonNumber.Text.Trim().Replace("'", ""));
+                includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
+            }
             if (checkBoxTenantSNPEnable.Checked)
             {
                 var snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
@@ -294,6 +304,20 @@ namespace Registry.Viewport.SearchForms
                 textBoxContractNumber.Focus();
                 return;
             }
+            if (checkBoxReasonNumberEnable.Checked && string.IsNullOrEmpty(textBoxReasonNumber.Text.Trim()))
+            {
+                MessageBox.Show(@"Введите номер документа-основания найма или уберите галочку поиска по номеру документа-основания",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxReasonNumber.Focus();
+                return;
+            }
+            if (checkBoxProtocolNumberEnable.Checked && string.IsNullOrEmpty(textBoxProtocolNumber.Text.Trim()))
+            {
+                MessageBox.Show(@"Введите номер протокола жилищной комиссии или уберите галочку поиска по номеру протокола жилищной комиссии",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxProtocolNumber.Focus();
+                return;
+            }
             if (checkBoxTenantSNPEnable.Checked && string.IsNullOrEmpty(textBoxTenantSNP.Text.Trim()))
             {
                 MessageBox.Show(@"Введите ФИО нанимателя или уберите галочку поиска по ФИО нанимателя",
@@ -429,6 +453,16 @@ namespace Registry.Viewport.SearchForms
         private void checkBoxRestrictionNumberEnable_CheckedChanged(object sender, EventArgs e)
         {
             textBoxRestrictionNumber.Enabled = checkBoxRestrictionNumberEnable.Checked;
+        }
+
+        private void checkBoxReasonNumberEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxReasonNumber.Enabled = checkBoxReasonNumberEnable.Checked;
+        }
+
+        private void checkBoxProtocolNumberEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxProtocolNumber.Enabled = checkBoxProtocolNumberEnable.Checked;
         }
     }
 }

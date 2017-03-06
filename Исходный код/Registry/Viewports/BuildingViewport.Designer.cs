@@ -195,6 +195,7 @@ namespace Registry.Viewport
             this.textBoxRoomsBTI = new System.Windows.Forms.TextBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
+            this.checkBoxIsMemorial = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -546,6 +547,7 @@ namespace Registry.Viewport
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.checkBoxIsMemorial);
             this.panel2.Controls.Add(this.numericUpDownRentCoefficientAuto);
             this.panel2.Controls.Add(this.label29);
             this.panel2.Controls.Add(this.numericUpDownRentCoefficient);
@@ -1505,6 +1507,16 @@ namespace Registry.Viewport
             this.textBoxDescription.Size = new System.Drawing.Size(239, 87);
             this.textBoxDescription.TabIndex = 0;
             // 
+            // checkBoxIsMemorial
+            // 
+            this.checkBoxIsMemorial.AutoSize = true;
+            this.checkBoxIsMemorial.Location = new System.Drawing.Point(333, 236);
+            this.checkBoxIsMemorial.Name = "checkBoxIsMemorial";
+            this.checkBoxIsMemorial.Size = new System.Drawing.Size(141, 19);
+            this.checkBoxIsMemorial.TabIndex = 41;
+            this.checkBoxIsMemorial.Text = "Памятник культуры";
+            this.checkBoxIsMemorial.UseVisualStyleBackColor = true;
+            // 
             // BuildingViewport
             // 
             this.AutoScroll = true;
@@ -1594,5 +1606,6 @@ namespace Registry.Viewport
         private Label label29;
         private FixedNumericUpDown numericUpDownRentCoefficient;
         private Label label28;
+        private CheckBox checkBoxIsMemorial;
     }
 }

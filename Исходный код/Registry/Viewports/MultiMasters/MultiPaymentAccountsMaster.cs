@@ -341,7 +341,6 @@ namespace Registry.Viewport.MultiMasters
                 return;
             }
 
-            var reporter = ReporterFactory.CreateReporter(ReporterType.RequestToBksReporter);
             var arguments = new Dictionary<string, string>();
             var filter = "";
             for (var i = 0; i < _paymentAccount.Count; i++)
@@ -352,7 +351,7 @@ namespace Registry.Viewport.MultiMasters
             }
             filter = filter.TrimEnd(',');
             arguments.Add("filter", filter);
-            reporter.Run(arguments);
+            _menuCallback.RunReport(ReporterType.RequestToBksReporter, arguments);
         }
 
         private void dataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)

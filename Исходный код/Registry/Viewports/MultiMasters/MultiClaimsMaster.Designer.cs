@@ -22,6 +22,7 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonJudicialOrder = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonToLegalDepartment = new System.Windows.Forms.ToolStripButton();
             this.toolStripProgressBarMultiOperations = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_claim = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -33,7 +34,6 @@ namespace Registry.Viewport.MultiMasters
             this.amount_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -77,7 +77,7 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonClaimCurrent.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonClaimCurrent.Name = "toolStripButtonClaimCurrent";
             this.toolStripButtonClaimCurrent.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonClaimCurrent.Text = "Добавить текущую претензионно исковую работу";
+            this.toolStripButtonClaimCurrent.Text = "Добавить выбранные претензионно-исковые работы";
             this.toolStripButtonClaimCurrent.Click += new System.EventHandler(this.toolStripButtonClaimCurrent_Click);
             // 
             // toolStripButtonClaimsByFilter
@@ -156,6 +156,11 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripProgressBarMultiOperations.Name = "toolStripProgressBarMultiOperations";
             this.toolStripProgressBarMultiOperations.Size = new System.Drawing.Size(100, 22);
             this.toolStripProgressBarMultiOperations.Visible = false;
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripLabelRowCount
             // 
@@ -274,11 +279,6 @@ namespace Registry.Viewport.MultiMasters
             this.amount_penalties.Name = "amount_penalties";
             this.amount_penalties.ReadOnly = true;
             this.amount_penalties.Width = 200;
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // MultiClaimsMaster
             // 

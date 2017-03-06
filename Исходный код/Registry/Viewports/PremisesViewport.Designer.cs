@@ -838,6 +838,7 @@ namespace Registry.Viewport
             this.checkBoxIsMemorial.TabIndex = 8;
             this.checkBoxIsMemorial.Text = "Памятник культуры";
             this.checkBoxIsMemorial.UseVisualStyleBackColor = true;
+            this.checkBoxIsMemorial.Visible = false;
             // 
             // textBoxAccount
             // 

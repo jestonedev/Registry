@@ -180,6 +180,7 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(checkBoxCanalization, "Checked", bindingSource, "canalization", true);
             ViewportHelper.BindProperty(checkBoxElectricity, "Checked", bindingSource, "electricity", true);
             ViewportHelper.BindProperty(checkBoxRadioNetwork, "Checked", bindingSource, "radio_network", false);
+            ViewportHelper.BindProperty(checkBoxIsMemorial, "Checked", bindingSource, "is_memorial", false);
             ViewportHelper.BindProperty(textBoxRoomsBTI, "Text", bindingSource, "BTI_rooms", "");
             ViewportHelper.BindProperty(textBoxHousingCooperative, "Text", bindingSource, "housing_cooperative", "");
             ViewportHelper.BindProperty(numericUpDownPremisesCount, "Value", bindingSource, "num_premises", 0m);
@@ -386,6 +387,7 @@ namespace Registry.Viewport
                 Canalization = checkBoxCanalization.Checked,
                 Electricity = checkBoxElectricity.Checked,
                 RadioNetwork = checkBoxRadioNetwork.Checked,
+                IsMemorial = checkBoxIsMemorial.Checked,
                 IdHeatingType = ViewportHelper.ValueOrNull<int>(comboBoxHeatingType),
                 RoomsBTI = ViewportHelper.ValueOrNull(textBoxRoomsBTI),
                 HousingCooperative = ViewportHelper.ValueOrNull(textBoxHousingCooperative),
@@ -429,6 +431,7 @@ namespace Registry.Viewport
             checkBoxCanalization.Checked = ViewportHelper.ValueOrDefault(building.Canalization);
             checkBoxElectricity.Checked = ViewportHelper.ValueOrDefault(building.Electricity);
             checkBoxRadioNetwork.Checked = ViewportHelper.ValueOrDefault(building.RadioNetwork);
+            checkBoxIsMemorial.Checked = ViewportHelper.ValueOrDefault(building.IsMemorial);
             comboBoxHeatingType.SelectedValue = ViewportHelper.ValueOrDefault(building.IdHeatingType);
             textBoxRoomsBTI.Text = building.RoomsBTI;
             textBoxHousingCooperative.Text = building.HousingCooperative;

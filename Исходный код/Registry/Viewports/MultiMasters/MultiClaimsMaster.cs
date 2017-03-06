@@ -295,7 +295,6 @@ namespace Registry.Viewport.MultiMasters
                 return;
             }
 
-            var reporter = ReporterFactory.CreateReporter(ReporterType.JudicialOrderReporter);
             var arguments = new Dictionary<string, string>();
             var filter = "";
             for (var i = 0; i < _claims.Count; i++)
@@ -306,7 +305,7 @@ namespace Registry.Viewport.MultiMasters
             }
             filter = filter.TrimEnd(',');
             arguments.Add("filter", filter);
-            reporter.Run(arguments);
+            _menuCallback.RunReport(ReporterType.JudicialOrderReporter, arguments);
         }
 
         private void toolStripButtonDeptPeriod_Click(object sender, EventArgs e)
@@ -453,7 +452,6 @@ namespace Registry.Viewport.MultiMasters
                     MessageBoxDefaultButton.Button1);
                 return;
             }
-            var reporter = ReporterFactory.CreateReporter(ReporterType.TransfertToLegalDepartmentReporter);
             var filter = "";
             var arguments = new Dictionary<string, string>();
             for (var i = 0; i < _claims.Count; i++)
@@ -464,7 +462,7 @@ namespace Registry.Viewport.MultiMasters
             }
             filter = filter.TrimEnd(',');
             arguments.Add("filter", filter);
-            reporter.Run(arguments);
+            _menuCallback.RunReport(ReporterType.TransfertToLegalDepartmentReporter, arguments);
         }
 
         private void dataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)

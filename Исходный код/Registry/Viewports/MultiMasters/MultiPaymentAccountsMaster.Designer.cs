@@ -18,6 +18,8 @@ namespace Registry.Viewport.MultiMasters
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonRequestToBks = new System.Windows.Forms.ToolStripButton();
             this.toolStripProgressBarMultiOperations = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -48,8 +50,6 @@ namespace Registry.Viewport.MultiMasters
             this.balance_output_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -61,7 +61,7 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonAccountCurrent.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAccountCurrent.Name = "toolStripButtonAccountCurrent";
             this.toolStripButtonAccountCurrent.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonAccountCurrent.Text = "Добавить текущий лицевой счет";
+            this.toolStripButtonAccountCurrent.Text = "Добавить выбранные лицевые счета";
             this.toolStripButtonAccountCurrent.Click += new System.EventHandler(this.toolStripButtonAccountCurrent_Click);
             // 
             // toolStripButtonAccountsByFilter
@@ -150,6 +150,17 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripProgressBarMultiOperations.Name = "toolStripProgressBarMultiOperations";
             this.toolStripProgressBarMultiOperations.Size = new System.Drawing.Size(100, 22);
             this.toolStripProgressBarMultiOperations.Visible = false;
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabelRowCount
+            // 
+            this.toolStripLabelRowCount.Name = "toolStripLabelRowCount";
+            this.toolStripLabelRowCount.Size = new System.Drawing.Size(154, 22);
+            this.toolStripLabelRowCount.Text = "Всего записей в мастере: 0";
             // 
             // dataGridView
             // 
@@ -384,17 +395,6 @@ namespace Registry.Viewport.MultiMasters
             this.balance_output_penalties.HeaderText = "Пени (исх.)";
             this.balance_output_penalties.Name = "balance_output_penalties";
             this.balance_output_penalties.ReadOnly = true;
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripLabelRowCount
-            // 
-            this.toolStripLabelRowCount.Name = "toolStripLabelRowCount";
-            this.toolStripLabelRowCount.Size = new System.Drawing.Size(154, 22);
-            this.toolStripLabelRowCount.Text = "Всего записей в мастере: 0";
             // 
             // MultiPaymentAccountsMaster
             // 

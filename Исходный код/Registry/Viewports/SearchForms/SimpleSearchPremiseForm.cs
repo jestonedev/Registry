@@ -34,7 +34,7 @@ namespace Registry.Viewport.SearchForms
             {
                 //по адресу
                 var addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                if (addressParts.Count() == 3)
+                if (addressParts.Length == 3)
                 {
                     var premisesIds = PremisesService.PremiseIDsByAddress(addressParts);
                     includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
@@ -50,7 +50,7 @@ namespace Registry.Viewport.SearchForms
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
                 var premisesIds = PremisesService.PremisesIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
                 includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
-            }
+            } else
             if (comboBoxCriteriaType.SelectedIndex == 2)
             {
                 // по ФИО участника
@@ -58,6 +58,7 @@ namespace Registry.Viewport.SearchForms
                 var premisesIds = PremisesService.PremisesIdsBySnp(snp, row => true);
                 includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
             }
+            else
             if (comboBoxCriteriaType.SelectedIndex == 3)
             {
                 //по кадастровому номеру
@@ -65,10 +66,25 @@ namespace Registry.Viewport.SearchForms
                     filter += " AND ";
                 filter += string.Format(CultureInfo.InvariantCulture, "cadastral_num = '{0}'", textBoxCriteria.Text.Trim().Replace("'", ""));
             }
+            else
             if (comboBoxCriteriaType.SelectedIndex == 4)
             {
                 // по номеру договора
                 var premisesIds = PremisesService.PremiseIDsByRegistrationNumber(textBoxCriteria.Text.Trim().Replace("'", ""));
+                includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
+            }
+            else
+            if (comboBoxCriteriaType.SelectedIndex == 5)
+            {
+                // по номеру документа-основания
+                var premisesIds = PremisesService.PremiseIDsByReasonNumber(textBoxCriteria.Text.Trim().Replace("'", ""));
+                includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
+            }
+            else
+            if (comboBoxCriteriaType.SelectedIndex == 6)
+            {
+                // по номеру протокола ЖК
+                var premisesIds = PremisesService.PremiseIDsByProtocolNumber(textBoxCriteria.Text.Trim().Replace("'", ""));
                 includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
             }
             if (includedPremises != null)

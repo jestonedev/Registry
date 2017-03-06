@@ -32,7 +32,7 @@ namespace Registry.Viewport.SearchForms
         /// </summary>
         private void InitializeComponent()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(SimpleSearchTenancyForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SimpleSearchTenancyForm));
             this.comboBoxCriteriaType = new System.Windows.Forms.ComboBox();
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.vButtonSearch = new VIBlend.WinForms.Controls.vButton();
@@ -44,13 +44,15 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxCriteriaType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCriteriaType.FormattingEnabled = true;
             this.comboBoxCriteriaType.Items.AddRange(new object[] {
-            "по номеру договора",
+            "по № договора",
+            "по № документа-основания найма",
+            "по № протокола ЖК",
             "по ФИО нанимателя",
             "по ФИО участника",
             "по адресу"});
             this.comboBoxCriteriaType.Location = new System.Drawing.Point(10, 9);
             this.comboBoxCriteriaType.Name = "comboBoxCriteriaType";
-            this.comboBoxCriteriaType.Size = new System.Drawing.Size(178, 23);
+            this.comboBoxCriteriaType.Size = new System.Drawing.Size(208, 23);
             this.comboBoxCriteriaType.TabIndex = 1;
             this.comboBoxCriteriaType.DropDownClosed += new System.EventHandler(this.comboBoxCriteriaType_DropDownClosed);
             // 
@@ -84,10 +86,10 @@ namespace Registry.Viewport.SearchForms
             // 
             // textBoxCriteria
             // 
-            this.textBoxCriteria.Location = new System.Drawing.Point(196, 10);
+            this.textBoxCriteria.Location = new System.Drawing.Point(224, 10);
             this.textBoxCriteria.MaxLength = 255;
             this.textBoxCriteria.Name = "textBoxCriteria";
-            this.textBoxCriteria.Size = new System.Drawing.Size(348, 21);
+            this.textBoxCriteria.Size = new System.Drawing.Size(320, 21);
             this.textBoxCriteria.TabIndex = 0;
             this.textBoxCriteria.Enter += new System.EventHandler(this.textBoxCriteria_Enter);
             // 

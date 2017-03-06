@@ -102,5 +102,8 @@ namespace Registry.Entities
 
         [DataColumn(DefaultValue = 0)]
         public decimal? RentCoefficient { get; set; }
+
+        [DataColumn(DefaultValue = false)]
+        public bool? IsMemorial { get; set; }
     }
 }
