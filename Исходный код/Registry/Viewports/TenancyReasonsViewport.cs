@@ -84,6 +84,7 @@ namespace Registry.Viewport
             reason_prepared.DataPropertyName = "reason_prepared";
             ViewportHelper.BindSource(id_reason_type, Presenter.ViewModel["reason_types"].BindingSource, "reason_name",
                 Presenter.ViewModel["reason_types"].PrimaryKeyFirst);
+            
         }
 
         public override bool CanInsertRecord()

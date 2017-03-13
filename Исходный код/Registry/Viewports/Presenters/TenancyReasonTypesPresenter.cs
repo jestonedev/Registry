@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using Registry.Entities;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ViewModels;
-using Settings;
 
 namespace Registry.Viewport.Presenters
 {

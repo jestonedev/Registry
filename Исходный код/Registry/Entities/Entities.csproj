@@ -65,6 +65,7 @@
     <Compile Include="OwnershipRightBuildingAssoc.cs" />
     <Compile Include="OwnershipRightPremisesAssoc.cs" />
     <Compile Include="Infrastructure\RelationAttribute.cs" />
+    <Compile Include="TenancyReasonProlongType.cs" />
     <Compile Include="ResettleBuildingFromAssoc.cs" />
     <Compile Include="ResettleBuildingToAssoc.cs" />
     <Compile Include="ResettlePremisesFromAssoc.cs" />

@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
-using System.Linq;
 using System.Security.Principal;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Declensions.Unicode;
 using Registry.DataModels.Services;
@@ -78,6 +76,10 @@ namespace Registry.Viewport
 
             ViewportHelper.BindSource(comboBoxIncludeKinship, Presenter.ViewModel["kinships"].BindingSource, "kinship",
                 Presenter.ViewModel["kinships"].PrimaryKeyFirst);
+
+
+            ViewportHelper.BindSource(comboBoxCommercialProlongReasonType, Presenter.ViewModel["tenancy_prolong_reason_types"].BindingSource, "reason_name",
+                 Presenter.ViewModel["tenancy_prolong_reason_types"].PrimaryKeyFirst);
 
             ViewportHelper.BindProperty(textBoxAgreementContent, "Text", bindingSource, "agreement_content", "");
             ViewportHelper.BindProperty(dateTimePickerAgreementDate, "Value", bindingSource, "agreement_date", DateTime.Now.Date);

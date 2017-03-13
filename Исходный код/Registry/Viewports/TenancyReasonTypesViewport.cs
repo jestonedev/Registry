@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Registry.Entities;
 using Registry.Viewport.Presenters;
@@ -155,15 +154,7 @@ namespace Registry.Viewport
                             cell.ErrorText = "";
                     break;
                 case "reason_template":
-                    if (cell.Value.ToString().Length > 4000)
-                        cell.ErrorText = "Длина шаблона вида основания не может превышать 4000 символов";
-                    else
-                    if (!(Regex.IsMatch(cell.Value.ToString(), "@reason_number@") &&
-                         Regex.IsMatch(cell.Value.ToString(), "@reason_date@")))
-                        cell.ErrorText = "Шаблон основания имеет неверный формат. В шаблоне должны быть указаны номер (в виде шаблона @reason_number@) и" +
-                            " дата (в виде шаблона @reason_date@) основания";
-                    else
-                        cell.ErrorText = "";
+                    cell.ErrorText = cell.Value.ToString().Length > 4000 ? "Длина шаблона вида основания не может превышать 4000 символов" : "";
                     break;
             }
         }

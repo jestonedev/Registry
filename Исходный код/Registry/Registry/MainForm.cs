@@ -84,7 +84,7 @@ namespace Registry
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
                 toolStripProgressBar.Maximum += 14;
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
-                toolStripProgressBar.Maximum += 17;
+                toolStripProgressBar.Maximum += 18;
             //Общие таблицы для реестра жилого фонда, процессов найма и процессов переселения
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead)
                 || AccessControl.HasPrivelege(Priveleges.ResettleRead))
@@ -129,6 +129,7 @@ namespace Registry
                 EntityDataModel<TenancySubPremisesAssoc>.GetInstance(afterLoadHandler);
                 EntityDataModel<TenancyReason>.GetInstance(afterLoadHandler);
                 EntityDataModel<ReasonType>.GetInstance(afterLoadHandler);
+                EntityDataModel<TenancyProlongReasonType>.GetInstance(afterLoadHandler);
                 EntityDataModel<Executor>.GetInstance(afterLoadHandler);
                 EntityDataModel<TenancyAgreement>.GetInstance(afterLoadHandler);
                 EntityDataModel<Warrant>.GetInstance(afterLoadHandler);

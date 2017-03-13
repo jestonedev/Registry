@@ -96,7 +96,7 @@ namespace Registry.Viewport
             this.vButtonRentPeriodDelete = new VIBlend.WinForms.Controls.vButton();
             this.vButtonRentPeriodAdd = new VIBlend.WinForms.Controls.vButton();
             this.groupBox31 = new System.Windows.Forms.GroupBox();
-            this.numericUpDownPayment = new FixedNumericUpDown();
+            this.numericUpDownPayment = new CustomControls.FixedNumericUpDown();
             this.labelPayment = new System.Windows.Forms.Label();
             this.labelDuplicateContract = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
@@ -936,7 +936,7 @@ namespace Registry.Viewport
             this.groupBoxProtocol.Size = new System.Drawing.Size(522, 79);
             this.groupBoxProtocol.TabIndex = 1;
             this.groupBoxProtocol.TabStop = false;
-            this.groupBoxProtocol.Text = "      Протокол жилищной комиссии";
+            this.groupBoxProtocol.Text = "      Протокол комиссии по жил. вопросам";
             // 
             // label45
             // 

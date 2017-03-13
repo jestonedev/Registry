@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Registry.DataModels;
 using Registry.DataModels.Services;
-using Registry.Entities.Infrastructure;
 
 namespace Registry.Viewport.SearchForms
 {

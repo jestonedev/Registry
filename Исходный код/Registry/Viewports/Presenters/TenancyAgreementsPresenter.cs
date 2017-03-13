@@ -440,7 +440,7 @@ namespace Registry.Viewport.Presenters
             var rentPeriodStr = "";
             if (prolongFrom != null)
             {
-                rentPeriodStr += "с " + prolongFrom.Value.ToString("dd.MM.yyy", CultureInfo.InvariantCulture);
+                rentPeriodStr += "с " + prolongFrom.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
             }
             if (untilDismissal)
             {
@@ -452,7 +452,7 @@ namespace Registry.Viewport.Presenters
             {
                 if (!string.IsNullOrEmpty(rentPeriodStr))
                     rentPeriodStr += " ";
-                rentPeriodStr += "по " + prolongTo.Value.ToString("dd.MM.yyy", CultureInfo.InvariantCulture);
+                rentPeriodStr += "по " + prolongTo.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
             }
 
             var contentList = content.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
@@ -482,7 +482,7 @@ namespace Registry.Viewport.Presenters
             var rentPeriodStr = "";
             if (prolongFrom != null)
             {
-                rentPeriodStr += "с " + prolongFrom.Value.ToString("dd.MM.yyy", CultureInfo.InvariantCulture);
+                rentPeriodStr += "с " + prolongFrom.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
             }
             if (untilDismissal)
             {
@@ -494,18 +494,23 @@ namespace Registry.Viewport.Presenters
             {
                 if (!string.IsNullOrEmpty(rentPeriodStr))
                     rentPeriodStr += " ";
-                rentPeriodStr += "по " + prolongTo.Value.ToString("dd.MM.yyy", CultureInfo.InvariantCulture);
+                rentPeriodStr += "по " + prolongTo.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
             }
             if (!untilDismissal)
             {
                 rentPeriodStr = "на период " + rentPeriodStr;
             }
-
-            return string.Format(@"1.1. По настоящему Соглашению на основании личного заявления нанимателя от {3}. Стороны договорились:" +
-                "\r\n\u200B1) продлить срок действия  договора  № {0} от {1} {5} найма жилого помещения, расположенного по адресу: {6}, {2}." +
-                "\r\n\u200B2) пункт {4} исключить.",
-                registrationNumber, GetFormatedRegistrationDate(), rentPeriodStr,
-                requestDate.ToString("dd.MM.yyyy"), prolongGeneralPoint, GetTenancyRent(), GetTenancyAddress());
+            var result = GetDefaultAgreementPoint();
+            result +=
+                string.Format("\r\n\u200B1) на основании {0} от {1} продлить срок действия  договора  № {2} от {3} {4} найма жилого помещения {5}.",
+                ViewModel["tenancy_prolong_reason_types"].CurrentRow["reason_template_genetive"],
+                requestDate.ToString("dd.MM.yyyy"),
+                registrationNumber, GetFormatedRegistrationDate(), GetTenancyRent(), rentPeriodStr);
+            if (!string.IsNullOrEmpty(prolongGeneralPoint))
+            {
+                result += string.Format("\r\n\u200B2) пункт {0} исключить.", prolongGeneralPoint);
+            }
+            return result;
         }
 
         internal void AddProlongModification(DateTime? prolongFrom, DateTime? prolongTo, bool untilDismissal, ExtModificationTypes prolongType)

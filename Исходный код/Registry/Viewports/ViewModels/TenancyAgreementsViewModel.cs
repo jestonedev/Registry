@@ -14,7 +14,8 @@ namespace Registry.Viewport.ViewModels
             {"executors", new ViewModelItem(EntityDataModel<Executor>.GetInstance())},
             {"warrants", new ViewModelItem(EntityDataModel<Warrant>.GetInstance())},
             {"rent_types", new ViewModelItem(DataModel.GetInstance<RentTypesDataModel>())},
-            {"tenancy_premises_info", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>())}
+            {"tenancy_premises_info", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>())},
+            {"tenancy_prolong_reason_types", new ViewModelItem(EntityDataModel<TenancyProlongReasonType>.GetInstance())}
         })
         {
             this["executors"].BindingSource.Filter = "is_inactive = 0";
