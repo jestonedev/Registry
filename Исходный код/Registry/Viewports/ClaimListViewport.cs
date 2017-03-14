@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -173,6 +174,10 @@ namespace Registry.Viewport
         {
             GeneralDataModel = Presenter.ViewModel["general"].Model;
             GeneralBindingSource = Presenter.ViewModel["general"].BindingSource;
+            Presenter.ParentRow = ParentRow;
+            Presenter.ParentType = ParentType;
+            StaticFilter = ((ClaimListPresenter)Presenter).GetStaticFilter();
+
             Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
 
             SetViewportCaption();
@@ -653,6 +658,17 @@ namespace Registry.Viewport
                     if (lastClaimState != null && lastClaimState.Field<DateTime?>("date_start_state") != null)
                         e.Value = lastClaimState.Field<DateTime>("date_start_state").ToString("dd.MM.yyyy");
                     break;
+            }
+            if (ParentType == ParentTypeEnum.PaymentAccount && row["id_account"] != DBNull.Value && 
+                (int)ParentRow["id_account"] == (int)row["id_account"])
+            {
+                DataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
+                DataGridView.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.Green;
+            }
+            else
+            {
+                DataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+                DataGridView.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
             }
         }
 

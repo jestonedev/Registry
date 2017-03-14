@@ -4,8 +4,10 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using Registry.DataModels.Services;
+using Registry.DataModels.Services.ServiceModels;
 using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.Presenters;
@@ -16,6 +18,7 @@ namespace Registry.Viewport
 {
     internal partial class PaymentsAccountsViewport : FormWithGridViewport
     {
+
         private PaymentsAccountsViewport()
             : this(null, null)
         {
@@ -80,6 +83,33 @@ namespace Registry.Viewport
 
             if (DataGridView.RowCount > 0)
                 DataGridView.Rows[0].Selected = true;
+
+            UpdateNotCompletedClaims();
+
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["claims"].DataSource, "RowDeleted",
+                (s, e) => UpdateNotCompletedClaims());
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["claims"].DataSource, "RowChanged",
+                (s, e) => UpdateNotCompletedClaims());
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["claim_states"].DataSource, "RowDeleted",
+               (s, e) => UpdateNotCompletedClaims());
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["claim_states"].DataSource, "RowChanged",
+                (s, e) => UpdateNotCompletedClaims());
+        }
+
+        private IEnumerable<ClaimPaymentAccountInfo> _notCompletedClaims;
+
+        private void UpdateNotCompletedClaims()
+        {
+            var context = SynchronizationContext.Current;
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                var notCompletedClaims = ClaimsService.NotCompletedClaimsPaymentAccountsInfo().ToList();
+                context.Post(state =>
+                {
+                    _notCompletedClaims = (IEnumerable<ClaimPaymentAccountInfo>)state;
+                    DataGridView.Refresh();
+                }, notCompletedClaims);
+            }, null);
         }
 
         private void DataBind()
@@ -168,11 +198,31 @@ namespace Registry.Viewport
             switch (DataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "date":
-                case "charging_date":
+                    var hasDuplicate = _notCompletedClaims.Any(r => row["account"] != DBNull.Value && r.Account == (string)row["account"]) ||
+                        _notCompletedClaims.Any(r => row["raw_address"] != DBNull.Value && r.RawAddress == (string)row["raw_address"]) ||
+                        _notCompletedClaims.Any(r => row["parsed_address"] != DBNull.Value && r.ParsedAddress == (string)row["parsed_address"]);
+                    if (hasDuplicate)
+                    {
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.Red;
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.DarkRed;
+                    }
+                    else
+                    {
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.White;
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = SystemColors.Highlight;
+                    }
+
                     DateTime dateValue;
                     if (DateTime.TryParse(row[DataGridView.Columns[e.ColumnIndex].Name].ToString(), out dateValue))
                     {
                         e.Value = dateValue.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    }
+                    break;
+                case "charging_date":
+                    DateTime chargingDateValue;
+                    if (DateTime.TryParse(row[DataGridView.Columns[e.ColumnIndex].Name].ToString(), out chargingDateValue))
+                    {
+                        e.Value = chargingDateValue.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     }
                     break;
                 default:

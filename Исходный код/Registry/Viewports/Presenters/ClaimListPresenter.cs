@@ -197,5 +197,18 @@ namespace Registry.Viewport.Presenters
                 claim.AmountPenalties = balanceInfo.BalanceOutputPenalties;
             }
         }
+
+        internal string GetStaticFilter()
+        {
+            if (ParentRow == null) return "";
+            var ids = (from row in ViewModel["payments_accounts"].Model.FilterDeletedRows()
+                      where row.Field<string>("raw_address") == ParentRow["raw_address"].ToString() ||
+                         (!string.IsNullOrEmpty(ParentRow["parsed_address"].ToString()) &&
+                            row.Field<string>("parsed_address") == ParentRow["parsed_address"].ToString())
+                      select row.Field<int>("id_account")).ToList();
+            if (ids.Any())
+                return "id_account IN (" + ids.Select(id => id.ToString()).Aggregate((acc, v) => acc + "," + v) + ")";
+            return "id_account IN (0)";
+        }
     }
 }

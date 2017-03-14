@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services.ServiceModels;
 using Registry.Entities;
 
 namespace Registry.DataModels.Services
@@ -62,6 +63,51 @@ namespace Registry.DataModels.Services
             return (from claimStatesRow in claimStates
                     where condition(claimStatesRow) && claimStatesRow.Field<int?>("id_claim") != null
                     select claimStatesRow.Field<int>("id_claim")).Distinct();
+        }
+
+        public static IEnumerable<ClaimPaymentAccountInfo> NotCompletedClaimsPaymentAccountsInfo()
+        {
+            var claimsDataModel = DataModel.GetInstance<EntityDataModel<Claim>>();
+            var claimStatesDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
+            var claimStatesTypeDataModel = DataModel.GetInstance<EntityDataModel<ClaimStateType>>();
+            var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
+                             group stateRow.Field<int?>("id_state") by stateRow.Field<int?>("id_claim") into gs
+                             select new
+                             {
+                                 id_claim = gs.Key,
+                                 id_state = gs.Max()
+                             };
+            var lastStateTypes = from lastStateRow in lastStates
+                                  join stateRow in claimStatesDataModel.FilterDeletedRows()
+                                      on lastStateRow.id_state equals stateRow.Field<int?>("id_state")
+                                  join stateTypeRow in claimStatesTypeDataModel.FilterDeletedRows()
+                                      on stateRow.Field<int?>("id_state_type") equals stateTypeRow.Field<int?>("id_state_type")
+                                  where stateRow.Field<int?>("id_claim") != null &&
+                                  stateRow.Field<int?>("id_state_type") != null
+                                  select new
+                                  {
+                                      id_claim = stateRow.Field<int>("id_claim"),
+                                      id_state_type = stateRow.Field<int>("id_state_type"),
+                                      state_type = stateTypeRow.Field<string>("state_type")
+                                  };
+            return from lastStateTypeRow in lastStateTypes
+                                      join claimsRow in claimsDataModel.FilterDeletedRows()
+                                          on lastStateTypeRow.id_claim equals claimsRow.Field<int>("id_claim")
+                                      join accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
+                                          on claimsRow.Field<int?>("id_account") equals accountRow.Field<int?>("id_account")
+                                      where ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
+                                        && accountRow.Field<int?>("id_account") != null &&
+                                        claimsRow.Field<int?>("id_claim") != null
+                                      select new ClaimPaymentAccountInfo
+                                      {
+                                          IdClaim = claimsRow.Field<int>("id_claim"),
+                                          IdAccount = accountRow.Field<int>("id_account"),
+                                          Account = accountRow.Field<string>("account"),
+                                          RawAddress = accountRow.Field<string>("raw_address"),
+                                          ParsedAddress = accountRow.Field<string>("parsed_address"),
+                                          Tenant = accountRow.Field<string>("tenant"),
+                                          StateType = lastStateTypeRow.state_type
+                                      };
         }
     }
 }

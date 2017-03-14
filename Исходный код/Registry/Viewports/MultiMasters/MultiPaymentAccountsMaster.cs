@@ -137,67 +137,7 @@ namespace Registry.Viewport.MultiMasters
                     @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
-            var claimsDataModel = DataModel.GetInstance<EntityDataModel<Claim>>();
-            var claimStatesDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
-            var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
-                             group stateRow.Field<int?>("id_state") by stateRow.Field<int>("id_claim") into gs
-                select new 
-                {
-                    id_claim = gs.Key,
-                    id_state = gs.Max()
-                };
-            var lastStateTypes = (from lastStateRow in lastStates
-                join stateRow in claimStatesDataModel.FilterDeletedRows()
-                    on lastStateRow.id_state equals stateRow.Field<int?>("id_state")
-                select new
-                {
-                    id_claim = stateRow.Field<int>("id_claim"),
-                    id_state_type = stateRow.Field<int>("id_state_type")
-                }).ToList();
-            var notCompletedClaims = (from lastStateTypeRow in lastStateTypes
-                join claimsRow in claimsDataModel.FilterDeletedRows()
-                    on lastStateTypeRow.id_claim equals claimsRow.Field<int>("id_claim")
-                join accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
-                    on claimsRow.Field<int?>("id_account") equals accountRow.Field<int?>("id_account")
-                where ClaimsService.ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
-                select new
-                {
-                    id_claim = claimsRow.Field<int?>("id_claim"),
-                    id_account = accountRow.Field<int?>("id_account"),
-                    account = accountRow.Field<string>("account"),
-                    raw_address = accountRow.Field<string>("raw_address"),
-                    parsed_address = accountRow.Field<string>("parsed_address")
-                }).ToList();
-            // Check duplicates
-            for (var i = 0; i < _paymentAccount.Count; i++)
-            {
-                var row = (DataRowView)_paymentAccount[i];
-                if (row["id_account"] == DBNull.Value) continue;
-                var isAccountDuplicate = notCompletedClaims.Any(r => r.account == (string) row["account"]);
-                if (isAccountDuplicate && MessageBox.Show(string.Format(
-                    @"По лицевому счету {0} уже заведена незавершенная претензионно-исковая работа. Все равно продолжить?",
-                    row["account"]), @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
-                    DialogResult.Yes)
-                    return;
-                var isRawAddressDuplicate = false;
-                if (!isAccountDuplicate)
-                {
-                    isRawAddressDuplicate = notCompletedClaims.Any(r => r.raw_address == (string) row["raw_address"]);
-                    if (isRawAddressDuplicate && MessageBox.Show(string.Format(
-                        @"По адресу БКС ""{0}"" уже заведена незавершенная претензионно-исковая работа. Все равно продолжить?",
-                        row["raw_address"]), @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
-                        MessageBoxDefaultButton.Button1) != DialogResult.Yes)
-                        return;
-                }
-                if (isAccountDuplicate || isRawAddressDuplicate) continue;
-                var isParsedAddressDuplicate = notCompletedClaims.Any(r => r.parsed_address == (string)row["parsed_address"]);
-                if (isParsedAddressDuplicate && MessageBox.Show(string.Format(
-                    @"По адресу ЖФ ""{0}"" уже заведена незавершенная претензионно-исковая работа. Все равно продолжить?",
-                    row["parsed_address"]), @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
-                    MessageBoxDefaultButton.Button1) != DialogResult.Yes)
-                    return;
-                
-            }
+            if (!ValidateDuplicates()) return;
             var atDateForm = new MultiPaymentAccountsAtDateForm();
             if (atDateForm.ShowDialog() != DialogResult.OK)
                 return;
@@ -217,6 +157,7 @@ namespace Registry.Viewport.MultiMasters
                     AmountPenalties = ViewportHelper.ValueOrNull<decimal>(row, "balance_output_penalties"),
                     AtDate = atDateForm.DateAt
                 };
+                var claimsDataModel = DataModel.GetInstance<EntityDataModel<Claim>>();
                 var id = claimsDataModel.Insert(claim);
                 if (id == -1) break;
                 claim.IdClaim = id;
@@ -243,6 +184,7 @@ namespace Registry.Viewport.MultiMasters
                 var firstStateTypes = ClaimsService.ClaimStartStateTypeIds().ToList();
                 if (!firstStateTypes.Any()) continue;
                 var firstStateType = firstStateTypes.First();
+                var claimStatesDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
                 var claimStatesBindingSource = new BindingSource
                 {
                     DataSource = claimStatesDataModel.Select()
@@ -284,6 +226,46 @@ namespace Registry.Viewport.MultiMasters
             else
                 MessageBox.Show(@"Во время добавления претензионно-исковых работ возникли ошибки", @"Внимание", MessageBoxButtons.OK,
                     MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+        }
+
+        private bool ValidateDuplicates()
+        {
+            var notCompletedClaims = ClaimsService.NotCompletedClaimsPaymentAccountsInfo().ToList();
+            // Check duplicates
+            for (var i = 0; i < _paymentAccount.Count; i++)
+            {
+                var row = (DataRowView)_paymentAccount[i];
+                if (row["id_account"] == DBNull.Value) continue;
+                var accountDuplicate = notCompletedClaims.FirstOrDefault(r => r.Account == (string)row["account"]);
+                if (accountDuplicate != null && MessageBox.Show(string.Format(
+                    @"По лицевому счету {0} уже заведена незавершенная претензионно-исковая работа. " +
+                    @"Наниматель: ""{1}"". Текущее состояние: ""{2}"". Все равно продолжить?",
+                    row["account"], accountDuplicate.Tenant, accountDuplicate.StateType),
+                    @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
+                    DialogResult.Yes)
+                    return false;
+                if (accountDuplicate != null) continue;
+
+                accountDuplicate = notCompletedClaims.FirstOrDefault(r => r.RawAddress == (string)row["raw_address"]);
+                if (accountDuplicate != null && MessageBox.Show(string.Format(
+                    @"По адресу БКС ""{0}"" уже заведена незавершенная претензионно-исковая работа. " +
+                    @"Наниматель: ""{1}"". Текущее состояние: ""{2}"". Все равно продолжить?",
+                    row["raw_address"], accountDuplicate.Tenant, accountDuplicate.StateType),
+                    @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                    return false;
+
+                if (accountDuplicate != null) continue;
+                accountDuplicate = notCompletedClaims.FirstOrDefault(r => r.ParsedAddress == (string)row["parsed_address"]);
+                if (accountDuplicate != null && MessageBox.Show(string.Format(
+                    @"По адресу ЖФ ""{0}"" уже заведена незавершенная претензионно-исковая работа. " +
+                    @"Наниматель: ""{1}"". Текущее состояние: ""{2}"". Все равно продолжить?",
+                    row["parsed_address"], accountDuplicate.Tenant, accountDuplicate.StateType),
+                    @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                    return false;
+            }
+            return true;
         }
 
         public void UpdateToolbar()
