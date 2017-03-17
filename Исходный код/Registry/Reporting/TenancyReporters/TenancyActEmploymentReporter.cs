@@ -29,7 +29,8 @@ namespace Registry.Reporting.TenancyReporters
                     arguments.Add("act_type", "2");
                     break;
             }
-            var dialogResult = MessageBox.Show(@"Сформировать с открытой датой?", @"Информация", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            var dialogResult = MessageBox.Show(@"Сформировать с открытой датой?", @"Информация", 
+                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             if (dialogResult == DialogResult.Cancel)
             {
                 Cancel();

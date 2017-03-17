@@ -401,7 +401,7 @@ namespace Registry.Viewport.Presenters
             var newTenantSnp = newTenantSurname + " " + newTenantName + " " + newTenantPatronymic;
             gender = Declension.GetGender(newTenantPatronymic);
             result += Environment.NewLine +
-                string.Format("\u200B1) считать стороной по договору - нанимателем - «{0}, {1}»;",
+                string.Format("\u200B1) считать стороной по договору - нанимателем - «{0}, {1} г.р.»;",
                 gender == Gender.NotDefind ? newTenantSnp : Declension.GetSNPDeclension(newTenantSnp, gender, DeclensionCase.Vinit),
                 newTenantRow["date_of_birth"] != DBNull.Value ? ((DateTime)newTenantRow["date_of_birth"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "");
             return result;

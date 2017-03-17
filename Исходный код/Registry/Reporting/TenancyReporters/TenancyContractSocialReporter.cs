@@ -16,18 +16,12 @@ namespace Registry.Reporting.TenancyReporters
             arguments.Add("connectionString", RegistrySettings.ConnectionString);
             var dialogResult = MessageBox.Show(@"Печатать с открытой датой?", @"Внимание",
                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2);
-            switch (dialogResult)
+            if (dialogResult == DialogResult.Cancel)
             {
-                case DialogResult.Cancel:
-                    Cancel();
-                    return;
-                case DialogResult.Yes:
-                    arguments.Add("opened_date", "1");
-                    break;
-                default:
-                    arguments.Add("opened_date", "0");
-                    break;
+                Cancel();
+                return;
             }
+            arguments.Add("opened_date", dialogResult == DialogResult.Yes ? "1" : "0");
             base.Run(arguments);
         }
     }
