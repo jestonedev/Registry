@@ -15,13 +15,13 @@
       <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="ActivityManagerPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\\nas\media$\ActivityManager\ActivityManager.exe</Value>
+      <Value Profile="(Default)">\\mcs.br\adm\server\ActivityManager\ActivityManager.exe</Value>
     </Setting>
     <Setting Name="ActivityManagerOutputCodePage" Type="System.String" Scope="User">
       <Value Profile="(Default)">cp866</Value>
     </Setting>
     <Setting Name="ActivityManagerConfigsPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\\nas\media$\ActivityManager\templates\registry</Value>
+      <Value Profile="(Default)">\\mcs.br\adm\server\ActivityManager\templates\registry</Value>
     </Setting>
     <Setting Name="DataModelsCallbackUpdateTimeout" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">120000</Value>
@@ -36,7 +36,7 @@
       <Value Profile="(Default)">IMLU/p0C/8AiREcT98nwUYGpZNwyeb2JPC0kuE4+luCowC9PgFaXVvhiAb1Hau031f4f9crgY5xgMDKDWoXN8A==</Value>
     </Setting>
     <Setting Name="ClaimsAttachmentsPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\\mcs.br\adm\общие_ресурсы\Registry\Attachments\Claims</Value>
+      <Value Profile="(Default)">\\mcs.br\adm\server\Registry\Attachments\Claims</Value>
     </Setting>
   </Settings>
 </SettingsFile>
