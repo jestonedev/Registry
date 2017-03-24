@@ -236,31 +236,40 @@ namespace Registry.Viewport.MultiMasters
             {
                 var row = (DataRowView)_paymentAccount[i];
                 if (row["id_account"] == DBNull.Value) continue;
-                var accountDuplicate = notCompletedClaims.FirstOrDefault(r => r.Account == (string)row["account"]);
+                var accountDuplicate = notCompletedClaims.LastOrDefault(r => r.Account == (string)row["account"]);
                 if (accountDuplicate != null && MessageBox.Show(string.Format(
                     @"По лицевому счету {0} уже заведена незавершенная претензионно-исковая работа. " +
-                    @"Наниматель: ""{1}"". Текущее состояние: ""{2}"". Все равно продолжить?",
-                    row["account"], accountDuplicate.Tenant, accountDuplicate.StateType),
+                    @"Наниматель: {1}. Текущее состояние: {2}. Предьявляемый период: {3}-{4}. Сумма к взысканию: {5}. Все равно продолжить?",
+                    row["account"], accountDuplicate.Tenant, accountDuplicate.StateType, 
+                    accountDuplicate.StartDeptPeriod.HasValue ? accountDuplicate.StartDeptPeriod.Value.ToString("dd.MM.yyyy") : "н/а",
+                    accountDuplicate.EndDeptPeriod.HasValue ? accountDuplicate.EndDeptPeriod.Value.ToString("dd.MM.yyyy") : "н/а",
+                    accountDuplicate.Amount),
                     @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
                     DialogResult.Yes)
                     return false;
                 if (accountDuplicate != null) continue;
 
-                accountDuplicate = notCompletedClaims.FirstOrDefault(r => r.RawAddress == (string)row["raw_address"]);
+                accountDuplicate = notCompletedClaims.LastOrDefault(r => r.RawAddress == (string)row["raw_address"]);
                 if (accountDuplicate != null && MessageBox.Show(string.Format(
                     @"По адресу БКС ""{0}"" уже заведена незавершенная претензионно-исковая работа. " +
-                    @"Наниматель: ""{1}"". Текущее состояние: ""{2}"". Все равно продолжить?",
-                    row["raw_address"], accountDuplicate.Tenant, accountDuplicate.StateType),
+                    @"Наниматель: {1}. Текущее состояние: {2}. Предьявляемый период: {3}-{4}. Сумма к взысканию: {5}. Все равно продолжить?",
+                    row["raw_address"], accountDuplicate.Tenant, accountDuplicate.StateType,
+                    accountDuplicate.StartDeptPeriod.HasValue ? accountDuplicate.StartDeptPeriod.Value.ToString("dd.MM.yyyy") : "н/а",
+                    accountDuplicate.EndDeptPeriod.HasValue ? accountDuplicate.EndDeptPeriod.Value.ToString("dd.MM.yyyy") : "н/а",
+                    accountDuplicate.Amount),
                     @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                     return false;
 
                 if (accountDuplicate != null) continue;
-                accountDuplicate = notCompletedClaims.FirstOrDefault(r => r.ParsedAddress == (string)row["parsed_address"]);
+                accountDuplicate = notCompletedClaims.LastOrDefault(r => r.ParsedAddress == (string)row["parsed_address"]);
                 if (accountDuplicate != null && MessageBox.Show(string.Format(
                     @"По адресу ЖФ ""{0}"" уже заведена незавершенная претензионно-исковая работа. " +
-                    @"Наниматель: ""{1}"". Текущее состояние: ""{2}"". Все равно продолжить?",
-                    row["parsed_address"], accountDuplicate.Tenant, accountDuplicate.StateType),
+                    @"Наниматель: {1}. Текущее состояние: {2}. Предьявляемый период: {3}-{4}. Сумма к взысканию: {5}. Все равно продолжить?",
+                    row["parsed_address"], accountDuplicate.Tenant, accountDuplicate.StateType,
+                    accountDuplicate.StartDeptPeriod.HasValue ? accountDuplicate.StartDeptPeriod.Value.ToString("dd.MM.yyyy") : "н/а",
+                    accountDuplicate.EndDeptPeriod.HasValue ? accountDuplicate.EndDeptPeriod.Value.ToString("dd.MM.yyyy") : "н/а",
+                    accountDuplicate.Amount),
                     @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                     return false;

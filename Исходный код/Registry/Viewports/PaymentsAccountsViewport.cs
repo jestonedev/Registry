@@ -203,8 +203,8 @@ namespace Registry.Viewport
                         _notCompletedClaims.Any(r => row["parsed_address"] != DBNull.Value && r.ParsedAddress == (string)row["parsed_address"]);
                     if (hasDuplicate)
                     {
-                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.Red;
-                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.DarkRed;
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.FromArgb(255, 117, 234, 232);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.FromArgb(255, 22, 145, 143);
                     }
                     else
                     {

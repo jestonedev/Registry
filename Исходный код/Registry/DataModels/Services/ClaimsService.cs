@@ -88,7 +88,8 @@ namespace Registry.DataModels.Services
                                   {
                                       id_claim = stateRow.Field<int>("id_claim"),
                                       id_state_type = stateRow.Field<int>("id_state_type"),
-                                      state_type = stateTypeRow.Field<string>("state_type")
+                                      state_type = stateTypeRow.Field<string>("state_type") != null ? 
+                                        stateTypeRow.Field<string>("state_type").ToLowerInvariant() : null
                                   };
             return from lastStateTypeRow in lastStateTypes
                                       join claimsRow in claimsDataModel.FilterDeletedRows()
@@ -101,6 +102,11 @@ namespace Registry.DataModels.Services
                                       select new ClaimPaymentAccountInfo
                                       {
                                           IdClaim = claimsRow.Field<int>("id_claim"),
+                                          StartDeptPeriod = claimsRow.Field<DateTime?>("start_dept_period"),
+                                          EndDeptPeriod = claimsRow.Field<DateTime?>("end_dept_period"),
+                                          Amount = claimsRow.Field<decimal>("amount_tenancy")+
+                                          claimsRow.Field<decimal>("amount_dgi") +
+                                          claimsRow.Field<decimal>("amount_penalties"),
                                           IdAccount = accountRow.Field<int>("id_account"),
                                           Account = accountRow.Field<string>("account"),
                                           RawAddress = accountRow.Field<string>("raw_address"),
