@@ -30,6 +30,8 @@ namespace Registry.Viewport
             this.startup_year = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_structure_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.num_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_heating_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -60,7 +62,9 @@ namespace Registry.Viewport
             this.cadastral_num,
             this.startup_year,
             this.id_structure_type,
-            this.id_state});
+            this.id_state,
+            this.num_premises,
+            this.id_heating_type});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridView.Location = new System.Drawing.Point(3, 3);
@@ -86,6 +90,7 @@ namespace Registry.Viewport
             // id_building
             // 
             this.id_building.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.id_building.Frozen = true;
             this.id_building.HeaderText = "№ по реестру";
             this.id_building.MinimumWidth = 60;
             this.id_building.Name = "id_building";
@@ -94,6 +99,7 @@ namespace Registry.Viewport
             // 
             // id_street
             // 
+            this.id_street.Frozen = true;
             this.id_street.HeaderText = "Адрес";
             this.id_street.MinimumWidth = 250;
             this.id_street.Name = "id_street";
@@ -103,6 +109,7 @@ namespace Registry.Viewport
             // house
             // 
             this.house.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.house.Frozen = true;
             this.house.HeaderText = "Дом";
             this.house.MinimumWidth = 50;
             this.house.Name = "house";
@@ -175,6 +182,21 @@ namespace Registry.Viewport
             this.id_state.ReadOnly = true;
             this.id_state.Width = 200;
             // 
+            // num_premises
+            // 
+            this.num_premises.HeaderText = "Всего помещений";
+            this.num_premises.MinimumWidth = 100;
+            this.num_premises.Name = "num_premises";
+            this.num_premises.ReadOnly = true;
+            // 
+            // id_heating_type
+            // 
+            this.id_heating_type.HeaderText = "Тип отопления";
+            this.id_heating_type.MinimumWidth = 120;
+            this.id_heating_type.Name = "id_heating_type";
+            this.id_heating_type.ReadOnly = true;
+            this.id_heating_type.Width = 120;
+            // 
             // BuildingListViewport
             // 
             this.BackColor = System.Drawing.Color.White;
@@ -200,5 +222,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn startup_year;
         private DataGridViewTextBoxColumn id_structure_type;
         private DataGridViewTextBoxColumn id_state;
+        private DataGridViewTextBoxColumn num_premises;
+        private DataGridViewTextBoxColumn id_heating_type;
     }
 }

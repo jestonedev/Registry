@@ -16,6 +16,7 @@ namespace Registry.Viewport.ViewModels
                 {"kladr", new ViewModelItem(DataModel.GetInstance<KladrStreetsDataModel>())},
                 {"object_states", new ViewModelItem(DataModel.GetInstance<ObjectStatesDataModel>())},
                 {"structure_types", new ViewModelItem(EntityDataModel<StructureType>.GetInstance())},
+                {"heating_types", new ViewModelItem(EntityDataModel<HeatingType>.GetInstance())},
                 {"municipal_premises", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>())}
             })
         {

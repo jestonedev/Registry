@@ -288,6 +288,7 @@ namespace Registry.Viewport
                 case "total_area":
                 case "cadastral_num":
                 case "startup_year":
+                case "num_premises":
                     e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "id_street":
@@ -305,6 +306,11 @@ namespace Registry.Viewport
                     if (stateRow != null)
                         e.Value = stateRow["state_neutral"];
                     break;
+                case "id_heating_type":
+                    var heatingTypeRow = Presenter.ViewModel["heating_types"].DataSource.Rows.Find(row["id_heating_type"]);
+                    if (heatingTypeRow != null)
+                        e.Value = heatingTypeRow["heating_type"];
+                    break;
                 case "mun_area":
                     e.Value = Convert.ToDecimal(Presenter.ViewModel["municipal_premises"].DataSource.AsEnumerable().
                         Where(s => s.Field<int>("id_building") == (int?)row["id_building"]).Sum(m => m.Field<double>("total_area")));
@@ -314,13 +320,15 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (DataGridView.Size.Width > 1010)
+            if (DataGridView.Size.Width > 1380)
             {
+                house.Frozen = id_street.Frozen = id_building.Frozen = false;
                 if (id_street.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     id_street.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             }
             else
             {
+                house.Frozen = id_street.Frozen = id_building.Frozen = true;
                 if (id_street.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
                     id_street.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
