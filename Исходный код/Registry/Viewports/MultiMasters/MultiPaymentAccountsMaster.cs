@@ -145,7 +145,7 @@ namespace Registry.Viewport.MultiMasters
 
             foreach (var viewport in _menuCallback.GetAllViewports())
             {
-                var paymentAccountViewport = (PaymentsAccountsViewport) viewport;
+                var paymentAccountViewport = viewport as PaymentsAccountsViewport;
                 if (paymentAccountViewport != null)
                 {
                     paymentAccountViewport.CanUpdateNotCompletedClaims = false;
@@ -235,7 +235,7 @@ namespace Registry.Viewport.MultiMasters
 
             foreach (var viewport in _menuCallback.GetAllViewports())
             {
-                var paymentAccountViewport = (PaymentsAccountsViewport)viewport;
+                var paymentAccountViewport = viewport as PaymentsAccountsViewport;
                 if (paymentAccountViewport != null)
                 {
                     paymentAccountViewport.CanUpdateNotCompletedClaims = true;
