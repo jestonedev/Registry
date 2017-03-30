@@ -83,7 +83,7 @@ namespace Registry.Viewport
 
             if (DataGridView.RowCount > 0)
                 DataGridView.Rows[0].Selected = true;
-
+            CanUpdateNotCompletedClaims = true;
             UpdateNotCompletedClaims();
 
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["claims"].DataSource, "RowDeleted",
@@ -97,9 +97,14 @@ namespace Registry.Viewport
         }
 
         private IEnumerable<ClaimPaymentAccountInfo> _notCompletedClaims;
+        public bool CanUpdateNotCompletedClaims { get; set; }
 
-        private void UpdateNotCompletedClaims()
+        public void UpdateNotCompletedClaims()
         {
+            if (!CanUpdateNotCompletedClaims)
+            {
+                return;
+            }
             var context = SynchronizationContext.Current;
             ThreadPool.QueueUserWorkItem(_ =>
             {

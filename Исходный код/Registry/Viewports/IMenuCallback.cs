@@ -16,5 +16,6 @@ namespace Registry.Viewport
         void SwitchToPreviousViewport();
         void RunReport(ReporterType reporterType, Dictionary<string, string> arguments = null);
         Viewport GetCurrentViewport();
+        IEnumerable<Viewport> GetAllViewports();
     }
 }

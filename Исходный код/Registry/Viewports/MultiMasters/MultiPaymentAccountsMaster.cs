@@ -137,18 +137,30 @@ namespace Registry.Viewport.MultiMasters
                     @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (!ValidateDuplicates()) return;
+            List<int> excludeIdAccounts;
+            if (!ValidateDuplicates(out excludeIdAccounts)) return;
             var atDateForm = new MultiPaymentAccountsAtDateForm();
             if (atDateForm.ShowDialog() != DialogResult.OK)
                 return;
+
+            foreach (var viewport in _menuCallback.GetAllViewports())
+            {
+                var paymentAccountViewport = (PaymentsAccountsViewport) viewport;
+                if (paymentAccountViewport != null)
+                {
+                    paymentAccountViewport.CanUpdateNotCompletedClaims = false;
+                }
+            }
+
             toolStripProgressBarMultiOperations.Visible = true;
             toolStripProgressBarMultiOperations.Value = 0;
             toolStripProgressBarMultiOperations.Maximum = _paymentAccount.Count - 1;
+
             for (var i = 0; i < _paymentAccount.Count; i++)
             {
                 toolStripProgressBarMultiOperations.Value = i;
                 var row = (DataRowView) _paymentAccount[i];
-                if (row["id_account"] == DBNull.Value) continue;
+                if (row["id_account"] == DBNull.Value || excludeIdAccounts.Contains((int)row["id_account"])) continue;
                 var claim = new Claim
                 {
                     IdAccount = (int) row["id_account"],
@@ -220,6 +232,17 @@ namespace Registry.Viewport.MultiMasters
                 Application.DoEvents();
             }
             toolStripProgressBarMultiOperations.Visible = false;
+
+            foreach (var viewport in _menuCallback.GetAllViewports())
+            {
+                var paymentAccountViewport = (PaymentsAccountsViewport)viewport;
+                if (paymentAccountViewport != null)
+                {
+                    paymentAccountViewport.CanUpdateNotCompletedClaims = true;
+                    paymentAccountViewport.UpdateNotCompletedClaims();
+                }
+            }
+
             if (toolStripProgressBarMultiOperations.Value == toolStripProgressBarMultiOperations.Maximum)
                 MessageBox.Show(@"Претензионно-исковые работы успешно созданы", @"Сообщение", MessageBoxButtons.OK,
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
@@ -228,51 +251,99 @@ namespace Registry.Viewport.MultiMasters
                     MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
         }
 
-        private bool ValidateDuplicates()
+        private bool ValidateDuplicates(out List<int> excludeIdAccounts)
         {
             var notCompletedClaims = ClaimsService.NotCompletedClaimsPaymentAccountsInfo().ToList();
+            excludeIdAccounts = new List<int>();
             // Check duplicates
             for (var i = 0; i < _paymentAccount.Count; i++)
             {
                 var row = (DataRowView)_paymentAccount[i];
                 if (row["id_account"] == DBNull.Value) continue;
-                var accountDuplicate = notCompletedClaims.LastOrDefault(r => r.Account == (string)row["account"]);
-                if (accountDuplicate != null && MessageBox.Show(string.Format(
-                    @"По лицевому счету {0} уже заведена незавершенная претензионно-исковая работа. " +
-                    @"Наниматель: {1}. Текущее состояние: {2}. Предьявляемый период: {3}-{4}. Сумма к взысканию: {5}. Все равно продолжить?",
-                    row["account"], accountDuplicate.Tenant, accountDuplicate.StateType, 
-                    accountDuplicate.StartDeptPeriod.HasValue ? accountDuplicate.StartDeptPeriod.Value.ToString("dd.MM.yyyy") : "н/а",
-                    accountDuplicate.EndDeptPeriod.HasValue ? accountDuplicate.EndDeptPeriod.Value.ToString("dd.MM.yyyy") : "н/а",
-                    accountDuplicate.Amount),
-                    @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
-                    DialogResult.Yes)
-                    return false;
+                var accountDuplicate = notCompletedClaims.LastOrDefault(r => 
+                    row["account"] != DBNull.Value &&  r.Account == (string)row["account"]);
+                if (accountDuplicate != null)
+                {
+                    var dialogResult = MessageBox.Show(string.Format(
+                        @"По лицевому счету {0} уже заведена незавершенная претензионно-исковая работа. " +
+                        @"Наниматель: {1}. Текущее состояние: {2}. Предьявляемый период: {3}-{4}. Сумма к взысканию: {5}. Все равно продолжить?",
+                        row["account"], accountDuplicate.Tenant, accountDuplicate.StateType,
+                        accountDuplicate.StartDeptPeriod.HasValue
+                            ? accountDuplicate.StartDeptPeriod.Value.ToString("dd.MM.yyyy")
+                            : "н/а",
+                        accountDuplicate.EndDeptPeriod.HasValue
+                            ? accountDuplicate.EndDeptPeriod.Value.ToString("dd.MM.yyyy")
+                            : "н/а",
+                        accountDuplicate.Amount),
+                        @"Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
+                        MessageBoxDefaultButton.Button1);
+
+                    switch (dialogResult)
+                    {
+                        case DialogResult.Cancel:
+                            return false;
+                        case DialogResult.No:
+                            excludeIdAccounts.Add((int)row["id_account"]);
+                            break;
+                    }
+                }
                 if (accountDuplicate != null) continue;
 
-                accountDuplicate = notCompletedClaims.LastOrDefault(r => r.RawAddress == (string)row["raw_address"]);
-                if (accountDuplicate != null && MessageBox.Show(string.Format(
-                    @"По адресу БКС ""{0}"" уже заведена незавершенная претензионно-исковая работа. " +
-                    @"Наниматель: {1}. Текущее состояние: {2}. Предьявляемый период: {3}-{4}. Сумма к взысканию: {5}. Все равно продолжить?",
-                    row["raw_address"], accountDuplicate.Tenant, accountDuplicate.StateType,
-                    accountDuplicate.StartDeptPeriod.HasValue ? accountDuplicate.StartDeptPeriod.Value.ToString("dd.MM.yyyy") : "н/а",
-                    accountDuplicate.EndDeptPeriod.HasValue ? accountDuplicate.EndDeptPeriod.Value.ToString("dd.MM.yyyy") : "н/а",
-                    accountDuplicate.Amount),
-                    @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
-                    MessageBoxDefaultButton.Button1) != DialogResult.Yes)
-                    return false;
-
+                accountDuplicate = notCompletedClaims.LastOrDefault(
+                    r => row["raw_address"] != DBNull.Value && 
+                    r.RawAddress == (string)row["raw_address"]);
+                if (accountDuplicate != null)
+                {
+                    var dialogResult = MessageBox.Show(string.Format(
+                        @"По адресу БКС ""{0}"" уже заведена незавершенная претензионно-исковая работа. " +
+                        @"Наниматель: {1}. Текущее состояние: {2}. Предьявляемый период: {3}-{4}. Сумма к взысканию: {5}. Все равно продолжить?",
+                        row["raw_address"], accountDuplicate.Tenant, accountDuplicate.StateType,
+                        accountDuplicate.StartDeptPeriod.HasValue
+                            ? accountDuplicate.StartDeptPeriod.Value.ToString("dd.MM.yyyy")
+                            : "н/а",
+                        accountDuplicate.EndDeptPeriod.HasValue
+                            ? accountDuplicate.EndDeptPeriod.Value.ToString("dd.MM.yyyy")
+                            : "н/а",
+                        accountDuplicate.Amount),
+                        @"Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
+                        MessageBoxDefaultButton.Button1);
+                    switch (dialogResult)
+                    {
+                        case DialogResult.Cancel:
+                            return false;
+                        case DialogResult.No:
+                            excludeIdAccounts.Add((int)row["id_account"]);
+                            break;
+                    }
+                }
                 if (accountDuplicate != null) continue;
-                accountDuplicate = notCompletedClaims.LastOrDefault(r => r.ParsedAddress == (string)row["parsed_address"]);
-                if (accountDuplicate != null && MessageBox.Show(string.Format(
-                    @"По адресу ЖФ ""{0}"" уже заведена незавершенная претензионно-исковая работа. " +
-                    @"Наниматель: {1}. Текущее состояние: {2}. Предьявляемый период: {3}-{4}. Сумма к взысканию: {5}. Все равно продолжить?",
-                    row["parsed_address"], accountDuplicate.Tenant, accountDuplicate.StateType,
-                    accountDuplicate.StartDeptPeriod.HasValue ? accountDuplicate.StartDeptPeriod.Value.ToString("dd.MM.yyyy") : "н/а",
-                    accountDuplicate.EndDeptPeriod.HasValue ? accountDuplicate.EndDeptPeriod.Value.ToString("dd.MM.yyyy") : "н/а",
-                    accountDuplicate.Amount),
-                    @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
-                    MessageBoxDefaultButton.Button1) != DialogResult.Yes)
-                    return false;
+                accountDuplicate = notCompletedClaims.LastOrDefault(
+                    r => row["parsed_address"] != DBNull.Value && 
+                    r.ParsedAddress == (string)row["parsed_address"]);
+                if (accountDuplicate != null)
+                {
+                    var dialogResult = MessageBox.Show(string.Format(
+                        @"По адресу ЖФ ""{0}"" уже заведена незавершенная претензионно-исковая работа. " +
+                        @"Наниматель: {1}. Текущее состояние: {2}. Предьявляемый период: {3}-{4}. Сумма к взысканию: {5}. Все равно продолжить?",
+                        row["parsed_address"], accountDuplicate.Tenant, accountDuplicate.StateType,
+                        accountDuplicate.StartDeptPeriod.HasValue
+                            ? accountDuplicate.StartDeptPeriod.Value.ToString("dd.MM.yyyy")
+                            : "н/а",
+                        accountDuplicate.EndDeptPeriod.HasValue
+                            ? accountDuplicate.EndDeptPeriod.Value.ToString("dd.MM.yyyy")
+                            : "н/а",
+                        accountDuplicate.Amount),
+                        @"Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
+                        MessageBoxDefaultButton.Button1);
+                    switch (dialogResult)
+                    {
+                        case DialogResult.Cancel:
+                            return false;
+                        case DialogResult.No:
+                            excludeIdAccounts.Add((int)row["id_account"]);
+                            break;
+                    }
+                }
             }
             return true;
         }
@@ -336,7 +407,7 @@ namespace Registry.Viewport.MultiMasters
             var filter = "";
             for (var i = 0; i < _paymentAccount.Count; i++)
             {
-                var row = ((DataRowView)_paymentAccount[i]);
+                var row = (DataRowView)_paymentAccount[i];
                 if (row["id_account"] != DBNull.Value)
                     filter += row["id_account"] + ",";
             }

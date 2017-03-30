@@ -8,8 +8,8 @@ namespace Registry.Viewport.MultiMasters
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MultiClaimsMaster));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -34,6 +34,7 @@ namespace Registry.Viewport.MultiMasters
             this.amount_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStripButtonRequestToBks = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -60,6 +61,7 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonCreateClaims,
             this.toolStripButtonDeptPeriod,
             this.toolStripButtonJudicialOrder,
+            this.toolStripButtonRequestToBks,
             this.toolStripButtonToLegalDepartment,
             this.toolStripProgressBarMultiOperations,
             this.toolStripSeparator3,
@@ -254,8 +256,8 @@ namespace Registry.Viewport.MultiMasters
             // 
             // amount_tenancy
             // 
-            dataGridViewCellStyle1.Format = "#0.0# руб.";
-            this.amount_tenancy.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Format = "#0.0# руб.";
+            this.amount_tenancy.DefaultCellStyle = dataGridViewCellStyle5;
             this.amount_tenancy.HeaderText = "Сумма долга найм";
             this.amount_tenancy.MinimumWidth = 200;
             this.amount_tenancy.Name = "amount_tenancy";
@@ -264,8 +266,8 @@ namespace Registry.Viewport.MultiMasters
             // 
             // amount_dgi
             // 
-            dataGridViewCellStyle2.Format = "#0.0# руб.";
-            this.amount_dgi.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Format = "#0.0# руб.";
+            this.amount_dgi.DefaultCellStyle = dataGridViewCellStyle6;
             this.amount_dgi.HeaderText = "Сумма долга ДГИ";
             this.amount_dgi.MinimumWidth = 200;
             this.amount_dgi.Name = "amount_dgi";
@@ -279,6 +281,16 @@ namespace Registry.Viewport.MultiMasters
             this.amount_penalties.Name = "amount_penalties";
             this.amount_penalties.ReadOnly = true;
             this.amount_penalties.Width = 200;
+            // 
+            // toolStripButtonRequestToBks
+            // 
+            this.toolStripButtonRequestToBks.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRequestToBks.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRequestToBks.Image")));
+            this.toolStripButtonRequestToBks.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRequestToBks.Name = "toolStripButtonRequestToBks";
+            this.toolStripButtonRequestToBks.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRequestToBks.Text = "Сформировать запрос в БКС";
+            this.toolStripButtonRequestToBks.Click += new System.EventHandler(this.toolStripButtonRequestToBks_Click);
             // 
             // MultiClaimsMaster
             // 
@@ -322,6 +334,7 @@ namespace Registry.Viewport.MultiMasters
         private DataGridViewTextBoxColumn amount_penalties;
         private ToolStripLabel toolStripLabelRowCount;
         private ToolStripSeparator toolStripSeparator3;
+        private ToolStripButton toolStripButtonRequestToBks;
 
     }
 }

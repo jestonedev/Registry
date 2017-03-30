@@ -22,13 +22,17 @@ namespace Registry.Viewport.Presenters
             
         }
 
-        public bool DeleteRecord()
+        public bool DeleteRecords(IEnumerable<int> idClaims)
         {
-            var row = ViewModel["general"].CurrentRow;
             var columnName = ViewModel["general"].PrimaryKeyFirst;
-            if (ViewModel["general"].Model.Delete((int)row[columnName]) == -1)
-                return false;
-            row.Delete();
+            foreach (var idClaim in idClaims)
+            {
+                var row = ViewModel["general"].DataSource.Rows.Find(idClaim);
+                if (row == null) continue;
+                if (ViewModel["general"].Model.Delete((int)row[columnName]) == -1)
+                    return false;
+                row.Delete();
+            }
             return true;
         }
 

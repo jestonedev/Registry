@@ -479,5 +479,20 @@ namespace Registry.Viewport.MultiMasters
         {
             toolStripLabelRowCount.Text = string.Format("Всего записей в мастере: {0}", dataGridView.RowCount);
         }
+
+        private void toolStripButtonRequestToBks_Click(object sender, EventArgs e)
+        {
+            var arguments = new Dictionary<string, string>();
+            var filter = "";
+            for (var i = 0; i < _claims.Count; i++)
+            {
+                var row = (DataRowView)_claims[i];
+                if (row["id_account"] != DBNull.Value)
+                    filter += row["id_account"] + ",";
+            }
+            filter = filter.TrimEnd(',');
+            arguments.Add("filter", filter);
+            _menuCallback.RunReport(ReporterType.RequestToBksReporter, arguments);
+        }
     }
 }

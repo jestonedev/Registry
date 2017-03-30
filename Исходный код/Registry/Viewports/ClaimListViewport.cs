@@ -287,7 +287,16 @@ namespace Registry.Viewport
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
             IsEditable = false;
-            if (!((ClaimListPresenter)Presenter).DeleteRecord())
+            var selectedIdClaims  = new List<int>();
+            foreach (DataGridViewRow row in dataGridViewClaims.SelectedRows)
+            {
+                if (row.Cells["id_claim"].Value != null)
+                {
+                    selectedIdClaims.Add((int) row.Cells["id_claim"].Value);
+                }
+            }
+
+            if (!((ClaimListPresenter)Presenter).DeleteRecords(selectedIdClaims))
             {
                 IsEditable = true;
                 return;

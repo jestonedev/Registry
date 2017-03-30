@@ -1197,6 +1197,11 @@ namespace Registry
             return dockPanel.ActiveDocument as Viewport.Viewport;
         }
 
+        public IEnumerable<Viewport.Viewport> GetAllViewports()
+        {
+            return dockPanel.Documents.Select(d => d as Viewport.Viewport).Where(d => d != null);
+        }
+
         private void ribbonOrbMenuItemHelp_Click(object sender, EventArgs e)
         {
             var fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,

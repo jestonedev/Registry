@@ -174,29 +174,16 @@ namespace Registry.Viewport.SearchForms
                 else
                 if (radioButtonWithUncompletedClaims.Checked || radioButtonWithoutUncompletedClaims.Checked)
                 {
-                    var claimsDataModel = DataModel.GetInstance<EntityDataModel<Claim>>();
-                    var claimStatesDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
-                    var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
-                                     group stateRow.Field<int?>("id_state") by stateRow.Field<int>("id_claim") into gs
-                                     select new
-                                     {
-                                         id_claim = gs.Key,
-                                         id_state = gs.Max()
-                                     };
-                    var lastStateTypes = from lastStateRow in lastStates
-                                         join stateRow in claimStatesDataModel.FilterDeletedRows()
-                                             on lastStateRow.id_state equals stateRow.Field<int?>("id_state")
-                                         select new
-                                         {
-                                             id_claim = stateRow.Field<int>("id_claim"),
-                                             id_state_type = stateRow.Field<int>("id_state_type")
-                                         };
-                    var withUncomplitedClaims =
-                        (from lastStateTypeRow in lastStateTypes
-                        join claimsRow in claimsDataModel.FilterDeletedRows()
-                            on lastStateTypeRow.id_claim equals claimsRow.Field<int>("id_claim")
-                         where ClaimsService.ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
-                        select claimsRow.Field<int>("id_account")).Distinct();
+                    var uncompletedClaimsPremisesInfo = ClaimsService.NotCompletedClaimsPaymentAccountsInfo().ToList();
+                    var paymentsAccounts = DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows().ToList();
+                    var withUncomplitedClaims = (from paymentRow in paymentsAccounts
+                        where
+                            uncompletedClaimsPremisesInfo.Any(r => paymentRow.Field<string>("account") == r.Account) ||
+                            uncompletedClaimsPremisesInfo.Any(
+                                r => paymentRow.Field<string>("raw_address") == r.RawAddress) ||
+                            uncompletedClaimsPremisesInfo.Any(
+                                r => paymentRow.Field<string>("parsed_address") == r.ParsedAddress)
+                        select paymentRow.Field<int>("id_account")).Distinct();
                     if (radioButtonWithUncompletedClaims.Checked)
                     {
                         includedAccounts = DataModelHelper.Intersect(includedAccounts, withUncomplitedClaims);

@@ -96,7 +96,10 @@ namespace Registry.DataModels.Services
                                           on lastStateTypeRow.id_claim equals claimsRow.Field<int>("id_claim")
                                       join accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
                                           on claimsRow.Field<int?>("id_account") equals accountRow.Field<int?>("id_account")
-                                      where ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
+                                      where ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any() &&
+                                            (lastStateTypeRow.id_state_type != 5 || 
+                                            claimsRow.Field<DateTime?>("end_dept_period") == null ||
+                                            claimsRow.Field<DateTime?>("end_dept_period") >= DateTime.Now.Date.AddYears(-2))
                                         && accountRow.Field<int?>("id_account") != null &&
                                         claimsRow.Field<int?>("id_claim") != null
                                       select new ClaimPaymentAccountInfo
