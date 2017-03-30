@@ -176,13 +176,23 @@ namespace Registry.Viewport.SearchForms
                 {
                     var uncompletedClaimsPremisesInfo = ClaimsService.NotCompletedClaimsPaymentAccountsInfo().ToList();
                     var paymentsAccounts = DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows().ToList();
-                    var withUncomplitedClaims = (from paymentRow in paymentsAccounts
-                        where
-                            uncompletedClaimsPremisesInfo.Any(r => 
-                                paymentRow.Field<string>("account") == r.Account ||
-                                paymentRow.Field<string>("raw_address") == r.RawAddress ||
-                                paymentRow.Field<string>("parsed_address") == r.ParsedAddress)
-                        select paymentRow.Field<int>("id_account")).Distinct();
+                    var paymentsAccountAccountDuplicate = from paymentAccountRow in paymentsAccounts
+                        join claimsRow in uncompletedClaimsPremisesInfo
+                            on paymentAccountRow.Field<string>("account") equals claimsRow.Account
+                                                          where claimsRow.Account != null
+                        select paymentAccountRow.Field<int>("id_account");
+                    var paymentsAccountRawAddressDuplicate = from paymentAccountRow in paymentsAccounts
+                                                          join claimsRow in uncompletedClaimsPremisesInfo
+                                                              on paymentAccountRow.Field<string>("raw_address") equals claimsRow.RawAddress
+                                                             where claimsRow.RawAddress != null
+                                                             select paymentAccountRow.Field<int>("id_account");
+                    var paymentsAccountParsedAddressDuplicate = from paymentAccountRow in paymentsAccounts
+                                                             join claimsRow in uncompletedClaimsPremisesInfo
+                                                                 on paymentAccountRow.Field<string>("parsed_address") equals claimsRow.ParsedAddress
+                                                                where claimsRow.ParsedAddress != null
+                                                             select paymentAccountRow.Field<int>("id_account");
+                    var withUncomplitedClaims = paymentsAccountAccountDuplicate.Union(paymentsAccountRawAddressDuplicate)
+                        .Union(paymentsAccountParsedAddressDuplicate).Distinct();
                     if (radioButtonWithUncompletedClaims.Checked)
                     {
                         includedAccounts = DataModelHelper.Intersect(includedAccounts, withUncomplitedClaims);
