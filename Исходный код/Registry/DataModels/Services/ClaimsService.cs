@@ -67,10 +67,11 @@ namespace Registry.DataModels.Services
 
         public static IEnumerable<ClaimPaymentAccountInfo> NotCompletedClaimsPaymentAccountsInfo()
         {
-            var claimsDataModel = DataModel.GetInstance<EntityDataModel<Claim>>();
-            var claimStatesDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
-            var claimStatesTypeDataModel = DataModel.GetInstance<EntityDataModel<ClaimStateType>>();
-            var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
+            var claims = DataModel.GetInstance<EntityDataModel<Claim>>().FilterDeletedRows().ToList();
+            var claimStates = DataModel.GetInstance<EntityDataModel<ClaimState>>().FilterDeletedRows().ToList();
+            var claimStatesTypes = DataModel.GetInstance<EntityDataModel<ClaimStateType>>().FilterDeletedRows().ToList();
+            var paymentAccounts = DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows().ToList();
+            var lastStates = from stateRow in claimStates
                              group stateRow.Field<int?>("id_state") by stateRow.Field<int?>("id_claim") into gs
                              select new
                              {
@@ -78,9 +79,9 @@ namespace Registry.DataModels.Services
                                  id_state = gs.Max()
                              };
             var lastStateTypes = from lastStateRow in lastStates
-                                  join stateRow in claimStatesDataModel.FilterDeletedRows()
+                                  join stateRow in claimStates
                                       on lastStateRow.id_state equals stateRow.Field<int?>("id_state")
-                                  join stateTypeRow in claimStatesTypeDataModel.FilterDeletedRows()
+                                  join stateTypeRow in claimStatesTypes
                                       on stateRow.Field<int?>("id_state_type") equals stateTypeRow.Field<int?>("id_state_type")
                                   where stateRow.Field<int?>("id_claim") != null &&
                                   stateRow.Field<int?>("id_state_type") != null
@@ -92,9 +93,9 @@ namespace Registry.DataModels.Services
                                         stateTypeRow.Field<string>("state_type").ToLowerInvariant() : null
                                   };
             return from lastStateTypeRow in lastStateTypes
-                                      join claimsRow in claimsDataModel.FilterDeletedRows()
+                                      join claimsRow in claims
                                           on lastStateTypeRow.id_claim equals claimsRow.Field<int>("id_claim")
-                                      join accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
+                                      join accountRow in paymentAccounts
                                           on claimsRow.Field<int?>("id_account") equals accountRow.Field<int?>("id_account")
                                       where ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any() &&
                                             (lastStateTypeRow.id_state_type != 5 || 

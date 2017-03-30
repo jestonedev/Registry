@@ -105,16 +105,7 @@ namespace Registry.Viewport
             {
                 return;
             }
-            var context = SynchronizationContext.Current;
-            ThreadPool.QueueUserWorkItem(_ =>
-            {
-                var notCompletedClaims = ClaimsService.NotCompletedClaimsPaymentAccountsInfo().ToList();
-                context.Post(state =>
-                {
-                    _notCompletedClaims = (IEnumerable<ClaimPaymentAccountInfo>)state;
-                    DataGridView.Refresh();
-                }, notCompletedClaims);
-            }, null);
+            _notCompletedClaims = ClaimsService.NotCompletedClaimsPaymentAccountsInfo().ToList();
         }
 
         private void DataBind()
