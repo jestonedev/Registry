@@ -178,11 +178,10 @@ namespace Registry.Viewport.SearchForms
                     var paymentsAccounts = DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows().ToList();
                     var withUncomplitedClaims = (from paymentRow in paymentsAccounts
                         where
-                            uncompletedClaimsPremisesInfo.Any(r => paymentRow.Field<string>("account") == r.Account) ||
-                            uncompletedClaimsPremisesInfo.Any(
-                                r => paymentRow.Field<string>("raw_address") == r.RawAddress) ||
-                            uncompletedClaimsPremisesInfo.Any(
-                                r => paymentRow.Field<string>("parsed_address") == r.ParsedAddress)
+                            uncompletedClaimsPremisesInfo.Any(r => 
+                                paymentRow.Field<string>("account") == r.Account ||
+                                paymentRow.Field<string>("raw_address") == r.RawAddress ||
+                                paymentRow.Field<string>("parsed_address") == r.ParsedAddress)
                         select paymentRow.Field<int>("id_account")).Distinct();
                     if (radioButtonWithUncompletedClaims.Checked)
                     {
