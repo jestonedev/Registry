@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities.Infrastructure;
 using WeifenLuo.WinFormsUI.Docking;
+using System.Drawing;
 
 namespace Registry.Viewport
 {
@@ -93,13 +94,25 @@ namespace Registry.Viewport
         private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (GeneralBindingSource.Count <= e.RowIndex) return;
+            var row = (DataRowView)GeneralBindingSource[e.RowIndex];
             switch (DataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "date":
-                    e.Value = ((DateTime)((DataRowView)GeneralBindingSource[e.RowIndex])["date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    e.Value = ((DateTime)row["date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
                 default:
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])[DataGridView.Columns[e.ColumnIndex].Name];
+                    if (ParentType == ParentTypeEnum.PaymentAccount &&
+                        (int) ParentRow["id_account"] == (int) row["id_account"])
+                    {
+                        DataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
+                        DataGridView.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.Green;
+                    }
+                    else
+                    {
+                        DataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+                        DataGridView.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
+                    }
+                    e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
                     break;
             }
         }
