@@ -1261,10 +1261,10 @@ namespace Registry.Viewport
             // 
             // date
             // 
+            this.date.Frozen = true;
             this.date.HeaderText = "Состояние на дату";
             this.date.Name = "date";
             this.date.ReadOnly = true;
-            this.date.Width = 130;
             // 
             // charging_date
             // 

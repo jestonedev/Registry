@@ -67,9 +67,10 @@
     <Compile Include="DataModelHelper.cs" />
     <Compile Include="DataModels\ClaimFilesDataModel.cs" />
     <Compile Include="DataModels\EntityDataModel.cs" />
+    <Compile Include="DataModels\PaymentsPremiseHistoryDataModel.cs" />
     <Compile Include="DataModels\SelectableSigners.cs" />
     <Compile Include="DataModels\PaymentsAccountsDataModel.cs" />
-    <Compile Include="DataModels\PaymentsDataModel.cs" />
+    <Compile Include="DataModels\PaymentsAccountHistoryDataModel.cs" />
     <Compile Include="CalcDataModels\CalcDataModelBuildingsPremisesFunds.cs" />
     <Compile Include="CalcDataModels\CalcDataModelBuildingsCurrentFunds.cs" />
     <Compile Include="CalcDataModels\CalcDataModel.cs" />

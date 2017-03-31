@@ -351,8 +351,10 @@ namespace Registry
                 ribbonPanelRelations.Items.Add(ribbonButtonClaimStates);
             if (document.HasAssocViewport<PaymentsAccountsViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonAccounts);
-            if (document.HasAssocViewport<PaymentsViewport>())
-                ribbonPanelRelations.Items.Add(ribbonButtonAccountHistory);
+            if (document.HasAssocViewport<PaymentsAccountHistoryViewport>())
+                ribbonPanelRelations.Items.Add(ribbonButtonPaymentsAccountHistory);
+            if (document.HasAssocViewport<PaymentsPremiseHistoryViewport>())
+                ribbonPanelRelations.Items.Add(ribbonButtonPaymentsPremiseHistory);
         }
 
         private void TenancyRelationsStateUpdate()
@@ -652,12 +654,18 @@ namespace Registry
                 document.ShowAssocViewport<PaymentsAccountsViewport>();
         }
 
-        private void ribbonButtonAccountHistory_Click(object sender, EventArgs e)
+        private void ribbonButtonPaymentsAccountHistory_Click(object sender, EventArgs e)
         {
-
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport<PaymentsViewport>();
+                document.ShowAssocViewport<PaymentsAccountHistoryViewport>();
+        }
+
+        private void ribbonButtonPaymentsPremiseHistory_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowAssocViewport<PaymentsPremiseHistoryViewport>();
         }
 
         private void ribbonButtonAssocTenancies_Click(object sender, EventArgs e)

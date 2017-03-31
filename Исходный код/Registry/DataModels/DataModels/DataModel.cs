@@ -265,7 +265,9 @@ namespace Registry.DataModels.DataModels
         public static DataModel GetInstance<T>(Action afterLoadHandler) where T :  DataModel
         {
             var currentDataModel = typeof(T);            
-            if(typeof(T) == typeof(PaymentsDataModel) || typeof(T) == typeof(SelectableSigners))
+            if(typeof(T) == typeof(PaymentsPremiseHistoryDataModel) ||
+               typeof(T) == typeof(PaymentsAccountHistoryDataModel) || 
+               typeof(T) == typeof(SelectableSigners))
             {
                 var method = currentDataModel.GetMethod("GetInstance",new Type[] {});
                 var instanceDm = (T)method.Invoke(null, new object[] { });

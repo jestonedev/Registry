@@ -63,6 +63,8 @@ namespace Registry
             this.ribbonButtonOrbTenancyAgreement = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonNotifyContractAgreement = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonNotifyIllegalResident = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonNotifyNoProlongTrouble = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonNotifyNoProlongCategory = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonNotifyCotractViolation = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptPremise = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptSubPremise = new System.Windows.Forms.RibbonButton();
@@ -107,7 +109,7 @@ namespace Registry
             this.ribbonButtonClaims = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonClaimStates = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonAccounts = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonAccountHistory = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonPaymentsAccountHistory = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonAssocTenancies = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonResettlePersons = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonResettleFromObjects = new System.Windows.Forms.RibbonButton();
@@ -179,8 +181,7 @@ namespace Registry
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonNotifyNoProlongCategory = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonNotifyNoProlongTrouble = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonPaymentsPremiseHistory = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -422,6 +423,28 @@ namespace Registry
             this.ribbonButtonNotifyIllegalResident.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyIllegalResident.ToolTipImage")));
             this.ribbonButtonNotifyIllegalResident.ToolTipTitle = "Уведомление незаконно проживающих";
             this.ribbonButtonNotifyIllegalResident.Click += new System.EventHandler(this.ribbonButtonNotifyIllegalResident_Click);
+            // 
+            // ribbonButtonNotifyNoProlongTrouble
+            // 
+            this.ribbonButtonNotifyNoProlongTrouble.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyNoProlongTrouble.Image")));
+            this.ribbonButtonNotifyNoProlongTrouble.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyNoProlongTrouble.SmallImage")));
+            this.ribbonButtonNotifyNoProlongTrouble.Text = "Уведомление о непродлении (аварийное)";
+            this.ribbonButtonNotifyNoProlongTrouble.ToolTip = "При нажатии на данную кнопку будет сформировано уведомление о непродлении (аварий" +
+    "ное)";
+            this.ribbonButtonNotifyNoProlongTrouble.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyNoProlongTrouble.ToolTipImage")));
+            this.ribbonButtonNotifyNoProlongTrouble.ToolTipTitle = "Уведомление о непродлении (аварийное)";
+            this.ribbonButtonNotifyNoProlongTrouble.Click += new System.EventHandler(this.ribbonButtonNotifyNoProlongTrouble_Click);
+            // 
+            // ribbonButtonNotifyNoProlongCategory
+            // 
+            this.ribbonButtonNotifyNoProlongCategory.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyNoProlongCategory.Image")));
+            this.ribbonButtonNotifyNoProlongCategory.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyNoProlongCategory.SmallImage")));
+            this.ribbonButtonNotifyNoProlongCategory.Text = "Уведомление о непродлении (категории)";
+            this.ribbonButtonNotifyNoProlongCategory.ToolTip = "При нажатии на данную кнопку будет сформировано уведомление о непродлении (катего" +
+    "рии)";
+            this.ribbonButtonNotifyNoProlongCategory.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyNoProlongCategory.ToolTipImage")));
+            this.ribbonButtonNotifyNoProlongCategory.ToolTipTitle = "Уведомление о непродлении (категории)";
+            this.ribbonButtonNotifyNoProlongCategory.Click += new System.EventHandler(this.ribbonButtonNotifyNoProlongCategory_Click);
             // 
             // ribbonButtonNotifyCotractViolation
             // 
@@ -729,7 +752,8 @@ namespace Registry
             this.ribbonPanelRelations.Items.Add(this.ribbonButtonClaims);
             this.ribbonPanelRelations.Items.Add(this.ribbonButtonClaimStates);
             this.ribbonPanelRelations.Items.Add(this.ribbonButtonAccounts);
-            this.ribbonPanelRelations.Items.Add(this.ribbonButtonAccountHistory);
+            this.ribbonPanelRelations.Items.Add(this.ribbonButtonPaymentsAccountHistory);
+            this.ribbonPanelRelations.Items.Add(this.ribbonButtonPaymentsPremiseHistory);
             this.ribbonPanelRelations.Items.Add(this.ribbonButtonAssocTenancies);
             this.ribbonPanelRelations.Items.Add(this.ribbonButtonResettlePersons);
             this.ribbonPanelRelations.Items.Add(this.ribbonButtonResettleFromObjects);
@@ -901,15 +925,15 @@ namespace Registry
             this.ribbonButtonAccounts.ToolTipTitle = "Лицевые счета";
             this.ribbonButtonAccounts.Click += new System.EventHandler(this.ribbonButtonAccounts_Click);
             // 
-            // ribbonButtonAccountHistory
+            // ribbonButtonPaymentsAccountHistory
             // 
-            this.ribbonButtonAccountHistory.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAccountHistory.Image")));
-            this.ribbonButtonAccountHistory.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAccountHistory.SmallImage")));
-            this.ribbonButtonAccountHistory.Text = "История счета";
-            this.ribbonButtonAccountHistory.ToolTip = "При нажатии на данную кнопку будет отображена история лицевого счета";
-            this.ribbonButtonAccountHistory.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAccountHistory.ToolTipImage")));
-            this.ribbonButtonAccountHistory.ToolTipTitle = "История счета";
-            this.ribbonButtonAccountHistory.Click += new System.EventHandler(this.ribbonButtonAccountHistory_Click);
+            this.ribbonButtonPaymentsAccountHistory.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPaymentsAccountHistory.Image")));
+            this.ribbonButtonPaymentsAccountHistory.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPaymentsAccountHistory.SmallImage")));
+            this.ribbonButtonPaymentsAccountHistory.Text = "История счета";
+            this.ribbonButtonPaymentsAccountHistory.ToolTip = "При нажатии на данную кнопку будет отображена история лицевого счета";
+            this.ribbonButtonPaymentsAccountHistory.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPaymentsAccountHistory.ToolTipImage")));
+            this.ribbonButtonPaymentsAccountHistory.ToolTipTitle = "История счета";
+            this.ribbonButtonPaymentsAccountHistory.Click += new System.EventHandler(this.ribbonButtonPaymentsAccountHistory_Click);
             // 
             // ribbonButtonAssocTenancies
             // 
@@ -1697,27 +1721,17 @@ namespace Registry
             this.ribbonButton3.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.SmallImage")));
             this.ribbonButton3.Text = "Лицевые счета";
             // 
-            // ribbonButtonNotifyNoProlongCategory
+            // ribbonButtonPaymentsPremiseHistory
             // 
-            this.ribbonButtonNotifyNoProlongCategory.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyNoProlongCategory.Image")));
-            this.ribbonButtonNotifyNoProlongCategory.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyNoProlongCategory.SmallImage")));
-            this.ribbonButtonNotifyNoProlongCategory.Text = "Уведомление о непродлении (категории)";
-            this.ribbonButtonNotifyNoProlongCategory.ToolTip = "При нажатии на данную кнопку будет сформировано уведомление о непродлении (катего" +
-    "рии)";
-            this.ribbonButtonNotifyNoProlongCategory.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyNoProlongCategory.ToolTipImage")));
-            this.ribbonButtonNotifyNoProlongCategory.ToolTipTitle = "Уведомление о непродлении (категории)";
-            this.ribbonButtonNotifyNoProlongCategory.Click += new System.EventHandler(this.ribbonButtonNotifyNoProlongCategory_Click);
-            // 
-            // ribbonButtonNotifyNoProlongTrouble
-            // 
-            this.ribbonButtonNotifyNoProlongTrouble.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyNoProlongTrouble.Image")));
-            this.ribbonButtonNotifyNoProlongTrouble.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyNoProlongTrouble.SmallImage")));
-            this.ribbonButtonNotifyNoProlongTrouble.Text = "Уведомление о непродлении (аварийное)";
-            this.ribbonButtonNotifyNoProlongTrouble.ToolTip = "При нажатии на данную кнопку будет сформировано уведомление о непродлении (аварий" +
-    "ное)";
-            this.ribbonButtonNotifyNoProlongTrouble.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyNoProlongTrouble.ToolTipImage")));
-            this.ribbonButtonNotifyNoProlongTrouble.ToolTipTitle = "Уведомление о непродлении (аварийное)";
-            this.ribbonButtonNotifyNoProlongTrouble.Click += new System.EventHandler(this.ribbonButtonNotifyNoProlongTrouble_Click);
+            this.ribbonButtonPaymentsPremiseHistory.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPaymentsPremiseHistory.Image")));
+            this.ribbonButtonPaymentsPremiseHistory.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPaymentsPremiseHistory.SmallImage")));
+            this.ribbonButtonPaymentsPremiseHistory.Text = "История помещения";
+            this.ribbonButtonPaymentsPremiseHistory.ToolTip = "При нажатии на данную кнопку будет отображена история лицевых счетов по помещению" +
+    "";
+            this.ribbonButtonPaymentsPremiseHistory.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPaymentsPremiseHistory.ToolTipImage")));
+            this.ribbonButtonPaymentsPremiseHistory.ToolTipTitle = "История помещения";
+            this.ribbonButtonPaymentsPremiseHistory.Value = "";
+            this.ribbonButtonPaymentsPremiseHistory.Click += new System.EventHandler(this.ribbonButtonPaymentsPremiseHistory_Click);
             // 
             // MainForm
             // 
@@ -1865,7 +1879,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonOrbRegistryMultiPremises;
         private System.Windows.Forms.RibbonOrbMenuItem ribbonOrbMenuItemPayments;
         private System.Windows.Forms.RibbonButton ribbonButtonAccounts;
-        private System.Windows.Forms.RibbonButton ribbonButtonAccountHistory;
+        private System.Windows.Forms.RibbonButton ribbonButtonPaymentsAccountHistory;
         private System.Windows.Forms.RibbonButton ribbonButton3;
         private System.Windows.Forms.RibbonButton ribbonButtonOrbMultiPaymentAccount;
         private System.Windows.Forms.RibbonButton ribbonButtonOrbMultiClaims;
@@ -1880,6 +1894,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonNotifyCotractViolation;
         private System.Windows.Forms.RibbonButton ribbonButtonNotifyNoProlongTrouble;
         private System.Windows.Forms.RibbonButton ribbonButtonNotifyNoProlongCategory;
+        private System.Windows.Forms.RibbonButton ribbonButtonPaymentsPremiseHistory;
     }
 }
 

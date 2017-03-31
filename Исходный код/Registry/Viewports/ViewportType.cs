@@ -36,6 +36,7 @@
         ResettleBuildingsViewport,
         ResettlePremisesViewport,
         PaymentsAccountsViewport,
-        PaymentsViewport
+        PaymentsAccountHistoryViewport,
+        PaymentsPremiseHistoryViewport
     }
 }

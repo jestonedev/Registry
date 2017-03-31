@@ -251,7 +251,8 @@ namespace Registry.Viewport
         {
             var reports = new List<ViewportType>
             {
-                ViewportType.PaymentsViewport,
+                ViewportType.PaymentsAccountHistoryViewport,
+                ViewportType.PaymentsPremiseHistoryViewport,
                 ViewportType.ClaimListViewport,
                 ViewportType.PremisesListViewport
             };
