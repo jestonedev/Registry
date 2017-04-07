@@ -447,7 +447,7 @@ namespace Registry.Viewport.MultiMasters
                     continue;
                 MessageBox.Show(
                     string.Format(
-                        "По исковой работе №{0} отсутствует стадия передачи в юр. отдел либо стадия является завершенной",
+                        "По исковой работе №{0} отсутствует стадия передачи в юр. отдел либо исковая работа является завершенной",
                         row["id_claim"]), @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button1);
                 return;

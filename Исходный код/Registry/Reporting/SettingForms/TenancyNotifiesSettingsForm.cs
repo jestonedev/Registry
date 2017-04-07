@@ -10,6 +10,7 @@ using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
+using Settings;
 
 namespace Registry.Reporting.SettingForms
 {
@@ -103,6 +104,17 @@ namespace Registry.Reporting.SettingForms
             comboBoxExecutor.DataSource = vExecutors;
             comboBoxExecutor.DisplayMember = "executor_name";
             comboBoxExecutor.ValueMember = "id_executor";
+            var login = UserDomain.Current.sAMAccountName;
+            var idExecutor = (from row in executors.FilterDeletedRows()
+                             where
+                                row.Field<string>("executor_login") != null &&
+                                row.Field<string>("executor_login").ToUpperInvariant() == 
+                                    "PWR\\"+login.ToUpperInvariant()
+                select row.Field<int?>("id_executor")).FirstOrDefault();
+            if (idExecutor != null)
+            {
+                comboBoxExecutor.SelectedValue = idExecutor;
+            }
 
             dataGridView.RowCount = _vTenancies.Count;
             tenanciesAggregate.RefreshEvent += tenancies_aggregate_RefreshEvent;

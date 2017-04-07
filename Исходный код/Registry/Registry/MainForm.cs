@@ -398,17 +398,24 @@ namespace Registry
         {
             ribbon1.OrbDropDown.RecentItems.Clear();
             var document = dockPanel.ActiveDocument as IMenuController;
+            if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
+            {
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiPremises);
+            }
+            if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
+            {
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiPaymentAccount);
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiClaims);
+            }
+
+            var mastersCount = ribbon1.OrbDropDown.RecentItems.Count;
+            var hasMasters = mastersCount > 0;
+
             if (document == null)
             {
-                if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
-                    ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiPremises);
-                if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
-                {
-                    ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiPaymentAccount);
-                    ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiClaims);
-                }
                 return;
             }
+
             if (document.HasReport(ReporterType.TenancyContractSpecial1711Reporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract1711);
             if (document.HasReport(ReporterType.TenancyContractSpecial1712Reporter))
@@ -438,15 +445,30 @@ namespace Registry
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremise);
             if (document.HasReport(ReporterType.RegistryExcerptReporterAllMunSubPremises))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremises);
-            if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
-                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiPremises);
-            if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
-            {
-                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiPaymentAccount);
-                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiClaims);
-            }
+
+            if (document.HasReport(ReporterType.JudicialOrderReporter))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonJudicialOrder);
+            if (document.HasReport(ReporterType.RequestToBksReporter))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonRequestToBks);
+            if (document.HasReport(ReporterType.TransfertToLegalDepartmentReporter))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonTransfertToLegalDepartment);
+
+            var reportsCount = ribbon1.OrbDropDown.RecentItems.Count - mastersCount;
+            var hasReports = reportsCount > 0;
+
             if (document.HasReport(ReporterType.ExportReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonExportOds);
+
+            var hasExport = ribbon1.OrbDropDown.RecentItems.Count - reportsCount - mastersCount > 0;
+
+            if (hasMasters && (hasReports || hasExport))
+            {
+                ribbon1.OrbDropDown.RecentItems.Insert(mastersCount, ribbonSeparatorMasters);
+            }
+            if (hasReports && hasExport)
+            {
+                ribbon1.OrbDropDown.RecentItems.Insert(mastersCount + reportsCount + 1, ribbonSeparatorExport);
+            }
         }
 
         private void RibbonTabsStateUpdate()
@@ -1227,6 +1249,27 @@ namespace Registry
                 process.StartInfo = psi;
                 process.Start();
             }
+        }
+
+        private void ribbonButtonTransfertToLegalDepartment_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.TransfertToLegalDepartmentReporter);
+        }
+
+        private void ribbonButtonRequestToBks_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.RequestToBksReporter);
+        }
+
+        private void ribbonButtonJudicialOrder_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.JudicialOrderReporter);
         }
     }
 }

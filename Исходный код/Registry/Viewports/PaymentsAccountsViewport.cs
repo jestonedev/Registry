@@ -309,7 +309,8 @@ namespace Registry.Viewport
         {
             var reports = new List<ReporterType>
             {
-                ReporterType.ExportReporter
+                ReporterType.ExportReporter,
+                ReporterType.RequestToBksReporter
             };
             return reports.Contains(reporterType);
         }
@@ -320,6 +321,10 @@ namespace Registry.Viewport
             if (reporterType == ReporterType.ExportReporter)
             {
                 arguments = ExportReportArguments();
+            }
+            if (reporterType == ReporterType.RequestToBksReporter)
+            {
+                arguments.Add("filter", Presenter.ViewModel["general"].CurrentRow["id_account"].ToString());
             }
             MenuCallback.RunReport(reporterType, arguments);
         }
