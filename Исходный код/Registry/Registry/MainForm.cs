@@ -450,7 +450,7 @@ namespace Registry
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonJudicialOrder);
             if (document.HasReport(ReporterType.RequestToBksReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonRequestToBks);
-            if (document.HasReport(ReporterType.TransfertToLegalDepartmentReporter))
+            if (document.HasReport(ReporterType.TransferToLegalDepartmentReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonTransfertToLegalDepartment);
 
             var reportsCount = ribbon1.OrbDropDown.RecentItems.Count - mastersCount;
@@ -1255,7 +1255,7 @@ namespace Registry
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.GenerateReport(ReporterType.TransfertToLegalDepartmentReporter);
+                document.GenerateReport(ReporterType.TransferToLegalDepartmentReporter);
         }
 
         private void ribbonButtonRequestToBks_Click(object sender, EventArgs e)

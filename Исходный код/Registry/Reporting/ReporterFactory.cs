@@ -81,7 +81,7 @@ namespace Registry.Reporting
                     return new RequestToBksReporter();
                 case ReporterType.JudicialOrderReporter:
                     return new JudicialOrderReporter();
-                case ReporterType.TransfertToLegalDepartmentReporter:
+                case ReporterType.TransferToLegalDepartmentReporter:
                     return new TransfertToLegalDepartmentReporter();
                 case ReporterType.TenancyNotifyDocumentsPrepared:
                 case ReporterType.TenancyNotifyIllegalResident:

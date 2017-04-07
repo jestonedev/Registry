@@ -39,7 +39,7 @@
         MultiExcerptReporter,
         RequestToBksReporter,
         JudicialOrderReporter,
-        TransfertToLegalDepartmentReporter,
+        TransferToLegalDepartmentReporter,
         ClaimsStatesReporter,
         AccountsDuplicateStatistic,
         TenancyNotifyDocumentsPrepared,

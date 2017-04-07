@@ -324,7 +324,9 @@ namespace Registry.Viewport
             }
             if (reporterType == ReporterType.RequestToBksReporter)
             {
-                arguments.Add("filter", Presenter.ViewModel["general"].CurrentRow["id_account"].ToString());
+                var ids = GetCurrentIds().ToList();
+                var filter = ids.Select(r => r.ToString()).Aggregate((acc, v) => acc + "," + v);
+                arguments.Add("filter", filter);
             }
             MenuCallback.RunReport(reporterType, arguments);
         }

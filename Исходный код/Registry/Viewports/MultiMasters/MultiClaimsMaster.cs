@@ -462,7 +462,7 @@ namespace Registry.Viewport.MultiMasters
             }
             filter = filter.TrimEnd(',');
             arguments.Add("filter", filter);
-            _menuCallback.RunReport(ReporterType.TransfertToLegalDepartmentReporter, arguments);
+            _menuCallback.RunReport(ReporterType.TransferToLegalDepartmentReporter, arguments);
         }
 
         private void dataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
