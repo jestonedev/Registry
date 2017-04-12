@@ -308,9 +308,9 @@
             this.rent_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.rent_type.HeaderText = "Тип найма";
             this.rent_type.MinimumWidth = 150;
-            this.rent_type.Name = "rent_type";
+            this.rent_type.Name = "id_rent_type";
             this.rent_type.ReadOnly = true;
-            this.rent_type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // this.rent_type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.rent_type.Width = 150;
             // 
             // address

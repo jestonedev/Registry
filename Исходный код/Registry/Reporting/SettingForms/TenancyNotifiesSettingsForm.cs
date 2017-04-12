@@ -299,7 +299,7 @@ namespace Registry.Reporting.SettingForms
                     if (rowIndex != -1)
                         e.Value = ((DataRowView)_vTenanciesAggregate[rowIndex])["tenant"];
                     break;
-                case "rent_type":
+                case "id_rent_type":
                     rowIndex = _vRentTypes.Find("id_rent_type", ((DataRowView)_vTenancies[e.RowIndex])["id_rent_type"]);
                     if (rowIndex != -1)
                         e.Value = ((DataRowView)_vRentTypes[rowIndex])["rent_type"];

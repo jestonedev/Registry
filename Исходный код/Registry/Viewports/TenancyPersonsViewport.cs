@@ -81,6 +81,7 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(textBoxDocumentSeria, "Text", bindingSource, "document_seria", "");
             ViewportHelper.BindProperty(textBoxDocumentNumber, "Text", bindingSource, "document_num", "");
             ViewportHelper.BindProperty(dateTimePickerDateOfDocumentIssue, "Value", bindingSource, "date_of_document_issue", null);
+            ViewportHelper.BindProperty(maskedTextBoxSNILS, "Text", bindingSource, "snils", "");
             ViewportHelper.BindProperty(textBoxRegistrationHouse, "Text", bindingSource, "registration_house", "");
             ViewportHelper.BindProperty(textBoxRegistrationFlat, "Text", bindingSource, "registration_flat", "");
             ViewportHelper.BindProperty(textBoxRegistrationRoom, "Text", bindingSource, "registration_room", "");
@@ -163,6 +164,7 @@ namespace Registry.Viewport
             textBoxPersonalAccount.Text = tenancyPerson.PersonalAccount;
             textBoxDocumentNumber.Text = tenancyPerson.DocumentNum;
             textBoxDocumentSeria.Text = tenancyPerson.DocumentSeria;
+            maskedTextBoxSNILS.Text = tenancyPerson.Snils;
             textBoxRegistrationHouse.Text = tenancyPerson.RegistrationHouse;
             textBoxRegistrationFlat.Text = tenancyPerson.RegistrationFlat;
             textBoxRegistrationRoom.Text = tenancyPerson.RegistrationRoom;
@@ -195,6 +197,7 @@ namespace Registry.Viewport
                 PersonalAccount = ViewportHelper.ValueOrNull(textBoxPersonalAccount),
                 DocumentSeria = ViewportHelper.ValueOrNull(textBoxDocumentSeria),
                 DocumentNum = ViewportHelper.ValueOrNull(textBoxDocumentNumber),
+                Snils = ViewportHelper.ValueOrNull(maskedTextBoxSNILS),
                 RegistrationHouse = ViewportHelper.ValueOrNull(textBoxRegistrationHouse),
                 RegistrationFlat = ViewportHelper.ValueOrNull(textBoxRegistrationFlat),
                 RegistrationRoom = ViewportHelper.ValueOrNull(textBoxRegistrationRoom),
@@ -636,5 +639,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }
+
+      
     }
 }

@@ -25,6 +25,7 @@ namespace Registry.Entities
         public string DocumentNum { get; set; }
         public string DocumentSeria { get; set; }
         public int? IdDocumentIssuedBy { get; set; }
+        public string Snils { get; set; }
         public string RegistrationIdStreet { get; set; }
         public string RegistrationHouse { get; set; }
         public string RegistrationFlat { get; set; }

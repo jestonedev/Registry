@@ -90,6 +90,8 @@ namespace Registry.Viewport
             this.comboBoxRegistrationStreet = new System.Windows.Forms.ComboBox();
             this.textBoxRegistrationHouse = new System.Windows.Forms.TextBox();
             this.groupBox26 = new System.Windows.Forms.GroupBox();
+            this.maskedTextBoxSNILS = new System.Windows.Forms.MaskedTextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.dateTimePickerExcludeDate = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.dateTimePickerIncludeDate = new System.Windows.Forms.DateTimePicker();
@@ -142,11 +144,12 @@ namespace Registry.Viewport
             this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel11.Name = "tableLayoutPanel11";
             this.tableLayoutPanel11.RowCount = 3;
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 220F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 250F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel11.Size = new System.Drawing.Size(1002, 724);
             this.tableLayoutPanel11.TabIndex = 0;
+          
             // 
             // groupBox23
             // 
@@ -166,7 +169,7 @@ namespace Registry.Viewport
             this.groupBox23.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox23.Location = new System.Drawing.Point(3, 3);
             this.groupBox23.Name = "groupBox23";
-            this.groupBox23.Size = new System.Drawing.Size(495, 214);
+            this.groupBox23.Size = new System.Drawing.Size(495, 244);
             this.groupBox23.TabIndex = 1;
             this.groupBox23.TabStop = false;
             this.groupBox23.Text = "Личные данные";
@@ -175,7 +178,7 @@ namespace Registry.Viewport
             // 
             this.buttonImportFromMSP.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonImportFromMSP.Location = new System.Drawing.Point(164, 183);
+            this.buttonImportFromMSP.Location = new System.Drawing.Point(164, 213);
             this.buttonImportFromMSP.Name = "buttonImportFromMSP";
             this.buttonImportFromMSP.Size = new System.Drawing.Size(325, 24);
             this.buttonImportFromMSP.TabIndex = 6;
@@ -314,7 +317,7 @@ namespace Registry.Viewport
             this.groupBox27.Controls.Add(this.comboBoxRegistrationStreet);
             this.groupBox27.Controls.Add(this.textBoxRegistrationHouse);
             this.groupBox27.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox27.Location = new System.Drawing.Point(3, 223);
+            this.groupBox27.Location = new System.Drawing.Point(3, 253);
             this.groupBox27.Name = "groupBox27";
             this.groupBox27.Size = new System.Drawing.Size(495, 134);
             this.groupBox27.TabIndex = 3;
@@ -402,6 +405,8 @@ namespace Registry.Viewport
             // 
             // groupBox26
             // 
+            this.groupBox26.Controls.Add(this.maskedTextBoxSNILS);
+            this.groupBox26.Controls.Add(this.label3);
             this.groupBox26.Controls.Add(this.dateTimePickerExcludeDate);
             this.groupBox26.Controls.Add(this.label2);
             this.groupBox26.Controls.Add(this.dateTimePickerIncludeDate);
@@ -419,25 +424,44 @@ namespace Registry.Viewport
             this.groupBox26.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox26.Location = new System.Drawing.Point(504, 3);
             this.groupBox26.Name = "groupBox26";
-            this.groupBox26.Size = new System.Drawing.Size(495, 214);
+            this.groupBox26.Size = new System.Drawing.Size(495, 244);
             this.groupBox26.TabIndex = 2;
             this.groupBox26.TabStop = false;
             this.groupBox26.Text = "Документ, удостоверяющий личность";
+            // 
+            // maskedTextBoxSNILS
+            // 
+            this.maskedTextBoxSNILS.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.maskedTextBoxSNILS.Location = new System.Drawing.Point(164, 158);
+            this.maskedTextBoxSNILS.Mask = "000-000-000 00";
+            this.maskedTextBoxSNILS.Name = "maskedTextBoxSNILS";
+            this.maskedTextBoxSNILS.Size = new System.Drawing.Size(325, 21);
+            this.maskedTextBoxSNILS.TabIndex = 5;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(18, 161);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(49, 15);
+            this.label3.TabIndex = 44;
+            this.label3.Text = "СНИЛС";
             // 
             // dateTimePickerExcludeDate
             // 
             this.dateTimePickerExcludeDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerExcludeDate.Location = new System.Drawing.Point(164, 184);
+            this.dateTimePickerExcludeDate.Location = new System.Drawing.Point(164, 214);
             this.dateTimePickerExcludeDate.Name = "dateTimePickerExcludeDate";
             this.dateTimePickerExcludeDate.ShowCheckBox = true;
             this.dateTimePickerExcludeDate.Size = new System.Drawing.Size(325, 21);
-            this.dateTimePickerExcludeDate.TabIndex = 41;
+            this.dateTimePickerExcludeDate.TabIndex = 7;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(17, 187);
+            this.label2.Location = new System.Drawing.Point(17, 217);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(109, 15);
             this.label2.TabIndex = 42;
@@ -447,16 +471,16 @@ namespace Registry.Viewport
             // 
             this.dateTimePickerIncludeDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerIncludeDate.Location = new System.Drawing.Point(164, 157);
+            this.dateTimePickerIncludeDate.Location = new System.Drawing.Point(164, 187);
             this.dateTimePickerIncludeDate.Name = "dateTimePickerIncludeDate";
             this.dateTimePickerIncludeDate.ShowCheckBox = true;
             this.dateTimePickerIncludeDate.Size = new System.Drawing.Size(325, 21);
-            this.dateTimePickerIncludeDate.TabIndex = 39;
+            this.dateTimePickerIncludeDate.TabIndex = 6;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 160);
+            this.label1.Location = new System.Drawing.Point(17, 190);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(103, 15);
             this.label1.TabIndex = 40;
@@ -572,7 +596,7 @@ namespace Registry.Viewport
             this.groupBox28.Controls.Add(this.comboBoxResidenceStreet);
             this.groupBox28.Controls.Add(this.textBoxResidenceHouse);
             this.groupBox28.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox28.Location = new System.Drawing.Point(504, 223);
+            this.groupBox28.Location = new System.Drawing.Point(504, 253);
             this.groupBox28.Name = "groupBox28";
             this.groupBox28.Size = new System.Drawing.Size(495, 134);
             this.groupBox28.TabIndex = 4;
@@ -685,12 +709,12 @@ namespace Registry.Viewport
             this.registration_date});
             this.tableLayoutPanel11.SetColumnSpan(this.dataGridViewTenancyPersons, 2);
             this.dataGridViewTenancyPersons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewTenancyPersons.Location = new System.Drawing.Point(3, 363);
+            this.dataGridViewTenancyPersons.Location = new System.Drawing.Point(3, 393);
             this.dataGridViewTenancyPersons.MultiSelect = false;
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(996, 358);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(996, 328);
             this.dataGridViewTenancyPersons.TabIndex = 0;
             // 
             // surname
@@ -769,5 +793,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn date_of_birth;
         private DataGridViewComboBoxColumn id_kinship;
         private DataGridViewTextBoxColumn registration_date;
+        private MaskedTextBox maskedTextBoxSNILS;
+        private Label label3;
     }
 }

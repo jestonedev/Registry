@@ -122,7 +122,13 @@ namespace Registry.Viewport
             {
                 var control = (TextBox) sender;
                 control.SelectAll();
-            } else if (sender is ComboBox)
+            }
+            else if (sender is MaskedTextBox)
+            {
+                var control = (MaskedTextBox)sender;
+                control.SelectAll();
+            } 
+            else if (sender is ComboBox)
             {
                 var control = (ComboBox)sender;
                 control.SelectAll();
@@ -151,5 +157,11 @@ namespace Registry.Viewport
             comboBox.ValueMember = valueMember;
             comboBox.DataPropertyName = dataPropertyName ?? valueMember;
         }
-    }
+
+        internal static string ValueOrNull(MaskedTextBox control)
+        {
+            return string.IsNullOrEmpty(control.Text.Trim()) ? null : control.Text.Trim();
+        }
+
+     }
 }

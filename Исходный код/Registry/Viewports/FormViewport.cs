@@ -255,6 +255,12 @@ namespace Registry.Viewport
                     (control as TextBox).TextChanged += (sender, args) => CheckViewportModifications();
                     (control as TextBox).Enter += (sender, args) => ViewportHelper.SelectAllText(sender);
                 }
+                else
+                    if (control is MaskedTextBox && !string.IsNullOrEmpty(control.Name))
+                    {
+                        (control as MaskedTextBox).TextChanged += (sender, args) => CheckViewportModifications();
+                        (control as MaskedTextBox).Enter += (sender, args) => ViewportHelper.SelectAllText(sender);
+                    }
                 if (control.Controls.Count > 0)
                     DataChangeHandlersInit(control);
             }
