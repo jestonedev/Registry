@@ -429,7 +429,9 @@ namespace Registry.Viewport.Presenters
                       personsRow["exclude_date"] == DBNull.Value &&
                       personsRow.Field<string>("surname").Trim() == tenant.Field<string>("surname").Trim() &&
                       personsRow.Field<string>("name").Trim() == tenant.Field<string>("name").Trim() &&
-                      personsRow.Field<string>("patronymic").Trim() == tenant.Field<string>("patronymic").Trim() &&
+                      ((personsRow.Field<string>("patronymic") != null && 
+                      personsRow.Field<string>("patronymic").Trim() == tenant.Field<string>("patronymic").Trim()) ||
+                      personsRow.Field<string>("patronymic") == tenant.Field<string>("patronymic")) &&
                       processRow.Field<int?>("id_process") != (int?) currentRow["id_process"] &&
                       (processRow.Field<string>("registration_num") == null || !processRow.Field<string>("registration_num").EndsWith("н"))
                 select processRow;

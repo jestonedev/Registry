@@ -166,6 +166,8 @@ namespace Registry.Viewport.MultiMasters
                     IdAccount = (int) row["id_account"],
                     AmountTenancy = ViewportHelper.ValueOrNull<decimal>(row, "balance_output_tenancy"),
                     AmountDgi = ViewportHelper.ValueOrNull<decimal>(row, "balance_output_dgi"),
+                    AmountPadun = ViewportHelper.ValueOrNull<decimal>(row, "balance_output_padun"),
+                    AmountPkk = ViewportHelper.ValueOrNull<decimal>(row, "balance_output_pkk"),
                     AmountPenalties = ViewportHelper.ValueOrNull<decimal>(row, "balance_output_penalties"),
                     AtDate = atDateForm.DateAt
                 };
@@ -189,6 +191,8 @@ namespace Registry.Viewport.MultiMasters
                 claimRow["id_account"] = ViewportHelper.ValueOrDbNull(claim.IdAccount);
                 claimRow["amount_tenancy"] = ViewportHelper.ValueOrDbNull(claim.AmountTenancy);
                 claimRow["amount_dgi"] = ViewportHelper.ValueOrDbNull(claim.AmountDgi);
+                claimRow["amount_padun"] = ViewportHelper.ValueOrDbNull(claim.AmountPadun);
+                claimRow["amount_pkk"] = ViewportHelper.ValueOrDbNull(claim.AmountPkk);
                 claimRow["amount_penalties"] = ViewportHelper.ValueOrDbNull(claim.AmountPenalties);
                 claimRow["at_date"] = ViewportHelper.ValueOrDbNull(claim.AtDate);
                 claimRow.EndEdit();

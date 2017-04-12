@@ -157,7 +157,8 @@ namespace Registry.DataModels.Services
             using (var command = DBConnection.CreateCommand())
             {
                 command.CommandText =
-                    string.Format(@"SELECT p.id_account, p.balance_output_tenancy, p.balance_output_dgi, p.balance_output_penalties
+                    string.Format(@"SELECT p.id_account, p.balance_output_tenancy, p.balance_output_dgi,  p.balance_output_padun,  
+                        p.balance_output_pkk, p.balance_output_penalties
                         FROM payments p
                         WHERE p.id_account IN (0{0}) AND MONTH(p.date) = ? AND YEAR(p.date) = ?",
                         idAccounts.Select(v => v.ToString()).Aggregate(

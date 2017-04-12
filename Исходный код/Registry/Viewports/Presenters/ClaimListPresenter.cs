@@ -186,6 +186,8 @@ namespace Registry.Viewport.Presenters
                                    {
                                        BalanceOutputTenancy = row.Field<decimal>("balance_output_tenancy"),
                                        BalanceOutputDgi = row.Field<decimal>("balance_output_dgi"),
+                                       BalanceOutputPadun = row.Field<decimal>("balance_output_padun"),
+                                       BalanceOutputPkk = row.Field<decimal>("balance_output_pkk"),
                                        BalanceOutputPenalties = row.Field<decimal>("balance_output_penalties")
                                    }).ToList();
             if (!balanceInfoList.Any())
@@ -198,6 +200,8 @@ namespace Registry.Viewport.Presenters
                 var balanceInfo = balanceInfoList.First();
                 claim.AmountTenancy = balanceInfo.BalanceOutputTenancy;
                 claim.AmountDgi = balanceInfo.BalanceOutputDgi;
+                claim.AmountPadun = balanceInfo.BalanceOutputPadun;
+                claim.AmountPkk = balanceInfo.BalanceOutputPkk;
                 claim.AmountPenalties = balanceInfo.BalanceOutputPenalties;
             }
         }

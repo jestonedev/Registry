@@ -74,6 +74,8 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(dateTimePickerStartDeptPeriod, "Value", bindingSource, "start_dept_period", DateTime.Now.Date);
             ViewportHelper.BindProperty(dateTimePickerEndDeptPeriod, "Value", bindingSource, "end_dept_period", DateTime.Now.Date);
             ViewportHelper.BindProperty(numericUpDownAmountDGI, "Value", bindingSource, "amount_dgi", 0m);
+            ViewportHelper.BindProperty(numericUpDownAmountPadun, "Value", bindingSource, "amount_padun", 0m);
+            ViewportHelper.BindProperty(numericUpDownAmountPkk, "Value", bindingSource, "amount_pkk", 0m);
             ViewportHelper.BindProperty(numericUpDownAmountTenancy, "Value", bindingSource, "amount_tenancy", 0m);
             ViewportHelper.BindProperty(numericUpDownAmountPenalties, "Value", bindingSource, "amount_penalties", 0m);
         }
@@ -743,6 +745,8 @@ namespace Registry.Viewport
                 case "id_claim":
                 case "amount_tenancy":
                 case "amount_dgi":
+                case "amount_padun":
+                case "amount_pkk":
                 case "amount_penalties":
                     e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
                     break;
@@ -757,6 +761,8 @@ namespace Registry.Viewport
                 case "tenant":
                 case "balance_output_tenancy":
                 case "balance_output_dgi":
+                case "balance_output_padun":
+                case "balance_output_pkk":
                 case "balance_output_penalties":
                     if (row["id_account"] == DBNull.Value) return;
                     if ((int)row["id_claim"] != _idClaim || 
@@ -897,13 +903,26 @@ namespace Registry.Viewport
         {
             numericUpDownAmountTotal.Minimum = decimal.MinValue;
             numericUpDownAmountTotal.Maximum = decimal.MaxValue;
-            numericUpDownAmountTotal.Value = numericUpDownAmountDGI.Value + numericUpDownAmountTenancy.Value +
-                    numericUpDownAmountPenalties.Value;
+            numericUpDownAmountTotal.Value = numericUpDownAmountDGI.Value + 
+                numericUpDownAmountPadun.Value +
+                numericUpDownAmountPkk.Value +
+                numericUpDownAmountTenancy.Value +
+                numericUpDownAmountPenalties.Value;
         }
 
         private void dataGridViewClaims_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             ShowAssocViewport<ClaimStatesViewport>();
+        }
+
+        private void numericUpDownAmountPadun_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDownAmountTotalChange();
+        }
+
+        private void numericUpDownAmountPkk_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDownAmountTotalChange();
         }
     }
 }

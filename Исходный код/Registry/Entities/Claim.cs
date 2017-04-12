@@ -21,6 +21,10 @@ namespace Registry.Entities
 
         [DataColumn(DefaultValue = 0)]
         public decimal? AmountDgi { get; set; }
+        [DataColumn(DefaultValue = 0)]
+        public decimal? AmountPadun { get; set; }
+        [DataColumn(DefaultValue = 0)]
+        public decimal? AmountPkk { get; set; }
 
         [DataColumn(DefaultValue = 0)]
         public decimal? AmountPenalties { get; set; }

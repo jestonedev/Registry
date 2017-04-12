@@ -83,6 +83,8 @@ namespace Registry.Viewport.MultiMasters
                 case "id_claim":
                 case "amount_tenancy":
                 case "amount_dgi":
+                case "amount_padun":
+                case "amount_pkk":
                 case "amount_penalties":
                 case "description":
                     e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];

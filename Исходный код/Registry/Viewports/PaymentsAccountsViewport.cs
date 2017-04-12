@@ -4,7 +4,6 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using Registry.DataModels.Services;
 using Registry.DataModels.Services.ServiceModels;
@@ -125,21 +124,31 @@ namespace Registry.Viewport
                 {"balance_input",numericUpDownBalanceTotalInput},
                 {"balance_tenancy",numericUpDownBalanceTenancyInput},
                 {"balance_dgi",numericUpDownBalanceDGIInput},
+                {"balance_padun",numericUpDownBalancePadunInput},
+                {"balance_pkk",numericUpDownBalancePkkInput},
                 {"balance_input_penalties",numericUpDownPenaltiesInput},
                 {"charging_total",numericUpDownChargingTotal},
                 {"charging_tenancy",numericUpDownChargingTenancy},
                 {"charging_dgi",numericUpDownChargingDGI},
+                {"charging_padun",numericUpDownChargingPadun},
+                {"charging_pkk",numericUpDownChargingPkk},
                 {"charging_penalties",numericUpDownChargingPenalties},
                 {"recalc_tenancy",numericUpDownRecalcTenancy},
                 {"recalc_dgi",numericUpDownRecalcDGI},
+                {"recalc_padun",numericUpDownRecalcPadun},
+                {"recalc_pkk",numericUpDownRecalcPkk},
                 {"recalc_penalties",numericUpDownRecalcPenalties},
                 {"payment_tenancy",numericUpDownPaymentTenancy},
                 {"payment_dgi",numericUpDownPaymentDGI},
+                {"payment_padun",numericUpDownPaymentPadun},
+                {"payment_pkk",numericUpDownPaymentPkk},
                 {"payment_penalties",numericUpDownPaymentPenalties},
                 {"transfer_balance",numericUpDownTransferBalance},
                 {"balance_output_total",numericUpDownBalanceTotalOutput},
                 {"balance_output_tenancy",numericUpDownBalanceTenancyOutput},
                 {"balance_output_dgi",numericUpDownBalanceDGIOutput},
+                {"balance_output_padun",numericUpDownBalancePadunOutput},
+                {"balance_output_pkk",numericUpDownBalancePkkOutput},
                 {"balance_output_penalties",numericUpDownPenaltiesOutput}
             })
             {

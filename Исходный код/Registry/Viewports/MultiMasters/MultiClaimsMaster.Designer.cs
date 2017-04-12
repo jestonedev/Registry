@@ -8,8 +8,8 @@ namespace Registry.Viewport.MultiMasters
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MultiClaimsMaster));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -34,6 +34,8 @@ namespace Registry.Viewport.MultiMasters
             this.end_dept_period = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.amount_padun = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.amount_pkk = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -197,6 +199,8 @@ namespace Registry.Viewport.MultiMasters
             this.end_dept_period,
             this.amount_tenancy,
             this.amount_dgi,
+            this.amount_padun,
+            this.amount_pkk,
             this.amount_penalties});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -266,31 +270,47 @@ namespace Registry.Viewport.MultiMasters
             // 
             // amount_tenancy
             // 
-            dataGridViewCellStyle3.Format = "#0.0# руб.";
-            this.amount_tenancy.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Format = "#0.0# руб.";
+            this.amount_tenancy.DefaultCellStyle = dataGridViewCellStyle1;
             this.amount_tenancy.HeaderText = "Сумма долга найм";
-            this.amount_tenancy.MinimumWidth = 200;
+            this.amount_tenancy.MinimumWidth = 110;
             this.amount_tenancy.Name = "amount_tenancy";
             this.amount_tenancy.ReadOnly = true;
-            this.amount_tenancy.Width = 200;
+            this.amount_tenancy.Width = 110;
             // 
             // amount_dgi
             // 
-            dataGridViewCellStyle4.Format = "#0.0# руб.";
-            this.amount_dgi.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Format = "#0.0# руб.";
+            this.amount_dgi.DefaultCellStyle = dataGridViewCellStyle2;
             this.amount_dgi.HeaderText = "Сумма долга ДГИ";
-            this.amount_dgi.MinimumWidth = 200;
+            this.amount_dgi.MinimumWidth = 110;
             this.amount_dgi.Name = "amount_dgi";
             this.amount_dgi.ReadOnly = true;
-            this.amount_dgi.Width = 200;
+            this.amount_dgi.Width = 110;
+            // 
+            // amount_padun
+            // 
+            this.amount_padun.HeaderText = "Сумма долга Падун";
+            this.amount_padun.MinimumWidth = 110;
+            this.amount_padun.Name = "amount_padun";
+            this.amount_padun.ReadOnly = true;
+            this.amount_padun.Width = 110;
+            // 
+            // amount_pkk
+            // 
+            this.amount_pkk.HeaderText = "Сумма долга ПКК";
+            this.amount_pkk.MinimumWidth = 110;
+            this.amount_pkk.Name = "amount_pkk";
+            this.amount_pkk.ReadOnly = true;
+            this.amount_pkk.Width = 110;
             // 
             // amount_penalties
             // 
             this.amount_penalties.HeaderText = "Сумма долга пени";
-            this.amount_penalties.MinimumWidth = 200;
+            this.amount_penalties.MinimumWidth = 110;
             this.amount_penalties.Name = "amount_penalties";
             this.amount_penalties.ReadOnly = true;
-            this.amount_penalties.Width = 200;
+            this.amount_penalties.Width = 110;
             // 
             // MultiClaimsMaster
             // 
@@ -323,6 +343,9 @@ namespace Registry.Viewport.MultiMasters
         private ToolStripButton toolStripButtonJudicialOrder;
         private ToolStripButton toolStripButtonDeptPeriod;
         private ToolStripButton toolStripButtonToLegalDepartment;
+        private ToolStripLabel toolStripLabelRowCount;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripButton toolStripButtonRequestToBks;
         private DataGridViewTextBoxColumn id_claim;
         private DataGridViewTextBoxColumn id_account;
         private DataGridViewTextBoxColumn at_date;
@@ -331,10 +354,9 @@ namespace Registry.Viewport.MultiMasters
         private DataGridViewTextBoxColumn end_dept_period;
         private DataGridViewTextBoxColumn amount_tenancy;
         private DataGridViewTextBoxColumn amount_dgi;
+        private DataGridViewTextBoxColumn amount_padun;
+        private DataGridViewTextBoxColumn amount_pkk;
         private DataGridViewTextBoxColumn amount_penalties;
-        private ToolStripLabel toolStripLabelRowCount;
-        private ToolStripSeparator toolStripSeparator3;
-        private ToolStripButton toolStripButtonRequestToBks;
 
     }
 }
