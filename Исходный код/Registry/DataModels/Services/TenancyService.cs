@@ -455,7 +455,7 @@ namespace Registry.DataModels.Services
                           ELSE ts.base_month
                           END AS mon, family, name, father, birth, c AS reg_date
                         FROM dbo.t_bks ts
-                        WHERE ts.street = @street AND house = @house AND RTRIM(LTRIM(flat)) = @flat) v
+                        WHERE ts.nas = @region AND ts.street = @street AND house = @house AND RTRIM(LTRIM(flat)) = @flat) v
                         WHERE mon = (
                           SELECT 
                           MAX(CASE SUBSTRING(ts.base_month,1,3) 
@@ -474,26 +474,7 @@ namespace Registry.DataModels.Services
                           ELSE ts.base_month
                           END) AS mon
                           FROM dbo.t_bks ts
-                          WHERE ts.street = @street AND house = @house AND RTRIM(LTRIM(flat)) = @flat)
-                            AND mon = (
-                                SELECT 
-                                MAX(CASE SUBSTRING(ts.base_month,1,3) 
-                                WHEN 'Jan' THEN SUBSTRING(ts.base_month,4,4)+'01'
-                                WHEN 'Feb' THEN SUBSTRING(ts.base_month,4,4)+'02'
-                                WHEN 'Mar' THEN SUBSTRING(ts.base_month,4,4)+'03'
-                                WHEN 'Apr' THEN SUBSTRING(ts.base_month,4,4)+'04'
-                                WHEN 'May' THEN SUBSTRING(ts.base_month,4,4)+'05'
-                                WHEN 'Jun' THEN SUBSTRING(ts.base_month,4,4)+'06'
-                                WHEN 'Jul' THEN SUBSTRING(ts.base_month,4,4)+'07'
-                                WHEN 'Aug' THEN SUBSTRING(ts.base_month,4,4)+'08'
-                                WHEN 'Sep' THEN SUBSTRING(ts.base_month,4,4)+'09'
-                                WHEN 'Oct' THEN SUBSTRING(ts.base_month,4,4)+'10'
-                                WHEN 'Nov' THEN SUBSTRING(ts.base_month,4,4)+'11'
-                                WHEN 'Dec' THEN SUBSTRING(ts.base_month,4,4)+'12'
-                                ELSE ts.base_month
-                                END) AS mon
-                                FROM dbo.t_bks ts
-                              )
+                          WHERE ts.nas = @region AND ts.street = @street AND house = @house AND RTRIM(LTRIM(flat)) = @flat)
                         ORDER BY mon;"
                 };
                 var streetName = currentPremise.First().street_name;
@@ -503,6 +484,15 @@ namespace Registry.DataModels.Services
                     "гск. ", "проезд. ", "пл-ка. ", "туп. "
                 };
                 var streetParts = streetName.Split(prefixes, StringSplitOptions.RemoveEmptyEntries);
+
+                var regionName = "";
+                if (streetParts.Length > 1)
+                {
+                    regionName = streetParts[0].Replace("жилрайон.", "").Trim(' ', ',');
+                }
+                var region = new SqlParameter("region", SqlDbType.NVarChar) { Value = regionName };
+                command.Parameters.Add(region);
+
                 streetName = streetParts[streetParts.Length - 1];
                 var street = new SqlParameter("street", SqlDbType.NVarChar) {Value = streetName};
                 command.Parameters.Add(street);

@@ -118,8 +118,19 @@ namespace Registry.Viewport.SearchForms
                     includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_tenancy",
                         comboBoxBalanceInputTenancyExpr.Text, numericUpDownBalanceInputTenancyFrom.Value, numericUpDownBalanceInputTenancyTo.Value);
                 if (checkBoxBalanceInputDGIEnable.Checked)
-                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_dgi",
-                        comboBoxBalanceInputDGIExpr.Text, numericUpDownBalanceInputDGIFrom.Value, numericUpDownBalanceInputDGITo.Value);
+                {
+                    var accountsDgi = AccountIdsByPaymentInfo(null, "balance_dgi",
+                        comboBoxBalanceInputDGIExpr.Text, numericUpDownBalanceInputDGIFrom.Value,
+                        numericUpDownBalanceInputDGITo.Value);
+                    var accountsPadun = AccountIdsByPaymentInfo(null, "balance_padun",
+                        comboBoxBalanceInputDGIExpr.Text, numericUpDownBalanceInputDGIFrom.Value,
+                        numericUpDownBalanceInputDGITo.Value);
+                    var accountsPkk = AccountIdsByPaymentInfo(null, "balance_pkk",
+                        comboBoxBalanceInputDGIExpr.Text, numericUpDownBalanceInputDGIFrom.Value,
+                        numericUpDownBalanceInputDGITo.Value);
+                    var accounts = accountsDgi.Concat(accountsPadun).Concat(accountsPkk);
+                    includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);
+                }
                 if (checkBoxChargingEnable.Checked)
                     includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "charging_total",
                         comboBoxChargingExpr.Text, numericUpDownChargingFrom.Value, numericUpDownChargingTo.Value);
@@ -127,20 +138,53 @@ namespace Registry.Viewport.SearchForms
                     includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "charging_tenancy",
                         comboBoxChargingTenancyExpr.Text, numericUpDownChargingTenancyFrom.Value, numericUpDownChargingTenancyTo.Value);
                 if (checkBoxChargingDGIEnable.Checked)
-                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "charging_dgi",
-                        comboBoxChargingDGIExpr.Text, numericUpDownChargingDGIFrom.Value, numericUpDownChargingDGITo.Value);
+                {
+                    var accountsDgi = AccountIdsByPaymentInfo(null, "charging_dgi",
+                        comboBoxChargingDGIExpr.Text, numericUpDownChargingDGIFrom.Value,
+                        numericUpDownChargingDGITo.Value);
+                    var accountsPadun = AccountIdsByPaymentInfo(null, "charging_padun",
+                        comboBoxChargingDGIExpr.Text, numericUpDownChargingDGIFrom.Value,
+                        numericUpDownChargingDGITo.Value);
+                    var accountsPkk = AccountIdsByPaymentInfo(null, "charging_pkk",
+                        comboBoxChargingDGIExpr.Text, numericUpDownChargingDGIFrom.Value,
+                        numericUpDownChargingDGITo.Value);
+                    var accounts = accountsDgi.Concat(accountsPadun).Concat(accountsPkk);
+                    includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);
+                }
                 if (checkBoxRecalcTenancyEnable.Checked)
                     includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "recalc_tenancy",
                         comboBoxRecalcTenancyExpr.Text, numericUpDownRecalcTenancyFrom.Value, numericUpDownRecalcTenancyTo.Value);
                 if (checkBoxRecalcDGIEnable.Checked)
-                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "recalc_dgi",
-                        comboBoxRecalcDGIExpr.Text, numericUpDownRecalcDGIFrom.Value, numericUpDownRecalcDGITo.Value);
+                {
+                    var accountsDgi = AccountIdsByPaymentInfo(null, "recalc_dgi",
+                        comboBoxRecalcDGIExpr.Text, numericUpDownRecalcDGIFrom.Value,
+                        numericUpDownRecalcDGITo.Value);
+                    var accountsPadun = AccountIdsByPaymentInfo(null, "recalc_padun",
+                        comboBoxRecalcDGIExpr.Text, numericUpDownRecalcDGIFrom.Value,
+                        numericUpDownRecalcDGITo.Value);
+                    var accountsPkk = AccountIdsByPaymentInfo(null, "recalc_pkk",
+                        comboBoxRecalcDGIExpr.Text, numericUpDownRecalcDGIFrom.Value,
+                        numericUpDownRecalcDGITo.Value);
+                    var accounts = accountsDgi.Concat(accountsPadun).Concat(accountsPkk);
+                    includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);
+                }
                 if (checkBoxPaymentTenancyEnable.Checked)
                     includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "payment_tenancy",
                         comboBoxPaymentTenancyExpr.Text, numericUpDownPaymentTenancyFrom.Value, numericUpDownPaymentTenancyTo.Value);
                 if (checkBoxPaymentDGIEnable.Checked)
-                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "payment_dgi",
-                        comboBoxPaymentDGIExpr.Text, numericUpDownPaymentDGIFrom.Value, numericUpDownPaymentDGITo.Value);
+                {
+                    var accountsDgi = AccountIdsByPaymentInfo(null, "payment_dgi",
+                        comboBoxPaymentDGIExpr.Text, numericUpDownPaymentDGIFrom.Value,
+                        numericUpDownPaymentDGITo.Value);
+                    var accountsPadun = AccountIdsByPaymentInfo(null, "payment_padun",
+                        comboBoxPaymentDGIExpr.Text, numericUpDownPaymentDGIFrom.Value,
+                        numericUpDownPaymentDGITo.Value);
+                    var accountsPkk = AccountIdsByPaymentInfo(null, "payment_pkk",
+                        comboBoxPaymentDGIExpr.Text, numericUpDownPaymentDGIFrom.Value,
+                        numericUpDownPaymentDGITo.Value);
+                    var accounts = accountsDgi.Concat(accountsPadun).Concat(accountsPkk);
+                    includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);           
+                }
                 if (checkBoxTransferBalanceEnable.Checked)
                     includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "transfer_balance",
                         comboBoxTransferBalanceExpr.Text, numericUpDownTransferBalanceFrom.Value, numericUpDownTransferBalanceTo.Value);
@@ -151,8 +195,19 @@ namespace Registry.Viewport.SearchForms
                     includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_output_tenancy",
                         comboBoxBalanceOutputTenancyExpr.Text, numericUpDownBalanceOutputTenancyFrom.Value, numericUpDownBalanceOutputTenancyTo.Value);
                 if (checkBoxBalanceOutputDGIEnable.Checked)
-                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_output_dgi",
-                        comboBoxBalanceOutputDGIExpr.Text, numericUpDownBalanceOutputDGIFrom.Value, numericUpDownBalanceOutputDGITo.Value);
+                {
+                    var accountsDgi = AccountIdsByPaymentInfo(null, "balance_output_dgi",
+                        comboBoxBalanceOutputDGIExpr.Text, numericUpDownBalanceOutputDGIFrom.Value,
+                        numericUpDownBalanceOutputDGITo.Value);
+                    var accountsPadun = AccountIdsByPaymentInfo(null, "balance_output_padun",
+                        comboBoxBalanceOutputDGIExpr.Text, numericUpDownBalanceOutputDGIFrom.Value,
+                        numericUpDownBalanceOutputDGITo.Value);
+                    var accountsPkk = AccountIdsByPaymentInfo(null, "balance_output_pkk",
+                        comboBoxBalanceOutputDGIExpr.Text, numericUpDownBalanceOutputDGIFrom.Value,
+                        numericUpDownBalanceOutputDGITo.Value);
+                    var accounts = accountsDgi.Concat(accountsPadun).Concat(accountsPkk);
+                    includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);    
+                }
             }
             if (checkBoxByClaimsChecked.Checked)
             {

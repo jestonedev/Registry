@@ -658,9 +658,9 @@ namespace Registry.Viewport.SearchForms
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(379, 90);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(138, 15);
+            this.label8.Size = new System.Drawing.Size(204, 15);
             this.label8.TabIndex = 111;
-            this.label8.Text = "Сальдо входящее ДГИ";
+            this.label8.Text = "Сальдо входящее ДГИ/Падун/ПКК";
             // 
             // numericUpDownChargingDGITo
             // 
@@ -732,9 +732,9 @@ namespace Registry.Viewport.SearchForms
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(379, 213);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(105, 15);
+            this.label9.Size = new System.Drawing.Size(171, 15);
             this.label9.TabIndex = 126;
-            this.label9.Text = "Начисление ДГИ";
+            this.label9.Text = "Начисление ДГИ/Падун/ПКК";
             // 
             // numericUpDownChargingTenancyTo
             // 
@@ -1028,9 +1028,9 @@ namespace Registry.Viewport.SearchForms
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(379, 293);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(105, 15);
+            this.label16.Size = new System.Drawing.Size(171, 15);
             this.label16.TabIndex = 136;
-            this.label16.Text = "Перерасчет ДГИ";
+            this.label16.Text = "Перерасчет ДГИ/Падун/ПКК";
             // 
             // numericUpDownRecalcTenancyTo
             // 
@@ -1250,9 +1250,9 @@ namespace Registry.Viewport.SearchForms
             this.label19.AutoSize = true;
             this.label19.Location = new System.Drawing.Point(379, 418);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(79, 15);
+            this.label19.Size = new System.Drawing.Size(145, 15);
             this.label19.TabIndex = 151;
-            this.label19.Text = "Оплата ДГИ";
+            this.label19.Text = "Оплата ДГИ/Падун/ПКК";
             // 
             // numericUpDownPaymentTenancyTo
             // 
@@ -1398,9 +1398,9 @@ namespace Registry.Viewport.SearchForms
             this.label21.AutoSize = true;
             this.label21.Location = new System.Drawing.Point(379, 544);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(144, 15);
+            this.label21.Size = new System.Drawing.Size(210, 15);
             this.label21.TabIndex = 166;
-            this.label21.Text = "Сальдо исходящее ДГИ";
+            this.label21.Text = "Сальдо исходящее ДГИ/Падун/ПКК";
             // 
             // numericUpDownBalanceOutputTenancyTo
             // 

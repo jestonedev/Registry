@@ -22,7 +22,6 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.crn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.raw_address = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.parsed_address = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -33,23 +32,33 @@ namespace Registry.Viewport.MultiMasters
             this.prescribed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_input = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.balance_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_input_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.charging_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.charging_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.balance_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.balance_padun = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.balance_pkk = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.charging_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.charging_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.charging_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.recalc_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.recalc_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.recalc_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.payment_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.payment_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.payment_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.charging_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.charging_padun = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.charging_pkk = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.transfer_balance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.recalc_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.recalc_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.recalc_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.recalc_padun = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.recalc_pkk = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.payment_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.payment_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.payment_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.payment_padun = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.payment_pkk = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.balance_output_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.balance_output_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.balance_output_padun = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.balance_output_pkk = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -171,7 +180,6 @@ namespace Registry.Viewport.MultiMasters
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.date,
-            this.id_account,
             this.crn,
             this.raw_address,
             this.parsed_address,
@@ -182,23 +190,33 @@ namespace Registry.Viewport.MultiMasters
             this.prescribed,
             this.balance_input,
             this.balance_tenancy,
-            this.balance_dgi,
             this.balance_input_penalties,
-            this.charging_tenancy,
-            this.charging_dgi,
+            this.balance_dgi,
+            this.balance_padun,
+            this.balance_pkk,
             this.charging_total,
+            this.charging_tenancy,
             this.charging_penalties,
-            this.recalc_tenancy,
-            this.recalc_dgi,
-            this.recalc_penalties,
-            this.payment_tenancy,
-            this.payment_dgi,
-            this.payment_penalties,
+            this.charging_dgi,
+            this.charging_padun,
+            this.charging_pkk,
             this.transfer_balance,
+            this.recalc_tenancy,
+            this.recalc_penalties,
+            this.recalc_dgi,
+            this.recalc_padun,
+            this.recalc_pkk,
+            this.payment_tenancy,
+            this.payment_penalties,
+            this.payment_dgi,
+            this.payment_padun,
+            this.payment_pkk,
             this.balance_output_total,
             this.balance_output_tenancy,
+            this.balance_output_penalties,
             this.balance_output_dgi,
-            this.balance_output_penalties});
+            this.balance_output_padun,
+            this.balance_output_pkk});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(0, 25);
             this.dataGridView.Margin = new System.Windows.Forms.Padding(2);
@@ -215,16 +233,10 @@ namespace Registry.Viewport.MultiMasters
             // 
             // date
             // 
+            this.date.Frozen = true;
             this.date.HeaderText = "Состояние на дату";
             this.date.Name = "date";
             this.date.ReadOnly = true;
-            // 
-            // id_account
-            // 
-            this.id_account.HeaderText = "№";
-            this.id_account.Name = "id_account";
-            this.id_account.ReadOnly = true;
-            this.id_account.Visible = false;
             // 
             // crn
             // 
@@ -294,41 +306,71 @@ namespace Registry.Viewport.MultiMasters
             this.balance_tenancy.Name = "balance_tenancy";
             this.balance_tenancy.ReadOnly = true;
             // 
-            // balance_dgi
-            // 
-            this.balance_dgi.HeaderText = "Сальдо вх. ДГИ";
-            this.balance_dgi.Name = "balance_dgi";
-            this.balance_dgi.ReadOnly = true;
-            // 
             // balance_input_penalties
             // 
             this.balance_input_penalties.HeaderText = "Пени (вх.)";
             this.balance_input_penalties.Name = "balance_input_penalties";
             this.balance_input_penalties.ReadOnly = true;
             // 
-            // charging_tenancy
+            // balance_dgi
             // 
-            this.charging_tenancy.HeaderText = "Начислено найм";
-            this.charging_tenancy.Name = "charging_tenancy";
-            this.charging_tenancy.ReadOnly = true;
+            this.balance_dgi.HeaderText = "Сальдо вх. ДГИ";
+            this.balance_dgi.Name = "balance_dgi";
+            this.balance_dgi.ReadOnly = true;
             // 
-            // charging_dgi
+            // balance_padun
             // 
-            this.charging_dgi.HeaderText = "Начислено ДГИ";
-            this.charging_dgi.Name = "charging_dgi";
-            this.charging_dgi.ReadOnly = true;
+            this.balance_padun.HeaderText = "Сальдо вх. Падун";
+            this.balance_padun.Name = "balance_padun";
+            this.balance_padun.ReadOnly = true;
+            // 
+            // balance_pkk
+            // 
+            this.balance_pkk.HeaderText = "Сальдо вх. ПКК";
+            this.balance_pkk.Name = "balance_pkk";
+            this.balance_pkk.ReadOnly = true;
             // 
             // charging_total
             // 
-            this.charging_total.HeaderText = "Начислено итого";
+            this.charging_total.HeaderText = "Начисление итого";
             this.charging_total.Name = "charging_total";
             this.charging_total.ReadOnly = true;
             // 
+            // charging_tenancy
+            // 
+            this.charging_tenancy.HeaderText = "Начисление найм";
+            this.charging_tenancy.Name = "charging_tenancy";
+            this.charging_tenancy.ReadOnly = true;
+            // 
             // charging_penalties
             // 
-            this.charging_penalties.HeaderText = "Пени (начислено)";
+            this.charging_penalties.HeaderText = "Начисление пени";
             this.charging_penalties.Name = "charging_penalties";
             this.charging_penalties.ReadOnly = true;
+            // 
+            // charging_dgi
+            // 
+            this.charging_dgi.HeaderText = "Начисление ДГИ";
+            this.charging_dgi.Name = "charging_dgi";
+            this.charging_dgi.ReadOnly = true;
+            // 
+            // charging_padun
+            // 
+            this.charging_padun.HeaderText = "Начисление Падун";
+            this.charging_padun.Name = "charging_padun";
+            this.charging_padun.ReadOnly = true;
+            // 
+            // charging_pkk
+            // 
+            this.charging_pkk.HeaderText = "Начисление ПКК";
+            this.charging_pkk.Name = "charging_pkk";
+            this.charging_pkk.ReadOnly = true;
+            // 
+            // transfer_balance
+            // 
+            this.transfer_balance.HeaderText = "Перенос сальдо";
+            this.transfer_balance.Name = "transfer_balance";
+            this.transfer_balance.ReadOnly = true;
             // 
             // recalc_tenancy
             // 
@@ -336,17 +378,29 @@ namespace Registry.Viewport.MultiMasters
             this.recalc_tenancy.Name = "recalc_tenancy";
             this.recalc_tenancy.ReadOnly = true;
             // 
+            // recalc_penalties
+            // 
+            this.recalc_penalties.HeaderText = "Перерасчет пени";
+            this.recalc_penalties.Name = "recalc_penalties";
+            this.recalc_penalties.ReadOnly = true;
+            // 
             // recalc_dgi
             // 
             this.recalc_dgi.HeaderText = "Перерасчет ДГИ";
             this.recalc_dgi.Name = "recalc_dgi";
             this.recalc_dgi.ReadOnly = true;
             // 
-            // recalc_penalties
+            // recalc_padun
             // 
-            this.recalc_penalties.HeaderText = "Пени (перерасчет)";
-            this.recalc_penalties.Name = "recalc_penalties";
-            this.recalc_penalties.ReadOnly = true;
+            this.recalc_padun.HeaderText = "Перерасчет Падун";
+            this.recalc_padun.Name = "recalc_padun";
+            this.recalc_padun.ReadOnly = true;
+            // 
+            // recalc_pkk
+            // 
+            this.recalc_pkk.HeaderText = "Перерасчет ПКК";
+            this.recalc_pkk.Name = "recalc_pkk";
+            this.recalc_pkk.ReadOnly = true;
             // 
             // payment_tenancy
             // 
@@ -354,23 +408,29 @@ namespace Registry.Viewport.MultiMasters
             this.payment_tenancy.Name = "payment_tenancy";
             this.payment_tenancy.ReadOnly = true;
             // 
+            // payment_penalties
+            // 
+            this.payment_penalties.HeaderText = "Оплата пени";
+            this.payment_penalties.Name = "payment_penalties";
+            this.payment_penalties.ReadOnly = true;
+            // 
             // payment_dgi
             // 
             this.payment_dgi.HeaderText = "Оплата ДГИ";
             this.payment_dgi.Name = "payment_dgi";
             this.payment_dgi.ReadOnly = true;
             // 
-            // payment_penalties
+            // payment_padun
             // 
-            this.payment_penalties.HeaderText = "Пени (оплата)";
-            this.payment_penalties.Name = "payment_penalties";
-            this.payment_penalties.ReadOnly = true;
+            this.payment_padun.HeaderText = "Оплата Падун";
+            this.payment_padun.Name = "payment_padun";
+            this.payment_padun.ReadOnly = true;
             // 
-            // transfer_balance
+            // payment_pkk
             // 
-            this.transfer_balance.HeaderText = "Перенос сальдо";
-            this.transfer_balance.Name = "transfer_balance";
-            this.transfer_balance.ReadOnly = true;
+            this.payment_pkk.HeaderText = "Оплата ПКК";
+            this.payment_pkk.Name = "payment_pkk";
+            this.payment_pkk.ReadOnly = true;
             // 
             // balance_output_total
             // 
@@ -384,17 +444,29 @@ namespace Registry.Viewport.MultiMasters
             this.balance_output_tenancy.Name = "balance_output_tenancy";
             this.balance_output_tenancy.ReadOnly = true;
             // 
+            // balance_output_penalties
+            // 
+            this.balance_output_penalties.HeaderText = "Пени исх.";
+            this.balance_output_penalties.Name = "balance_output_penalties";
+            this.balance_output_penalties.ReadOnly = true;
+            // 
             // balance_output_dgi
             // 
             this.balance_output_dgi.HeaderText = "Сальдо исх. ДГИ";
             this.balance_output_dgi.Name = "balance_output_dgi";
             this.balance_output_dgi.ReadOnly = true;
             // 
-            // balance_output_penalties
+            // balance_output_padun
             // 
-            this.balance_output_penalties.HeaderText = "Пени (исх.)";
-            this.balance_output_penalties.Name = "balance_output_penalties";
-            this.balance_output_penalties.ReadOnly = true;
+            this.balance_output_padun.HeaderText = "Сальдо исх. Падун";
+            this.balance_output_padun.Name = "balance_output_padun";
+            this.balance_output_padun.ReadOnly = true;
+            // 
+            // balance_output_pkk
+            // 
+            this.balance_output_pkk.HeaderText = "Сальдо исх. ПКК";
+            this.balance_output_pkk.Name = "balance_output_pkk";
+            this.balance_output_pkk.ReadOnly = true;
             // 
             // MultiPaymentAccountsMaster
             // 
@@ -424,9 +496,10 @@ namespace Registry.Viewport.MultiMasters
         private ToolStrip toolStrip1;
         private ToolStripProgressBar toolStripProgressBarMultiOperations;
         private ToolStripButton toolStripButtonRequestToBks;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripLabel toolStripLabelRowCount;
         private DataGridView dataGridView;
         private DataGridViewTextBoxColumn date;
-        private DataGridViewTextBoxColumn id_account;
         private DataGridViewTextBoxColumn crn;
         private DataGridViewTextBoxColumn raw_address;
         private DataGridViewTextBoxColumn parsed_address;
@@ -437,25 +510,33 @@ namespace Registry.Viewport.MultiMasters
         private DataGridViewTextBoxColumn prescribed;
         private DataGridViewTextBoxColumn balance_input;
         private DataGridViewTextBoxColumn balance_tenancy;
-        private DataGridViewTextBoxColumn balance_dgi;
         private DataGridViewTextBoxColumn balance_input_penalties;
-        private DataGridViewTextBoxColumn charging_tenancy;
-        private DataGridViewTextBoxColumn charging_dgi;
+        private DataGridViewTextBoxColumn balance_dgi;
+        private DataGridViewTextBoxColumn balance_padun;
+        private DataGridViewTextBoxColumn balance_pkk;
         private DataGridViewTextBoxColumn charging_total;
+        private DataGridViewTextBoxColumn charging_tenancy;
         private DataGridViewTextBoxColumn charging_penalties;
-        private DataGridViewTextBoxColumn recalc_tenancy;
-        private DataGridViewTextBoxColumn recalc_dgi;
-        private DataGridViewTextBoxColumn recalc_penalties;
-        private DataGridViewTextBoxColumn payment_tenancy;
-        private DataGridViewTextBoxColumn payment_dgi;
-        private DataGridViewTextBoxColumn payment_penalties;
+        private DataGridViewTextBoxColumn charging_dgi;
+        private DataGridViewTextBoxColumn charging_padun;
+        private DataGridViewTextBoxColumn charging_pkk;
         private DataGridViewTextBoxColumn transfer_balance;
+        private DataGridViewTextBoxColumn recalc_tenancy;
+        private DataGridViewTextBoxColumn recalc_penalties;
+        private DataGridViewTextBoxColumn recalc_dgi;
+        private DataGridViewTextBoxColumn recalc_padun;
+        private DataGridViewTextBoxColumn recalc_pkk;
+        private DataGridViewTextBoxColumn payment_tenancy;
+        private DataGridViewTextBoxColumn payment_penalties;
+        private DataGridViewTextBoxColumn payment_dgi;
+        private DataGridViewTextBoxColumn payment_padun;
+        private DataGridViewTextBoxColumn payment_pkk;
         private DataGridViewTextBoxColumn balance_output_total;
         private DataGridViewTextBoxColumn balance_output_tenancy;
-        private DataGridViewTextBoxColumn balance_output_dgi;
         private DataGridViewTextBoxColumn balance_output_penalties;
-        private ToolStripSeparator toolStripSeparator3;
-        private ToolStripLabel toolStripLabelRowCount;
+        private DataGridViewTextBoxColumn balance_output_dgi;
+        private DataGridViewTextBoxColumn balance_output_padun;
+        private DataGridViewTextBoxColumn balance_output_pkk;
 
     }
 }
