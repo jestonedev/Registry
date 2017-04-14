@@ -93,7 +93,7 @@ namespace Registry.Viewport.ModalEditors
                             person.IdPerson, person.IdProcess, person.IdKinship, person.Surname,
                             person.Name, person.Patronymic, person.DateOfBirth,
                             person.IdDocumentType,
-                            person.DateOfDocumentIssue, person.DocumentNum, person.DocumentSeria, person.IdDocumentIssuedBy,
+                            person.DateOfDocumentIssue, person.DocumentNum, person.DocumentSeria, person.IdDocumentIssuedBy,person.Snils,
                             person.RegistrationIdStreet, person.RegistrationHouse, person.RegistrationFlat, person.RegistrationRoom, person.RegistrationDate,
                             person.ResidenceIdStreet, person.ResidenceHouse, person.ResidenceFlat, person.ResidenceRoom,
                             person.PersonalAccount, person.IncludeDate, person.ExcludeDate, 0);
