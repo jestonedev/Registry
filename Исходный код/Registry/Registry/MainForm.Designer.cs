@@ -55,6 +55,10 @@ namespace Registry
             this.ribbonSeparator4 = new System.Windows.Forms.RibbonSeparator();
             this.ribbonOrbMenuItemHelp = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonOrbMenuItemExit = new System.Windows.Forms.RibbonOrbMenuItem();
+            this.ribbonButtonOrbRegistryMultiPremises = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbMultiPaymentAccount = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbMultiClaims = new System.Windows.Forms.RibbonButton();
+            this.ribbonSeparatorMasters = new System.Windows.Forms.RibbonSeparator();
             this.ribbonButtonOrbTenancyContract = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbTenancyContract1711 = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbTenancyContract1712 = new System.Windows.Forms.RibbonButton();
@@ -65,13 +69,14 @@ namespace Registry
             this.ribbonButtonNotifyIllegalResident = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonNotifyNoProlongTrouble = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonNotifyNoProlongCategory = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonNotifyEvictionTrouble = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonNotifyCotractViolation = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptPremise = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptSubPremise = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptSubPremises = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbRegistryMultiPremises = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbMultiPaymentAccount = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbMultiClaims = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonJudicialOrder = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonRequestToBks = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonTransfertToLegalDepartment = new System.Windows.Forms.RibbonButton();
             this.ribbonSeparatorExport = new System.Windows.Forms.RibbonSeparator();
             this.ribbonButtonExportOds = new System.Windows.Forms.RibbonButton();
             this.ribbonTabGeneral = new System.Windows.Forms.RibbonTab();
@@ -182,10 +187,6 @@ namespace Registry
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonRequestToBks = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonTransfertToLegalDepartment = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonJudicialOrder = new System.Windows.Forms.RibbonButton();
-            this.ribbonSeparatorMasters = new System.Windows.Forms.RibbonSeparator();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -225,6 +226,7 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonNotifyIllegalResident);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonNotifyNoProlongTrouble);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonNotifyNoProlongCategory);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonNotifyEvictionTrouble);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonNotifyCotractViolation);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremise);
@@ -235,7 +237,7 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonSeparatorExport);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonExportOds);
             this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать и массовые операции";
-            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 565);
+            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 587);
             this.ribbon1.OrbDropDown.TabIndex = 0;
             this.ribbon1.OrbImage = null;
             this.ribbon1.OrbStyle = System.Windows.Forms.RibbonOrbStyle.Office_2010;
@@ -346,6 +348,39 @@ namespace Registry
             this.ribbonOrbMenuItemExit.ToolTipTitle = "Выход из программы";
             this.ribbonOrbMenuItemExit.Click += new System.EventHandler(this.ribbonOrbMenuItemExit_Click);
             // 
+            // ribbonButtonOrbRegistryMultiPremises
+            // 
+            this.ribbonButtonOrbRegistryMultiPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiPremises.Image")));
+            this.ribbonButtonOrbRegistryMultiPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiPremises.SmallImage")));
+            this.ribbonButtonOrbRegistryMultiPremises.Text = "Массовые операции над помещениями";
+            this.ribbonButtonOrbRegistryMultiPremises.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над помещениями";
+            this.ribbonButtonOrbRegistryMultiPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiPremises.ToolTipImage")));
+            this.ribbonButtonOrbRegistryMultiPremises.ToolTipTitle = "Массовые операции над помещениями";
+            this.ribbonButtonOrbRegistryMultiPremises.Click += new System.EventHandler(this.ribbonButtonOrbMultiPremises_Click);
+            // 
+            // ribbonButtonOrbMultiPaymentAccount
+            // 
+            this.ribbonButtonOrbMultiPaymentAccount.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiPaymentAccount.Image")));
+            this.ribbonButtonOrbMultiPaymentAccount.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiPaymentAccount.SmallImage")));
+            this.ribbonButtonOrbMultiPaymentAccount.Text = "Массовые операции над лицевыми счетами";
+            this.ribbonButtonOrbMultiPaymentAccount.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над лицевыми счет" +
+    "ами";
+            this.ribbonButtonOrbMultiPaymentAccount.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiPaymentAccount.ToolTipImage")));
+            this.ribbonButtonOrbMultiPaymentAccount.ToolTipTitle = "Массовые операции над лицевыми счетами";
+            this.ribbonButtonOrbMultiPaymentAccount.Value = "";
+            this.ribbonButtonOrbMultiPaymentAccount.Click += new System.EventHandler(this.ribbonButtonOrbMultiPaymentAccount_Click);
+            // 
+            // ribbonButtonOrbMultiClaims
+            // 
+            this.ribbonButtonOrbMultiClaims.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiClaims.Image")));
+            this.ribbonButtonOrbMultiClaims.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiClaims.SmallImage")));
+            this.ribbonButtonOrbMultiClaims.Text = "Массовые операции над исковыми работами";
+            this.ribbonButtonOrbMultiClaims.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над претензионно-" +
+    "исковыми работами";
+            this.ribbonButtonOrbMultiClaims.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiClaims.ToolTipImage")));
+            this.ribbonButtonOrbMultiClaims.ToolTipTitle = "Массовые операции над исковыми работами";
+            this.ribbonButtonOrbMultiClaims.Click += new System.EventHandler(this.ribbonButtonOrbMultiClaims_Click);
+            // 
             // ribbonButtonOrbTenancyContract
             // 
             this.ribbonButtonOrbTenancyContract.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract.Image")));
@@ -454,6 +489,16 @@ namespace Registry
             this.ribbonButtonNotifyNoProlongCategory.ToolTipTitle = "Уведомление о непродлении (категории)";
             this.ribbonButtonNotifyNoProlongCategory.Click += new System.EventHandler(this.ribbonButtonNotifyNoProlongCategory_Click);
             // 
+            // ribbonButtonNotifyEvictionTrouble
+            // 
+            this.ribbonButtonNotifyEvictionTrouble.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyEvictionTrouble.Image")));
+            this.ribbonButtonNotifyEvictionTrouble.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyEvictionTrouble.SmallImage")));
+            this.ribbonButtonNotifyEvictionTrouble.Text = "Уведомление о выселении из АФ";
+            this.ribbonButtonNotifyEvictionTrouble.ToolTip = "При нажатии на данную кнопку будет сформировано уведомление о выселении из АФ";
+            this.ribbonButtonNotifyEvictionTrouble.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyEvictionTrouble.ToolTipImage")));
+            this.ribbonButtonNotifyEvictionTrouble.ToolTipTitle = "Уведомление о выселении из АФ";
+            this.ribbonButtonNotifyEvictionTrouble.Click += new System.EventHandler(this.ribbonButtonNotifyEvictionTrouble_Click);
+            // 
             // ribbonButtonNotifyCotractViolation
             // 
             this.ribbonButtonNotifyCotractViolation.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyCotractViolation.Image")));
@@ -498,38 +543,35 @@ namespace Registry
             this.ribbonButtonOrbRegistryExcerptSubPremises.ToolTipTitle = "Выписка (на все муниципальные комнаты)";
             this.ribbonButtonOrbRegistryExcerptSubPremises.Click += new System.EventHandler(this.ribbonButtonOrbRegistryExcerptSubPremises_Click);
             // 
-            // ribbonButtonOrbRegistryMultiPremises
+            // ribbonButtonJudicialOrder
             // 
-            this.ribbonButtonOrbRegistryMultiPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiPremises.Image")));
-            this.ribbonButtonOrbRegistryMultiPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiPremises.SmallImage")));
-            this.ribbonButtonOrbRegistryMultiPremises.Text = "Массовые операции над помещениями";
-            this.ribbonButtonOrbRegistryMultiPremises.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над помещениями";
-            this.ribbonButtonOrbRegistryMultiPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiPremises.ToolTipImage")));
-            this.ribbonButtonOrbRegistryMultiPremises.ToolTipTitle = "Массовые операции над помещениями";
-            this.ribbonButtonOrbRegistryMultiPremises.Click += new System.EventHandler(this.ribbonButtonOrbMultiPremises_Click);
+            this.ribbonButtonJudicialOrder.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonJudicialOrder.Image")));
+            this.ribbonButtonJudicialOrder.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonJudicialOrder.SmallImage")));
+            this.ribbonButtonJudicialOrder.Text = "Заявление о выдаче судебного приказа";
+            this.ribbonButtonJudicialOrder.ToolTip = "Сформировать заявление о выдаче судебного приказа";
+            this.ribbonButtonJudicialOrder.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonJudicialOrder.ToolTipImage")));
+            this.ribbonButtonJudicialOrder.ToolTipTitle = "Заявление о выдаче судебного приказа";
+            this.ribbonButtonJudicialOrder.Click += new System.EventHandler(this.ribbonButtonJudicialOrder_Click);
             // 
-            // ribbonButtonOrbMultiPaymentAccount
+            // ribbonButtonRequestToBks
             // 
-            this.ribbonButtonOrbMultiPaymentAccount.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiPaymentAccount.Image")));
-            this.ribbonButtonOrbMultiPaymentAccount.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiPaymentAccount.SmallImage")));
-            this.ribbonButtonOrbMultiPaymentAccount.Text = "Массовые операции над лицевыми счетами";
-            this.ribbonButtonOrbMultiPaymentAccount.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над лицевыми счет" +
-    "ами";
-            this.ribbonButtonOrbMultiPaymentAccount.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiPaymentAccount.ToolTipImage")));
-            this.ribbonButtonOrbMultiPaymentAccount.ToolTipTitle = "Массовые операции над лицевыми счетами";
-            this.ribbonButtonOrbMultiPaymentAccount.Value = "";
-            this.ribbonButtonOrbMultiPaymentAccount.Click += new System.EventHandler(this.ribbonButtonOrbMultiPaymentAccount_Click);
+            this.ribbonButtonRequestToBks.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRequestToBks.Image")));
+            this.ribbonButtonRequestToBks.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRequestToBks.SmallImage")));
+            this.ribbonButtonRequestToBks.Text = "Запрос в БКС";
+            this.ribbonButtonRequestToBks.ToolTip = "Сформировать запрос в БКС";
+            this.ribbonButtonRequestToBks.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRequestToBks.ToolTipImage")));
+            this.ribbonButtonRequestToBks.ToolTipTitle = "Запрос в БКС";
+            this.ribbonButtonRequestToBks.Click += new System.EventHandler(this.ribbonButtonRequestToBks_Click);
             // 
-            // ribbonButtonOrbMultiClaims
+            // ribbonButtonTransfertToLegalDepartment
             // 
-            this.ribbonButtonOrbMultiClaims.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiClaims.Image")));
-            this.ribbonButtonOrbMultiClaims.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiClaims.SmallImage")));
-            this.ribbonButtonOrbMultiClaims.Text = "Массовые операции над исковыми работами";
-            this.ribbonButtonOrbMultiClaims.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над претензионно-" +
-    "исковыми работами";
-            this.ribbonButtonOrbMultiClaims.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiClaims.ToolTipImage")));
-            this.ribbonButtonOrbMultiClaims.ToolTipTitle = "Массовые операции над исковыми работами";
-            this.ribbonButtonOrbMultiClaims.Click += new System.EventHandler(this.ribbonButtonOrbMultiClaims_Click);
+            this.ribbonButtonTransfertToLegalDepartment.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTransfertToLegalDepartment.Image")));
+            this.ribbonButtonTransfertToLegalDepartment.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTransfertToLegalDepartment.SmallImage")));
+            this.ribbonButtonTransfertToLegalDepartment.Text = "Передача в юридический отдел";
+            this.ribbonButtonTransfertToLegalDepartment.ToolTip = "Сформировать служебную записку о передаче в юридический отдел";
+            this.ribbonButtonTransfertToLegalDepartment.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTransfertToLegalDepartment.ToolTipImage")));
+            this.ribbonButtonTransfertToLegalDepartment.ToolTipTitle = "Передача в юридический отдел";
+            this.ribbonButtonTransfertToLegalDepartment.Click += new System.EventHandler(this.ribbonButtonTransfertToLegalDepartment_Click);
             // 
             // ribbonButtonExportOds
             // 
@@ -1734,42 +1776,13 @@ namespace Registry
             this.dockPanel.Skin = dockPanelSkin1;
             this.dockPanel.TabIndex = 5;
             this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.dockPanel_ActiveDocumentChanged);
+            this.dockPanel.ActiveContentChanged += new System.EventHandler(this.dockPanel_ActiveContentChanged);
             // 
             // ribbonButton3
             // 
             this.ribbonButton3.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.Image")));
             this.ribbonButton3.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.SmallImage")));
             this.ribbonButton3.Text = "Лицевые счета";
-            // 
-            // ribbonButtonRequestToBks
-            // 
-            this.ribbonButtonRequestToBks.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRequestToBks.Image")));
-            this.ribbonButtonRequestToBks.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRequestToBks.SmallImage")));
-            this.ribbonButtonRequestToBks.Text = "Запрос в БКС";
-            this.ribbonButtonRequestToBks.ToolTip = "Сформировать запрос в БКС";
-            this.ribbonButtonRequestToBks.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRequestToBks.ToolTipImage")));
-            this.ribbonButtonRequestToBks.ToolTipTitle = "Запрос в БКС";
-            this.ribbonButtonRequestToBks.Click += new System.EventHandler(this.ribbonButtonRequestToBks_Click);
-            // 
-            // ribbonButtonTransfertToLegalDepartment
-            // 
-            this.ribbonButtonTransfertToLegalDepartment.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTransfertToLegalDepartment.Image")));
-            this.ribbonButtonTransfertToLegalDepartment.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTransfertToLegalDepartment.SmallImage")));
-            this.ribbonButtonTransfertToLegalDepartment.Text = "Передача в юридический отдел";
-            this.ribbonButtonTransfertToLegalDepartment.ToolTip = "Сформировать служебную записку о передаче в юридический отдел";
-            this.ribbonButtonTransfertToLegalDepartment.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTransfertToLegalDepartment.ToolTipImage")));
-            this.ribbonButtonTransfertToLegalDepartment.ToolTipTitle = "Передача в юридический отдел";
-            this.ribbonButtonTransfertToLegalDepartment.Click += new System.EventHandler(this.ribbonButtonTransfertToLegalDepartment_Click);
-            // 
-            // ribbonButtonJudicialOrder
-            // 
-            this.ribbonButtonJudicialOrder.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonJudicialOrder.Image")));
-            this.ribbonButtonJudicialOrder.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonJudicialOrder.SmallImage")));
-            this.ribbonButtonJudicialOrder.Text = "Заявление о выдаче судебного приказа";
-            this.ribbonButtonJudicialOrder.ToolTip = "Сформировать заявление о выдаче судебного приказа";
-            this.ribbonButtonJudicialOrder.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonJudicialOrder.ToolTipImage")));
-            this.ribbonButtonJudicialOrder.ToolTipTitle = "Заявление о выдаче судебного приказа";
-            this.ribbonButtonJudicialOrder.Click += new System.EventHandler(this.ribbonButtonJudicialOrder_Click);
             // 
             // MainForm
             // 
@@ -1937,6 +1950,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonRequestToBks;
         private System.Windows.Forms.RibbonButton ribbonButtonTransfertToLegalDepartment;
         private System.Windows.Forms.RibbonSeparator ribbonSeparatorMasters;
+        private System.Windows.Forms.RibbonButton ribbonButtonNotifyEvictionTrouble;
     }
 }
 

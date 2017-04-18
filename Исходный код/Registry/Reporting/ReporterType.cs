@@ -46,6 +46,7 @@
         TenancyNotifyIllegalResident,
         TenancyNotifyContractViolation,
         TenancyNotifyNoProlongTrouble,
-        TenancyNotifyNoProlongCategory
+        TenancyNotifyNoProlongCategory,
+        TenancyNotifyEvictionTrouble
     }
 }

@@ -437,6 +437,8 @@ namespace Registry
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyNoProlongTrouble);
             if (document.HasReport(ReporterType.TenancyNotifyNoProlongCategory))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyNoProlongCategory);
+            if (document.HasReport(ReporterType.TenancyNotifyEvictionTrouble))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyEvictionTrouble);
             if (document.HasReport(ReporterType.TenancyNotifyContractViolation))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyCotractViolation);
             if (document.HasReport(ReporterType.RegistryExcerptReporterPremise))
@@ -1141,6 +1143,12 @@ namespace Registry
                 document.GenerateReport(ReporterType.TenancyNotifyNoProlongCategory);
         }
 
+        private void ribbonButtonNotifyEvictionTrouble_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.TenancyNotifyEvictionTrouble);
+        }
         private void ribbonButtonOrbMultiPaymentAccount_Click(object sender, EventArgs e)
         {
             var multiPaymentAccountsMaster = new MultiPaymentAccountsMaster(this);
@@ -1270,6 +1278,11 @@ namespace Registry
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
                 document.GenerateReport(ReporterType.JudicialOrderReporter);
+        }
+
+        private void dockPanel_ActiveContentChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
