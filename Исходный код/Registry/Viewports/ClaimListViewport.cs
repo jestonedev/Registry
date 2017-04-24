@@ -145,6 +145,8 @@ namespace Registry.Viewport
                 IdAccount = _idAccount,
                 AmountTenancy = numericUpDownAmountTenancy.Value,
                 AmountDgi = numericUpDownAmountDGI.Value,
+                AmountPadun = numericUpDownAmountPadun.Value,
+                AmountPkk = numericUpDownAmountPkk.Value,
                 AmountPenalties = numericUpDownAmountPenalties.Value,
                 AtDate = ViewportHelper.ValueOrNull(dateTimePickerAtDate),
                 StartDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerStartDeptPeriod),
@@ -157,6 +159,8 @@ namespace Registry.Viewport
         private void ViewportFromClaim(Claim claim)
         {
             numericUpDownAmountDGI.Value = ViewportHelper.ValueOrDefault(claim.AmountDgi);
+            numericUpDownAmountPadun.Value = ViewportHelper.ValueOrDefault(claim.AmountPadun);
+            numericUpDownAmountPkk.Value = ViewportHelper.ValueOrDefault(claim.AmountPkk);
             numericUpDownAmountPenalties.Value = ViewportHelper.ValueOrDefault(claim.AmountPenalties);
             numericUpDownAmountTenancy.Value = ViewportHelper.ValueOrDefault(claim.AmountTenancy);
             dateTimePickerAtDate.Value = ViewportHelper.ValueOrDefault(claim.AtDate);
@@ -247,6 +251,8 @@ namespace Registry.Viewport
             {
                 numericUpDownAmountTenancy.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_tenancy"]);
                 numericUpDownAmountDGI.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_dgi"]);
+                numericUpDownAmountPadun.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_padun"]);
+                numericUpDownAmountPkk.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_pkk"]);
                 numericUpDownAmountPenalties.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_penalties"]);
             }
             IsEditable = true;
