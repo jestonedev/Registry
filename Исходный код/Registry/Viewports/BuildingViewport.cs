@@ -16,6 +16,7 @@ using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 using System.Drawing;
+using Registry.Reporting;
 
 
 namespace Registry.Viewport
@@ -714,6 +715,34 @@ namespace Registry.Viewport
             ShowAssocViewport<T>(MenuCallback,
                 columnName + " = " + Convert.ToInt32(row[columnName], CultureInfo.InvariantCulture),
                 row.Row, ParentTypeEnum.Building);
+        }
+
+        public override bool HasReport(ReporterType reporterType)
+        {
+            var reports = new List<ReporterType>
+            {
+                ReporterType.RegistryExcerptReporterBuilding
+            };
+            return reports.Contains(reporterType);
+        }
+
+        public override void GenerateReport(ReporterType reporterType)
+        {
+            var arguments = new Dictionary<string, string>();
+            switch (reporterType)
+            {
+                case ReporterType.RegistryExcerptReporterBuilding:
+                    var viewModel = Presenter.ViewModel["general"];
+                    if (viewModel.CurrentRow == null)
+                    {
+                        MessageBox.Show(@"Не выбрано здание", @"Ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+                    arguments.Add("ids", viewModel.CurrentRow["id_building"].ToString());
+                    break;
+            }
+            MenuCallback.RunReport(reporterType, arguments);
         }
 
         protected override void OnVisibleChanged(EventArgs e)

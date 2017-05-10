@@ -48,6 +48,6 @@
         TenancyNotifyNoProlongTrouble,
         TenancyNotifyNoProlongCategory,
         TenancyNotifyEvictionTrouble,
-        ClaimCourtOrderReporter
+        RegistryExcerptReporterBuilding
     }
 }
