@@ -51,7 +51,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregatedAddress.cs" />
+    <Compile Include="JudgeBuildingAssoc.cs" />
+    <Compile Include="Judge.cs" />
     <Compile Include="ClaimFile.cs" />
+    <Compile Include="ClaimCourtOrder.cs" />
+    <Compile Include="ClaimPerson.cs" />
     <Compile Include="ClaimStateTypeRelation.cs" />
     <Compile Include="Infrastructure\DataColumnAttribute.cs" />
     <Compile Include="Infrastructure\DataTableAttribute.cs" />

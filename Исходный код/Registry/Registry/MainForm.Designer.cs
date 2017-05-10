@@ -187,6 +187,7 @@ namespace Registry
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonClaimCourtOrders = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -801,6 +802,7 @@ namespace Registry
             this.ribbonPanelRelations.Items.Add(this.ribbonButtonTenancyAgreements);
             this.ribbonPanelRelations.Items.Add(this.ribbonButtonClaims);
             this.ribbonPanelRelations.Items.Add(this.ribbonButtonClaimStates);
+            this.ribbonPanelRelations.Items.Add(this.ribbonButtonClaimCourtOrders);
             this.ribbonPanelRelations.Items.Add(this.ribbonButtonAccounts);
             this.ribbonPanelRelations.Items.Add(this.ribbonButtonPaymentsAccountHistory);
             this.ribbonPanelRelations.Items.Add(this.ribbonButtonPaymentsPremiseHistory);
@@ -1776,13 +1778,23 @@ namespace Registry
             this.dockPanel.Skin = dockPanelSkin1;
             this.dockPanel.TabIndex = 5;
             this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.dockPanel_ActiveDocumentChanged);
-            this.dockPanel.ActiveContentChanged += new System.EventHandler(this.dockPanel_ActiveContentChanged);
             // 
             // ribbonButton3
             // 
             this.ribbonButton3.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.Image")));
             this.ribbonButton3.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.SmallImage")));
             this.ribbonButton3.Text = "Лицевые счета";
+            // 
+            // ribbonButtonClaimCourtOrders
+            // 
+            this.ribbonButtonClaimCourtOrders.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimCourtOrders.Image")));
+            this.ribbonButtonClaimCourtOrders.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimCourtOrders.SmallImage")));
+            this.ribbonButtonClaimCourtOrders.Text = "Судебный приказ";
+            this.ribbonButtonClaimCourtOrders.ToolTip = "При нажатии на данную кнопку откроется окно для ввода и формирования судебного пр" +
+    "иказа";
+            this.ribbonButtonClaimCourtOrders.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimCourtOrders.ToolTipImage")));
+            this.ribbonButtonClaimCourtOrders.ToolTipTitle = "Судебный приказ";
+            this.ribbonButtonClaimCourtOrders.Click += new System.EventHandler(this.ribbonButtonClaimCourtOrders_Click);
             // 
             // MainForm
             // 
@@ -1951,6 +1963,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonTransfertToLegalDepartment;
         private System.Windows.Forms.RibbonSeparator ribbonSeparatorMasters;
         private System.Windows.Forms.RibbonButton ribbonButtonNotifyEvictionTrouble;
+        private System.Windows.Forms.RibbonButton ribbonButtonClaimCourtOrders;
     }
 }
 

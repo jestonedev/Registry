@@ -4,6 +4,8 @@ using Registry.Entities.Infrastructure;
 namespace Registry.Entities
 {
     [Relation(SlaveTableName = "claim_states")]
+    [Relation(SlaveTableName = "claim_persons")]
+    [Relation(SlaveTableName = "claim_court_orders")]
     [Relation(MasterTableName = "payments_accounts", MasterFieldName = "id_account")]
     [DataTable(HasDeletedMark = true, Name = "claims")]
     public sealed class Claim : Entity

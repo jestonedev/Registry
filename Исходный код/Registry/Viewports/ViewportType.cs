@@ -37,6 +37,7 @@
         ResettlePremisesViewport,
         PaymentsAccountsViewport,
         PaymentsAccountHistoryViewport,
-        PaymentsPremiseHistoryViewport
+        PaymentsPremiseHistoryViewport,
+        ClaimCourtOrdersViewport
     }
 }

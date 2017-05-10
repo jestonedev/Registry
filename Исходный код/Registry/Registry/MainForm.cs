@@ -349,6 +349,8 @@ namespace Registry
                 ribbonPanelRelations.Items.Add(ribbonButtonClaims);
             if (document.HasAssocViewport<ClaimStatesViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonClaimStates);
+            if (document.HasAssocViewport<ClaimCourtOrdersViewport>())
+                ribbonPanelRelations.Items.Add(ribbonButtonClaimCourtOrders);
             if (document.HasAssocViewport<PaymentsAccountsViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonAccounts);
             if (document.HasAssocViewport<PaymentsAccountHistoryViewport>())
@@ -1280,9 +1282,11 @@ namespace Registry
                 document.GenerateReport(ReporterType.JudicialOrderReporter);
         }
 
-        private void dockPanel_ActiveContentChanged(object sender, EventArgs e)
+        private void ribbonButtonClaimCourtOrders_Click(object sender, EventArgs e)
         {
-
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowAssocViewport<ClaimCourtOrdersViewport>();
         }
     }
 }

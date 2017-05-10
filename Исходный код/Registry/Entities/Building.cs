@@ -14,6 +14,7 @@ namespace Registry.Entities
     [Relation(SlaveTableName = "tenancy_buildings_assoc")]
     [Relation(SlaveTableName = "resettle_buildings_from_assoc")]
     [Relation(SlaveTableName = "resettle_buildings_to_assoc")]
+    [Relation(SlaveTableName = "judges_buildings_assoc")]
     [DataTable(Name = "buildings", HasDeletedMark = true)]
     public sealed class Building : Entity
     {

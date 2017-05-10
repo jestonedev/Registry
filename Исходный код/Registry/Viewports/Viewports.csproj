@@ -88,6 +88,12 @@
     <Compile Include="BuildingViewport.Designer.cs">
       <DependentUpon>BuildingViewport.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClaimCourtOrdersViewport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClaimCourtOrdersViewport.Designer.cs">
+      <DependentUpon>ClaimCourtOrdersViewport.cs</DependentUpon>
+    </Compile>
     <Compile Include="ClaimFiles.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -196,6 +202,7 @@
     </Compile>
     <Compile Include="Presenters\BuildingListPresenter.cs" />
     <Compile Include="Presenters\BuldingPresenter.cs" />
+    <Compile Include="Presenters\ClaimCourtOrdersPresenter.cs" />
     <Compile Include="Presenters\ClaimListPresenter.cs" />
     <Compile Include="Presenters\ClaimStatesPresenter.cs" />
     <Compile Include="Presenters\DocumentsResidencePresenter.cs" />
@@ -537,6 +544,7 @@
     </Compile>
     <Compile Include="ViewModels\BuildingListViewModel.cs" />
     <Compile Include="ViewModels\BuildingViewModel.cs" />
+    <Compile Include="ViewModels\ClaimCourtOrdersViewModel.cs" />
     <Compile Include="ViewModels\ClaimListViewModel.cs" />
     <Compile Include="ViewModels\ClaimStatesViewModel.cs" />
     <Compile Include="ViewModels\DocumentIssuedByViewModel.cs" />
@@ -620,6 +628,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BuildingViewport.resx">
       <DependentUpon>BuildingViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClaimCourtOrdersViewport.resx">
+      <DependentUpon>ClaimCourtOrdersViewport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ClaimFiles.resx">
       <DependentUpon>ClaimFiles.cs</DependentUpon>
