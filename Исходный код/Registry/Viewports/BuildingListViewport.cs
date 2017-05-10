@@ -204,7 +204,8 @@ namespace Registry.Viewport
         {
             var reports = new List<ReporterType>
             {
-                ReporterType.ExportReporter
+                ReporterType.ExportReporter,
+                ReporterType.RegistryExcerptReporterBuilding
             };
             return reports.Contains(reporterType);
         }
@@ -216,6 +217,16 @@ namespace Registry.Viewport
             {
                 case ReporterType.ExportReporter:
                     arguments = ExportReportArguments();
+                    break;
+                case ReporterType.RegistryExcerptReporterBuilding:        
+                    var viewModel = Presenter.ViewModel["general"];
+                    if (viewModel.CurrentRow == null)
+                    {
+                        MessageBox.Show(@"Не выбрано здание", @"Ошибка", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+                    arguments.Add("ids", viewModel.CurrentRow["id_building"].ToString());
                     break;
             }
             MenuCallback.RunReport(reporterType, arguments);

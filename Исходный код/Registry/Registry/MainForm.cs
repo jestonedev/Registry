@@ -441,6 +441,8 @@ namespace Registry
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyEvictionTrouble);
             if (document.HasReport(ReporterType.TenancyNotifyContractViolation))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyCotractViolation);
+            if (document.HasReport(ReporterType.RegistryExcerptReporterBuilding))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptBuild);
             if (document.HasReport(ReporterType.RegistryExcerptReporterPremise))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptPremise);
             if (document.HasReport(ReporterType.RegistryExcerptReporterSubPremise))
@@ -1078,6 +1080,12 @@ namespace Registry
                 document.GenerateReport(ReporterType.TenancyOrderReporter); 
         }
 
+        private void ribbonButtonOrbRegistryExcerptBuild_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.RegistryExcerptReporterBuilding);
+        }
         private void ribbonButtonOrbRegistryExcerptPremise_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;

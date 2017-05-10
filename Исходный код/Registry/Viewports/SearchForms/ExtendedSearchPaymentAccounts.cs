@@ -102,9 +102,8 @@ namespace Registry.Viewport.SearchForms
                 !checkBoxBalanceOutputTenancyEnable.Checked
                 && !checkBoxBalanceOutputDGIEnable.Checked && !checkBoxTenantSNPEnable.Checked)
             {
-                if (!string.IsNullOrEmpty(filter))
-                    filter += " AND ";
-                filter += string.Format("date {0} '{1}'", ConvertDisplayEqExprToSql(comboBoxDateExpr.Text), dateTimePickerDate.Value.ToString("yyyy-MM-dd"));
+                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_tenancy",
+                        "между", decimal.MinValue, decimal.MaxValue);
             }
             else
             {

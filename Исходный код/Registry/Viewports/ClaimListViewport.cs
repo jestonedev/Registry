@@ -493,7 +493,7 @@ namespace Registry.Viewport
             var viewModel = Presenter.ViewModel["general"];
             if (viewModel.CurrentRow == null)
             {
-                MessageBox.Show(@"ННе выбрана протензионно-исковая работа для отображения ее состояний", @"Ошибка",
+                MessageBox.Show(@"Не выбрана протензионно-исковая работа для отображения ее состояний", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }

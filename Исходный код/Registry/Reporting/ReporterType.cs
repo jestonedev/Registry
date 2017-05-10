@@ -47,6 +47,7 @@
         TenancyNotifyContractViolation,
         TenancyNotifyNoProlongTrouble,
         TenancyNotifyNoProlongCategory,
-        TenancyNotifyEvictionTrouble
+        TenancyNotifyEvictionTrouble,
+        RegistryExcerptReporterBuilding
     }
 }
