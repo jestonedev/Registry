@@ -96,10 +96,31 @@ namespace Registry.Viewport.SearchForms
             }
             if (checkBoxAccountChecked.Checked && !string.IsNullOrEmpty(textBoxAccount.Text.Trim()))
             {
-                var accounts = from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
+                var accounts = (from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
                                where accountRow.Field<string>("account").Contains(textBoxAccount.Text.Trim())
-                               select accountRow.Field<int>("id_account");
-                includedAccounts = DataModelHelper.Intersect(null, accounts);
+                               select accountRow).ToList();
+                if (accounts.Any())
+                {
+                    accounts =
+                        accounts.Concat(
+                            from accountRow in
+                                DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
+                            join selAccountRow in accounts
+                                on accountRow.Field<string>("raw_address") equals
+                                selAccountRow.Field<string>("raw_address")
+                            where selAccountRow.Field<string>("raw_address") != null
+                            select accountRow).ToList();
+                    accounts =
+                        accounts.Concat(
+                            from accountRow in
+                                DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
+                            join selAccountRow in accounts
+                                on accountRow.Field<string>("parsed_address") equals
+                                selAccountRow.Field<string>("parsed_address")
+                            where selAccountRow.Field<string>("parsed_address") != null
+                            select accountRow).ToList();
+                }
+                includedAccounts = DataModelHelper.Intersect(null, accounts.Select(r => r.Field<int>("id_account")));
             }
             if (checkBoxSRNEnable.Checked && !string.IsNullOrEmpty(textBoxSRN.Text.Trim()))
             {
