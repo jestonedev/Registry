@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using VIBlend.WinForms.Controls;
 
-namespace Registry.Viewport
+namespace Registry.Viewport.ModalEditors
 {
     partial class SubPremisesEditor
     {

@@ -45,15 +45,15 @@
             this.label73 = new System.Windows.Forms.Label();
             this.groupBox30 = new System.Windows.Forms.GroupBox();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.vButtonPersonEdit = new VIBlend.WinForms.Controls.vButton();
-            this.vButtonPersonDelete = new VIBlend.WinForms.Controls.vButton();
-            this.vButtonPersonAdd = new VIBlend.WinForms.Controls.vButton();
             this.dataGridViewClaimPersons = new System.Windows.Forms.DataGridView();
             this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.IsClaimer = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.is_claimer = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.vButtonPersonEdit = new VIBlend.WinForms.Controls.vButton();
+            this.vButtonPersonDelete = new VIBlend.WinForms.Controls.vButton();
+            this.vButtonPersonAdd = new VIBlend.WinForms.Controls.vButton();
             this.tableLayoutPanel12.SuspendLayout();
             this.panel7.SuspendLayout();
             this.groupBox29.SuspendLayout();
@@ -240,48 +240,6 @@
             this.panel5.Size = new System.Drawing.Size(38, 405);
             this.panel5.TabIndex = 4;
             // 
-            // vButtonPersonEdit
-            // 
-            this.vButtonPersonEdit.AllowAnimations = true;
-            this.vButtonPersonEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.vButtonPersonEdit.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonPersonEdit.Image = ((System.Drawing.Image)(resources.GetObject("vButtonPersonEdit.Image")));
-            this.vButtonPersonEdit.Location = new System.Drawing.Point(3, 57);
-            this.vButtonPersonEdit.Name = "vButtonPersonEdit";
-            this.vButtonPersonEdit.RoundedCornersMask = ((byte)(15));
-            this.vButtonPersonEdit.Size = new System.Drawing.Size(32, 25);
-            this.vButtonPersonEdit.TabIndex = 2;
-            this.vButtonPersonEdit.UseVisualStyleBackColor = false;
-            this.vButtonPersonEdit.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
-            // 
-            // vButtonPersonDelete
-            // 
-            this.vButtonPersonDelete.AllowAnimations = true;
-            this.vButtonPersonDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.vButtonPersonDelete.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonPersonDelete.Image = ((System.Drawing.Image)(resources.GetObject("vButtonPersonDelete.Image")));
-            this.vButtonPersonDelete.Location = new System.Drawing.Point(3, 30);
-            this.vButtonPersonDelete.Name = "vButtonPersonDelete";
-            this.vButtonPersonDelete.RoundedCornersMask = ((byte)(15));
-            this.vButtonPersonDelete.Size = new System.Drawing.Size(32, 25);
-            this.vButtonPersonDelete.TabIndex = 1;
-            this.vButtonPersonDelete.UseVisualStyleBackColor = false;
-            this.vButtonPersonDelete.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
-            // 
-            // vButtonPersonAdd
-            // 
-            this.vButtonPersonAdd.AllowAnimations = true;
-            this.vButtonPersonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.vButtonPersonAdd.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonPersonAdd.Image = ((System.Drawing.Image)(resources.GetObject("vButtonPersonAdd.Image")));
-            this.vButtonPersonAdd.Location = new System.Drawing.Point(3, 3);
-            this.vButtonPersonAdd.Name = "vButtonPersonAdd";
-            this.vButtonPersonAdd.RoundedCornersMask = ((byte)(15));
-            this.vButtonPersonAdd.Size = new System.Drawing.Size(32, 25);
-            this.vButtonPersonAdd.TabIndex = 0;
-            this.vButtonPersonAdd.UseVisualStyleBackColor = false;
-            this.vButtonPersonAdd.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
-            // 
             // dataGridViewClaimPersons
             // 
             this.dataGridViewClaimPersons.AllowUserToAddRows = false;
@@ -295,7 +253,7 @@
             this.name,
             this.patronymic,
             this.date_of_birth,
-            this.IsClaimer});
+            this.is_claimer});
             this.dataGridViewClaimPersons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewClaimPersons.Location = new System.Drawing.Point(3, 16);
             this.dataGridViewClaimPersons.MultiSelect = false;
@@ -333,12 +291,57 @@
             this.date_of_birth.Name = "date_of_birth";
             this.date_of_birth.ReadOnly = true;
             // 
-            // IsClaimer
+            // is_claimer
             // 
-            this.IsClaimer.HeaderText = "Является нанимателем";
-            this.IsClaimer.MinimumWidth = 100;
-            this.IsClaimer.Name = "IsClaimer";
-            this.IsClaimer.ReadOnly = true;
+            this.is_claimer.HeaderText = "Является нанимателем";
+            this.is_claimer.MinimumWidth = 100;
+            this.is_claimer.Name = "is_claimer";
+            this.is_claimer.ReadOnly = true;
+            // 
+            // vButtonPersonEdit
+            // 
+            this.vButtonPersonEdit.AllowAnimations = true;
+            this.vButtonPersonEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.vButtonPersonEdit.BackColor = System.Drawing.Color.Transparent;
+            this.vButtonPersonEdit.Image = ((System.Drawing.Image)(resources.GetObject("vButtonPersonEdit.Image")));
+            this.vButtonPersonEdit.Location = new System.Drawing.Point(3, 57);
+            this.vButtonPersonEdit.Name = "vButtonPersonEdit";
+            this.vButtonPersonEdit.RoundedCornersMask = ((byte)(15));
+            this.vButtonPersonEdit.Size = new System.Drawing.Size(32, 25);
+            this.vButtonPersonEdit.TabIndex = 2;
+            this.vButtonPersonEdit.UseVisualStyleBackColor = false;
+            this.vButtonPersonEdit.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonPersonEdit.Click += new System.EventHandler(this.vButtonPersonEdit_Click);
+            // 
+            // vButtonPersonDelete
+            // 
+            this.vButtonPersonDelete.AllowAnimations = true;
+            this.vButtonPersonDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.vButtonPersonDelete.BackColor = System.Drawing.Color.Transparent;
+            this.vButtonPersonDelete.Image = ((System.Drawing.Image)(resources.GetObject("vButtonPersonDelete.Image")));
+            this.vButtonPersonDelete.Location = new System.Drawing.Point(3, 30);
+            this.vButtonPersonDelete.Name = "vButtonPersonDelete";
+            this.vButtonPersonDelete.RoundedCornersMask = ((byte)(15));
+            this.vButtonPersonDelete.Size = new System.Drawing.Size(32, 25);
+            this.vButtonPersonDelete.TabIndex = 1;
+            this.vButtonPersonDelete.UseVisualStyleBackColor = false;
+            this.vButtonPersonDelete.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonPersonDelete.Click += new System.EventHandler(this.vButtonPersonDelete_Click);
+            // 
+            // vButtonPersonAdd
+            // 
+            this.vButtonPersonAdd.AllowAnimations = true;
+            this.vButtonPersonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.vButtonPersonAdd.BackColor = System.Drawing.Color.Transparent;
+            this.vButtonPersonAdd.Image = ((System.Drawing.Image)(resources.GetObject("vButtonPersonAdd.Image")));
+            this.vButtonPersonAdd.Location = new System.Drawing.Point(3, 3);
+            this.vButtonPersonAdd.Name = "vButtonPersonAdd";
+            this.vButtonPersonAdd.RoundedCornersMask = ((byte)(15));
+            this.vButtonPersonAdd.Size = new System.Drawing.Size(32, 25);
+            this.vButtonPersonAdd.TabIndex = 0;
+            this.vButtonPersonAdd.UseVisualStyleBackColor = false;
+            this.vButtonPersonAdd.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonPersonAdd.Click += new System.EventHandler(this.vButtonPersonAdd_Click);
             // 
             // ClaimCourtOrdersViewport
             // 
@@ -392,6 +395,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
         private System.Windows.Forms.DataGridViewTextBoxColumn patronymic;
         private System.Windows.Forms.DataGridViewTextBoxColumn date_of_birth;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn IsClaimer;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn is_claimer;
     }
 }

@@ -8,7 +8,7 @@ using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Security;
 
-namespace Registry.Viewport
+namespace Registry.Viewport.ModalEditors
 {
     internal partial class RestrictionsEditor : Form
     {

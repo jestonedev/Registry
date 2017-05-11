@@ -14,7 +14,7 @@ namespace Registry.Viewport.ViewModels
             {"claim_persons", new ViewModelItem(EntityDataModel<ClaimPerson>.GetInstance())},
             {"judges", new ViewModelItem(EntityDataModel<Judge>.GetInstance())},
             {"judges_buildings_assoc", new ViewModelItem(EntityDataModel<JudgeBuildingAssoc>.GetInstance())},
-            {"executor", new ViewModelItem(EntityDataModel<Executor>.GetInstance())},
+            {"executors", new ViewModelItem(EntityDataModel<Executor>.GetInstance())},
         })
         {
         }
