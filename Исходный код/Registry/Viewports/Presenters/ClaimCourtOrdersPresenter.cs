@@ -43,5 +43,20 @@ namespace Registry.Viewport.Presenters
             EntityConverter<ClaimCourtOrder>.FillRow(claimCourtOrder, row);
             return true;
         }
+
+        internal bool InsertClaimPersonRecord(ClaimPerson claimPerson)
+        {
+            var id = ViewModel["claim_persons"].Model.Insert(claimPerson);
+            if (id == -1)
+            {
+                return false;
+            }
+            claimPerson.IdPerson = id;
+            var row = (DataRowView)ViewModel["claim_persons"].BindingSource.AddNew();
+            if (row == null) return false;
+            EntityConverter<ClaimPerson>.FillRow(claimPerson, row);
+            ViewModel["claim_persons"].Model.EditingNewRecord = false;
+            return true;
+        }
     }
 }

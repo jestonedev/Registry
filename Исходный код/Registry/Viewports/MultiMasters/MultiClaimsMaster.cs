@@ -280,36 +280,6 @@ namespace Registry.Viewport.MultiMasters
             toolStripButtonCreateClaims.Enabled = AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
-        private void toolStripButtonJudicialOrder_Click(object sender, EventArgs e)
-        {
-            for (var i = 0; i < _claims.Count; i++)
-            {
-                var row = ((DataRowView)_claims[i]);
-                var hasState =
-                    (from currentRow in DataModel.GetInstance<EntityDataModel<ClaimState>>().FilterDeletedRows()
-                        where
-                            currentRow.Field<int?>("id_claim") == (int)row["id_claim"] &&
-                            currentRow.Field<int?>("id_state_type") == 4
-                        select currentRow).Any();
-                if (hasState) continue;
-                MessageBox.Show(string.Format("В претензионно-исковой работе №{0} отсутствует стадия подготовки и направления судебного приказа. Для формирования заявлений необходимо проставить стадию или убрать претензионно-исковую работу из списка мастера массовых операций", 
-                    row["id_claim"]), @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                return;
-            }
-
-            var arguments = new Dictionary<string, string>();
-            var filter = "";
-            for (var i = 0; i < _claims.Count; i++)
-            {
-                var row = ((DataRowView)_claims[i]);
-                if (row["id_claim"] != DBNull.Value)
-                    filter += row["id_claim"] + ",";
-            }
-            filter = filter.TrimEnd(',');
-            arguments.Add("filter", filter);
-            _menuCallback.RunReport(ReporterType.JudicialOrderReporter, arguments);
-        }
-
         private void toolStripButtonDeptPeriod_Click(object sender, EventArgs e)
         {
             if (_claims.Count == 0)

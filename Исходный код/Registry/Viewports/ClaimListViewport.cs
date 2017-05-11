@@ -564,7 +564,6 @@ namespace Registry.Viewport
             var reports = new List<ReporterType>
             {
                 ReporterType.ExportReporter,
-                ReporterType.JudicialOrderReporter,
                 ReporterType.RequestToBksReporter,
                 ReporterType.TransferToLegalDepartmentReporter
             };
@@ -582,23 +581,6 @@ namespace Registry.Viewport
             }
 
             var ids = GetCurrentIds().ToList();
-            if (!ids.Any())
-            {
-                MessageBox.Show(@"Не выбрано ни одной претензионно-исковой работы", @"Внимание", MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning,
-                    MessageBoxDefaultButton.Button1);
-                return;
-            }
-            if (reporterType == ReporterType.JudicialOrderReporter)
-            {
-                if (ValidForJudicialOrderReporter())
-                {
-                    var filter = ids.Select(r => r.ToString()).Aggregate((acc, v) => acc + "," + v);
-                    arguments.Add("filter", filter);
-                    MenuCallback.RunReport(reporterType, arguments);
-                    return;
-                }
-            }
             if (reporterType == ReporterType.TransferToLegalDepartmentReporter)
             {
                 if (ValidForTransferToLegalDepartmentReporter())
@@ -624,39 +606,6 @@ namespace Registry.Viewport
                 arguments.Add("filter", filter);
                 MenuCallback.RunReport(reporterType, arguments);
             }
-        }
-
-        private bool ValidForJudicialOrderReporter()
-        {
-            var ids = GetCurrentIds().ToList();
-            if (!ids.Any())
-            {
-                MessageBox.Show(@"Не выбрано ни одной претензионно-исковой работы", @"Внимание", MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning,
-                    MessageBoxDefaultButton.Button1);
-                return false;
-            }
-            foreach (var idClaim in ids)
-            {
-                var row = Presenter.ViewModel["general"].DataSource.Rows.Find(idClaim);
-                var hasState =
-                    (from currentRow in Presenter.ViewModel["claim_states"].Model.FilterDeletedRows()
-                     where
-                         currentRow.Field<int?>("id_claim") == (int)row["id_claim"] &&
-                         currentRow.Field<int?>("id_state_type") == 4
-                     select currentRow).Any();
-                if (!hasState)
-                {
-                    MessageBox.Show(
-                        string.Format(
-                            "В претензионно-исковой работе №{0} отсутствует стадия подготовки и направления судебного приказа. " +
-                            "Для формирования заявлений необходимо проставить стадию или убрать претензионно-исковую работу из списка мастера массовых операций",
-                            row["id_claim"]), @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning,
-                        MessageBoxDefaultButton.Button1);
-                    return false;
-                }
-            }
-            return true;
         }
 
         private bool ValidForTransferToLegalDepartmentReporter()

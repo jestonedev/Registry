@@ -19,7 +19,6 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonClaimDeleteAll = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonCreateClaims = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonDeptPeriod = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonJudicialOrder = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRequestToBks = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonToLegalDepartment = new System.Windows.Forms.ToolStripButton();
             this.toolStripProgressBarMultiOperations = new System.Windows.Forms.ToolStripProgressBar();
@@ -62,7 +61,6 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripSeparator2,
             this.toolStripButtonCreateClaims,
             this.toolStripButtonDeptPeriod,
-            this.toolStripButtonJudicialOrder,
             this.toolStripButtonRequestToBks,
             this.toolStripButtonToLegalDepartment,
             this.toolStripProgressBarMultiOperations,
@@ -134,16 +132,6 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonDeptPeriod.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonDeptPeriod.Text = "Установить период предъявления";
             this.toolStripButtonDeptPeriod.Click += new System.EventHandler(this.toolStripButtonDeptPeriod_Click);
-            // 
-            // toolStripButtonJudicialOrder
-            // 
-            this.toolStripButtonJudicialOrder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonJudicialOrder.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonJudicialOrder.Image")));
-            this.toolStripButtonJudicialOrder.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonJudicialOrder.Name = "toolStripButtonJudicialOrder";
-            this.toolStripButtonJudicialOrder.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonJudicialOrder.Text = "Сформировать заявление о выдаче судебного приказа";
-            this.toolStripButtonJudicialOrder.Click += new System.EventHandler(this.toolStripButtonJudicialOrder_Click);
             // 
             // toolStripButtonRequestToBks
             // 
@@ -340,7 +328,6 @@ namespace Registry.Viewport.MultiMasters
         private ToolStrip toolStrip1;
         private ToolStripProgressBar toolStripProgressBarMultiOperations;
         private DataGridView dataGridView;
-        private ToolStripButton toolStripButtonJudicialOrder;
         private ToolStripButton toolStripButtonDeptPeriod;
         private ToolStripButton toolStripButtonToLegalDepartment;
         private ToolStripLabel toolStripLabelRowCount;

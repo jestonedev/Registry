@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Registry.Entities;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels.Services
 {
@@ -149,6 +152,133 @@ namespace Registry.DataModels.Services
                     WHERE {0}", whereStatement);
                 return connection.SqlSelectTable("ids", command).AsEnumerable().Select(row => row.Field<int>("id_premises"));
             }
+        }
+
+        public static int? GetJudgeByIdAccount(int idAccount)
+        {
+            using (var connection = new DBConnection())
+            using (var command = DBConnection.CreateCommand())
+            {
+                command.CommandText = @"SELECT jba.id_judge
+                                        FROM (
+                                        SELECT p.id_building, papa.id_account
+                                        FROM payments_account_premises_assoc papa
+                                          INNER JOIN premises p ON papa.id_premises = p.id_premises
+                                        WHERE p.deleted <> 1
+                                        UNION ALL
+                                        SELECT p.id_building, paspa.id_account
+                                        FROM payments_account_sub_premises_assoc paspa
+                                          INNER JOIN sub_premises sp ON paspa.id_sub_premises = sp.id_sub_premises
+                                          INNER JOIN premises p ON sp.id_premises = p.id_premises
+                                        WHERE sp.deleted <> 1) v
+                                          INNER JOIN judges_buildings_assoc jba ON v.id_building = jba.id_building
+                                        WHERE v.id_account = ?
+                                        LIMIT 1";
+                command.Parameters.Add(DBConnection.CreateParameter("id_account", idAccount));
+                return connection.SqlSelectTable("judge", command).AsEnumerable().Select(row => row.Field<int?>("id_judge")).FirstOrDefault();
+            }
+        }
+
+        public static IEnumerable<ClaimPerson> GetClaimPersonsByIdAccount(int idAccount)
+        {
+            using (var connection = new DBConnection())
+            using (var command = DBConnection.CreateCommand())
+            {
+                command.CommandText = @"SELECT tp.surname, tp.name, tp.patronymic, tp.date_of_birth, 
+                                            IF(tp.id_kinship = 1, 1, 0) AS is_claimer
+                                        FROM (
+                                        SELECT * FROM (
+                                        SELECT tp.id_process, tp.registration_num, tp.registration_date, papa.id_account
+                                        FROM payments_account_premises_assoc papa
+                                            INNER JOIN premises p ON papa.id_premises = p.id_premises
+                                            INNER JOIN tenancy_premises_assoc tpa ON p.id_premises = tpa.id_premises
+                                            INNER JOIN tenancy_processes tp ON tpa.id_process = tp.id_process
+                                        WHERE p.deleted <> 1 AND tp.deleted <> 1 AND tpa.deleted <> 1
+                                        UNION ALL
+                                        SELECT tp.id_process, tp.registration_num, tp.registration_date, paspa.id_account
+                                        FROM payments_account_sub_premises_assoc paspa
+                                            INNER JOIN sub_premises sp ON paspa.id_sub_premises = sp.id_sub_premises
+                                            INNER JOIN tenancy_sub_premises_assoc tspa ON sp.id_sub_premises = tspa.id_sub_premises
+                                            INNER JOIN tenancy_processes tp ON tspa.id_process = tp.id_process
+                                        WHERE sp.deleted <> 1 AND tp.deleted <> 1 AND tspa.deleted <> 1) v
+                                        WHERE v.id_account = ? AND (v.registration_num IS NULL OR v.registration_num NOT LIKE '%н')
+                                        ORDER BY v.registration_date DESC
+                                        LIMIT 1) v INNER JOIN tenancy_persons tp
+                                            ON v.id_process = tp.id_process
+                                        WHERE tp.deleted <> 1";
+                command.Parameters.Add(DBConnection.CreateParameter("id_account", idAccount));
+                return connection.SqlSelectTable("persons", command).AsEnumerable().Select(row => 
+                    new ClaimPerson
+                    {
+                        Surname = row.Field<string>("surname"),
+                        Name = row.Field<string>("name"),
+                        Patronymic = row.Field<string>("patronymic"),
+                        DateOfBirth = row.Field<DateTime?>("date_of_birth"),
+                        IsClaimer = row.Field<long>("is_claimer") == 1,
+                    });
+            }
+        }
+
+        
+
+        public static void UpdateJudgeInfoByIdAccount(int? idAccount, int? idJudge)
+        {
+            var dataModel = EntityDataModel<JudgeBuildingAssoc>.GetInstance();
+            using (var connection = new DBConnection())
+            using (var command = DBConnection.CreateCommand())
+            {
+                command.CommandText = @"SELECT v.id_building
+                                        FROM (
+                                        SELECT p.id_building, papa.id_account
+                                        FROM payments_account_premises_assoc papa
+                                            INNER JOIN premises p ON papa.id_premises = p.id_premises
+                                        WHERE p.deleted <> 1
+                                        UNION ALL
+                                        SELECT p.id_building, paspa.id_account
+                                        FROM payments_account_sub_premises_assoc paspa
+                                            INNER JOIN sub_premises sp ON paspa.id_sub_premises = sp.id_sub_premises
+                                            INNER JOIN premises p ON sp.id_premises = p.id_premises
+                                        WHERE sp.deleted <> 1) v
+                                        WHERE v.id_account = ?
+                                        LIMIT 1";
+                command.Parameters.Add(DBConnection.CreateParameter("id_account", idAccount));
+                var idBuilding = connection.SqlSelectTable("building", command).AsEnumerable().Select(
+                    row => row.Field<int?>("id_building")).FirstOrDefault();
+                if (idBuilding == null)
+                {
+                    return;
+                }
+                var judgeBuildingAssoc = dataModel.FilterDeletedRows()
+                    .FirstOrDefault(r => r.Field<int>("id_building") == idBuilding);
+                if (judgeBuildingAssoc != null)
+                {
+                    if (EntityDataModel<JudgeBuildingAssoc>.GetInstance().Update(new JudgeBuildingAssoc
+                    {
+                        IdAssoc = (int) judgeBuildingAssoc["id_assoc"],
+                        IdBuilding = idBuilding,
+                        IdJudge = idJudge
+                    }) == -1)
+                    {
+                        return;
+                    }
+                    judgeBuildingAssoc["id_judge"] = idJudge;
+                    judgeBuildingAssoc.EndEdit();
+                }
+                else
+                {
+                    // Insert
+                    var id = EntityDataModel<JudgeBuildingAssoc>.GetInstance().Insert(new JudgeBuildingAssoc {
+                        IdBuilding = idBuilding,
+                        IdJudge = idJudge
+                    });
+                    if (id == -1)
+                    {
+                        return;
+                    }
+                    dataModel.Select().Rows.Add(id, idJudge, idBuilding);
+                }
+            }
+
         }
 
         public static DataTable GetBalanceInfoOnDate(IEnumerable<int> idAccounts, int year, int month)

@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Security.Principal;
 using System.Windows.Forms;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ModalEditors;
 using Registry.Viewport.Presenters;
@@ -77,8 +82,22 @@ namespace Registry.Viewport
             DataChangeHandlersInit();
 
             IsEditable = true;
-            if (GeneralBindingSource.Count == 0)
-                InsertRecord();
+        }
+
+        private bool _firstShowing = true;
+
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            if (_firstShowing && Presenter.ViewModel["general"].BindingSource.Count == 0)
+            {
+                _firstShowing = false;
+                if (GeneralBindingSource.Count == 0)
+                {
+                    InsertRecord();
+                    MenuCallback.EditingStateUpdate();
+                }
+            }
+            base.OnVisibleChanged(e);
         }
 
         private void GeneralBindingSource_RowDeleted(object sender, DataRowChangeEventArgs e)
@@ -152,9 +171,6 @@ namespace Registry.Viewport
                         IsEditable = true;
                         return;
                     }
-
-                    // TODO: autoload tenancy persons if exists
-
                     break;
                 case ViewportState.ModifyRowState:
                     if (!((ClaimCourtOrdersPresenter)Presenter).UpdateRecord(claimCourtOrder))
@@ -164,6 +180,7 @@ namespace Registry.Viewport
                     }
                     break;
             }
+            PaymentService.UpdateJudgeInfoByIdAccount((int)ParentRow["id_account"], claimCourtOrder.IdJudge);
             IsEditable = true;
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
@@ -206,7 +223,45 @@ namespace Registry.Viewport
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
             Presenter.ViewModel["general"].BindingSource.AddNew();
 
-            // TODO: autoload judge and executor
+            var login = WindowsIdentity.GetCurrent().Name;
+            var index = Presenter.ViewModel["executors"].BindingSource.Find("executor_login", login);
+            if (index != -1)
+            {
+                comboBoxExecutor.SelectedValue = ((DataRowView)Presenter.ViewModel["executors"].BindingSource[index])["id_executor"];   
+            }
+            var idJudge = PaymentService.GetJudgeByIdAccount((int)ParentRow["id_account"]);
+            if (idJudge != null)
+            {
+                comboBoxJudge.SelectedValue = (int) idJudge;
+            }
+            else
+            {
+                comboBoxJudge.SelectedValue = DBNull.Value;
+            }
+
+            if (Presenter.ViewModel["claim_persons"].BindingSource.Count == 0)
+            {
+                var claimPersons = PaymentService.GetClaimPersonsByIdAccount((int) ParentRow["id_account"]).ToList();
+                if (!claimPersons.Any())
+                {
+                    MessageBox.Show(
+                        @"Участники найма по даннмоу адресу ЖФ отсутствуют, либо отсутствует привязка адреса",
+                        @"Информация",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                }
+                else
+                {
+                    foreach (var claimPerson in claimPersons)
+                    {
+                        claimPerson.IdClaim = (int) ParentRow["id_claim"];
+                        if (!((ClaimCourtOrdersPresenter) Presenter).InsertClaimPersonRecord(claimPerson))
+                        {
+                            IsEditable = true;
+                            return;
+                        }
+                    }
+                }
+            }
 
             IsEditable = true;
         }
@@ -328,6 +383,45 @@ namespace Registry.Viewport
                 editor.ClaimPerson = claimPerson;
                 editor.ShowDialog();
             }
+        }
+
+        public override bool HasReport(ReporterType reporterType)
+        {
+            var reports = new List<ReporterType>
+            {
+                ReporterType.JudicialOrderReporter
+            };
+            return reports.Contains(reporterType);
+        }
+
+        public override void GenerateReport(ReporterType reporterType)
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            var arguments = new Dictionary<string, string>();
+            switch (reporterType)
+            {
+                case ReporterType.JudicialOrderReporter:
+                    if (ValidForJudicialOrderReporter())
+                    {
+                        arguments.Add("id_claim", ParentRow["id_claim"].ToString());
+                        MenuCallback.RunReport(reporterType, arguments);
+                    }
+                    break;
+                default:
+                    throw new ReporterException("Неподдерживаемый тип отчета");
+            }
+        }
+
+        private bool ValidForJudicialOrderReporter()
+        {
+            if (GeneralBindingSource.Count == 0)
+            {
+                MessageBox.Show(@"Отсутствует необходимая информация по судебному приказу. Невозможно сформировать заявление", @"Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            return true;
         }
     }
 }
