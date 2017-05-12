@@ -117,11 +117,11 @@ namespace Registry.Viewport
             // residence_warrant_num
             // 
             this.residence_warrant_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.residence_warrant_num.HeaderText = "№ ордера";
-            this.residence_warrant_num.MinimumWidth = 90;
+            this.residence_warrant_num.HeaderText = "№ ордера / другого документа-основания";
+            this.residence_warrant_num.MinimumWidth = 150;
             this.residence_warrant_num.Name = "residence_warrant_num";
             this.residence_warrant_num.ReadOnly = true;
-            this.residence_warrant_num.Width = 90;
+            this.residence_warrant_num.Width = 150;
             // 
             // tenant
             // 

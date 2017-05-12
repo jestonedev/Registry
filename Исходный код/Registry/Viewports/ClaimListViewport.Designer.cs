@@ -389,6 +389,7 @@ namespace Registry.Viewport
             // 
             this.numericUpDownAmountTotal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountTotal.BackColor = System.Drawing.Color.White;
             this.numericUpDownAmountTotal.DecimalPlaces = 2;
             this.numericUpDownAmountTotal.Location = new System.Drawing.Point(172, 149);
             this.numericUpDownAmountTotal.Maximum = new decimal(new int[] {

@@ -12,6 +12,7 @@ namespace Registry.Viewport.ViewModels
             {"general", new ViewModelItem(EntityDataModel<ClaimCourtOrder>.GetInstance())},
             {"payments_accounts", new ViewModelItem(DataModel.GetInstance<PaymentsAccountsDataModel>())},
             {"claim_persons", new ViewModelItem(EntityDataModel<ClaimPerson>.GetInstance())},
+            {"claims", new ViewModelItem(EntityDataModel<Claim>.GetInstance())},
             {"judges", new ViewModelItem(EntityDataModel<Judge>.GetInstance())},
             {"judges_buildings_assoc", new ViewModelItem(EntityDataModel<JudgeBuildingAssoc>.GetInstance())},
             {"executors", new ViewModelItem(EntityDataModel<Executor>.GetInstance())},

@@ -85,15 +85,15 @@ namespace Registry.Viewport
                 var residenceWarrantNumColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "residence_warrant_num",
-                    HeaderText = @"№ ордера найма",
-                    Width = 90,
+                    HeaderText = @"№ ордера / другого документа-основания",
+                    Width = 150,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var residenceWarrantDateColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "residence_warrant_date",
-                    HeaderText = @"Дата ордера найма",
-                    Width = 90,
+                    HeaderText = @"Дата ордера / другого документа-основания",
+                    Width = 150,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var tenantColumn = new DataGridViewTextBoxColumn

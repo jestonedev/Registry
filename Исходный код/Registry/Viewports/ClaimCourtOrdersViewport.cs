@@ -78,10 +78,55 @@ namespace Registry.Viewport
 
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", GeneralBindingSource_RowChanged);
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", GeneralBindingSource_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["claims"].DataSource, "RowChanged", Claims_RowChanged);
 
             DataChangeHandlersInit();
 
             IsEditable = true;
+        }
+
+        private void Claims_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            UpdateExtInfo();
+        }
+
+        private void UpdateExtInfo()
+        {
+            var account = Presenter.ViewModel["payments_accounts"].DataSource.Rows.Find(ParentRow["id_account"]);
+            if (account == null)
+            {
+                return;
+            }
+            textBoxRawAddress.Text = account["raw_address"].ToString();
+            textBoxParsedAddress.Text = account["parsed_address"].ToString();
+            if (ParentRow["start_dept_period"] != DBNull.Value)
+            {
+                dateTimePickerStartDeptPeriod.Checked = true;
+                dateTimePickerStartDeptPeriod.Value = (DateTime) ParentRow["start_dept_period"];
+            }
+            else
+            {
+                dateTimePickerStartDeptPeriod.Checked = false;
+                dateTimePickerStartDeptPeriod.Value = DateTime.Now.Date;
+            }
+            if (ParentRow["end_dept_period"] != DBNull.Value)
+            {
+                dateTimePickerEndDeptPeriod.Checked = true;
+                dateTimePickerEndDeptPeriod.Value = (DateTime)ParentRow["end_dept_period"];
+            }
+            else
+            {
+                dateTimePickerEndDeptPeriod.Checked = false;
+                dateTimePickerEndDeptPeriod.Value = DateTime.Now.Date;
+            }
+            numericUpDownAmountTenancy.Value = (decimal)ParentRow["amount_tenancy"];
+            numericUpDownAmountDGI.Value = (decimal) ParentRow["amount_dgi"];
+            numericUpDownAmountPadun.Value = (decimal)ParentRow["amount_padun"];
+            numericUpDownAmountPkk.Value = (decimal)ParentRow["amount_pkk"];
+            numericUpDownAmountPenalties.Value = (decimal)ParentRow["amount_penalties"];
+            numericUpDownAmountTotal.Value = (decimal)ParentRow["amount_tenancy"] + (decimal) ParentRow["amount_dgi"]
+                + (decimal)ParentRow["amount_padun"] + (decimal)ParentRow["amount_pkk"] 
+                + (decimal)ParentRow["amount_penalties"];
         }
 
         private bool _firstShowing = true;
@@ -105,6 +150,7 @@ namespace Registry.Viewport
             if (e.Action != DataRowAction.Delete) return;
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
+            UpdateExtInfo();
         }
 
         private void GeneralBindingSource_RowChanged(object sender, DataRowChangeEventArgs e)
@@ -112,6 +158,7 @@ namespace Registry.Viewport
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
             CheckViewportModifications();
+            UpdateExtInfo();
         }
 
         private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
@@ -212,7 +259,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return GeneralBindingSource.Count == 0;
+            return GeneralBindingSource.Count == 0 && !Presenter.ViewModel["general"].Model.EditingNewRecord;
         }
 
         public override void InsertRecord()
@@ -262,7 +309,7 @@ namespace Registry.Viewport
                     }
                 }
             }
-
+            UpdateExtInfo();
             IsEditable = true;
         }
 

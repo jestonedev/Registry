@@ -118,6 +118,7 @@ namespace Registry.Viewport
             this.comboBoxCurrentFundType = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.checkBoxIsMemorial = new System.Windows.Forms.CheckBox();
             this.numericUpDownRentCoefficientAuto = new CustomControls.FixedNumericUpDown();
             this.label29 = new System.Windows.Forms.Label();
             this.numericUpDownRentCoefficient = new CustomControls.FixedNumericUpDown();
@@ -195,7 +196,6 @@ namespace Registry.Viewport
             this.textBoxRoomsBTI = new System.Windows.Forms.TextBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.checkBoxIsMemorial = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -576,6 +576,16 @@ namespace Registry.Viewport
             this.panel2.Size = new System.Drawing.Size(490, 263);
             this.panel2.TabIndex = 1;
             // 
+            // checkBoxIsMemorial
+            // 
+            this.checkBoxIsMemorial.AutoSize = true;
+            this.checkBoxIsMemorial.Location = new System.Drawing.Point(333, 236);
+            this.checkBoxIsMemorial.Name = "checkBoxIsMemorial";
+            this.checkBoxIsMemorial.Size = new System.Drawing.Size(141, 19);
+            this.checkBoxIsMemorial.TabIndex = 41;
+            this.checkBoxIsMemorial.Text = "Памятник культуры";
+            this.checkBoxIsMemorial.UseVisualStyleBackColor = true;
+            // 
             // numericUpDownRentCoefficientAuto
             // 
             this.numericUpDownRentCoefficientAuto.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -841,6 +851,7 @@ namespace Registry.Viewport
             // numericUpDownMunPremisesPercentage
             // 
             this.numericUpDownMunPremisesPercentage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownMunPremisesPercentage.BackColor = System.Drawing.Color.White;
             this.numericUpDownMunPremisesPercentage.DecimalPlaces = 2;
             this.numericUpDownMunPremisesPercentage.Location = new System.Drawing.Point(423, 134);
             this.numericUpDownMunPremisesPercentage.Maximum = new decimal(new int[] {
@@ -872,6 +883,7 @@ namespace Registry.Viewport
             // 
             this.numericUpDownMunPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownMunPremisesCount.BackColor = System.Drawing.Color.White;
             this.numericUpDownMunPremisesCount.Location = new System.Drawing.Point(181, 134);
             this.numericUpDownMunPremisesCount.Maximum = new decimal(new int[] {
             65535,
@@ -1006,6 +1018,7 @@ namespace Registry.Viewport
             // 
             this.numericUpDownOtherPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownOtherPremisesCount.BackColor = System.Drawing.Color.White;
             this.numericUpDownOtherPremisesCount.Location = new System.Drawing.Point(175, 105);
             this.numericUpDownOtherPremisesCount.Maximum = new decimal(new int[] {
             65535,
@@ -1021,6 +1034,7 @@ namespace Registry.Viewport
             // 
             this.numericUpDownSpecialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownSpecialPremisesCount.BackColor = System.Drawing.Color.White;
             this.numericUpDownSpecialPremisesCount.Location = new System.Drawing.Point(175, 76);
             this.numericUpDownSpecialPremisesCount.Maximum = new decimal(new int[] {
             65535,
@@ -1036,6 +1050,7 @@ namespace Registry.Viewport
             // 
             this.numericUpDownCommercialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownCommercialPremisesCount.BackColor = System.Drawing.Color.White;
             this.numericUpDownCommercialPremisesCount.Location = new System.Drawing.Point(175, 47);
             this.numericUpDownCommercialPremisesCount.Maximum = new decimal(new int[] {
             65535,
@@ -1051,6 +1066,7 @@ namespace Registry.Viewport
             // 
             this.numericUpDownSocialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownSocialPremisesCount.BackColor = System.Drawing.Color.White;
             this.numericUpDownSocialPremisesCount.Location = new System.Drawing.Point(175, 18);
             this.numericUpDownSocialPremisesCount.Maximum = new decimal(new int[] {
             65535,
@@ -1159,6 +1175,7 @@ namespace Registry.Viewport
             // 
             this.numericUpDownMunicipalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownMunicipalArea.BackColor = System.Drawing.Color.White;
             this.numericUpDownMunicipalArea.DecimalPlaces = 3;
             this.numericUpDownMunicipalArea.Location = new System.Drawing.Point(181, 76);
             this.numericUpDownMunicipalArea.Maximum = new decimal(new int[] {
@@ -1474,6 +1491,7 @@ namespace Registry.Viewport
             // 
             // textBoxRoomsBTI
             // 
+            this.textBoxRoomsBTI.BackColor = System.Drawing.Color.White;
             this.textBoxRoomsBTI.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxRoomsBTI.Location = new System.Drawing.Point(3, 17);
             this.textBoxRoomsBTI.MaxLength = 1512;
@@ -1506,16 +1524,6 @@ namespace Registry.Viewport
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxDescription.Size = new System.Drawing.Size(239, 87);
             this.textBoxDescription.TabIndex = 0;
-            // 
-            // checkBoxIsMemorial
-            // 
-            this.checkBoxIsMemorial.AutoSize = true;
-            this.checkBoxIsMemorial.Location = new System.Drawing.Point(333, 236);
-            this.checkBoxIsMemorial.Name = "checkBoxIsMemorial";
-            this.checkBoxIsMemorial.Size = new System.Drawing.Size(141, 19);
-            this.checkBoxIsMemorial.TabIndex = 41;
-            this.checkBoxIsMemorial.Text = "Памятник культуры";
-            this.checkBoxIsMemorial.UseVisualStyleBackColor = true;
             // 
             // BuildingViewport
             // 

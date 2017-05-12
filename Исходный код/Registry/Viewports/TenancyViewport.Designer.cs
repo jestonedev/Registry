@@ -403,6 +403,7 @@ namespace Registry.Viewport
             // 
             this.numericUpDownPayment.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownPayment.BackColor = System.Drawing.Color.White;
             this.numericUpDownPayment.DecimalPlaces = 2;
             this.numericUpDownPayment.Location = new System.Drawing.Point(178, 69);
             this.numericUpDownPayment.Maximum = new decimal(new int[] {
