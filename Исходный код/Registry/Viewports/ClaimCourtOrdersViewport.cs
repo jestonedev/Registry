@@ -69,7 +69,6 @@ namespace Registry.Viewport
             GeneralDataModel = Presenter.ViewModel["general"].Model;
             GeneralBindingSource = Presenter.ViewModel["general"].BindingSource;
             Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
-            Presenter.ViewModel["judges"].BindingSource.Filter = "is_inactive = 0";
             Presenter.ViewModel["executors"].BindingSource.Filter = "is_inactive = 0";
 
             DataBind();
@@ -81,6 +80,8 @@ namespace Registry.Viewport
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["claims"].DataSource, "RowChanged", Claims_RowChanged);
 
             DataChangeHandlersInit();
+
+            UpdateExtInfo();
 
             IsEditable = true;
         }
@@ -172,10 +173,10 @@ namespace Registry.Viewport
         {
             var bindingSource = Presenter.ViewModel["general"].BindingSource;
             ViewportHelper.BindProperty(dateTimePickerOrderDate, "Value", bindingSource, "order_date", DateTime.Now.Date);
-            ViewportHelper.BindSource(comboBoxJudge, Presenter.ViewModel["judges"].BindingSource, "snp",
-                 Presenter.ViewModel["judges"].PrimaryKeyFirst);
+            ViewportHelper.BindSource(comboBoxJudge, Presenter.ViewModel["judge_info"].BindingSource, "judge",
+                 Presenter.ViewModel["judge_info"].PrimaryKeyFirst);
             ViewportHelper.BindProperty(comboBoxJudge, "SelectedValue", bindingSource,
-                Presenter.ViewModel["judges"].PrimaryKeyFirst, 1);
+                Presenter.ViewModel["judge_info"].PrimaryKeyFirst, 1);
 
             ViewportHelper.BindSource(comboBoxExecutor, Presenter.ViewModel["executors"].BindingSource, "executor_name",
                  Presenter.ViewModel["executors"].PrimaryKeyFirst);
@@ -309,7 +310,6 @@ namespace Registry.Viewport
                     }
                 }
             }
-            UpdateExtInfo();
             IsEditable = true;
         }
 

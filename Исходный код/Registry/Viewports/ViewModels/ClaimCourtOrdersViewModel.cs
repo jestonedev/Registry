@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 
@@ -13,10 +14,10 @@ namespace Registry.Viewport.ViewModels
             {"payments_accounts", new ViewModelItem(DataModel.GetInstance<PaymentsAccountsDataModel>())},
             {"claim_persons", new ViewModelItem(EntityDataModel<ClaimPerson>.GetInstance())},
             {"claims", new ViewModelItem(EntityDataModel<Claim>.GetInstance())},
-            {"judges", new ViewModelItem(EntityDataModel<Judge>.GetInstance())},
-            {"judges_buildings_assoc", new ViewModelItem(EntityDataModel<JudgeBuildingAssoc>.GetInstance())},
             {"executors", new ViewModelItem(EntityDataModel<Executor>.GetInstance())},
             {"payments_account_premises_assoc", new ViewModelItem(DataModel.GetInstance<PaymentsAccountsDataModel>())},
+            {"judges_buildings_assoc", new ViewModelItem(EntityDataModel<JudgeBuildingAssoc>.GetInstance())},
+            {"judge_info", new ViewModelItem(CalcDataModelJudgeInfo.GetInstance())}
         })
         {
         }

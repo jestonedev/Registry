@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CalcDataModels\CalcDataModelJudgeInfo.cs" />
     <Compile Include="CalcDataModels\CalcDataModelMunicipalPremises.cs" />
     <Compile Include="CalcDataModels\CalcDataModelPremisesTenanciesInfo.cs" />
     <Compile Include="CalcDataModels\CalcDataModelSubPremisesCurrentFunds.cs" />
