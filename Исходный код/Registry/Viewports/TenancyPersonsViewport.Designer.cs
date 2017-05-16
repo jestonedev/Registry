@@ -149,7 +149,6 @@ namespace Registry.Viewport
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel11.Size = new System.Drawing.Size(1002, 724);
             this.tableLayoutPanel11.TabIndex = 0;
-          
             // 
             // groupBox23
             // 
@@ -219,6 +218,8 @@ namespace Registry.Viewport
             // 
             this.comboBoxKinship.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxKinship.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.comboBoxKinship.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBoxKinship.DropDownHeight = 405;
             this.comboBoxKinship.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxKinship.FormattingEnabled = true;
