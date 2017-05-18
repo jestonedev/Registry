@@ -75,6 +75,10 @@
             this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.is_claimer = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.comboBoxExecutor = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.dateTimePickerCreateDate = new System.Windows.Forms.DateTimePicker();
+            this.label10 = new System.Windows.Forms.Label();
             this.tableLayoutPanel12.SuspendLayout();
             this.panel7.SuspendLayout();
             this.groupBox29.SuspendLayout();
@@ -104,7 +108,7 @@
             this.tableLayoutPanel12.RowCount = 2;
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 260F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(842, 762);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(849, 762);
             this.tableLayoutPanel12.TabIndex = 1;
             // 
             // panel7
@@ -113,7 +117,7 @@
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(3, 3);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(836, 254);
+            this.panel7.Size = new System.Drawing.Size(843, 254);
             this.panel7.TabIndex = 0;
             // 
             // groupBox29
@@ -122,7 +126,7 @@
             this.groupBox29.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox29.Location = new System.Drawing.Point(0, 0);
             this.groupBox29.Name = "groupBox29";
-            this.groupBox29.Size = new System.Drawing.Size(836, 254);
+            this.groupBox29.Size = new System.Drawing.Size(843, 254);
             this.groupBox29.TabIndex = 0;
             this.groupBox29.TabStop = false;
             this.groupBox29.Text = "Общие сведения";
@@ -140,27 +144,32 @@
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 235F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(830, 235);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(837, 235);
             this.tableLayoutPanel1.TabIndex = 43;
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.numericUpDownAmountPkk);
+            this.panel1.Controls.Add(this.dateTimePickerEndDeptPeriod);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.numericUpDownAmountPadun);
+            this.panel1.Controls.Add(this.label96);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.numericUpDownAmountPenalties);
+            this.panel1.Controls.Add(this.label98);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.numericUpDownAmountTotal);
+            this.panel1.Controls.Add(this.dateTimePickerStartDeptPeriod);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.numericUpDownAmountDGI);
+            this.panel1.Controls.Add(this.label97);
             this.panel1.Controls.Add(this.label95);
             this.panel1.Controls.Add(this.numericUpDownAmountTenancy);
             this.panel1.Controls.Add(this.label94);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(418, 3);
+            this.panel1.Location = new System.Drawing.Point(421, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(409, 229);
+            this.panel1.Size = new System.Drawing.Size(413, 229);
             this.panel1.TabIndex = 1;
             // 
             // numericUpDownAmountPkk
@@ -177,7 +186,7 @@
             0});
             this.numericUpDownAmountPkk.Name = "numericUpDownAmountPkk";
             this.numericUpDownAmountPkk.ReadOnly = true;
-            this.numericUpDownAmountPkk.Size = new System.Drawing.Size(230, 20);
+            this.numericUpDownAmountPkk.Size = new System.Drawing.Size(234, 20);
             this.numericUpDownAmountPkk.TabIndex = 3;
             this.numericUpDownAmountPkk.ThousandsSeparator = true;
             // 
@@ -204,7 +213,7 @@
             0});
             this.numericUpDownAmountPadun.Name = "numericUpDownAmountPadun";
             this.numericUpDownAmountPadun.ReadOnly = true;
-            this.numericUpDownAmountPadun.Size = new System.Drawing.Size(230, 20);
+            this.numericUpDownAmountPadun.Size = new System.Drawing.Size(234, 20);
             this.numericUpDownAmountPadun.TabIndex = 2;
             this.numericUpDownAmountPadun.ThousandsSeparator = true;
             // 
@@ -231,7 +240,7 @@
             0});
             this.numericUpDownAmountPenalties.Name = "numericUpDownAmountPenalties";
             this.numericUpDownAmountPenalties.ReadOnly = true;
-            this.numericUpDownAmountPenalties.Size = new System.Drawing.Size(230, 20);
+            this.numericUpDownAmountPenalties.Size = new System.Drawing.Size(234, 20);
             this.numericUpDownAmountPenalties.TabIndex = 4;
             this.numericUpDownAmountPenalties.ThousandsSeparator = true;
             // 
@@ -263,7 +272,7 @@
             -2147483648});
             this.numericUpDownAmountTotal.Name = "numericUpDownAmountTotal";
             this.numericUpDownAmountTotal.ReadOnly = true;
-            this.numericUpDownAmountTotal.Size = new System.Drawing.Size(230, 20);
+            this.numericUpDownAmountTotal.Size = new System.Drawing.Size(234, 20);
             this.numericUpDownAmountTotal.TabIndex = 5;
             this.numericUpDownAmountTotal.ThousandsSeparator = true;
             // 
@@ -290,7 +299,7 @@
             0});
             this.numericUpDownAmountDGI.Name = "numericUpDownAmountDGI";
             this.numericUpDownAmountDGI.ReadOnly = true;
-            this.numericUpDownAmountDGI.Size = new System.Drawing.Size(230, 20);
+            this.numericUpDownAmountDGI.Size = new System.Drawing.Size(234, 20);
             this.numericUpDownAmountDGI.TabIndex = 1;
             this.numericUpDownAmountDGI.ThousandsSeparator = true;
             // 
@@ -317,7 +326,7 @@
             0});
             this.numericUpDownAmountTenancy.Name = "numericUpDownAmountTenancy";
             this.numericUpDownAmountTenancy.ReadOnly = true;
-            this.numericUpDownAmountTenancy.Size = new System.Drawing.Size(230, 20);
+            this.numericUpDownAmountTenancy.Size = new System.Drawing.Size(234, 20);
             this.numericUpDownAmountTenancy.TabIndex = 0;
             this.numericUpDownAmountTenancy.ThousandsSeparator = true;
             // 
@@ -332,17 +341,16 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.dateTimePickerCreateDate);
+            this.panel2.Controls.Add(this.label10);
+            this.panel2.Controls.Add(this.comboBoxExecutor);
             this.panel2.Controls.Add(this.label4);
-            this.panel2.Controls.Add(this.dateTimePickerEndDeptPeriod);
+            this.panel2.Controls.Add(this.label9);
             this.panel2.Controls.Add(this.textBoxParsedAddress);
             this.panel2.Controls.Add(this.dateTimePickerPaymentAccountOpenDate);
-            this.panel2.Controls.Add(this.label96);
             this.panel2.Controls.Add(this.label1);
-            this.panel2.Controls.Add(this.label98);
             this.panel2.Controls.Add(this.label2);
-            this.panel2.Controls.Add(this.dateTimePickerStartDeptPeriod);
             this.panel2.Controls.Add(this.comboBoxJudge);
-            this.panel2.Controls.Add(this.label97);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.textBoxRawAddress);
             this.panel2.Controls.Add(this.comboBoxSigner);
@@ -352,7 +360,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(409, 229);
+            this.panel2.Size = new System.Drawing.Size(412, 229);
             this.panel2.TabIndex = 0;
             // 
             // label4
@@ -369,10 +377,10 @@
             this.dateTimePickerEndDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerEndDeptPeriod.Enabled = false;
-            this.dateTimePickerEndDeptPeriod.Location = new System.Drawing.Point(145, 199);
+            this.dateTimePickerEndDeptPeriod.Location = new System.Drawing.Point(169, 201);
             this.dateTimePickerEndDeptPeriod.Name = "dateTimePickerEndDeptPeriod";
             this.dateTimePickerEndDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerEndDeptPeriod.Size = new System.Drawing.Size(256, 20);
+            this.dateTimePickerEndDeptPeriod.Size = new System.Drawing.Size(234, 20);
             this.dateTimePickerEndDeptPeriod.TabIndex = 7;
             // 
             // textBoxParsedAddress
@@ -383,7 +391,7 @@
             this.textBoxParsedAddress.Location = new System.Drawing.Point(144, 35);
             this.textBoxParsedAddress.Name = "textBoxParsedAddress";
             this.textBoxParsedAddress.ReadOnly = true;
-            this.textBoxParsedAddress.Size = new System.Drawing.Size(257, 20);
+            this.textBoxParsedAddress.Size = new System.Drawing.Size(260, 20);
             this.textBoxParsedAddress.TabIndex = 1;
             // 
             // dateTimePickerPaymentAccountOpenDate
@@ -392,13 +400,13 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerPaymentAccountOpenDate.Location = new System.Drawing.Point(145, 118);
             this.dateTimePickerPaymentAccountOpenDate.Name = "dateTimePickerPaymentAccountOpenDate";
-            this.dateTimePickerPaymentAccountOpenDate.Size = new System.Drawing.Size(256, 20);
+            this.dateTimePickerPaymentAccountOpenDate.Size = new System.Drawing.Size(259, 20);
             this.dateTimePickerPaymentAccountOpenDate.TabIndex = 4;
             // 
             // label96
             // 
             this.label96.AutoSize = true;
-            this.label96.Location = new System.Drawing.Point(10, 177);
+            this.label96.Location = new System.Drawing.Point(8, 178);
             this.label96.Name = "label96";
             this.label96.Size = new System.Drawing.Size(109, 13);
             this.label96.TabIndex = 51;
@@ -416,7 +424,7 @@
             // label98
             // 
             this.label98.AutoSize = true;
-            this.label98.Location = new System.Drawing.Point(123, 202);
+            this.label98.Location = new System.Drawing.Point(144, 205);
             this.label98.Name = "label98";
             this.label98.Size = new System.Drawing.Size(19, 13);
             this.label98.TabIndex = 53;
@@ -436,10 +444,10 @@
             this.dateTimePickerStartDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerStartDeptPeriod.Enabled = false;
-            this.dateTimePickerStartDeptPeriod.Location = new System.Drawing.Point(145, 173);
+            this.dateTimePickerStartDeptPeriod.Location = new System.Drawing.Point(169, 173);
             this.dateTimePickerStartDeptPeriod.Name = "dateTimePickerStartDeptPeriod";
             this.dateTimePickerStartDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(256, 20);
+            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(234, 20);
             this.dateTimePickerStartDeptPeriod.TabIndex = 6;
             // 
             // comboBoxJudge
@@ -450,13 +458,13 @@
             this.comboBoxJudge.FormattingEnabled = true;
             this.comboBoxJudge.Location = new System.Drawing.Point(144, 145);
             this.comboBoxJudge.Name = "comboBoxJudge";
-            this.comboBoxJudge.Size = new System.Drawing.Size(257, 21);
+            this.comboBoxJudge.Size = new System.Drawing.Size(260, 21);
             this.comboBoxJudge.TabIndex = 5;
             // 
             // label97
             // 
             this.label97.AutoSize = true;
-            this.label97.Location = new System.Drawing.Point(129, 177);
+            this.label97.Location = new System.Drawing.Point(150, 178);
             this.label97.Name = "label97";
             this.label97.Size = new System.Drawing.Size(13, 13);
             this.label97.TabIndex = 52;
@@ -479,10 +487,10 @@
             this.textBoxRawAddress.Location = new System.Drawing.Point(145, 8);
             this.textBoxRawAddress.Name = "textBoxRawAddress";
             this.textBoxRawAddress.ReadOnly = true;
-            this.textBoxRawAddress.Size = new System.Drawing.Size(256, 20);
+            this.textBoxRawAddress.Size = new System.Drawing.Size(259, 20);
             this.textBoxRawAddress.TabIndex = 0;
             // 
-            // comboBoxExecutor
+            // comboBoxSigner
             // 
             this.comboBoxSigner.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -490,7 +498,7 @@
             this.comboBoxSigner.FormattingEnabled = true;
             this.comboBoxSigner.Location = new System.Drawing.Point(144, 91);
             this.comboBoxSigner.Name = "comboBoxSigner";
-            this.comboBoxSigner.Size = new System.Drawing.Size(257, 21);
+            this.comboBoxSigner.Size = new System.Drawing.Size(260, 21);
             this.comboBoxSigner.TabIndex = 3;
             // 
             // label71
@@ -508,7 +516,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerOrderDate.Location = new System.Drawing.Point(145, 63);
             this.dateTimePickerOrderDate.Name = "dateTimePickerOrderDate";
-            this.dateTimePickerOrderDate.Size = new System.Drawing.Size(256, 20);
+            this.dateTimePickerOrderDate.Size = new System.Drawing.Size(259, 20);
             this.dateTimePickerOrderDate.TabIndex = 2;
             // 
             // label73
@@ -527,7 +535,7 @@
             this.groupBox30.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox30.Location = new System.Drawing.Point(3, 263);
             this.groupBox30.Name = "groupBox30";
-            this.groupBox30.Size = new System.Drawing.Size(836, 496);
+            this.groupBox30.Size = new System.Drawing.Size(843, 496);
             this.groupBox30.TabIndex = 2;
             this.groupBox30.TabStop = false;
             this.groupBox30.Text = "Участники";
@@ -538,7 +546,7 @@
             this.panel5.Controls.Add(this.vButtonPersonDelete);
             this.panel5.Controls.Add(this.vButtonPersonAdd);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel5.Location = new System.Drawing.Point(795, 16);
+            this.panel5.Location = new System.Drawing.Point(802, 16);
             this.panel5.Margin = new System.Windows.Forms.Padding(0);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(38, 477);
@@ -609,7 +617,7 @@
             this.dataGridViewClaimPersons.Name = "dataGridViewClaimPersons";
             this.dataGridViewClaimPersons.ReadOnly = true;
             this.dataGridViewClaimPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewClaimPersons.Size = new System.Drawing.Size(830, 477);
+            this.dataGridViewClaimPersons.Size = new System.Drawing.Size(837, 477);
             this.dataGridViewClaimPersons.TabIndex = 1;
             // 
             // surname
@@ -647,12 +655,52 @@
             this.is_claimer.Name = "is_claimer";
             this.is_claimer.ReadOnly = true;
             // 
+            // comboBoxExecutor
+            // 
+            this.comboBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxExecutor.Enabled = false;
+            this.comboBoxExecutor.FormattingEnabled = true;
+            this.comboBoxExecutor.Location = new System.Drawing.Point(144, 173);
+            this.comboBoxExecutor.Name = "comboBoxExecutor";
+            this.comboBoxExecutor.Size = new System.Drawing.Size(260, 21);
+            this.comboBoxExecutor.TabIndex = 6;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(10, 178);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(74, 13);
+            this.label9.TabIndex = 71;
+            this.label9.Text = "Исполнитель";
+            // 
+            // dateTimePickerCreateDate
+            // 
+            this.dateTimePickerCreateDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerCreateDate.Enabled = false;
+            this.dateTimePickerCreateDate.Location = new System.Drawing.Point(145, 201);
+            this.dateTimePickerCreateDate.Name = "dateTimePickerCreateDate";
+            this.dateTimePickerCreateDate.Size = new System.Drawing.Size(259, 20);
+            this.dateTimePickerCreateDate.TabIndex = 7;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(10, 205);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(84, 13);
+            this.label10.TabIndex = 73;
+            this.label10.Text = "Дата создания";
+            // 
             // ClaimCourtOrdersViewport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(842, 762);
+            this.ClientSize = new System.Drawing.Size(849, 762);
             this.Controls.Add(this.tableLayoutPanel12);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -728,5 +776,9 @@
         private CustomControls.FixedNumericUpDown numericUpDownAmountTenancy;
         private System.Windows.Forms.Label label94;
         private System.Windows.Forms.DateTimePicker dateTimePickerStartDeptPeriod;
+        private System.Windows.Forms.DateTimePicker dateTimePickerCreateDate;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.ComboBox comboBoxExecutor;
+        private System.Windows.Forms.Label label9;
     }
 }

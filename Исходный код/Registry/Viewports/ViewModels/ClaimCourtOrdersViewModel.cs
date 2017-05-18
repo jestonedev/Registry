@@ -15,6 +15,7 @@ namespace Registry.Viewport.ViewModels
             {"claim_persons", new ViewModelItem(EntityDataModel<ClaimPerson>.GetInstance())},
             {"claims", new ViewModelItem(EntityDataModel<Claim>.GetInstance())},
             {"selectable_signers", new ViewModelItem(SelectableSignersDataModel.GetInstance())},
+            {"executors", new ViewModelItem(EntityDataModel<Executor>.GetInstance())},
             {"payments_account_premises_assoc", new ViewModelItem(DataModel.GetInstance<PaymentsAccountsDataModel>())},
             {"judges_buildings_assoc", new ViewModelItem(EntityDataModel<JudgeBuildingAssoc>.GetInstance())},
             {"judge_info", new ViewModelItem(CalcDataModelJudgeInfo.GetInstance())}

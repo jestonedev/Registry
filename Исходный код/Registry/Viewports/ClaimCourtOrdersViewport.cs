@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Principal;
 using System.Windows.Forms;
 using Registry.DataModels.Services;
 using Registry.Entities;
@@ -51,8 +52,10 @@ namespace Registry.Viewport
                 IdOrder = row == null ? null : ViewportHelper.ValueOrNull<int>(row, "id_order"),
                 IdClaim = (int)ParentRow["id_claim"],
                 IdSigner = ViewportHelper.ValueOrNull<int>(comboBoxSigner),
+                IdExecutor = ViewportHelper.ValueOrNull<int>(comboBoxExecutor),
                 IdJudge = ViewportHelper.ValueOrNull<int>(comboBoxJudge),
                 OrderDate = ViewportHelper.ValueOrNull(dateTimePickerOrderDate),
+                CreateDate = ViewportHelper.ValueOrNull(dateTimePickerCreateDate),
                 OpenAccountDate = ViewportHelper.ValueOrNull(dateTimePickerPaymentAccountOpenDate)
             };
             return claimCourtOrder;
@@ -181,7 +184,13 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(comboBoxSigner, "SelectedValue", bindingSource,
                 "id_signer", 1);
 
+            ViewportHelper.BindSource(comboBoxExecutor, Presenter.ViewModel["executors"].BindingSource, "executor_name",
+                 Presenter.ViewModel["executors"].PrimaryKeyFirst);
+            ViewportHelper.BindProperty(comboBoxExecutor, "SelectedValue", bindingSource,
+                "id_executor", 1);
+
             ViewportHelper.BindProperty(dateTimePickerPaymentAccountOpenDate, "Value", bindingSource, "open_account_date", DateTime.Now.Date);
+            ViewportHelper.BindProperty(dateTimePickerCreateDate, "Value", bindingSource, "create_date", DateTime.Now.Date);
 
             dataGridViewClaimPersons.AutoGenerateColumns = false;
             dataGridViewClaimPersons.DataSource = Presenter.ViewModel["claim_persons"].BindingSource;
@@ -248,6 +257,12 @@ namespace Registry.Viewport
                 comboBoxSigner.Focus();
                 return false;
             }
+            if (claimCourtOrder.IdExecutor == null)
+            {
+                MessageBox.Show(@"Не указан исполнитель. В связи с отсутствием возможности редактирования поля ""Исполнитель"" обратитесь к системному администратору для добавления Вас в справочник исполнителей", @"Ошибка",
+                   MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
             return true;
         }
 
@@ -302,6 +317,11 @@ namespace Registry.Viewport
                     }
                 }
             }
+            dateTimePickerCreateDate.Value = DateTime.Now.Date;
+            var login = WindowsIdentity.GetCurrent().Name;
+            var index = Presenter.ViewModel["executors"].BindingSource.Find("executor_login", login);
+            if (index != -1)
+                comboBoxExecutor.SelectedValue = ((DataRowView)Presenter.ViewModel["executors"].BindingSource[index])["id_executor"];
             IsEditable = true;
         }
 
