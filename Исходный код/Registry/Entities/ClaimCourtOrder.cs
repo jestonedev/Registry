@@ -10,7 +10,7 @@ namespace Registry.Entities
         [DataColumn(IsPrimaryKey = true)]
         public int? IdOrder { get; set; }
         public int? IdClaim { get; set; }
-        public int? IdExecutor { get; set; }
+        public int? IdSigner { get; set; }
         public int? IdJudge { get; set; }
         public DateTime? OrderDate { get; set; }
         public DateTime? OpenAccountDate { get; set; }

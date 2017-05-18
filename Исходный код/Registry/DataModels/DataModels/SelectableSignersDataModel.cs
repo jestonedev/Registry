@@ -1,22 +1,22 @@
 ﻿namespace Registry.DataModels.DataModels
 {
-    public class SelectableSigners : DataModel
+    public class SelectableSignersDataModel : DataModel
     {
-        private static SelectableSigners _dataModel;
+        private static SelectableSignersDataModel _dataModel;
         private const string SelectQuery = @"SELECT s.id_record, CONCAT(s.surname, ' ', s.`name`, 
                                               IF(s.patronymic IS NULL, '', CONCAT(' ', s.patronymic))) AS snp, id_signer_group
                                             FROM selectable_signers s
                                             WHERE s.deleted = 0";
         private const string TableName = "selectable_head_housing_dep";
 
-        private SelectableSigners()
+        private SelectableSignersDataModel()
             : base(SelectQuery, TableName, null)
         {
         }
 
-        public static SelectableSigners GetInstance()
+        public static SelectableSignersDataModel GetInstance()
         {
-            return _dataModel ?? (_dataModel = new SelectableSigners());
+            return _dataModel ?? (_dataModel = new SelectableSignersDataModel());
         }
 
         protected override void ConfigureTable()

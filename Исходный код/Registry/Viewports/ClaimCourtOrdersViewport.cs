@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Security.Principal;
 using System.Windows.Forms;
 using Registry.DataModels.Services;
 using Registry.Entities;
@@ -51,7 +50,7 @@ namespace Registry.Viewport
             {
                 IdOrder = row == null ? null : ViewportHelper.ValueOrNull<int>(row, "id_order"),
                 IdClaim = (int)ParentRow["id_claim"],
-                IdExecutor = ViewportHelper.ValueOrNull<int>(comboBoxExecutor),
+                IdSigner = ViewportHelper.ValueOrNull<int>(comboBoxSigner),
                 IdJudge = ViewportHelper.ValueOrNull<int>(comboBoxJudge),
                 OrderDate = ViewportHelper.ValueOrNull(dateTimePickerOrderDate),
                 OpenAccountDate = ViewportHelper.ValueOrNull(dateTimePickerPaymentAccountOpenDate)
@@ -69,7 +68,6 @@ namespace Registry.Viewport
             GeneralDataModel = Presenter.ViewModel["general"].Model;
             GeneralBindingSource = Presenter.ViewModel["general"].BindingSource;
             Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
-            Presenter.ViewModel["executors"].BindingSource.Filter = "is_inactive = 0";
 
             DataBind();
 
@@ -178,10 +176,10 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(comboBoxJudge, "SelectedValue", bindingSource,
                 Presenter.ViewModel["judge_info"].PrimaryKeyFirst, 1);
 
-            ViewportHelper.BindSource(comboBoxExecutor, Presenter.ViewModel["executors"].BindingSource, "executor_name",
-                 Presenter.ViewModel["executors"].PrimaryKeyFirst);
-            ViewportHelper.BindProperty(comboBoxExecutor, "SelectedValue", bindingSource,
-                Presenter.ViewModel["executors"].PrimaryKeyFirst, 1);
+            ViewportHelper.BindSource(comboBoxSigner, Presenter.ViewModel["selectable_signers"].BindingSource, "snp",
+                 Presenter.ViewModel["selectable_signers"].PrimaryKeyFirst);
+            ViewportHelper.BindProperty(comboBoxSigner, "SelectedValue", bindingSource,
+                "id_signer", 1);
 
             ViewportHelper.BindProperty(dateTimePickerPaymentAccountOpenDate, "Value", bindingSource, "open_account_date", DateTime.Now.Date);
 
@@ -243,11 +241,11 @@ namespace Registry.Viewport
                 comboBoxJudge.Focus();
                 return false;
             }
-            if (claimCourtOrder.IdExecutor == null)
+            if (claimCourtOrder.IdSigner == null)
             {
-                MessageBox.Show(@"Необходимо выбрать исполнителя", @"Ошибка",
+                MessageBox.Show(@"Необходимо выбрать подписывающего", @"Ошибка",
                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                comboBoxExecutor.Focus();
+                comboBoxSigner.Focus();
                 return false;
             }
             return true;
@@ -271,12 +269,6 @@ namespace Registry.Viewport
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
             Presenter.ViewModel["general"].BindingSource.AddNew();
 
-            var login = WindowsIdentity.GetCurrent().Name;
-            var index = Presenter.ViewModel["executors"].BindingSource.Find("executor_login", login);
-            if (index != -1)
-            {
-                comboBoxExecutor.SelectedValue = ((DataRowView)Presenter.ViewModel["executors"].BindingSource[index])["id_executor"];   
-            }
             var idJudge = PaymentService.GetJudgeByIdAccount((int)ParentRow["id_account"]);
             if (idJudge != null)
             {

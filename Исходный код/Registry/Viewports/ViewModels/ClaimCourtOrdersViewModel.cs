@@ -14,12 +14,13 @@ namespace Registry.Viewport.ViewModels
             {"payments_accounts", new ViewModelItem(DataModel.GetInstance<PaymentsAccountsDataModel>())},
             {"claim_persons", new ViewModelItem(EntityDataModel<ClaimPerson>.GetInstance())},
             {"claims", new ViewModelItem(EntityDataModel<Claim>.GetInstance())},
-            {"executors", new ViewModelItem(EntityDataModel<Executor>.GetInstance())},
+            {"selectable_signers", new ViewModelItem(SelectableSignersDataModel.GetInstance())},
             {"payments_account_premises_assoc", new ViewModelItem(DataModel.GetInstance<PaymentsAccountsDataModel>())},
             {"judges_buildings_assoc", new ViewModelItem(EntityDataModel<JudgeBuildingAssoc>.GetInstance())},
             {"judge_info", new ViewModelItem(CalcDataModelJudgeInfo.GetInstance())}
         })
         {
+            this["selectable_signers"].BindingSource.Filter = "id_signer_group = 3";
         }
     }
 }

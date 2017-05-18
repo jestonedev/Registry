@@ -267,7 +267,7 @@ namespace Registry.DataModels.DataModels
             var currentDataModel = typeof(T);            
             if(typeof(T) == typeof(PaymentsPremiseHistoryDataModel) ||
                typeof(T) == typeof(PaymentsAccountHistoryDataModel) || 
-               typeof(T) == typeof(SelectableSigners))
+               typeof(T) == typeof(SelectableSignersDataModel))
             {
                 var method = currentDataModel.GetMethod("GetInstance",new Type[] {});
                 var instanceDm = (T)method.Invoke(null, new object[] { });

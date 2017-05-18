@@ -55,11 +55,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label98 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.dateTimePickerStartDeptPeriod = new System.Windows.Forms.DateTimePicker();
             this.comboBoxJudge = new System.Windows.Forms.ComboBox();
             this.label97 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxRawAddress = new System.Windows.Forms.TextBox();
-            this.comboBoxExecutor = new System.Windows.Forms.ComboBox();
+            this.comboBoxSigner = new System.Windows.Forms.ComboBox();
             this.label71 = new System.Windows.Forms.Label();
             this.dateTimePickerOrderDate = new System.Windows.Forms.DateTimePicker();
             this.label73 = new System.Windows.Forms.Label();
@@ -74,7 +75,6 @@
             this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.is_claimer = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dateTimePickerStartDeptPeriod = new System.Windows.Forms.DateTimePicker();
             this.tableLayoutPanel12.SuspendLayout();
             this.panel7.SuspendLayout();
             this.groupBox29.SuspendLayout();
@@ -345,7 +345,7 @@
             this.panel2.Controls.Add(this.label97);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.textBoxRawAddress);
-            this.panel2.Controls.Add(this.comboBoxExecutor);
+            this.panel2.Controls.Add(this.comboBoxSigner);
             this.panel2.Controls.Add(this.label71);
             this.panel2.Controls.Add(this.dateTimePickerOrderDate);
             this.panel2.Controls.Add(this.label73);
@@ -431,6 +431,17 @@
             this.label2.TabIndex = 42;
             this.label2.Text = "Дата открытия ЛС";
             // 
+            // dateTimePickerStartDeptPeriod
+            // 
+            this.dateTimePickerStartDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerStartDeptPeriod.Enabled = false;
+            this.dateTimePickerStartDeptPeriod.Location = new System.Drawing.Point(145, 173);
+            this.dateTimePickerStartDeptPeriod.Name = "dateTimePickerStartDeptPeriod";
+            this.dateTimePickerStartDeptPeriod.ShowCheckBox = true;
+            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(256, 20);
+            this.dateTimePickerStartDeptPeriod.TabIndex = 6;
+            // 
             // comboBoxJudge
             // 
             this.comboBoxJudge.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -473,14 +484,14 @@
             // 
             // comboBoxExecutor
             // 
-            this.comboBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboBoxSigner.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxExecutor.FormattingEnabled = true;
-            this.comboBoxExecutor.Location = new System.Drawing.Point(144, 91);
-            this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(257, 21);
-            this.comboBoxExecutor.TabIndex = 3;
+            this.comboBoxSigner.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSigner.FormattingEnabled = true;
+            this.comboBoxSigner.Location = new System.Drawing.Point(144, 91);
+            this.comboBoxSigner.Name = "comboBoxSigner";
+            this.comboBoxSigner.Size = new System.Drawing.Size(257, 21);
+            this.comboBoxSigner.TabIndex = 3;
             // 
             // label71
             // 
@@ -505,9 +516,9 @@
             this.label73.AutoSize = true;
             this.label73.Location = new System.Drawing.Point(9, 96);
             this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(74, 13);
+            this.label73.Size = new System.Drawing.Size(94, 13);
             this.label73.TabIndex = 38;
-            this.label73.Text = "Исполнитель";
+            this.label73.Text = "Подписывающий";
             // 
             // groupBox30
             // 
@@ -636,17 +647,6 @@
             this.is_claimer.Name = "is_claimer";
             this.is_claimer.ReadOnly = true;
             // 
-            // dateTimePickerStartDeptPeriod
-            // 
-            this.dateTimePickerStartDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerStartDeptPeriod.Enabled = false;
-            this.dateTimePickerStartDeptPeriod.Location = new System.Drawing.Point(145, 173);
-            this.dateTimePickerStartDeptPeriod.Name = "dateTimePickerStartDeptPeriod";
-            this.dateTimePickerStartDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(256, 20);
-            this.dateTimePickerStartDeptPeriod.TabIndex = 6;
-            // 
             // ClaimCourtOrdersViewport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -685,7 +685,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel12;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.GroupBox groupBox29;
-        private System.Windows.Forms.ComboBox comboBoxExecutor;
+        private System.Windows.Forms.ComboBox comboBoxSigner;
         private System.Windows.Forms.Label label73;
         private System.Windows.Forms.DateTimePicker dateTimePickerOrderDate;
         private System.Windows.Forms.Label label71;

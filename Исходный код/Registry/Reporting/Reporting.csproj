@@ -70,12 +70,6 @@
     <Compile Include="SettingForms\ClaimStatesSettingsForm.Designer.cs">
       <DependentUpon>ClaimStatesSettingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingForms\JudicialOrderSettingsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SettingForms\JudicialOrderSettingsForm.Designer.cs">
-      <DependentUpon>JudicialOrderSettingsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="RegistryReporters\MunicipalBuildingsReporter.cs" />
     <Compile Include="RegistryReporters\MunicipalPremisesReporter.cs" />
     <Compile Include="SettingForms\StatisticReportDialog.cs">
@@ -206,9 +200,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingForms\DateRangeForm.resx">
       <DependentUpon>DateRangeForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SettingForms\JudicialOrderSettingsForm.resx">
-      <DependentUpon>JudicialOrderSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingForms\StatisticReportDialog.resx">
       <DependentUpon>StatisticReportDialog.cs</DependentUpon>

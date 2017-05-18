@@ -69,7 +69,7 @@
     <Compile Include="DataModels\ClaimFilesDataModel.cs" />
     <Compile Include="DataModels\EntityDataModel.cs" />
     <Compile Include="DataModels\PaymentsPremiseHistoryDataModel.cs" />
-    <Compile Include="DataModels\SelectableSigners.cs" />
+    <Compile Include="DataModels\SelectableSignersDataModel.cs" />
     <Compile Include="DataModels\PaymentsAccountsDataModel.cs" />
     <Compile Include="DataModels\PaymentsAccountHistoryDataModel.cs" />
     <Compile Include="CalcDataModels\CalcDataModelBuildingsPremisesFunds.cs" />
