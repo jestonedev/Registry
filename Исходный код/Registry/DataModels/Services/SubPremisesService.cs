@@ -26,5 +26,15 @@ namespace Registry.DataModels.Services
                     where rSubPremiseRow.Field<int?>("id_sub_premises") == idSubPremise
                     select rSubPremiseRow).Any();
         }
+
+        internal static IEnumerable<int> GetPremisesIdsBySubPremiseStates(IEnumerable<int> stateIds)
+        {
+            var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
+            return from row in subPremises
+                   where row.Field<int?>("id_premises") != null && 
+                   row.Field<int?>("id_state") != null &&
+                   stateIds.Contains(row.Field<int>("id_state"))
+                select row.Field<int>("id_premises");
+        }
     }
 }

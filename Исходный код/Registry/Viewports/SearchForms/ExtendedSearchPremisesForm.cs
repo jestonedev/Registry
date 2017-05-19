@@ -45,18 +45,26 @@ namespace Registry.Viewport.SearchForms
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                var array = string.Empty;
+                var stateFilter = string.Empty;
+                var stateIds = new List<int>();
                 for(var i = 0; i < checkedListBox1.CheckedItems.Count; i++)
                 {
                     var row =(DataRowView) checkedListBox1.CheckedItems[i];
-                    array += checkedListBox1.CheckedItems.IndexOf(row) == checkedListBox1.CheckedItems.Count - 1 ?
+                    stateFilter += checkedListBox1.CheckedItems.IndexOf(row) == checkedListBox1.CheckedItems.Count - 1 ?
                         row["id_state"] : row["id_state"] + ", ";
+                    stateIds.Add((int)row["id_state"]);
                 }
-                filter += "id_state IN (" + array + ")";
+                var premisesIds = SubPremisesService.GetPremisesIdsBySubPremiseStates(stateIds).ToList();
+                var premisesFilter = "";
+                if (premisesIds.Any())
+                {
+                    premisesFilter = premisesIds.Select(v => v.ToString()).Aggregate((acc, v) => acc + "," + v);
+                }
+                filter += string.Format("(id_state IN (0{0}) OR id_premises IN (0{1}))", stateFilter, premisesFilter);
+                
             }
-
             if (checkBoxIDPremisesEnable.Checked)
-                includedPremises = DataModelHelper.Intersect(null, new List<int>() { Convert.ToInt32(numericUpDownIDPremises.Value) });
+                includedPremises = DataModelHelper.Intersect(null, new List<int> { Convert.ToInt32(numericUpDownIDPremises.Value) });
             if (checkBoxRegionEnable.Checked && (comboBoxRegion.SelectedValue != null))
             {
                 var buildingsIds = BuildingService.BuildingIDsByRegion(comboBoxRegion.SelectedValue.ToString());

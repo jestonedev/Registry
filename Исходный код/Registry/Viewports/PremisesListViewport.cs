@@ -382,8 +382,14 @@ namespace Registry.Viewport
             {
                 {"type", "2"},
                 {"filter", filter.Trim() == "" ? "(1=1)" : filter },
-                {"columnHeaders", "["+columnHeaders+",{\"columnHeader\":\"Номер и дата включения в фонд\"},{\"columnHeader\":\"Дополнительные сведения\"}]"},
-                {"columnPatterns", "["+columnPatterns+",{\"columnPattern\":\"$fund_info$\"},{\"columnPattern\":\"$description$\"}]"}
+                {
+                    "columnHeaders", "["+columnHeaders+",{\"columnHeader\":\"Номер и дата включения в фонд\"},{\"columnHeader\":\"Дополнительные сведения\"}"+
+                    ",{\"columnHeader\":\"Основание на включение в АФ здания\"},{\"columnHeader\":\"Основание на включение в АФ помещения\"}]"
+                },
+                {
+                    "columnPatterns", "["+columnPatterns+",{\"columnPattern\":\"$fund_info$\"},{\"columnPattern\":\"$description$\"}"+
+                    ",{\"columnPattern\":\"$b_emergency$\"},{\"columnPattern\":\"$p_emergency$\"}]"
+                }
             };
             return arguments;
         }
