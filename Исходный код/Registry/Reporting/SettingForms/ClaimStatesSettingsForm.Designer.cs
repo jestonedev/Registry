@@ -48,7 +48,7 @@
             this.vButtonOk.Name = "vButtonOk";
             this.vButtonOk.RoundedCornersMask = ((byte)(15));
             this.vButtonOk.Size = new System.Drawing.Size(117, 35);
-            this.vButtonOk.TabIndex = 3;
+            this.vButtonOk.TabIndex = 4;
             this.vButtonOk.Text = "Сформировать";
             this.vButtonOk.UseVisualStyleBackColor = false;
             this.vButtonOk.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -62,7 +62,7 @@
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
-            this.vButtonCancel.TabIndex = 4;
+            this.vButtonCancel.TabIndex = 5;
             this.vButtonCancel.Text = "Отменить";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -74,7 +74,7 @@
             this.dateTimePickerTo.Location = new System.Drawing.Point(97, 37);
             this.dateTimePickerTo.Name = "dateTimePickerTo";
             this.dateTimePickerTo.Size = new System.Drawing.Size(204, 20);
-            this.dateTimePickerTo.TabIndex = 1;
+            this.dateTimePickerTo.TabIndex = 2;
             // 
             // label2
             // 
@@ -92,7 +92,7 @@
             this.dateTimePickerFrom.Location = new System.Drawing.Point(97, 8);
             this.dateTimePickerFrom.Name = "dateTimePickerFrom";
             this.dateTimePickerFrom.Size = new System.Drawing.Size(204, 20);
-            this.dateTimePickerFrom.TabIndex = 0;
+            this.dateTimePickerFrom.TabIndex = 1;
             // 
             // label1
             // 
@@ -118,7 +118,7 @@
             this.comboBoxExecutor.Location = new System.Drawing.Point(97, 64);
             this.comboBoxExecutor.Name = "comboBoxExecutor";
             this.comboBoxExecutor.Size = new System.Drawing.Size(204, 21);
-            this.comboBoxExecutor.TabIndex = 81;
+            this.comboBoxExecutor.TabIndex = 3;
             // 
             // ClaimStatesSettingsForm
             // 
