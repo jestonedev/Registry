@@ -40,9 +40,6 @@ namespace Registry.Viewport
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClaimListViewport));
             this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox34 = new System.Windows.Forms.GroupBox();
@@ -88,9 +85,6 @@ namespace Registry.Viewport
             this.amount_padun = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_pkk = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.balance_output_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.balance_output_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.balance_output_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel15.SuspendLayout();
             this.groupBox34.SuspendLayout();
             this.tableLayoutPanel16.SuspendLayout();
@@ -491,10 +485,7 @@ namespace Registry.Viewport
             this.amount_dgi,
             this.amount_padun,
             this.amount_pkk,
-            this.amount_penalties,
-            this.balance_output_tenancy,
-            this.balance_output_dgi,
-            this.balance_output_penalties});
+            this.amount_penalties});
             this.dataGridViewClaims.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewClaims.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridViewClaims.Location = new System.Drawing.Point(3, 203);
@@ -634,42 +625,6 @@ namespace Registry.Viewport
             this.amount_penalties.ReadOnly = true;
             this.amount_penalties.Width = 110;
             // 
-            // balance_output_tenancy
-            // 
-            dataGridViewCellStyle4.Format = "#0.0# руб.";
-            this.balance_output_tenancy.DefaultCellStyle = dataGridViewCellStyle4;
-            this.balance_output_tenancy.HeaderText = "Тек. сальдо исх. найм";
-            this.balance_output_tenancy.MinimumWidth = 110;
-            this.balance_output_tenancy.Name = "balance_output_tenancy";
-            this.balance_output_tenancy.ReadOnly = true;
-            this.balance_output_tenancy.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.balance_output_tenancy.Visible = false;
-            this.balance_output_tenancy.Width = 110;
-            // 
-            // balance_output_dgi
-            // 
-            dataGridViewCellStyle5.Format = "#0.0# руб.";
-            this.balance_output_dgi.DefaultCellStyle = dataGridViewCellStyle5;
-            this.balance_output_dgi.HeaderText = "Тек. сальдо исх. ДГИ";
-            this.balance_output_dgi.MinimumWidth = 110;
-            this.balance_output_dgi.Name = "balance_output_dgi";
-            this.balance_output_dgi.ReadOnly = true;
-            this.balance_output_dgi.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.balance_output_dgi.Visible = false;
-            this.balance_output_dgi.Width = 110;
-            // 
-            // balance_output_penalties
-            // 
-            dataGridViewCellStyle6.Format = "#0.0# руб.";
-            this.balance_output_penalties.DefaultCellStyle = dataGridViewCellStyle6;
-            this.balance_output_penalties.HeaderText = "Тек. сальдо исх. пени";
-            this.balance_output_penalties.MinimumWidth = 110;
-            this.balance_output_penalties.Name = "balance_output_penalties";
-            this.balance_output_penalties.ReadOnly = true;
-            this.balance_output_penalties.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.balance_output_penalties.Visible = false;
-            this.balance_output_penalties.Width = 110;
-            // 
             // ClaimListViewport
             // 
             this.AutoScroll = true;
@@ -723,8 +678,5 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn amount_padun;
         private DataGridViewTextBoxColumn amount_pkk;
         private DataGridViewTextBoxColumn amount_penalties;
-        private DataGridViewTextBoxColumn balance_output_tenancy;
-        private DataGridViewTextBoxColumn balance_output_dgi;
-        private DataGridViewTextBoxColumn balance_output_penalties;
     }
 }
