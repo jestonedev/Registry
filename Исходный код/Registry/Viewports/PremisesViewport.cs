@@ -305,8 +305,10 @@ namespace Registry.Viewport
         private void DataBind()
         {
             var bindingSource = Presenter.ViewModel["general"].BindingSource;
+
             ViewportHelper.BindSource(comboBoxStreet, Presenter.ViewModel["kladr"].BindingSource, "street_name", 
                 Presenter.ViewModel["kladr"].PrimaryKeyFirst);
+
             ViewportHelper.BindSource(comboBoxHouse, Presenter.ViewModel["kladr_buildings"].BindingSource, "house", "id_building");
             ViewportHelper.BindSource(comboBoxPremisesKind, Presenter.ViewModel["premises_kinds"].BindingSource, "premises_kind",
                 Presenter.ViewModel["premises_kinds"].PrimaryKeyFirst);
@@ -995,6 +997,11 @@ namespace Registry.Viewport
                 (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) || (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
             {
                 var text = comboBoxStreet.Text;
+                if (comboBoxStreet.Text.Length < 3)
+                {
+                    Presenter.ViewModel["kladr"].BindingSource.Filter = "1 = 0";
+                    return;
+                }
                 var selectionStart = comboBoxStreet.SelectionStart;
                 var selectionLength = comboBoxStreet.SelectionLength;
                 Presenter.ViewModel["kladr"].BindingSource.Filter = "street_name like '%" + comboBoxStreet.Text + "%'";
