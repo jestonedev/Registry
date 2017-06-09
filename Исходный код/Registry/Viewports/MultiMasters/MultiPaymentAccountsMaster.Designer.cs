@@ -59,6 +59,7 @@ namespace Registry.Viewport.MultiMasters
             this.balance_output_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_padun = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_pkk = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStripButtonExport = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -135,6 +136,7 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripSeparator2,
             this.toolStripButtonCreateClaims,
             this.toolStripButtonRequestToBks,
+            this.toolStripButtonExport,
             this.toolStripProgressBarMultiOperations,
             this.toolStripSeparator3,
             this.toolStripLabelRowCount});
@@ -468,6 +470,16 @@ namespace Registry.Viewport.MultiMasters
             this.balance_output_pkk.Name = "balance_output_pkk";
             this.balance_output_pkk.ReadOnly = true;
             // 
+            // toolStripButtonExport
+            // 
+            this.toolStripButtonExport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonExport.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonExport.Image")));
+            this.toolStripButtonExport.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonExport.Name = "toolStripButtonExport";
+            this.toolStripButtonExport.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonExport.Text = "Экспорт";
+            this.toolStripButtonExport.Click += new System.EventHandler(this.toolStripButtonExport_Click);
+            // 
             // MultiPaymentAccountsMaster
             // 
             this.ClientSize = new System.Drawing.Size(608, 157);
@@ -537,6 +549,7 @@ namespace Registry.Viewport.MultiMasters
         private DataGridViewTextBoxColumn balance_output_dgi;
         private DataGridViewTextBoxColumn balance_output_padun;
         private DataGridViewTextBoxColumn balance_output_pkk;
+        private ToolStripButton toolStripButtonExport;
 
     }
 }

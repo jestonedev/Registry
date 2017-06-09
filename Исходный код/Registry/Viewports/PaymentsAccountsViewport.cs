@@ -352,7 +352,8 @@ namespace Registry.Viewport
                 {"type", "5"},
                 {"filter", filter.Trim() == "" ? "(1=1)" : filter },
                 {"columnHeaders", "["+columnHeaders+"]"},
-                {"columnPatterns", "["+columnPatterns+"]"}
+                {"columnPatterns", "["+columnPatterns+"]"},
+                {"orderColumn", string.IsNullOrEmpty(Presenter.ViewModel["general"].BindingSource.Sort) ? "id_account" : Presenter.ViewModel["general"].BindingSource.Sort}
             };
             return arguments;
         }

@@ -393,5 +393,29 @@ namespace Registry.Viewport.MultiMasters
         {
             toolStripLabelRowCount.Text = string.Format("Всего записей в мастере: {0}", dataGridView.RowCount);
         }
+
+        private void toolStripButtonExport_Click(object sender, EventArgs e)
+        {
+            var reporter = ReporterFactory.CreateReporter(ReporterType.ExportReporter);
+            reporter.Run(ExportReportArguments());
+        }
+
+        private Dictionary<string, string> ExportReportArguments()
+        {
+            var columnHeaders = dataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
+            var columnPatterns = dataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnPattern\":\"$column" + column.DisplayIndex + "$\"}");
+            var filter = _paymentAccount.Filter ?? "";
+            var arguments = new Dictionary<string, string>
+            {
+                {"type", "5"},
+                {"filter", filter.Trim() == "" ? "(1=1)" : filter },
+                {"columnHeaders", "["+columnHeaders+"]"},
+                {"columnPatterns", "["+columnPatterns+"]"},
+                {"orderColumn", string.IsNullOrEmpty(_paymentAccount.Sort) ? "id_account" : _paymentAccount.Sort}
+            };
+            return arguments;
+        }
     }
 }
