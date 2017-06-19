@@ -596,7 +596,7 @@ namespace Registry.Viewport
                     if (ValidForJudicialOrderReporter())
                     {
                         arguments.Add("id_claim", ParentRow["id_claim"].ToString());
-                        arguments.Add("id_order", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"].ToString());
+                        arguments.Add("id_order", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_order"].ToString());
                         MenuCallback.RunReport(reporterType, arguments);
                     }
                     break;
