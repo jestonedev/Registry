@@ -59,11 +59,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClaimsAndPaymentsReporters\AccountsDuplicateStatistic.cs" />
+    <Compile Include="ClaimsAndPaymentsReporters\ClaimsCourtOrderPrepareReporter.cs" />
     <Compile Include="ClaimsAndPaymentsReporters\JudicialOrderReporter.cs" />
     <Compile Include="ClaimsAndPaymentsReporters\RequestToBksReporter.cs" />
     <Compile Include="ClaimsAndPaymentsReporters\TransfertToLegalDepartmentReporter.cs" />
     <Compile Include="ClaimsAndPaymentsReporters\ClaimsStatesReporter.cs" />
     <Compile Include="RegistryReporters\BuildingExcerptReporter.cs" />
+    <Compile Include="SettingForms\ClaimCourtOrdersPrepareSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingForms\ClaimCourtOrdersPrepareSettingsForm.Designer.cs">
+      <DependentUpon>ClaimCourtOrdersPrepareSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingForms\ClaimStatesSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,6 +201,9 @@
   <ItemGroup>
     <EmbeddedResource Include="SettingForms\ClaimsFilterForm.resx">
       <DependentUpon>ClaimsFilterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingForms\ClaimCourtOrdersPrepareSettingsForm.resx">
+      <DependentUpon>ClaimCourtOrdersPrepareSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingForms\ClaimStatesSettingsForm.resx">
       <DependentUpon>ClaimStatesSettingsForm.cs</DependentUpon>

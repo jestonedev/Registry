@@ -1296,5 +1296,10 @@ namespace Registry
             if (document != null)
                 document.ShowAssocViewport<ClaimCourtOrdersViewport>();
         }
+
+        private void ribbonPanel4_Click(object sender, EventArgs e)
+        {
+            RunReport(ReporterType.ClaimsCourtOrderPrepareReporter);
+        }
     }
 }

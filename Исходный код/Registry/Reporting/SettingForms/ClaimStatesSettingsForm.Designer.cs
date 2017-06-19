@@ -138,7 +138,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ClaimStatesSettingsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Отчет по стадиям исковых работ";
+            this.Text = "Отчет о подготовленных судебных приказах";
             this.ResumeLayout(false);
             this.PerformLayout();
 

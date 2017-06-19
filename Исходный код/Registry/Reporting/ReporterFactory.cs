@@ -100,6 +100,8 @@ namespace Registry.Reporting
                     return new MunicipalBuildingsReporter();
                 case ReporterType.AccountsDuplicateStatistic:
                     return new AccountsDuplicateStatistic();
+                case ReporterType.ClaimsCourtOrderPrepareReporter:
+                    return new ClaimsCourtOrderPrepareReporter();
             }
             throw new ReporterException(String.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType));
         }
