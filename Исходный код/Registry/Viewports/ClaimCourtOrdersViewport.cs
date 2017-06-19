@@ -117,13 +117,13 @@ namespace Registry.Viewport
         {
             if (_firstShowing && Presenter.ViewModel["general"].BindingSource.Count == 0)
             {
-                _firstShowing = false;
                 if (GeneralBindingSource.Count == 0)
                 {
                     InsertRecord();
                     MenuCallback.EditingStateUpdate();
                 }
             }
+            _firstShowing = false;
             base.OnVisibleChanged(e);
         }
 
