@@ -15,7 +15,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    internal sealed partial class ClaimCourtOrdersViewport : FormViewport
+    internal sealed partial class ClaimCourtOrdersViewport : FormWithGridViewport
     {
         public ClaimCourtOrdersViewport()
             : this(null, null)
@@ -56,7 +56,14 @@ namespace Registry.Viewport
                 IdJudge = ViewportHelper.ValueOrNull<int>(comboBoxJudge),
                 OrderDate = ViewportHelper.ValueOrNull(dateTimePickerOrderDate),
                 CreateDate = ViewportHelper.ValueOrNull(dateTimePickerCreateDate),
-                OpenAccountDate = ViewportHelper.ValueOrNull(dateTimePickerPaymentAccountOpenDate)
+                OpenAccountDate = ViewportHelper.ValueOrNull(dateTimePickerPaymentAccountOpenDate),
+                AmountTenancy = numericUpDownAmountTenancy.Value,
+                AmountDgi = numericUpDownAmountDGI.Value,
+                AmountPadun = numericUpDownAmountPadun.Value,
+                AmountPkk = numericUpDownAmountPkk.Value,
+                AmountPenalties = numericUpDownAmountPenalties.Value,
+                StartDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerStartDeptPeriod),
+                EndDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerEndDeptPeriod),
             };
             return claimCourtOrder;
         }
@@ -70,6 +77,7 @@ namespace Registry.Viewport
         {
             GeneralDataModel = Presenter.ViewModel["general"].Model;
             GeneralBindingSource = Presenter.ViewModel["general"].BindingSource;
+            DataGridView = dataGridViewClaimCourtOrderVersions;
             Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
 
             DataBind();
@@ -78,16 +86,16 @@ namespace Registry.Viewport
 
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", GeneralBindingSource_RowChanged);
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", GeneralBindingSource_RowDeleted);
-            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["claims"].DataSource, "RowChanged", Claims_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["payments_accounts"].DataSource, "RowChanged", PaymentsAccounts_RowChanged);
 
             DataChangeHandlersInit();
 
             UpdateExtInfo();
-
+            GeneralBindingSource_CurrentItemChanged(null, EventArgs.Empty);
             IsEditable = true;
         }
 
-        private void Claims_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void PaymentsAccounts_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             UpdateExtInfo();
         }
@@ -101,34 +109,6 @@ namespace Registry.Viewport
             }
             textBoxRawAddress.Text = account["raw_address"].ToString();
             textBoxParsedAddress.Text = account["parsed_address"].ToString();
-            if (ParentRow["start_dept_period"] != DBNull.Value)
-            {
-                dateTimePickerStartDeptPeriod.Checked = true;
-                dateTimePickerStartDeptPeriod.Value = (DateTime) ParentRow["start_dept_period"];
-            }
-            else
-            {
-                dateTimePickerStartDeptPeriod.Checked = false;
-                dateTimePickerStartDeptPeriod.Value = DateTime.Now.Date;
-            }
-            if (ParentRow["end_dept_period"] != DBNull.Value)
-            {
-                dateTimePickerEndDeptPeriod.Checked = true;
-                dateTimePickerEndDeptPeriod.Value = (DateTime)ParentRow["end_dept_period"];
-            }
-            else
-            {
-                dateTimePickerEndDeptPeriod.Checked = false;
-                dateTimePickerEndDeptPeriod.Value = DateTime.Now.Date;
-            }
-            numericUpDownAmountTenancy.Value = (decimal)ParentRow["amount_tenancy"];
-            numericUpDownAmountDGI.Value = (decimal) ParentRow["amount_dgi"];
-            numericUpDownAmountPadun.Value = (decimal)ParentRow["amount_padun"];
-            numericUpDownAmountPkk.Value = (decimal)ParentRow["amount_pkk"];
-            numericUpDownAmountPenalties.Value = (decimal)ParentRow["amount_penalties"];
-            numericUpDownAmountTotal.Value = (decimal)ParentRow["amount_tenancy"] + (decimal) ParentRow["amount_dgi"]
-                + (decimal)ParentRow["amount_padun"] + (decimal)ParentRow["amount_pkk"] 
-                + (decimal)ParentRow["amount_penalties"];
         }
 
         private bool _firstShowing = true;
@@ -147,12 +127,32 @@ namespace Registry.Viewport
             base.OnVisibleChanged(e);
         }
 
+        protected override void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
+        {
+            var bindingSource = Presenter.ViewModel["general"].BindingSource;
+            if (Presenter.ViewModel["general"].CurrentRow == null || DataGridView.RowCount == 0)
+                DataGridView.ClearSelection();
+            else
+                if (bindingSource.Position >= DataGridView.RowCount)
+                    DataGridView.Rows[DataGridView.RowCount - 1].Selected = true;
+                else if (DataGridView.Rows[bindingSource.Position].Selected != true)
+                    DataGridView.Rows[bindingSource.Position].Selected = true;
+
+            var isEditable = IsEditable;
+            UpdateExtInfo();
+            IsEditable = isEditable;
+
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.RelationsStateUpdate();
+        }
+
         private void GeneralBindingSource_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action != DataRowAction.Delete) return;
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
-            UpdateExtInfo();
+            dataGridViewClaimCourtOrderVersions.Refresh();
         }
 
         private void GeneralBindingSource_RowChanged(object sender, DataRowChangeEventArgs e)
@@ -160,14 +160,7 @@ namespace Registry.Viewport
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
             CheckViewportModifications();
-            UpdateExtInfo();
-        }
-
-        private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
-        {
-            if (!Selected) return;
-            MenuCallback.NavigationStateUpdate();
-            MenuCallback.RelationsStateUpdate();
+            dataGridViewClaimCourtOrderVersions.Refresh();
         }
 
         private void DataBind()
@@ -191,6 +184,13 @@ namespace Registry.Viewport
 
             ViewportHelper.BindProperty(dateTimePickerPaymentAccountOpenDate, "Value", bindingSource, "open_account_date", DateTime.Now.Date);
             ViewportHelper.BindProperty(dateTimePickerCreateDate, "Value", bindingSource, "create_date", DateTime.Now.Date);
+            ViewportHelper.BindProperty(dateTimePickerStartDeptPeriod, "Value", bindingSource, "start_dept_period", DateTime.Now.Date);
+            ViewportHelper.BindProperty(dateTimePickerEndDeptPeriod, "Value", bindingSource, "end_dept_period", DateTime.Now.Date);
+            ViewportHelper.BindProperty(numericUpDownAmountTenancy, "Value", bindingSource, "amount_tenancy", DateTime.Now.Date);
+            ViewportHelper.BindProperty(numericUpDownAmountDGI, "Value", bindingSource, "amount_dgi", DateTime.Now.Date);
+            ViewportHelper.BindProperty(numericUpDownAmountPadun, "Value", bindingSource, "amount_padun", DateTime.Now.Date);
+            ViewportHelper.BindProperty(numericUpDownAmountPkk, "Value", bindingSource, "amount_pkk", DateTime.Now.Date);
+            ViewportHelper.BindProperty(numericUpDownAmountPenalties, "Value", bindingSource, "amount_penalties", DateTime.Now.Date);
 
             dataGridViewClaimPersons.AutoGenerateColumns = false;
             dataGridViewClaimPersons.DataSource = Presenter.ViewModel["claim_persons"].BindingSource;
@@ -200,6 +200,16 @@ namespace Registry.Viewport
             patronymic.DataPropertyName = "patronymic";
             is_claimer.DataPropertyName = "is_claimer";
             date_of_birth.DataPropertyName = "date_of_birth";
+
+            dataGridViewClaimCourtOrderVersions.AutoGenerateColumns = false;
+            dataGridViewClaimCourtOrderVersions.DataSource = Presenter.ViewModel["general"].BindingSource;
+            id_order.DataPropertyName = "id_order";
+            create_date.DataPropertyName = "create_date";
+            order_date.DataPropertyName = "order_date";
+            id_executor.DataPropertyName = "id_executor";
+            id_executor.DataSource = Presenter.ViewModel["executors"].BindingSource;
+            id_executor.DisplayMember = "executor_name";
+            id_executor.ValueMember = "id_executor";
         }
 
         public override bool CanSaveRecord()
@@ -239,6 +249,8 @@ namespace Registry.Viewport
             IsEditable = true;
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
+            dataGridViewClaimCourtOrderVersions.Refresh();
+            SetPaymentFieldsState(true);
         }
 
         private bool ValidateClaimCourtOrder(ClaimCourtOrder claimCourtOrder)
@@ -273,7 +285,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return GeneralBindingSource.Count == 0 && !Presenter.ViewModel["general"].Model.EditingNewRecord;
+            return !Presenter.ViewModel["general"].Model.EditingNewRecord && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
         public override void InsertRecord()
@@ -282,16 +294,78 @@ namespace Registry.Viewport
                 return;
             IsEditable = false;
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+
+            DataRowView lastRow = null;
+            if (Presenter.ViewModel["general"].BindingSource.Count > 0)
+            {
+                lastRow =
+                    (DataRowView)
+                        Presenter.ViewModel["general"].BindingSource[
+                            Presenter.ViewModel["general"].BindingSource.Position];
+            }
+
             Presenter.ViewModel["general"].BindingSource.AddNew();
 
-            var idJudge = PaymentService.GetJudgeByIdAccount((int)ParentRow["id_account"]);
-            if (idJudge != null)
+            if (lastRow != null)
             {
-                comboBoxJudge.SelectedValue = (int) idJudge;
+                dateTimePickerOrderDate.Value = lastRow["order_date"] != DBNull.Value
+                    ? (DateTime) lastRow["order_date"]
+                    : DateTime.Now.Date;
+                dateTimePickerPaymentAccountOpenDate.Value = lastRow["open_account_date"] != DBNull.Value
+                    ? (DateTime) lastRow["open_account_date"]
+                    : DateTime.Now.Date;
+                dateTimePickerStartDeptPeriod.Value = lastRow["start_dept_period"] != DBNull.Value
+                    ? (DateTime)lastRow["start_dept_period"]
+                    : DateTime.Now.Date;
+                dateTimePickerEndDeptPeriod.Value = lastRow["end_dept_period"] != DBNull.Value
+                    ? (DateTime)lastRow["end_dept_period"]
+                    : DateTime.Now.Date;
+                comboBoxSigner.SelectedValue = lastRow["id_signer"] != DBNull.Value ? (int?) lastRow["id_signer"] : null;
+                comboBoxJudge.SelectedValue = lastRow["id_judge"] != DBNull.Value ? (int?)lastRow["id_judge"] : null;
+                numericUpDownAmountTenancy.Value = lastRow["amount_tenancy"] != DBNull.Value ? (decimal)lastRow["amount_tenancy"] : 0;
+                numericUpDownAmountDGI.Value = lastRow["amount_dgi"] != DBNull.Value ? (decimal)lastRow["amount_dgi"] : 0;
+                numericUpDownAmountPadun.Value = lastRow["amount_padun"] != DBNull.Value ? (decimal)lastRow["amount_padun"] : 0;
+                numericUpDownAmountPkk.Value = lastRow["amount_pkk"] != DBNull.Value ? (decimal)lastRow["amount_pkk"] : 0;
+                numericUpDownAmountPenalties.Value = lastRow["amount_penalties"] != DBNull.Value ? (decimal)lastRow["amount_penalties"] : 0;
             }
             else
             {
-                comboBoxJudge.SelectedValue = DBNull.Value;
+
+                var idJudge = PaymentService.GetJudgeByIdAccount((int) ParentRow["id_account"]);
+                if (idJudge != null)
+                {
+                    comboBoxJudge.SelectedValue = (int) idJudge;
+                }
+                else
+                {
+                    comboBoxJudge.SelectedValue = DBNull.Value;
+                }
+
+                if (ParentRow["start_dept_period"] != DBNull.Value)
+                {
+                    dateTimePickerStartDeptPeriod.Checked = true;
+                    dateTimePickerStartDeptPeriod.Value = (DateTime)ParentRow["start_dept_period"];
+                }
+                else
+                {
+                    dateTimePickerStartDeptPeriod.Checked = false;
+                    dateTimePickerStartDeptPeriod.Value = DateTime.Now.Date;
+                }
+                if (ParentRow["end_dept_period"] != DBNull.Value)
+                {
+                    dateTimePickerEndDeptPeriod.Checked = true;
+                    dateTimePickerEndDeptPeriod.Value = (DateTime)ParentRow["end_dept_period"];
+                }
+                else
+                {
+                    dateTimePickerEndDeptPeriod.Checked = false;
+                    dateTimePickerEndDeptPeriod.Value = DateTime.Now.Date;
+                }
+                numericUpDownAmountTenancy.Value = (decimal)ParentRow["amount_tenancy"];
+                numericUpDownAmountDGI.Value = (decimal)ParentRow["amount_dgi"];
+                numericUpDownAmountPadun.Value = (decimal)ParentRow["amount_padun"];
+                numericUpDownAmountPkk.Value = (decimal)ParentRow["amount_pkk"];
+                numericUpDownAmountPenalties.Value = (decimal)ParentRow["amount_penalties"];
             }
 
             if (Presenter.ViewModel["claim_persons"].BindingSource.Count == 0)
@@ -322,16 +396,39 @@ namespace Registry.Viewport
             var index = Presenter.ViewModel["executors"].BindingSource.Find("executor_login", login);
             if (index != -1)
                 comboBoxExecutor.SelectedValue = ((DataRowView)Presenter.ViewModel["executors"].BindingSource[index])["id_executor"];
+
+            numericUpDownAmountTotal.Value = numericUpDownAmountTenancy.Value + numericUpDownAmountDGI.Value +
+                + numericUpDownAmountPadun.Value + numericUpDownAmountPkk.Value +
+                + numericUpDownAmountPenalties.Value;
+
+            SetPaymentFieldsState(false);
+
             IsEditable = true;
+        }
+
+        public void SetPaymentFieldsState(bool readOnly)
+        {
+            numericUpDownAmountTenancy.ReadOnly = readOnly;
+            numericUpDownAmountDGI.ReadOnly = readOnly;
+            numericUpDownAmountPadun.ReadOnly = readOnly;
+            numericUpDownAmountPkk.ReadOnly = readOnly;
+            numericUpDownAmountPenalties.ReadOnly = readOnly;
+            dateTimePickerStartDeptPeriod.Enabled = !readOnly;
+            dateTimePickerEndDeptPeriod.Enabled = !readOnly;
+            dateTimePickerOrderDate.Enabled = !readOnly;
+            dateTimePickerPaymentAccountOpenDate.Enabled = !readOnly;
+            comboBoxSigner.Enabled = !readOnly;
+            comboBoxJudge.Enabled = !readOnly;
         }
 
         public override bool CanCancelRecord()
         {
-            return false;
+            return (ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState);
         }
 
         public override void CancelRecord()
         {
+            textBoxRawAddress.Focus();
             switch (ViewportState)
             {
                 case ViewportState.ReadState: return;
@@ -351,11 +448,40 @@ namespace Registry.Viewport
             IsEditable = true;
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
+            SetPaymentFieldsState(true);
         }
 
         public override bool CanDeleteRecord()
         {
-            return false;
+            return (Presenter.ViewModel["general"].CurrentRow != null)
+                && (ViewportState != ViewportState.NewRowState)
+                && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
+        }
+
+        public override void DeleteRecord()
+        {
+            if (MessageBox.Show(@"Вы действительно хотите удалить выбранную версию судебного приказа?", @"Внимание",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                return;
+            IsEditable = false;
+            var selectedIdOrders = new List<int>();
+            foreach (DataGridViewRow row in DataGridView.SelectedRows)
+            {
+                if (row.Cells["id_order"].Value != null)
+                {
+                    selectedIdOrders.Add((int)row.Cells["id_order"].Value);
+                }
+            }
+
+            if (!((ClaimCourtOrdersPresenter)Presenter).DeleteRecords(selectedIdOrders))
+            {
+                IsEditable = true;
+                return;
+            }
+            IsEditable = true;
+            ViewportState = ViewportState.ReadState;
+            MenuCallback.EditingStateUpdate();
+            MenuCallback.ForceCloseDetachedViewports();
         }
 
         private void vButtonPersonAdd_Click(object sender, EventArgs e)
@@ -457,6 +583,12 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
+            if (GeneralBindingSource.Position < 0)
+            {
+                MessageBox.Show(@"Не выбран судебный приказ для формирования", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
             var arguments = new Dictionary<string, string>();
             switch (reporterType)
             {
@@ -464,6 +596,7 @@ namespace Registry.Viewport
                     if (ValidForJudicialOrderReporter())
                     {
                         arguments.Add("id_claim", ParentRow["id_claim"].ToString());
+                        arguments.Add("id_order", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"].ToString());
                         MenuCallback.RunReport(reporterType, arguments);
                     }
                     break;

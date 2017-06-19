@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Windows.Forms;
 using Registry.Entities;
 using Registry.Viewport.EntityConverters;
@@ -56,6 +57,20 @@ namespace Registry.Viewport.Presenters
             if (row == null) return false;
             EntityConverter<ClaimPerson>.FillRow(claimPerson, row);
             ViewModel["claim_persons"].Model.EditingNewRecord = false;
+            return true;
+        }
+
+        internal bool DeleteRecords(IEnumerable<int> idOrders)
+        {
+            var columnName = ViewModel["general"].PrimaryKeyFirst;
+            foreach (var idOrder in idOrders)
+            {
+                var row = ViewModel["general"].DataSource.Rows.Find(idOrder);
+                if (row == null) continue;
+                if (ViewModel["general"].Model.Delete((int)row[columnName]) == -1)
+                    return false;
+                row.Delete();
+            }
             return true;
         }
     }

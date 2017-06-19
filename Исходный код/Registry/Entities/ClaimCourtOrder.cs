@@ -16,5 +16,20 @@ namespace Registry.Entities
         public int? IdJudge { get; set; }
         public DateTime? OrderDate { get; set; }
         public DateTime? OpenAccountDate { get; set; }
+
+        [DataColumn(DefaultValue = 0)]
+        public decimal? AmountTenancy { get; set; }
+
+        [DataColumn(DefaultValue = 0)]
+        public decimal? AmountDgi { get; set; }
+        [DataColumn(DefaultValue = 0)]
+        public decimal? AmountPadun { get; set; }
+        [DataColumn(DefaultValue = 0)]
+        public decimal? AmountPkk { get; set; }
+
+        [DataColumn(DefaultValue = 0)]
+        public decimal? AmountPenalties { get; set; }
+        public DateTime? StartDeptPeriod { get; set; }
+        public DateTime? EndDeptPeriod { get; set; }
     }
 }
