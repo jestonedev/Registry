@@ -41,6 +41,7 @@
             // 
             this.vButtonOk.AllowAnimations = true;
             this.vButtonOk.BackColor = System.Drawing.Color.Transparent;
+            this.vButtonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.vButtonOk.Location = new System.Drawing.Point(32, 69);
             this.vButtonOk.Name = "vButtonOk";
             this.vButtonOk.RoundedCornersMask = ((byte)(15));
