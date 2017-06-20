@@ -22,7 +22,6 @@ namespace Registry.Reporting.ClaimsAndPaymentsReporters
                 {
                     arguments.Add("date_from", cssfForm.DateFrom.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
                     arguments.Add("date_to", cssfForm.DateTo.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
-                    arguments.Add("id_executor", cssfForm.IdExecutor.ToString());
                     base.Run(arguments);
                 }
                 else

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Data;
-using System.Linq;
 using System.Windows.Forms;
-using Registry.DataModels.DataModels;
-using Registry.Entities;
-using Settings;
 
 namespace Registry.Reporting.SettingForms
 {
@@ -26,14 +21,6 @@ namespace Registry.Reporting.SettingForms
             }
         }
 
-        public int IdExecutor
-        {
-            get
-            {
-                return (int?) comboBoxExecutor.SelectedValue ?? -1;
-            }
-        }
-
         public ClaimCourtOrdersPrepareSettingsForm()
         {
             InitializeComponent();
@@ -41,20 +28,6 @@ namespace Registry.Reporting.SettingForms
             {
                 DialogResult = DialogResult.OK;
             });
-            comboBoxExecutor.DataSource = new BindingSource
-            {
-                DataSource = EntityDataModel<Executor>.GetInstance().Select(),
-                Filter = "is_inactive = 0"
-            };
-            comboBoxExecutor.DisplayMember = "executor_name";
-            comboBoxExecutor.ValueMember = "id_executor";
-
-            var executor = EntityDataModel<Executor>.GetInstance().FilterDeletedRows().
-                FirstOrDefault(r => r.Field<string>("executor_name") == UserDomain.Current.DisplayName);
-            if (executor != null)
-            {
-                comboBoxExecutor.SelectedValue = executor.Field<int>("id_executor");
-            }
         }
 
         protected void HandleHotKeys(Control.ControlCollection controls, Action<object, EventArgs> eventClick)
@@ -81,17 +54,6 @@ namespace Registry.Reporting.SettingForms
                     HandleHotKeys(control.Controls, eventClick);
                 }
             }
-        }
-
-        private void vButtonOk_Click(object sender, EventArgs e)
-        {
-            if (comboBoxExecutor.SelectedValue == null)
-            {
-                MessageBox.Show(@"Необходимо выбрать исполнителя", @"Ошибка", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
-            }
-            DialogResult = DialogResult.OK;
         }
     }
 }

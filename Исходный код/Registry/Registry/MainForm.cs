@@ -1297,7 +1297,7 @@ namespace Registry
                 document.ShowAssocViewport<ClaimCourtOrdersViewport>();
         }
 
-        private void ribbonPanel4_Click(object sender, EventArgs e)
+        private void ribbonButtonCourtOrdersPrepareReport_Click(object sender, EventArgs e)
         {
             RunReport(ReporterType.ClaimsCourtOrderPrepareReporter);
         }
