@@ -498,8 +498,19 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
+            var idClaim = Convert.ToInt32(viewModel.CurrentRow[viewModel.PrimaryKeyFirst], CultureInfo.InvariantCulture);
+            if (typeof(T) == typeof(ClaimCourtOrdersViewport))
+            {
+                if (!Presenter.ViewModel["claim_states"].Model.FilterDeletedRows().Any(
+                    r => r.Field<int?>("id_claim") == idClaim && r.Field<int?>("id_state_type") == 4))
+                {
+                    MessageBox.Show(@"Нельзя сформировать судебный приказ по претензионно-исковой работе, у которой отсутствует стадия ""Подготовка и направление судебного приказа""", @"Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
+            }
             ShowAssocViewport<T>(MenuCallback, viewModel.PrimaryKeyFirst + " = " +
-                Convert.ToInt32(viewModel.CurrentRow[viewModel.PrimaryKeyFirst], CultureInfo.InvariantCulture),
+                idClaim,
                 viewModel.CurrentRow.Row, ParentTypeEnum.Claim);
         }
 

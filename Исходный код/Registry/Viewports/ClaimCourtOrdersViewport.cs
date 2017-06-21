@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Security.Principal;
 using System.Windows.Forms;
@@ -83,9 +84,17 @@ namespace Registry.Viewport
             DataBind();
 
             AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["claim_persons"].BindingSource, "CurrentItemChanged", ClaimPersons_CurrentItemChanged);
 
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", GeneralBindingSource_RowChanged);
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", GeneralBindingSource_RowDeleted);
+
+            dataGridViewClaimPersons.AutoGenerateColumns = false;
+            Presenter.ViewModel["claim_persons"].BindingSource.Filter = StaticFilter;
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["claim_persons"].DataSource, "RowChanged", (s,e) => { DataGridViewClaimPersonsRefresh(); });
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["claim_persons"].DataSource, "RowDeleted", (s, e) => { DataGridViewClaimPersonsRefresh(); });
+            DataGridViewClaimPersonsRefresh();
+
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["payments_accounts"].DataSource, "RowChanged", PaymentsAccounts_RowChanged);
 
             DataChangeHandlersInit();
@@ -93,6 +102,36 @@ namespace Registry.Viewport
             UpdateExtInfo();
             GeneralBindingSource_CurrentItemChanged(null, EventArgs.Empty);
             IsEditable = true;
+        }
+
+        private void ClaimPersons_CurrentItemChanged(object sender, EventArgs e)
+        {
+            var bindingSource = Presenter.ViewModel["claim_persons"].BindingSource;
+            if (bindingSource.Position == -1 || dataGridViewClaimPersons.RowCount == 0)
+            {
+                dataGridViewClaimPersons.ClearSelection();
+                return;
+            }
+            if (bindingSource.Position >= dataGridViewClaimPersons.RowCount)
+            {
+                dataGridViewClaimPersons.Rows[dataGridViewClaimPersons.RowCount - 1].Selected = true;
+                dataGridViewClaimPersons.CurrentCell = dataGridViewClaimPersons.CurrentCell != null ?
+                    dataGridViewClaimPersons.Rows[dataGridViewClaimPersons.RowCount - 1].Cells[dataGridViewClaimPersons.CurrentCell.ColumnIndex] :
+                    dataGridViewClaimPersons.Rows[dataGridViewClaimPersons.RowCount - 1].Cells[0];
+            }
+            else
+            {
+                dataGridViewClaimPersons.Rows[bindingSource.Position].Selected = true;
+                dataGridViewClaimPersons.CurrentCell = dataGridViewClaimPersons.CurrentCell != null ?
+                    dataGridViewClaimPersons.Rows[bindingSource.Position].Cells[dataGridViewClaimPersons.CurrentCell.ColumnIndex] :
+                    dataGridViewClaimPersons.Rows[bindingSource.Position].Cells[0];
+            }
+        }
+
+        private void DataGridViewClaimPersonsRefresh()
+        {
+            dataGridViewClaimPersons.RowCount = Presenter.ViewModel["claim_persons"].BindingSource.Count;
+            dataGridViewClaimPersons.Refresh();
         }
 
         private void PaymentsAccounts_RowChanged(object sender, DataRowChangeEventArgs e)
@@ -191,15 +230,6 @@ namespace Registry.Viewport
             ViewportHelper.BindProperty(numericUpDownAmountPadun, "Value", bindingSource, "amount_padun", DateTime.Now.Date);
             ViewportHelper.BindProperty(numericUpDownAmountPkk, "Value", bindingSource, "amount_pkk", DateTime.Now.Date);
             ViewportHelper.BindProperty(numericUpDownAmountPenalties, "Value", bindingSource, "amount_penalties", DateTime.Now.Date);
-
-            dataGridViewClaimPersons.AutoGenerateColumns = false;
-            dataGridViewClaimPersons.DataSource = Presenter.ViewModel["claim_persons"].BindingSource;
-            Presenter.ViewModel["claim_persons"].BindingSource.Filter = StaticFilter;
-            surname.DataPropertyName = "surname";
-            name.DataPropertyName = "name";
-            patronymic.DataPropertyName = "patronymic";
-            is_claimer.DataPropertyName = "is_claimer";
-            date_of_birth.DataPropertyName = "date_of_birth";
 
             dataGridViewClaimCourtOrderVersions.AutoGenerateColumns = false;
             dataGridViewClaimCourtOrderVersions.DataSource = Presenter.ViewModel["general"].BindingSource;
@@ -486,18 +516,9 @@ namespace Registry.Viewport
 
         private void vButtonPersonAdd_Click(object sender, EventArgs e)
         {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            var row = Presenter.ViewModel["general"].CurrentRow;
-            if (row == null)
-            {
-                MessageBox.Show(@"Не выбран судебный приказ", @"Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
-            }
             if (Presenter.ViewModel["claim_persons"].Model.EditingNewRecord)
             {
-                MessageBox.Show(@"Одна из вкладок участников найма уже находится в режиме добавления новых записей. " +
+                MessageBox.Show(@"Одна из вкладок участников претензионно-исковой работы уже находится в режиме добавления новых записей. " +
                     @"Одновременно можно добавлять не более одного участника.",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
@@ -512,15 +533,6 @@ namespace Registry.Viewport
 
         private void vButtonPersonDelete_Click(object sender, EventArgs e)
         {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            var row = Presenter.ViewModel["general"].CurrentRow;
-            if (row == null)
-            {
-                MessageBox.Show(@"Не выбран судебный приказ", @"Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
-            }
             var claimPersonRow = Presenter.ViewModel["claim_persons"].CurrentRow;
             if (claimPersonRow == null)
             {
@@ -537,15 +549,6 @@ namespace Registry.Viewport
 
         private void vButtonPersonEdit_Click(object sender, EventArgs e)
         {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            var claimCourtOrderRow = Presenter.ViewModel["general"].CurrentRow;
-            if (claimCourtOrderRow == null)
-            {
-                MessageBox.Show(@"Не выбран судебный приказ", @"Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
-            }
             if (Presenter.ViewModel["claim_persons"].Model.EditingNewRecord)
             {
                 MessageBox.Show(@"Одна из вкладок участников найма уже находится в режиме добавления новых записей. " +
@@ -614,6 +617,75 @@ namespace Registry.Viewport
                 return false;
             }
             return true;
+        }
+
+        private void dataGridViewClaimPersons_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.RowIndex >= Presenter.ViewModel["claim_persons"].BindingSource.Count)
+            {
+                return;
+            }
+            var columnName = dataGridViewClaimPersons.Columns[e.ColumnIndex].Name;
+            switch (columnName)
+            {
+                case "surname":
+                case "name":
+                case "patronymic":
+                    e.Value = ((DataRowView)Presenter.ViewModel["claim_persons"].BindingSource[e.RowIndex])[columnName];
+                    break;
+                case "date_of_birth":
+                    var dateOfBirth =
+                        ((DataRowView)Presenter.ViewModel["claim_persons"].BindingSource[e.RowIndex])[columnName];
+                    if (dateOfBirth != DBNull.Value)
+                    {
+                        e.Value = ((DateTime)dateOfBirth).ToString("dd.MM.yyyy");   
+                    }
+                    break;
+                case "is_claimer":
+                    var isClaimer = ((DataRowView)Presenter.ViewModel["claim_persons"].BindingSource[e.RowIndex])[columnName];
+                    if (isClaimer != DBNull.Value)
+                    {
+                        e.Value = (short)isClaimer == 1 ? "является" : "";
+                        if ((short) isClaimer == 1)
+                        {
+                            dataGridViewClaimPersons.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
+                            dataGridViewClaimPersons.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.Green;
+                        }
+                        else
+                        {
+                            dataGridViewClaimPersons.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+                            dataGridViewClaimPersons.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private void dataGridViewClaimPersons_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridViewClaimPersons.SelectedRows.Count > 0)
+                Presenter.ViewModel["claim_persons"].BindingSource.Position = dataGridViewClaimPersons.SelectedRows[0].Index;
+            else
+                Presenter.ViewModel["claim_persons"].BindingSource.Position = -1;
+        }
+
+        private void dataGridViewClaimPersons_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (dataGridViewClaimPersons.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
+                return;
+            Func<SortOrder, bool> changeSortColumn = way =>
+            {
+                foreach (DataGridViewColumn column in dataGridViewClaimPersons.Columns)
+                    column.HeaderCell.SortGlyphDirection = SortOrder.None;
+                Presenter.ViewModel["claim_persons"].BindingSource.Sort = dataGridViewClaimPersons.Columns[e.ColumnIndex].Name + " " +
+                    (way == SortOrder.Ascending ? "ASC" : "DESC");
+                dataGridViewClaimPersons.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
+                return true;
+            };
+            changeSortColumn(dataGridViewClaimPersons.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending
+                ? SortOrder.Descending
+                : SortOrder.Ascending);
+            dataGridViewClaimPersons.Refresh();
         }
     }
 }

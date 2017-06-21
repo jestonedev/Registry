@@ -77,15 +77,15 @@
             this.id_executor = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.groupBox30 = new System.Windows.Forms.GroupBox();
             this.dataGridViewClaimPersons = new System.Windows.Forms.DataGridView();
-            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.is_claimer = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.panel5 = new System.Windows.Forms.Panel();
             this.vButtonPersonEdit = new VIBlend.WinForms.Controls.vButton();
             this.vButtonPersonDelete = new VIBlend.WinForms.Controls.vButton();
             this.vButtonPersonAdd = new VIBlend.WinForms.Controls.vButton();
+            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.is_claimer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel12.SuspendLayout();
             this.panel7.SuspendLayout();
             this.groupBox29.SuspendLayout();
@@ -119,7 +119,7 @@
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 260F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(953, 562);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(930, 503);
             this.tableLayoutPanel12.TabIndex = 1;
             // 
             // panel7
@@ -128,7 +128,7 @@
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(3, 3);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(947, 254);
+            this.panel7.Size = new System.Drawing.Size(924, 254);
             this.panel7.TabIndex = 0;
             // 
             // groupBox29
@@ -137,7 +137,7 @@
             this.groupBox29.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox29.Location = new System.Drawing.Point(0, 0);
             this.groupBox29.Name = "groupBox29";
-            this.groupBox29.Size = new System.Drawing.Size(947, 254);
+            this.groupBox29.Size = new System.Drawing.Size(924, 254);
             this.groupBox29.TabIndex = 0;
             this.groupBox29.TabStop = false;
             this.groupBox29.Text = "Общие сведения";
@@ -156,7 +156,7 @@
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 235F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(941, 235);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(918, 235);
             this.tableLayoutPanel1.TabIndex = 43;
             // 
             // panel1
@@ -179,10 +179,10 @@
             this.panel1.Controls.Add(this.numericUpDownAmountTenancy);
             this.panel1.Controls.Add(this.label94);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(470, 0);
+            this.panel1.Location = new System.Drawing.Point(459, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(471, 235);
+            this.panel1.Size = new System.Drawing.Size(459, 235);
             this.panel1.TabIndex = 1;
             // 
             // numericUpDownAmountPkk
@@ -199,7 +199,7 @@
             0});
             this.numericUpDownAmountPkk.Name = "numericUpDownAmountPkk";
             this.numericUpDownAmountPkk.ReadOnly = true;
-            this.numericUpDownAmountPkk.Size = new System.Drawing.Size(292, 20);
+            this.numericUpDownAmountPkk.Size = new System.Drawing.Size(280, 20);
             this.numericUpDownAmountPkk.TabIndex = 3;
             this.numericUpDownAmountPkk.ThousandsSeparator = true;
             // 
@@ -211,7 +211,7 @@
             this.dateTimePickerEndDeptPeriod.Location = new System.Drawing.Point(169, 201);
             this.dateTimePickerEndDeptPeriod.Name = "dateTimePickerEndDeptPeriod";
             this.dateTimePickerEndDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerEndDeptPeriod.Size = new System.Drawing.Size(292, 20);
+            this.dateTimePickerEndDeptPeriod.Size = new System.Drawing.Size(280, 20);
             this.dateTimePickerEndDeptPeriod.TabIndex = 7;
             // 
             // label5
@@ -237,7 +237,7 @@
             0});
             this.numericUpDownAmountPadun.Name = "numericUpDownAmountPadun";
             this.numericUpDownAmountPadun.ReadOnly = true;
-            this.numericUpDownAmountPadun.Size = new System.Drawing.Size(292, 20);
+            this.numericUpDownAmountPadun.Size = new System.Drawing.Size(280, 20);
             this.numericUpDownAmountPadun.TabIndex = 2;
             this.numericUpDownAmountPadun.ThousandsSeparator = true;
             // 
@@ -273,7 +273,7 @@
             0});
             this.numericUpDownAmountPenalties.Name = "numericUpDownAmountPenalties";
             this.numericUpDownAmountPenalties.ReadOnly = true;
-            this.numericUpDownAmountPenalties.Size = new System.Drawing.Size(292, 20);
+            this.numericUpDownAmountPenalties.Size = new System.Drawing.Size(280, 20);
             this.numericUpDownAmountPenalties.TabIndex = 4;
             this.numericUpDownAmountPenalties.ThousandsSeparator = true;
             // 
@@ -314,7 +314,7 @@
             -2147483648});
             this.numericUpDownAmountTotal.Name = "numericUpDownAmountTotal";
             this.numericUpDownAmountTotal.ReadOnly = true;
-            this.numericUpDownAmountTotal.Size = new System.Drawing.Size(292, 20);
+            this.numericUpDownAmountTotal.Size = new System.Drawing.Size(280, 20);
             this.numericUpDownAmountTotal.TabIndex = 5;
             this.numericUpDownAmountTotal.ThousandsSeparator = true;
             // 
@@ -326,7 +326,7 @@
             this.dateTimePickerStartDeptPeriod.Location = new System.Drawing.Point(169, 173);
             this.dateTimePickerStartDeptPeriod.Name = "dateTimePickerStartDeptPeriod";
             this.dateTimePickerStartDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(292, 20);
+            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(280, 20);
             this.dateTimePickerStartDeptPeriod.TabIndex = 6;
             // 
             // label8
@@ -352,7 +352,7 @@
             0});
             this.numericUpDownAmountDGI.Name = "numericUpDownAmountDGI";
             this.numericUpDownAmountDGI.ReadOnly = true;
-            this.numericUpDownAmountDGI.Size = new System.Drawing.Size(292, 20);
+            this.numericUpDownAmountDGI.Size = new System.Drawing.Size(280, 20);
             this.numericUpDownAmountDGI.TabIndex = 1;
             this.numericUpDownAmountDGI.ThousandsSeparator = true;
             // 
@@ -388,7 +388,7 @@
             0});
             this.numericUpDownAmountTenancy.Name = "numericUpDownAmountTenancy";
             this.numericUpDownAmountTenancy.ReadOnly = true;
-            this.numericUpDownAmountTenancy.Size = new System.Drawing.Size(292, 20);
+            this.numericUpDownAmountTenancy.Size = new System.Drawing.Size(280, 20);
             this.numericUpDownAmountTenancy.TabIndex = 0;
             this.numericUpDownAmountTenancy.ThousandsSeparator = true;
             // 
@@ -423,7 +423,7 @@
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(470, 235);
+            this.panel2.Size = new System.Drawing.Size(459, 235);
             this.panel2.TabIndex = 0;
             // 
             // dateTimePickerCreateDate
@@ -433,7 +433,7 @@
             this.dateTimePickerCreateDate.Enabled = false;
             this.dateTimePickerCreateDate.Location = new System.Drawing.Point(145, 201);
             this.dateTimePickerCreateDate.Name = "dateTimePickerCreateDate";
-            this.dateTimePickerCreateDate.Size = new System.Drawing.Size(317, 20);
+            this.dateTimePickerCreateDate.Size = new System.Drawing.Size(306, 20);
             this.dateTimePickerCreateDate.TabIndex = 7;
             // 
             // label10
@@ -454,7 +454,7 @@
             this.comboBoxExecutor.FormattingEnabled = true;
             this.comboBoxExecutor.Location = new System.Drawing.Point(144, 173);
             this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(318, 21);
+            this.comboBoxExecutor.Size = new System.Drawing.Size(307, 21);
             this.comboBoxExecutor.TabIndex = 6;
             // 
             // label4
@@ -483,7 +483,7 @@
             this.textBoxParsedAddress.Location = new System.Drawing.Point(144, 35);
             this.textBoxParsedAddress.Name = "textBoxParsedAddress";
             this.textBoxParsedAddress.ReadOnly = true;
-            this.textBoxParsedAddress.Size = new System.Drawing.Size(318, 20);
+            this.textBoxParsedAddress.Size = new System.Drawing.Size(307, 20);
             this.textBoxParsedAddress.TabIndex = 1;
             // 
             // dateTimePickerPaymentAccountOpenDate
@@ -493,7 +493,7 @@
             this.dateTimePickerPaymentAccountOpenDate.Enabled = false;
             this.dateTimePickerPaymentAccountOpenDate.Location = new System.Drawing.Point(145, 118);
             this.dateTimePickerPaymentAccountOpenDate.Name = "dateTimePickerPaymentAccountOpenDate";
-            this.dateTimePickerPaymentAccountOpenDate.Size = new System.Drawing.Size(317, 20);
+            this.dateTimePickerPaymentAccountOpenDate.Size = new System.Drawing.Size(306, 20);
             this.dateTimePickerPaymentAccountOpenDate.TabIndex = 4;
             // 
             // label1
@@ -523,7 +523,7 @@
             this.comboBoxJudge.FormattingEnabled = true;
             this.comboBoxJudge.Location = new System.Drawing.Point(144, 145);
             this.comboBoxJudge.Name = "comboBoxJudge";
-            this.comboBoxJudge.Size = new System.Drawing.Size(318, 21);
+            this.comboBoxJudge.Size = new System.Drawing.Size(307, 21);
             this.comboBoxJudge.TabIndex = 5;
             // 
             // label3
@@ -543,7 +543,7 @@
             this.textBoxRawAddress.Location = new System.Drawing.Point(145, 8);
             this.textBoxRawAddress.Name = "textBoxRawAddress";
             this.textBoxRawAddress.ReadOnly = true;
-            this.textBoxRawAddress.Size = new System.Drawing.Size(317, 20);
+            this.textBoxRawAddress.Size = new System.Drawing.Size(306, 20);
             this.textBoxRawAddress.TabIndex = 0;
             // 
             // comboBoxSigner
@@ -555,7 +555,7 @@
             this.comboBoxSigner.FormattingEnabled = true;
             this.comboBoxSigner.Location = new System.Drawing.Point(144, 91);
             this.comboBoxSigner.Name = "comboBoxSigner";
-            this.comboBoxSigner.Size = new System.Drawing.Size(318, 21);
+            this.comboBoxSigner.Size = new System.Drawing.Size(307, 21);
             this.comboBoxSigner.TabIndex = 3;
             // 
             // label71
@@ -574,7 +574,7 @@
             this.dateTimePickerOrderDate.Enabled = false;
             this.dateTimePickerOrderDate.Location = new System.Drawing.Point(145, 63);
             this.dateTimePickerOrderDate.Name = "dateTimePickerOrderDate";
-            this.dateTimePickerOrderDate.Size = new System.Drawing.Size(317, 20);
+            this.dateTimePickerOrderDate.Size = new System.Drawing.Size(306, 20);
             this.dateTimePickerOrderDate.TabIndex = 2;
             // 
             // label73
@@ -600,7 +600,7 @@
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(953, 302);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(930, 243);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // groupBox1
@@ -609,7 +609,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(470, 296);
+            this.groupBox1.Size = new System.Drawing.Size(459, 237);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Версии судебного приказа";
@@ -633,7 +633,7 @@
             this.dataGridViewClaimCourtOrderVersions.Name = "dataGridViewClaimCourtOrderVersions";
             this.dataGridViewClaimCourtOrderVersions.ReadOnly = true;
             this.dataGridViewClaimCourtOrderVersions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewClaimCourtOrderVersions.Size = new System.Drawing.Size(464, 277);
+            this.dataGridViewClaimCourtOrderVersions.Size = new System.Drawing.Size(453, 218);
             this.dataGridViewClaimCourtOrderVersions.TabIndex = 1;
             // 
             // id_order
@@ -673,9 +673,9 @@
             this.groupBox30.Controls.Add(this.dataGridViewClaimPersons);
             this.groupBox30.Controls.Add(this.panel5);
             this.groupBox30.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox30.Location = new System.Drawing.Point(479, 3);
+            this.groupBox30.Location = new System.Drawing.Point(468, 3);
             this.groupBox30.Name = "groupBox30";
-            this.groupBox30.Size = new System.Drawing.Size(471, 296);
+            this.groupBox30.Size = new System.Drawing.Size(459, 237);
             this.groupBox30.TabIndex = 3;
             this.groupBox30.TabStop = false;
             this.groupBox30.Text = "Участники (общие для всех версий)";
@@ -700,43 +700,12 @@
             this.dataGridViewClaimPersons.Name = "dataGridViewClaimPersons";
             this.dataGridViewClaimPersons.ReadOnly = true;
             this.dataGridViewClaimPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewClaimPersons.Size = new System.Drawing.Size(427, 277);
+            this.dataGridViewClaimPersons.Size = new System.Drawing.Size(415, 218);
             this.dataGridViewClaimPersons.TabIndex = 5;
-            // 
-            // surname
-            // 
-            this.surname.HeaderText = "Фамилия";
-            this.surname.MinimumWidth = 100;
-            this.surname.Name = "surname";
-            this.surname.ReadOnly = true;
-            // 
-            // name
-            // 
-            this.name.HeaderText = "Имя";
-            this.name.MinimumWidth = 100;
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            // 
-            // patronymic
-            // 
-            this.patronymic.HeaderText = "Отчество";
-            this.patronymic.MinimumWidth = 100;
-            this.patronymic.Name = "patronymic";
-            this.patronymic.ReadOnly = true;
-            // 
-            // date_of_birth
-            // 
-            this.date_of_birth.HeaderText = "Дата рождения";
-            this.date_of_birth.MinimumWidth = 100;
-            this.date_of_birth.Name = "date_of_birth";
-            this.date_of_birth.ReadOnly = true;
-            // 
-            // is_claimer
-            // 
-            this.is_claimer.HeaderText = "Является нанимателем";
-            this.is_claimer.MinimumWidth = 100;
-            this.is_claimer.Name = "is_claimer";
-            this.is_claimer.ReadOnly = true;
+            this.dataGridViewClaimPersons.VirtualMode = true;
+            this.dataGridViewClaimPersons.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridViewClaimPersons_CellValueNeeded);
+            this.dataGridViewClaimPersons.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewClaimPersons_ColumnHeaderMouseClick);
+            this.dataGridViewClaimPersons.SelectionChanged += new System.EventHandler(this.dataGridViewClaimPersons_SelectionChanged);
             // 
             // panel5
             // 
@@ -744,10 +713,10 @@
             this.panel5.Controls.Add(this.vButtonPersonDelete);
             this.panel5.Controls.Add(this.vButtonPersonAdd);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel5.Location = new System.Drawing.Point(430, 16);
+            this.panel5.Location = new System.Drawing.Point(418, 16);
             this.panel5.Margin = new System.Windows.Forms.Padding(0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(38, 277);
+            this.panel5.Size = new System.Drawing.Size(38, 218);
             this.panel5.TabIndex = 4;
             // 
             // vButtonPersonEdit
@@ -795,16 +764,53 @@
             this.vButtonPersonAdd.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonPersonAdd.Click += new System.EventHandler(this.vButtonPersonAdd_Click);
             // 
+            // surname
+            // 
+            this.surname.HeaderText = "Фамилия";
+            this.surname.MinimumWidth = 100;
+            this.surname.Name = "surname";
+            this.surname.ReadOnly = true;
+            // 
+            // name
+            // 
+            this.name.HeaderText = "Имя";
+            this.name.MinimumWidth = 100;
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            // 
+            // patronymic
+            // 
+            this.patronymic.HeaderText = "Отчество";
+            this.patronymic.MinimumWidth = 100;
+            this.patronymic.Name = "patronymic";
+            this.patronymic.ReadOnly = true;
+            // 
+            // date_of_birth
+            // 
+            this.date_of_birth.HeaderText = "Дата рождения";
+            this.date_of_birth.MinimumWidth = 100;
+            this.date_of_birth.Name = "date_of_birth";
+            this.date_of_birth.ReadOnly = true;
+            // 
+            // is_claimer
+            // 
+            this.is_claimer.HeaderText = "Является нанимателем";
+            this.is_claimer.MinimumWidth = 100;
+            this.is_claimer.Name = "is_claimer";
+            this.is_claimer.ReadOnly = true;
+            this.is_claimer.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
             // ClaimCourtOrdersViewport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
+            this.AutoScrollMinSize = new System.Drawing.Size(800, 500);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(953, 562);
+            this.ClientSize = new System.Drawing.Size(930, 503);
             this.Controls.Add(this.tableLayoutPanel12);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "ClaimCourtOrdersViewport";
             this.Text = "Судебный приказ";
             this.tableLayoutPanel12.ResumeLayout(false);
@@ -881,14 +887,14 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView dataGridViewClaimCourtOrderVersions;
         private System.Windows.Forms.DataGridView dataGridViewClaimPersons;
-        private System.Windows.Forms.DataGridViewTextBoxColumn surname;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn patronymic;
-        private System.Windows.Forms.DataGridViewTextBoxColumn date_of_birth;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn is_claimer;
         private System.Windows.Forms.DataGridViewTextBoxColumn id_order;
         private System.Windows.Forms.DataGridViewTextBoxColumn order_date;
         private System.Windows.Forms.DataGridViewTextBoxColumn create_date;
         private System.Windows.Forms.DataGridViewComboBoxColumn id_executor;
+        private System.Windows.Forms.DataGridViewTextBoxColumn surname;
+        private System.Windows.Forms.DataGridViewTextBoxColumn name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn patronymic;
+        private System.Windows.Forms.DataGridViewTextBoxColumn date_of_birth;
+        private System.Windows.Forms.DataGridViewTextBoxColumn is_claimer;
     }
 }

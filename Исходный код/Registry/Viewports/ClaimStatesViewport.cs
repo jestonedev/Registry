@@ -519,7 +519,7 @@ namespace Registry.Viewport
         protected override void OnVisibleChanged(EventArgs e)
         {
             UnbindedCheckBoxesUpdate();
-            dateTimePickerStartState.Focus();
+            textBoxDescription.Focus();
             base.OnVisibleChanged(e);
         }
 
