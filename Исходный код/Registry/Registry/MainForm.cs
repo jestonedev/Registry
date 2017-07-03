@@ -1301,5 +1301,10 @@ namespace Registry
         {
             RunReport(ReporterType.ClaimsCourtOrderPrepareReporter);
         }
+
+        private void ribbonButtonGisZkhExport_Click(object sender, EventArgs e)
+        {
+            RunReport(ReporterType.GisZkhReporter);
+        }
     }
 }

@@ -49,6 +49,7 @@
         TenancyNotifyNoProlongCategory,
         TenancyNotifyEvictionTrouble,
         RegistryExcerptReporterBuilding,
-        ClaimsCourtOrderPrepareReporter
+        ClaimsCourtOrderPrepareReporter,
+        GisZkhReporter
     }
 }

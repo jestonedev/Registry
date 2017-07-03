@@ -64,6 +64,7 @@
     <Compile Include="ClaimsAndPaymentsReporters\RequestToBksReporter.cs" />
     <Compile Include="ClaimsAndPaymentsReporters\TransfertToLegalDepartmentReporter.cs" />
     <Compile Include="ClaimsAndPaymentsReporters\ClaimsStatesReporter.cs" />
+    <Compile Include="TenancyReporters\GisZkhExport.cs" />
     <Compile Include="RegistryReporters\BuildingExcerptReporter.cs" />
     <Compile Include="SettingForms\ClaimCourtOrdersPrepareSettingsForm.cs">
       <SubType>Form</SubType>
