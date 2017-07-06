@@ -131,6 +131,18 @@ namespace Registry.DataModels.Services
                 select ownershipPremisesAssocRow.Field<int>("id_premises");
         }
 
+        public static IEnumerable<int> EmergencyPremisesIDs()
+        {
+            var ownershipRights = EntityDataModel<OwnershipRight>.GetInstance().FilterDeletedRows();
+            var ownershipPremisesAssoc = EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance().FilterDeletedRows();
+            return from ownershipPremisesAssocRow in ownershipPremisesAssoc
+                   join ownershipRightsRow in ownershipRights
+                       on ownershipPremisesAssocRow.Field<int?>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
+                   where ownershipRightsRow.Field<int?>("id_ownership_right_type") == 2 &&
+                       ownershipPremisesAssocRow.Field<int?>("id_premises") != null
+                   select ownershipPremisesAssocRow.Field<int>("id_premises");
+        }
+
         public static IEnumerable<int> EmergencyExcludedPremisesIDs()
         {
             var ownershipRights = EntityDataModel<OwnershipRight>.GetInstance().FilterDeletedRows();

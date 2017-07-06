@@ -419,7 +419,10 @@ namespace Registry.Viewport
         private int _idPremises = int.MinValue;
         private IEnumerable<DataRow> _tenancyInfoRows;
         private IEnumerable<int> _demolishedBuildings = BuildingService.DemolishedBuildingIDs().ToList();
+        private readonly IEnumerable<int> _emergencyBuildings = BuildingService.EmergencyBuildingIDs().ToList();
         private IEnumerable<int> _demolishedPremises = PremisesService.DemolishedPremisesIDs().ToList();
+        private readonly IEnumerable<int> _emergencyPremises = PremisesService.EmergencyPremisesIDs().ToList();
+        private readonly IEnumerable<int> _emergencyExcludedPremises = PremisesService.EmergencyExcludedPremisesIDs().ToList();
 
         private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
@@ -434,6 +437,14 @@ namespace Registry.Viewport
                     {
                         DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.Red;
                         DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.DarkRed;
+                    } else
+                    if (_emergencyBuildings.Contains((int) row["id_building"]) || (
+                        _emergencyPremises.Contains((int) row["id_premises"]) &&
+                        !_emergencyExcludedPremises.Contains((int) row["id_premises"])
+                        ))
+                    {
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.FromArgb(255, 117, 234, 232);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.FromArgb(255, 22, 145, 143);
                     }
                     else
                     {
