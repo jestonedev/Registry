@@ -21,13 +21,13 @@ namespace Registry.DataModels.Services
                 (from tenancyPersonsRow in tenancyPersons
                     where
                         snp.Any() && tenancyPersonsRow.Field<string>("surname") != null &&
-                        string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0],
+                        string.Equals(tenancyPersonsRow.Field<string>("surname").Trim(), snp[0].Trim(),
                             StringComparison.InvariantCultureIgnoreCase) &&
                         ((snp.Length < 2) || tenancyPersonsRow.Field<string>("name") != null &&
-                         string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1],
+                         string.Equals(tenancyPersonsRow.Field<string>("name").Trim(), snp[1].Trim(),
                              StringComparison.InvariantCultureIgnoreCase)) &&
                         ((snp.Length < 3) || tenancyPersonsRow.Field<string>("patronymic") != null &&
-                         string.Equals(tenancyPersonsRow.Field<string>("patronymic"), snp[2],
+                         string.Equals(tenancyPersonsRow.Field<string>("patronymic").Trim(), snp[2].Trim(),
                              StringComparison.InvariantCultureIgnoreCase)) &&
                         condition(tenancyPersonsRow) && tenancyPersonsRow.Field<int?>("id_process") != null
                     select tenancyPersonsRow.Field<int>("id_process")).Distinct();
