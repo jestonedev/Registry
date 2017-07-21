@@ -753,7 +753,7 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            if (!TenancyValidForReportGenerate())
+            if (reporterType != ReporterType.RequestToMvdReporter && !TenancyValidForReportGenerate())
                 return;
             var arguments = new Dictionary<string, string>();
             switch (reporterType)
