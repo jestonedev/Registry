@@ -104,6 +104,8 @@ namespace Registry.Reporting
                     return new ClaimsCourtOrderPrepareReporter();
                 case ReporterType.GisZkhReporter:
                     return new GisZkhExport();
+                case ReporterType.RequestToMvdReporter:
+                    return new RequestToMvdReporter();
             }
             throw new ReporterException(String.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType));
         }

@@ -171,6 +171,7 @@
     <Compile Include="TenancyReporters\TenancyContractSocialReporter.cs" />
     <Compile Include="TenancyReporters\TenancyContractSpecial1711Reporter.cs" />
     <Compile Include="TenancyReporters\TenancyContractSpecial1712Reporter.cs" />
+    <Compile Include="TenancyReporters\RequestToMvdReporter.cs" />
     <Compile Include="TenancyReporters\TenancyOrderReporter.cs" />
     <Compile Include="TenancyReporters\TenancyStatisticForCoMSReporter.cs" />
     <Compile Include="TenancyReporters\TenancyStatisticReporter.cs" />

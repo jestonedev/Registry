@@ -75,6 +75,7 @@ namespace Registry
             this.ribbonButtonOrbRegistryExcerptPremise = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptSubPremise = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptSubPremises = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonRequestToMvd = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonJudicialOrder = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonRequestToBks = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonTransfertToLegalDepartment = new System.Windows.Forms.RibbonButton();
@@ -158,6 +159,7 @@ namespace Registry
             this.ribbonButtonOrderByNewTenancy = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrderByCurrentTenancy = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonNotifies = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonGisZkhExport = new System.Windows.Forms.RibbonButton();
             this.ribbonPanel9 = new System.Windows.Forms.RibbonPanel();
             this.ribbonButtonWarrants = new System.Windows.Forms.RibbonButton();
             this.ribbonButton1 = new System.Windows.Forms.RibbonButton();
@@ -192,7 +194,6 @@ namespace Registry
             this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton7 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton8 = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonGisZkhExport = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -238,13 +239,14 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremises);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonRequestToMvd);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonJudicialOrder);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonRequestToBks);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonTransfertToLegalDepartment);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonSeparatorExport);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonExportOds);
             this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать и массовые операции";
-            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 609);
+            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 631);
             this.ribbon1.OrbDropDown.TabIndex = 0;
             this.ribbon1.OrbImage = null;
             this.ribbon1.OrbStyle = System.Windows.Forms.RibbonOrbStyle.Office_2010;
@@ -559,6 +561,16 @@ namespace Registry
             this.ribbonButtonOrbRegistryExcerptSubPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremises.ToolTipImage")));
             this.ribbonButtonOrbRegistryExcerptSubPremises.ToolTipTitle = "Выписка (на все муниципальные комнаты)";
             this.ribbonButtonOrbRegistryExcerptSubPremises.Click += new System.EventHandler(this.ribbonButtonOrbRegistryExcerptSubPremises_Click);
+            // 
+            // ribbonButtonRequestToMvd
+            // 
+            this.ribbonButtonRequestToMvd.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRequestToMvd.Image")));
+            this.ribbonButtonRequestToMvd.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRequestToMvd.SmallImage")));
+            this.ribbonButtonRequestToMvd.Text = "Запрос в МВД";
+            this.ribbonButtonRequestToMvd.ToolTip = "Сформировать запрос в МВД об установлении местонахождении участников найма";
+            this.ribbonButtonRequestToMvd.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRequestToMvd.ToolTipImage")));
+            this.ribbonButtonRequestToMvd.ToolTipTitle = "Запрос в МВД";
+            this.ribbonButtonRequestToMvd.Click += new System.EventHandler(this.ribbonButtonRequestToMvd_Click);
             // 
             // ribbonButtonJudicialOrder
             // 
@@ -1473,6 +1485,17 @@ namespace Registry
             this.ribbonButtonNotifies.ToolTipTitle = "Печать уведомлений";
             this.ribbonButtonNotifies.Click += new System.EventHandler(this.ribbonButtonNotifies_Click);
             // 
+            // ribbonButtonGisZkhExport
+            // 
+            this.ribbonButtonGisZkhExport.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonGisZkhExport.Image")));
+            this.ribbonButtonGisZkhExport.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonGisZkhExport.SmallImage")));
+            this.ribbonButtonGisZkhExport.Text = "Экспорт для ГИС \"ЖКХ\"";
+            this.ribbonButtonGisZkhExport.ToolTip = "При нажатии на данную кнопку будет сформирован файл с наймами для импорта в ГИС \"" +
+    "ЖКХ\"";
+            this.ribbonButtonGisZkhExport.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonGisZkhExport.ToolTipImage")));
+            this.ribbonButtonGisZkhExport.ToolTipTitle = "Экспорт для ГИС \"ЖКХ\"";
+            this.ribbonButtonGisZkhExport.Click += new System.EventHandler(this.ribbonButtonGisZkhExport_Click);
+            // 
             // ribbonPanel9
             // 
             this.ribbonPanel9.ButtonMoreEnabled = false;
@@ -1843,17 +1866,6 @@ namespace Registry
             this.ribbonButton8.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton8.ToolTipImage")));
             this.ribbonButton8.ToolTipTitle = "Статистика по разделенным ЛС";
             // 
-            // ribbonButtonGisZkhExport
-            // 
-            this.ribbonButtonGisZkhExport.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonGisZkhExport.Image")));
-            this.ribbonButtonGisZkhExport.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonGisZkhExport.SmallImage")));
-            this.ribbonButtonGisZkhExport.Text = "Экспорт для ГИС \"ЖКХ\"";
-            this.ribbonButtonGisZkhExport.ToolTip = "При нажатии на данную кнопку будет сформирован файл с наймами для импорта в ГИС \"" +
-    "ЖКХ\"";
-            this.ribbonButtonGisZkhExport.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonGisZkhExport.ToolTipImage")));
-            this.ribbonButtonGisZkhExport.ToolTipTitle = "Экспорт для ГИС \"ЖКХ\"";
-            this.ribbonButtonGisZkhExport.Click += new System.EventHandler(this.ribbonButtonGisZkhExport_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2027,6 +2039,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonCourtOrdersPrepareReport;
         private System.Windows.Forms.RibbonButton ribbonButton8;
         private System.Windows.Forms.RibbonButton ribbonButtonGisZkhExport;
+        private System.Windows.Forms.RibbonButton ribbonButtonRequestToMvd;
     }
 }
 

@@ -50,6 +50,7 @@
         TenancyNotifyEvictionTrouble,
         RegistryExcerptReporterBuilding,
         ClaimsCourtOrderPrepareReporter,
-        GisZkhReporter
+        GisZkhReporter,
+        RequestToMvdReporter
     }
 }
