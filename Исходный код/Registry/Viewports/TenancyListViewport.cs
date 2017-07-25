@@ -256,7 +256,9 @@ namespace Registry.Viewport
 
         public override void GenerateReport(ReporterType reporterType)
         {
-            if (reporterType != ReporterType.RequestToMvdReporter && !TenancyValidForReportGenerate())
+            if (reporterType != ReporterType.RequestToMvdReporter && 
+                reporterType != ReporterType.ExportReporter &&
+                !TenancyValidForReportGenerate())
                 return;
             var arguments = new Dictionary<string, string>();
             switch (reporterType)

@@ -81,6 +81,7 @@ namespace Registry
             this.ribbonButtonTransfertToLegalDepartment = new System.Windows.Forms.RibbonButton();
             this.ribbonSeparatorExport = new System.Windows.Forms.RibbonSeparator();
             this.ribbonButtonExportOds = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonTenancyHistory = new System.Windows.Forms.RibbonButton();
             this.ribbonTabGeneral = new System.Windows.Forms.RibbonTab();
             this.ribbonPanel1 = new System.Windows.Forms.RibbonPanel();
             this.ribbonButtonSave = new System.Windows.Forms.RibbonButton();
@@ -245,8 +246,9 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonTransfertToLegalDepartment);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonSeparatorExport);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonExportOds);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonTenancyHistory);
             this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать и массовые операции";
-            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 631);
+            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 653);
             this.ribbon1.OrbDropDown.TabIndex = 0;
             this.ribbon1.OrbImage = null;
             this.ribbon1.OrbStyle = System.Windows.Forms.RibbonOrbStyle.Office_2010;
@@ -610,6 +612,16 @@ namespace Registry
             this.ribbonButtonExportOds.ToolTip = "Экспортирует отфильтрованные данные в табличный процессор";
             this.ribbonButtonExportOds.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonExportOds.ToolTipImage")));
             this.ribbonButtonExportOds.Click += new System.EventHandler(this.ribbonButtonExportOds_Click);
+            // 
+            // ribbonButtonTenancyHistory
+            // 
+            this.ribbonButtonTenancyHistory.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyHistory.Image")));
+            this.ribbonButtonTenancyHistory.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyHistory.SmallImage")));
+            this.ribbonButtonTenancyHistory.Text = "История найма";
+            this.ribbonButtonTenancyHistory.ToolTip = "При нажатии на данную кнопку будет сформирован отчет по истории найма помещений";
+            this.ribbonButtonTenancyHistory.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyHistory.ToolTipImage")));
+            this.ribbonButtonTenancyHistory.ToolTipTitle = "История найма";
+            this.ribbonButtonTenancyHistory.Click += new System.EventHandler(this.ribbonButtonTenancyHistory_Click);
             // 
             // ribbonTabGeneral
             // 
@@ -2040,6 +2052,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButton8;
         private System.Windows.Forms.RibbonButton ribbonButtonGisZkhExport;
         private System.Windows.Forms.RibbonButton ribbonButtonRequestToMvd;
+        private System.Windows.Forms.RibbonButton ribbonButtonTenancyHistory;
     }
 }
 

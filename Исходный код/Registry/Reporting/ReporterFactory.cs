@@ -106,8 +106,10 @@ namespace Registry.Reporting
                     return new GisZkhExport();
                 case ReporterType.RequestToMvdReporter:
                     return new RequestToMvdReporter();
+                case ReporterType.TenancyHistoryReporter:
+                    return new TenancyHistoryReporter();
             }
-            throw new ReporterException(String.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType));
+            throw new ReporterException(string.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType));
         }
     }
 }

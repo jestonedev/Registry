@@ -51,6 +51,7 @@
         RegistryExcerptReporterBuilding,
         ClaimsCourtOrderPrepareReporter,
         GisZkhReporter,
-        RequestToMvdReporter
+        RequestToMvdReporter,
+        TenancyHistoryReporter
     }
 }

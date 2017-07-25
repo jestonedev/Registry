@@ -805,6 +805,7 @@ namespace Registry.Viewport
             {
                 case ReporterType.RegistryExcerptReporterPremise:
                 case ReporterType.RegistryExcerptReporterAllMunSubPremises:
+                case ReporterType.TenancyHistoryReporter:
                     return Presenter.ViewModel["general"].CurrentRow != null;
                 case ReporterType.RegistryExcerptReporterSubPremise:
                     return Presenter.ViewModel["premises_sub_premises"].CurrentRow != null;
@@ -827,9 +828,23 @@ namespace Registry.Viewport
                     break;
                 case ReporterType.RegistryExcerptReporterSubPremise:
                     arguments = RegistryExcerptReporterSubPremiseArguments();
+                    break;        
+                case ReporterType.TenancyHistoryReporter:
+                    arguments = TenancyHistoryReportArguments();
                     break;
             }
             MenuCallback.RunReport(reporterType, arguments);
+        }
+
+
+
+        private Dictionary<string, string> TenancyHistoryReportArguments()
+        {
+            var arguments = new Dictionary<string, string>
+            {
+                {"filter", string.Format("id_premises = {0}", Presenter.ViewModel["general"].CurrentRow["id_premises"])  }
+            };
+            return arguments;
         }
 
         private Dictionary<string, string> RegistryExcerptPremiseReportArguments()

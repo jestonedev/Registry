@@ -327,6 +327,7 @@ namespace Registry.Viewport
             var reports = new List<ReporterType>
             {
                 ReporterType.ExportReporter,
+                ReporterType.TenancyHistoryReporter,
                 ReporterType.RegistryExcerptReporterPremise,
                 ReporterType.RegistryExcerptReporterAllMunSubPremises
             };
@@ -347,8 +348,21 @@ namespace Registry.Viewport
                 case ReporterType.RegistryExcerptReporterAllMunSubPremises:
                     arguments = RegistryExcerptReporterAllMunSubPremisesArguments();
                     break;
+                case ReporterType.TenancyHistoryReporter:
+                    arguments = TenancyHistoryReportArguments();
+                    break;
             }
             MenuCallback.RunReport(reporterType, arguments);
+        }
+
+        private Dictionary<string, string> TenancyHistoryReportArguments()
+        {
+            var filter = Presenter.ViewModel["general"].BindingSource.Filter ?? "";
+            var arguments = new Dictionary<string, string>
+            {
+                {"filter", filter.Trim() == "" ? "(1=1)" : filter }
+            };
+            return arguments;
         }
 
         private Dictionary<string, string> RegistryExcerptPremiseReportArguments()

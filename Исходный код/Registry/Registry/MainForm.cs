@@ -466,6 +466,8 @@ namespace Registry
 
             if (document.HasReport(ReporterType.ExportReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonExportOds);
+            if (document.HasReport(ReporterType.TenancyHistoryReporter))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonTenancyHistory);
 
             var hasExport = ribbon1.OrbDropDown.RecentItems.Count - reportsCount - mastersCount > 0;
 
@@ -1314,6 +1316,13 @@ namespace Registry
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
                 document.GenerateReport(ReporterType.RequestToMvdReporter);
+        }
+
+        private void ribbonButtonTenancyHistory_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.TenancyHistoryReporter);
         }
     }
 }
