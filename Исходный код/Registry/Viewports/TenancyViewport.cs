@@ -754,7 +754,8 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
             if (reporterType != ReporterType.RequestToMvdReporter &&
-                reporterType != ReporterType.ExportReporter && 
+                reporterType != ReporterType.ExportReporter &&
+                reporterType != ReporterType.TenancyNotifyIllegalResident &&
                 !TenancyValidForReportGenerate())
                 return;
             var arguments = new Dictionary<string, string>();
