@@ -108,6 +108,8 @@ namespace Registry.Reporting
                     return new RequestToMvdReporter();
                 case ReporterType.TenancyHistoryReporter:
                     return new TenancyHistoryReporter();
+                case ReporterType.DistrictCommitteePreContractReporter:
+                    return new DistrictCommitteePreContractReporter();
             }
             throw new ReporterException(string.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType));
         }

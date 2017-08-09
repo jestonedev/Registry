@@ -65,6 +65,12 @@
     <Compile Include="ClaimsAndPaymentsReporters\TransfertToLegalDepartmentReporter.cs" />
     <Compile Include="ClaimsAndPaymentsReporters\ClaimsStatesReporter.cs" />
     <Compile Include="RegistryReporters\TenancyHistoryReporter.cs" />
+    <Compile Include="SettingForms\DistrictCommitteePreContractReporterSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingForms\DistrictCommitteePreContractReporterSettingsForm.Designer.cs">
+      <DependentUpon>DistrictCommitteePreContractReporterSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TenancyReporters\GisZkhExport.cs" />
     <Compile Include="RegistryReporters\BuildingExcerptReporter.cs" />
     <Compile Include="SettingForms\ClaimCourtOrdersPrepareSettingsForm.cs">
@@ -173,6 +179,7 @@
     <Compile Include="TenancyReporters\TenancyContractSpecial1711Reporter.cs" />
     <Compile Include="TenancyReporters\TenancyContractSpecial1712Reporter.cs" />
     <Compile Include="TenancyReporters\RequestToMvdReporter.cs" />
+    <Compile Include="TenancyReporters\DistrictCommitteePreContractReporter.cs" />
     <Compile Include="TenancyReporters\TenancyOrderReporter.cs" />
     <Compile Include="TenancyReporters\TenancyStatisticForCoMSReporter.cs" />
     <Compile Include="TenancyReporters\TenancyStatisticReporter.cs" />
@@ -213,6 +220,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingForms\DateRangeForm.resx">
       <DependentUpon>DateRangeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingForms\DistrictCommitteePreContractReporterSettingsForm.resx">
+      <DependentUpon>DistrictCommitteePreContractReporterSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingForms\StatisticReportDialog.resx">
       <DependentUpon>StatisticReportDialog.cs</DependentUpon>

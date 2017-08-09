@@ -195,6 +195,7 @@ namespace Registry
             this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton7 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton8 = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonPreContract = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -224,6 +225,7 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbMultiPaymentAccount);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbMultiClaims);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonSeparatorMasters);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonPreContract);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbTenancyContract);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbTenancyContract1711);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbTenancyContract1712);
@@ -248,7 +250,7 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonExportOds);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonTenancyHistory);
             this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать и массовые операции";
-            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 653);
+            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 675);
             this.ribbon1.OrbDropDown.TabIndex = 0;
             this.ribbon1.OrbImage = null;
             this.ribbon1.OrbStyle = System.Windows.Forms.RibbonOrbStyle.Office_2010;
@@ -1878,6 +1880,17 @@ namespace Registry
             this.ribbonButton8.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton8.ToolTipImage")));
             this.ribbonButton8.ToolTipTitle = "Статистика по разделенным ЛС";
             // 
+            // ribbonButtonPreContract
+            // 
+            this.ribbonButtonPreContract.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPreContract.Image")));
+            this.ribbonButtonPreContract.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPreContract.SmallImage")));
+            this.ribbonButtonPreContract.Text = "Предварительный договор";
+            this.ribbonButtonPreContract.ToolTip = "При нажатии на данную кнопку будет сформирован предварительный договор по текущем" +
+    "у процессу найма";
+            this.ribbonButtonPreContract.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPreContract.ToolTipImage")));
+            this.ribbonButtonPreContract.ToolTipTitle = "Предварительный договор";
+            this.ribbonButtonPreContract.Click += new System.EventHandler(this.ribbonButtonPreContract_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2053,6 +2066,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonGisZkhExport;
         private System.Windows.Forms.RibbonButton ribbonButtonRequestToMvd;
         private System.Windows.Forms.RibbonButton ribbonButtonTenancyHistory;
+        private System.Windows.Forms.RibbonButton ribbonButtonPreContract;
     }
 }
 

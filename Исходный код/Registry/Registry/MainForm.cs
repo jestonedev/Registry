@@ -418,6 +418,8 @@ namespace Registry
                 return;
             }
 
+            if (document.HasReport(ReporterType.DistrictCommitteePreContractReporter))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonPreContract);
             if (document.HasReport(ReporterType.TenancyContractSpecial1711Reporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract1711);
             if (document.HasReport(ReporterType.TenancyContractSpecial1712Reporter))
@@ -1323,6 +1325,13 @@ namespace Registry
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
                 document.GenerateReport(ReporterType.TenancyHistoryReporter);
+        }
+
+        private void ribbonButtonPreContract_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.DistrictCommitteePreContractReporter);
         }
     }
 }

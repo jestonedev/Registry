@@ -247,6 +247,7 @@ namespace Registry.Viewport
                 case ReporterType.TenancyNotifyEvictionTrouble:
                 case ReporterType.TenancyNotifyContractViolation:
                 case ReporterType.RequestToMvdReporter:
+                case ReporterType.DistrictCommitteePreContractReporter:
                     return idProcess != null;
                 case ReporterType.TenancyAgreementReporter:
                     return idProcess != null && (TenancyService.TenancyAgreementsCountForProcess(idProcess.Value) > 0);
@@ -256,10 +257,7 @@ namespace Registry.Viewport
 
         public override void GenerateReport(ReporterType reporterType)
         {
-            if (reporterType != ReporterType.RequestToMvdReporter && 
-                reporterType != ReporterType.ExportReporter &&
-                reporterType != ReporterType.TenancyNotifyIllegalResident &&
-                !TenancyValidForReportGenerate())
+            if (!TenancyValidForReportGenerate(reporterType))
                 return;
             var arguments = new Dictionary<string, string>();
             switch (reporterType)
@@ -271,6 +269,7 @@ namespace Registry.Viewport
                 case ReporterType.TenancyContractSocialReporter:
                 case ReporterType.TenancyContractSpecial1711Reporter:
                 case ReporterType.TenancyContractSpecial1712Reporter:
+                case ReporterType.DistrictCommitteePreContractReporter:
                 case ReporterType.RequestToMvdReporter:
                     arguments = TenancyContractReporterArguments();
                     break;
@@ -341,12 +340,22 @@ namespace Registry.Viewport
             return new Dictionary<string, string> { { "id_process", row["id_process"].ToString() } }; 
         }
 
-        private bool TenancyValidForReportGenerate()
+        private bool TenancyValidForReportGenerate(ReporterType reporterType)
         {
-            //Проверить наличие нанимателя (и только одного) и наличия номера и даты договора найма
+            if (reporterType == ReporterType.ExportReporter)
+            {
+                return true;
+            }
             var row = Presenter.ViewModel["general"].CurrentRow;
             if (row == null)
                 return false;
+            if (reporterType == ReporterType.RequestToMvdReporter ||
+                reporterType == ReporterType.TenancyNotifyIllegalResident ||
+                reporterType == ReporterType.DistrictCommitteePreContractReporter)
+            {
+                return true;
+            }
+            //Проверить наличие нанимателя (и только одного) и наличия номера и даты договора найма
             if (!TenancyService.TenancyProcessHasTenant(Convert.ToInt32(row["id_process"], CultureInfo.InvariantCulture)))
             {
                 MessageBox.Show(@"Для формирования отчетной документации необходимо указать нанимателя процесса найма",@"Ошибка", 

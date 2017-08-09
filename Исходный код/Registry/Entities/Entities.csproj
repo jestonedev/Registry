@@ -51,6 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregatedAddress.cs" />
+    <Compile Include="DistrictCommitteePreContractPreamble.cs" />
+    <Compile Include="DistrictCommittee.cs" />
     <Compile Include="JudgeBuildingAssoc.cs" />
     <Compile Include="Judge.cs" />
     <Compile Include="ClaimFile.cs" />
