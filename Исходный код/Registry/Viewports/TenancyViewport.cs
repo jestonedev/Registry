@@ -363,21 +363,21 @@ namespace Registry.Viewport
             if (ViewportState != ViewportState.NewRowState)
             {
                 var reasons =
-                    from reasonRow in EntityDataModel<TenancyReason>.GetInstance().FilterDeletedRows() 
+                    (from reasonRow in EntityDataModel<TenancyReason>.GetInstance().FilterDeletedRows() 
                     where row != null && 
-                        reasonRow.Field<int>("id_process") == (int) row["id_process"] && 
-                        reasonRow.Field<string>("reason_prepared").ToUpper().Contains("ОРДЕР")
+                        reasonRow.Field<int>("id_process") == (int) row["id_process"] 
                     select new
                     {
                         number = reasonRow.Field<string>("reason_number"),
                         date = reasonRow.Field<DateTime?>("reason_date")
-                    };
+                    }).ToList();
 
-                var reasonsList = reasons.ToList();
-                if (reasonsList.Any())
+                if (reasons.Any())
                 {
-                    tenancy.ResidenceWarrantNum = reasonsList.First().number;
-                    tenancy.ResidenceWarrantDate = reasonsList.First().date;
+
+                    var reason = reasons.Last();
+                    tenancy.ResidenceWarrantNum = reason.number;
+                    tenancy.ResidenceWarrantDate = reason.date;
                 }
             }
             //
