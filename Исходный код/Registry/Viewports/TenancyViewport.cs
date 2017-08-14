@@ -922,14 +922,16 @@ namespace Registry.Viewport
             if (hasDuplicate)
             {
                 textBoxDescription.Height = 47;
-                labelPayment.Top = 71;
-                numericUpDownPayment.Top = 69;
+                labelPayment.Top = 72;
+                numericUpDownPayment.Top = 70;
+                buttonShowAttachments.Top = 96;
             }
             else
             {
                 textBoxDescription.Height = 62;
-                labelPayment.Top = 86;
-                numericUpDownPayment.Top = 84;
+                labelPayment.Top = 87;
+                numericUpDownPayment.Top = 85;
+                buttonShowAttachments.Top = 111;
             }
             
         }
@@ -1054,6 +1056,23 @@ namespace Registry.Viewport
         private void checkBoxSubTenancyEnable_CheckedChanged(object sender, EventArgs e)
         {
             groupBoxSubTenancy.Enabled = checkBoxSubTenancyEnable.Checked;
+        }
+
+        private void buttonShowAttachments_Click(object sender, EventArgs e)
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            if (Presenter.ViewModel["general"].CurrentRow == null)
+            {
+                MessageBox.Show(@"Не выбран процесс найма для отображения прикрепленных файлов", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            using (var form = new TenancyFiles())
+            {
+                form.Initialize((int)Presenter.ViewModel["general"].CurrentRow["id_process"]);
+                form.ShowDialog();
+            }
         }
     }
 }

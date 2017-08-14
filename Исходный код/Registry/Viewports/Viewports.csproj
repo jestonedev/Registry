@@ -94,6 +94,12 @@
     <Compile Include="ClaimCourtOrdersViewport.Designer.cs">
       <DependentUpon>ClaimCourtOrdersViewport.cs</DependentUpon>
     </Compile>
+    <Compile Include="TenancyFiles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TenancyFiles.Designer.cs">
+      <DependentUpon>TenancyFiles.cs</DependentUpon>
+    </Compile>
     <Compile Include="ClaimFiles.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -637,6 +643,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ClaimCourtOrdersViewport.resx">
       <DependentUpon>ClaimCourtOrdersViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyFiles.resx">
+      <DependentUpon>TenancyFiles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ClaimFiles.resx">
       <DependentUpon>ClaimFiles.cs</DependentUpon>

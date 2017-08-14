@@ -167,5 +167,17 @@ namespace Settings.Properties {
                 this["ClaimsAttachmentsPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\mcs.br\\adm\\server\\Registry\\Attachments\\Tenancies")]
+        public string TenanciesAttachmentsPath {
+            get {
+                return ((string)(this["TenanciesAttachmentsPath"]));
+            }
+            set {
+                this["TenanciesAttachmentsPath"] = value;
+            }
+        }
     }
 }

@@ -197,6 +197,12 @@ namespace Settings
             set { Properties.Settings.Default.ClaimsAttachmentsPath = value; }
         }
 
+        public static string TenanciesAttachmentsPath
+        {
+            get { return Properties.Settings.Default.TenanciesAttachmentsPath; }
+            set { Properties.Settings.Default.TenanciesAttachmentsPath = value; }
+        }
+
         public static void Save()
         {
             Properties.Settings.Default.Save();

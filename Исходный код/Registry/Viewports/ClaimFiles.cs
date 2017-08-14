@@ -116,6 +116,12 @@ namespace Registry.Viewport
 
         private void vButtonOpenFile_Click(object sender, EventArgs e)
         {
+            if (dataGridView.SelectedRows.Count == 0)
+            {
+                MessageBox.Show(@"Выберите файл, который хотите открыть", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
             foreach (DataGridViewRow selectedRow in dataGridView.SelectedRows)
             {
                 var fileName = selectedRow.Cells["file_name"].Value.ToString();

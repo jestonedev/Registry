@@ -75,9 +75,9 @@ namespace Registry.Viewport
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyViewport));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.checkBoxSubTenancyEnable = new System.Windows.Forms.CheckBox();
@@ -96,6 +96,7 @@ namespace Registry.Viewport
             this.vButtonRentPeriodDelete = new VIBlend.WinForms.Controls.vButton();
             this.vButtonRentPeriodAdd = new VIBlend.WinForms.Controls.vButton();
             this.groupBox31 = new System.Windows.Forms.GroupBox();
+            this.buttonShowAttachments = new System.Windows.Forms.Button();
             this.numericUpDownPayment = new CustomControls.FixedNumericUpDown();
             this.labelPayment = new System.Windows.Forms.Label();
             this.labelDuplicateContract = new System.Windows.Forms.Label();
@@ -202,10 +203,9 @@ namespace Registry.Viewport
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 114F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 86F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 150F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(1056, 683);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(1002, 724);
             this.tableLayoutPanel9.TabIndex = 0;
             // 
             // panel3
@@ -215,7 +215,7 @@ namespace Registry.Viewport
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 202);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(522, 80);
+            this.panel3.Size = new System.Drawing.Size(495, 80);
             this.panel3.TabIndex = 3;
             // 
             // checkBoxSubTenancyEnable
@@ -239,7 +239,7 @@ namespace Registry.Viewport
             this.groupBoxSubTenancy.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxSubTenancy.Location = new System.Drawing.Point(0, 0);
             this.groupBoxSubTenancy.Name = "groupBoxSubTenancy";
-            this.groupBoxSubTenancy.Size = new System.Drawing.Size(522, 80);
+            this.groupBoxSubTenancy.Size = new System.Drawing.Size(495, 80);
             this.groupBoxSubTenancy.TabIndex = 1;
             this.groupBoxSubTenancy.TabStop = false;
             this.groupBoxSubTenancy.Text = "      Разрешение на сдачу в поднаем";
@@ -251,7 +251,7 @@ namespace Registry.Viewport
             this.textBoxSubTenancyNumber.Location = new System.Drawing.Point(175, 22);
             this.textBoxSubTenancyNumber.MaxLength = 255;
             this.textBoxSubTenancyNumber.Name = "textBoxSubTenancyNumber";
-            this.textBoxSubTenancyNumber.Size = new System.Drawing.Size(341, 21);
+            this.textBoxSubTenancyNumber.Size = new System.Drawing.Size(314, 21);
             this.textBoxSubTenancyNumber.TabIndex = 0;
             this.textBoxSubTenancyNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -279,7 +279,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerSubTenancyDate.Location = new System.Drawing.Point(175, 49);
             this.dateTimePickerSubTenancyDate.Name = "dateTimePickerSubTenancyDate";
-            this.dateTimePickerSubTenancyDate.Size = new System.Drawing.Size(341, 21);
+            this.dateTimePickerSubTenancyDate.Size = new System.Drawing.Size(314, 21);
             this.dateTimePickerSubTenancyDate.TabIndex = 1;
             // 
             // groupBox2
@@ -287,9 +287,9 @@ namespace Registry.Viewport
             this.groupBox2.Controls.Add(this.panel2);
             this.groupBox2.Controls.Add(this.panel1);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(531, 202);
+            this.groupBox2.Location = new System.Drawing.Point(504, 202);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(522, 80);
+            this.groupBox2.Size = new System.Drawing.Size(495, 80);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Предыдущие периоды найма";
@@ -300,7 +300,7 @@ namespace Registry.Viewport
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 17);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(478, 60);
+            this.panel2.Size = new System.Drawing.Size(451, 60);
             this.panel2.TabIndex = 5;
             // 
             // dataGridViewRentPeriods
@@ -320,7 +320,7 @@ namespace Registry.Viewport
             this.dataGridViewRentPeriods.Name = "dataGridViewRentPeriods";
             this.dataGridViewRentPeriods.ReadOnly = true;
             this.dataGridViewRentPeriods.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRentPeriods.Size = new System.Drawing.Size(478, 60);
+            this.dataGridViewRentPeriods.Size = new System.Drawing.Size(451, 60);
             this.dataGridViewRentPeriods.TabIndex = 1;
             // 
             // rent_periods_begin_date
@@ -349,7 +349,7 @@ namespace Registry.Viewport
             this.panel1.Controls.Add(this.vButtonRentPeriodDelete);
             this.panel1.Controls.Add(this.vButtonRentPeriodAdd);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(481, 17);
+            this.panel1.Location = new System.Drawing.Point(454, 17);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(38, 60);
@@ -387,17 +387,30 @@ namespace Registry.Viewport
             // 
             // groupBox31
             // 
+            this.groupBox31.Controls.Add(this.buttonShowAttachments);
             this.groupBox31.Controls.Add(this.numericUpDownPayment);
             this.groupBox31.Controls.Add(this.labelPayment);
             this.groupBox31.Controls.Add(this.labelDuplicateContract);
             this.groupBox31.Controls.Add(this.textBoxDescription);
             this.groupBox31.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox31.Location = new System.Drawing.Point(3, 427);
+            this.groupBox31.Location = new System.Drawing.Point(3, 432);
             this.groupBox31.Name = "groupBox31";
-            this.groupBox31.Size = new System.Drawing.Size(522, 114);
+            this.groupBox31.Size = new System.Drawing.Size(495, 144);
             this.groupBox31.TabIndex = 6;
             this.groupBox31.TabStop = false;
             this.groupBox31.Text = "Дополнительные сведения";
+            // 
+            // buttonShowAttachments
+            // 
+            this.buttonShowAttachments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonShowAttachments.Location = new System.Drawing.Point(6, 96);
+            this.buttonShowAttachments.Name = "buttonShowAttachments";
+            this.buttonShowAttachments.Size = new System.Drawing.Size(483, 25);
+            this.buttonShowAttachments.TabIndex = 54;
+            this.buttonShowAttachments.Text = "Прикрепленные файлы";
+            this.buttonShowAttachments.UseVisualStyleBackColor = true;
+            this.buttonShowAttachments.Click += new System.EventHandler(this.buttonShowAttachments_Click);
             // 
             // numericUpDownPayment
             // 
@@ -405,7 +418,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownPayment.BackColor = System.Drawing.Color.White;
             this.numericUpDownPayment.DecimalPlaces = 2;
-            this.numericUpDownPayment.Location = new System.Drawing.Point(178, 69);
+            this.numericUpDownPayment.Location = new System.Drawing.Point(178, 70);
             this.numericUpDownPayment.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -418,14 +431,14 @@ namespace Registry.Viewport
             -2147483648});
             this.numericUpDownPayment.Name = "numericUpDownPayment";
             this.numericUpDownPayment.ReadOnly = true;
-            this.numericUpDownPayment.Size = new System.Drawing.Size(338, 21);
+            this.numericUpDownPayment.Size = new System.Drawing.Size(311, 21);
             this.numericUpDownPayment.TabIndex = 1;
             // 
             // labelPayment
             // 
             this.labelPayment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPayment.AutoSize = true;
-            this.labelPayment.Location = new System.Drawing.Point(3, 71);
+            this.labelPayment.Location = new System.Drawing.Point(3, 72);
             this.labelPayment.Name = "labelPayment";
             this.labelPayment.Size = new System.Drawing.Size(146, 15);
             this.labelPayment.TabIndex = 39;
@@ -436,7 +449,7 @@ namespace Registry.Viewport
             this.labelDuplicateContract.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.labelDuplicateContract.AutoSize = true;
             this.labelDuplicateContract.ForeColor = System.Drawing.Color.Red;
-            this.labelDuplicateContract.Location = new System.Drawing.Point(59, 93);
+            this.labelDuplicateContract.Location = new System.Drawing.Point(45, 122);
             this.labelDuplicateContract.Name = "labelDuplicateContract";
             this.labelDuplicateContract.Size = new System.Drawing.Size(395, 15);
             this.labelDuplicateContract.TabIndex = 2;
@@ -453,7 +466,7 @@ namespace Registry.Viewport
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDescription.Size = new System.Drawing.Size(510, 47);
+            this.textBoxDescription.Size = new System.Drawing.Size(483, 47);
             this.textBoxDescription.TabIndex = 0;
             this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -466,7 +479,7 @@ namespace Registry.Viewport
             this.groupBox22.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox22.Location = new System.Drawing.Point(3, 3);
             this.groupBox22.Name = "groupBox22";
-            this.groupBox22.Size = new System.Drawing.Size(522, 79);
+            this.groupBox22.Size = new System.Drawing.Size(495, 79);
             this.groupBox22.TabIndex = 0;
             this.groupBox22.TabStop = false;
             this.groupBox22.Text = "Общие сведения";
@@ -479,7 +492,7 @@ namespace Registry.Viewport
             this.comboBoxExecutor.FormattingEnabled = true;
             this.comboBoxExecutor.Location = new System.Drawing.Point(175, 48);
             this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(341, 23);
+            this.comboBoxExecutor.Size = new System.Drawing.Size(314, 23);
             this.comboBoxExecutor.TabIndex = 1;
             // 
             // label41
@@ -501,7 +514,7 @@ namespace Registry.Viewport
             this.comboBoxRentType.FormattingEnabled = true;
             this.comboBoxRentType.Location = new System.Drawing.Point(175, 19);
             this.comboBoxRentType.Name = "comboBoxRentType";
-            this.comboBoxRentType.Size = new System.Drawing.Size(341, 23);
+            this.comboBoxRentType.Size = new System.Drawing.Size(314, 23);
             this.comboBoxRentType.TabIndex = 0;
             // 
             // label46
@@ -517,10 +530,10 @@ namespace Registry.Viewport
             // 
             this.groupBoxPersons.Controls.Add(this.dataGridViewTenancyPersons);
             this.groupBoxPersons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxPersons.Location = new System.Drawing.Point(531, 427);
+            this.groupBoxPersons.Location = new System.Drawing.Point(504, 432);
             this.groupBoxPersons.Name = "groupBoxPersons";
             this.tableLayoutPanel9.SetRowSpan(this.groupBoxPersons, 2);
-            this.groupBoxPersons.Size = new System.Drawing.Size(522, 253);
+            this.groupBoxPersons.Size = new System.Drawing.Size(495, 289);
             this.groupBoxPersons.TabIndex = 8;
             this.groupBoxPersons.TabStop = false;
             this.groupBoxPersons.Text = "Участники найма";
@@ -545,7 +558,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(516, 233);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(489, 269);
             this.dataGridViewTenancyPersons.TabIndex = 0;
             this.dataGridViewTenancyPersons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyPersons_CellDoubleClick);
             // 
@@ -593,7 +606,7 @@ namespace Registry.Viewport
             this.groupBoxTenancyContract.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxTenancyContract.Location = new System.Drawing.Point(3, 88);
             this.groupBoxTenancyContract.Name = "groupBoxTenancyContract";
-            this.groupBoxTenancyContract.Size = new System.Drawing.Size(1050, 108);
+            this.groupBoxTenancyContract.Size = new System.Drawing.Size(996, 108);
             this.groupBoxTenancyContract.TabIndex = 2;
             this.groupBoxTenancyContract.TabStop = false;
             this.groupBoxTenancyContract.Text = "      Договор найма";
@@ -611,7 +624,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel10.RowCount = 1;
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(1044, 88);
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(990, 88);
             this.tableLayoutPanel10.TabIndex = 1;
             // 
             // panel6
@@ -624,10 +637,10 @@ namespace Registry.Viewport
             this.panel6.Controls.Add(this.label50);
             this.panel6.Controls.Add(this.dateTimePickerBeginDate);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(522, 0);
+            this.panel6.Location = new System.Drawing.Point(495, 0);
             this.panel6.Margin = new System.Windows.Forms.Padding(0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(522, 90);
+            this.panel6.Size = new System.Drawing.Size(495, 90);
             this.panel6.TabIndex = 1;
             // 
             // vButtonSwapRentPeriod
@@ -636,7 +649,7 @@ namespace Registry.Viewport
             this.vButtonSwapRentPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonSwapRentPeriod.BackColor = System.Drawing.Color.Transparent;
             this.vButtonSwapRentPeriod.Image = ((System.Drawing.Image)(resources.GetObject("vButtonSwapRentPeriod.Image")));
-            this.vButtonSwapRentPeriod.Location = new System.Drawing.Point(482, 7);
+            this.vButtonSwapRentPeriod.Location = new System.Drawing.Point(455, 7);
             this.vButtonSwapRentPeriod.Name = "vButtonSwapRentPeriod";
             this.vButtonSwapRentPeriod.RoundedCornersMask = ((byte)(15));
             this.vButtonSwapRentPeriod.Size = new System.Drawing.Size(32, 51);
@@ -681,7 +694,7 @@ namespace Registry.Viewport
             this.dateTimePickerEndDate.Location = new System.Drawing.Point(174, 37);
             this.dateTimePickerEndDate.Name = "dateTimePickerEndDate";
             this.dateTimePickerEndDate.ShowCheckBox = true;
-            this.dateTimePickerEndDate.Size = new System.Drawing.Size(302, 21);
+            this.dateTimePickerEndDate.Size = new System.Drawing.Size(275, 21);
             this.dateTimePickerEndDate.TabIndex = 1;
             // 
             // label50
@@ -700,7 +713,7 @@ namespace Registry.Viewport
             this.dateTimePickerBeginDate.Location = new System.Drawing.Point(174, 7);
             this.dateTimePickerBeginDate.Name = "dateTimePickerBeginDate";
             this.dateTimePickerBeginDate.ShowCheckBox = true;
-            this.dateTimePickerBeginDate.Size = new System.Drawing.Size(302, 21);
+            this.dateTimePickerBeginDate.Size = new System.Drawing.Size(275, 21);
             this.dateTimePickerBeginDate.TabIndex = 0;
             // 
             // panel5
@@ -718,7 +731,7 @@ namespace Registry.Viewport
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Margin = new System.Windows.Forms.Padding(0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(522, 90);
+            this.panel5.Size = new System.Drawing.Size(495, 90);
             this.panel5.TabIndex = 0;
             // 
             // vButtonWarrant
@@ -727,7 +740,7 @@ namespace Registry.Viewport
             this.vButtonWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonWarrant.BackColor = System.Drawing.Color.Transparent;
             this.vButtonWarrant.Enabled = false;
-            this.vButtonWarrant.Location = new System.Drawing.Point(486, 90);
+            this.vButtonWarrant.Location = new System.Drawing.Point(459, 90);
             this.vButtonWarrant.Name = "vButtonWarrant";
             this.vButtonWarrant.RoundedCornersMask = ((byte)(15));
             this.vButtonWarrant.Size = new System.Drawing.Size(27, 20);
@@ -746,7 +759,7 @@ namespace Registry.Viewport
             this.textBoxSelectedWarrant.Location = new System.Drawing.Point(172, 90);
             this.textBoxSelectedWarrant.Name = "textBoxSelectedWarrant";
             this.textBoxSelectedWarrant.ReadOnly = true;
-            this.textBoxSelectedWarrant.Size = new System.Drawing.Size(308, 21);
+            this.textBoxSelectedWarrant.Size = new System.Drawing.Size(281, 21);
             this.textBoxSelectedWarrant.TabIndex = 3;
             this.textBoxSelectedWarrant.Visible = false;
             // 
@@ -775,7 +788,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerRegistrationDate.Location = new System.Drawing.Point(172, 36);
             this.dateTimePickerRegistrationDate.Name = "dateTimePickerRegistrationDate";
-            this.dateTimePickerRegistrationDate.Size = new System.Drawing.Size(341, 21);
+            this.dateTimePickerRegistrationDate.Size = new System.Drawing.Size(314, 21);
             this.dateTimePickerRegistrationDate.TabIndex = 1;
             // 
             // textBoxRegistrationNumber
@@ -785,7 +798,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationNumber.Location = new System.Drawing.Point(172, 7);
             this.textBoxRegistrationNumber.MaxLength = 255;
             this.textBoxRegistrationNumber.Name = "textBoxRegistrationNumber";
-            this.textBoxRegistrationNumber.Size = new System.Drawing.Size(341, 21);
+            this.textBoxRegistrationNumber.Size = new System.Drawing.Size(314, 21);
             this.textBoxRegistrationNumber.TabIndex = 0;
             this.textBoxRegistrationNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -814,7 +827,7 @@ namespace Registry.Viewport
             this.dateTimePickerIssueDate.Location = new System.Drawing.Point(172, 65);
             this.dateTimePickerIssueDate.Name = "dateTimePickerIssueDate";
             this.dateTimePickerIssueDate.ShowCheckBox = true;
-            this.dateTimePickerIssueDate.Size = new System.Drawing.Size(341, 21);
+            this.dateTimePickerIssueDate.Size = new System.Drawing.Size(314, 21);
             this.dateTimePickerIssueDate.TabIndex = 2;
             // 
             // checkBoxContractEnable
@@ -833,9 +846,9 @@ namespace Registry.Viewport
             // 
             this.groupBox25.Controls.Add(this.dataGridViewTenancyAgreements);
             this.groupBox25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox25.Location = new System.Drawing.Point(531, 288);
+            this.groupBox25.Location = new System.Drawing.Point(504, 288);
             this.groupBox25.Name = "groupBox25";
-            this.groupBox25.Size = new System.Drawing.Size(522, 133);
+            this.groupBox25.Size = new System.Drawing.Size(495, 138);
             this.groupBox25.TabIndex = 5;
             this.groupBox25.TabStop = false;
             this.groupBox25.Text = "Соглашения найма";
@@ -856,7 +869,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyAgreements.Name = "dataGridViewTenancyAgreements";
             this.dataGridViewTenancyAgreements.ReadOnly = true;
             this.dataGridViewTenancyAgreements.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyAgreements.Size = new System.Drawing.Size(516, 113);
+            this.dataGridViewTenancyAgreements.Size = new System.Drawing.Size(489, 118);
             this.dataGridViewTenancyAgreements.TabIndex = 0;
             this.dataGridViewTenancyAgreements.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyAgreements_CellDoubleClick);
             // 
@@ -879,7 +892,7 @@ namespace Registry.Viewport
             this.groupBox24.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox24.Location = new System.Drawing.Point(3, 288);
             this.groupBox24.Name = "groupBox24";
-            this.groupBox24.Size = new System.Drawing.Size(522, 133);
+            this.groupBox24.Size = new System.Drawing.Size(495, 138);
             this.groupBox24.TabIndex = 4;
             this.groupBox24.TabStop = false;
             this.groupBox24.Text = "Основания найма";
@@ -901,7 +914,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyReasons.Name = "dataGridViewTenancyReasons";
             this.dataGridViewTenancyReasons.ReadOnly = true;
             this.dataGridViewTenancyReasons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyReasons.Size = new System.Drawing.Size(516, 113);
+            this.dataGridViewTenancyReasons.Size = new System.Drawing.Size(489, 118);
             this.dataGridViewTenancyReasons.TabIndex = 0;
             this.dataGridViewTenancyReasons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyReasons_CellDoubleClick);
             // 
@@ -932,9 +945,9 @@ namespace Registry.Viewport
             this.groupBoxProtocol.Controls.Add(this.textBoxProtocolNumber);
             this.groupBoxProtocol.Controls.Add(this.checkBoxProtocolEnable);
             this.groupBoxProtocol.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxProtocol.Location = new System.Drawing.Point(531, 3);
+            this.groupBoxProtocol.Location = new System.Drawing.Point(504, 3);
             this.groupBoxProtocol.Name = "groupBoxProtocol";
-            this.groupBoxProtocol.Size = new System.Drawing.Size(522, 79);
+            this.groupBoxProtocol.Size = new System.Drawing.Size(495, 79);
             this.groupBoxProtocol.TabIndex = 1;
             this.groupBoxProtocol.TabStop = false;
             this.groupBoxProtocol.Text = "      Протокол комиссии по жил. вопросам";
@@ -954,7 +967,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerProtocolDate.Location = new System.Drawing.Point(171, 48);
             this.dateTimePickerProtocolDate.Name = "dateTimePickerProtocolDate";
-            this.dateTimePickerProtocolDate.Size = new System.Drawing.Size(340, 21);
+            this.dateTimePickerProtocolDate.Size = new System.Drawing.Size(313, 21);
             this.dateTimePickerProtocolDate.TabIndex = 2;
             // 
             // label42
@@ -973,7 +986,7 @@ namespace Registry.Viewport
             this.textBoxProtocolNumber.Location = new System.Drawing.Point(171, 19);
             this.textBoxProtocolNumber.MaxLength = 50;
             this.textBoxProtocolNumber.Name = "textBoxProtocolNumber";
-            this.textBoxProtocolNumber.Size = new System.Drawing.Size(340, 21);
+            this.textBoxProtocolNumber.Size = new System.Drawing.Size(313, 21);
             this.textBoxProtocolNumber.TabIndex = 1;
             this.textBoxProtocolNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -993,9 +1006,9 @@ namespace Registry.Viewport
             // 
             this.groupBox21.Controls.Add(this.dataGridViewTenancyAddress);
             this.groupBox21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox21.Location = new System.Drawing.Point(3, 547);
+            this.groupBox21.Location = new System.Drawing.Point(3, 582);
             this.groupBox21.Name = "groupBox21";
-            this.groupBox21.Size = new System.Drawing.Size(522, 133);
+            this.groupBox21.Size = new System.Drawing.Size(495, 139);
             this.groupBox21.TabIndex = 7;
             this.groupBox21.TabStop = false;
             this.groupBox21.Text = "Нанимаемое жилье";
@@ -1019,7 +1032,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyAddress.Name = "dataGridViewTenancyAddress";
             this.dataGridViewTenancyAddress.ReadOnly = true;
             this.dataGridViewTenancyAddress.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyAddress.Size = new System.Drawing.Size(516, 113);
+            this.dataGridViewTenancyAddress.Size = new System.Drawing.Size(489, 119);
             this.dataGridViewTenancyAddress.TabIndex = 0;
             this.dataGridViewTenancyAddress.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyAddress_CellDoubleClick);
             // 
@@ -1032,8 +1045,8 @@ namespace Registry.Viewport
             // 
             // total_area
             // 
-            dataGridViewCellStyle1.Format = "#0.0## м²";
-            this.total_area.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Format = "#0.0## м²";
+            this.total_area.DefaultCellStyle = dataGridViewCellStyle7;
             this.total_area.HeaderText = "Общая площадь";
             this.total_area.MinimumWidth = 150;
             this.total_area.Name = "total_area";
@@ -1041,8 +1054,8 @@ namespace Registry.Viewport
             // 
             // living_area
             // 
-            dataGridViewCellStyle2.Format = "#0.0## м²";
-            this.living_area.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Format = "#0.0## м²";
+            this.living_area.DefaultCellStyle = dataGridViewCellStyle8;
             this.living_area.HeaderText = "Жилая площадь";
             this.living_area.MinimumWidth = 150;
             this.living_area.Name = "living_area";
@@ -1050,8 +1063,8 @@ namespace Registry.Viewport
             // 
             // rent_area
             // 
-            dataGridViewCellStyle3.Format = "#0.0## м²";
-            this.rent_area.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Format = "#0.0## м²";
+            this.rent_area.DefaultCellStyle = dataGridViewCellStyle9;
             this.rent_area.HeaderText = "Площадь койко-места";
             this.rent_area.MinimumWidth = 200;
             this.rent_area.Name = "rent_area";
@@ -1062,7 +1075,7 @@ namespace Registry.Viewport
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(1000, 600);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1062, 689);
+            this.ClientSize = new System.Drawing.Size(1008, 730);
             this.Controls.Add(this.tableLayoutPanel9);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1125,5 +1138,6 @@ namespace Registry.Viewport
         private Label labelPayment;
         private Label labelDuplicateContract;
         private CheckBox checkBoxSubTenancyEnable;
+        private Button buttonShowAttachments;
     }
 }

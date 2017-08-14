@@ -66,6 +66,7 @@
     <Compile Include="DataAccessLockers.cs" />
     <Compile Include="DataModelsCallbackUpdater.cs" />
     <Compile Include="DataModelHelper.cs" />
+    <Compile Include="DataModels\TenancyFilesDataModel.cs" />
     <Compile Include="DataModels\ClaimFilesDataModel.cs" />
     <Compile Include="DataModels\EntityDataModel.cs" />
     <Compile Include="DataModels\PaymentsPremiseHistoryDataModel.cs" />

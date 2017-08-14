@@ -167,9 +167,9 @@ namespace Registry.Viewport
             // 
             this.buttonShowAttachments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonShowAttachments.Location = new System.Drawing.Point(15, 148);
+            this.buttonShowAttachments.Location = new System.Drawing.Point(12, 148);
             this.buttonShowAttachments.Name = "buttonShowAttachments";
-            this.buttonShowAttachments.Size = new System.Drawing.Size(472, 25);
+            this.buttonShowAttachments.Size = new System.Drawing.Size(475, 25);
             this.buttonShowAttachments.TabIndex = 53;
             this.buttonShowAttachments.Text = "Прикрепленные файлы";
             this.buttonShowAttachments.UseVisualStyleBackColor = true;
