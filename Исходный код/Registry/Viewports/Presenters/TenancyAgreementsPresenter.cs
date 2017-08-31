@@ -382,7 +382,7 @@ namespace Registry.Viewport.Presenters
             var registrationNumber = ParentRow["registration_num"];
 
             var result = string.Format(CultureInfo.InvariantCulture,
-                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {2} найма жилого помещения, распложенного по адресу: {3}, ",
+                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {2} найма жилого помещения, расположенного по адресу: {3}, ",
                 registrationNumber, GetFormatedRegistrationDate(), GetTenancyRent(), GetTenancyAddress());
 
             // Исключаем старого нанимателя
