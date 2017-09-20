@@ -292,7 +292,7 @@ namespace Registry.Viewport.Presenters
             {
                 point = string.Format("«{0}. Наймодатель передает Нанимателю и членам его семьи за плату в бессрочное владение и пользование муниципальное изолированное жилое помещение - квартира (далее - жилое помещение)", generalPoint.Trim());
             }
-            var element = string.Format(CultureInfo.InvariantCulture, "{0}». {1}", point, explainContent.Trim());
+            var element = string.Format(CultureInfo.InvariantCulture, "{0}.»\r\n {1}", point, explainContent.Trim());
 
             var contentList = content.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
             const string headerWildcard = "^\u200B.*изложить";
@@ -382,7 +382,7 @@ namespace Registry.Viewport.Presenters
             var registrationNumber = ParentRow["registration_num"];
 
             var result = string.Format(CultureInfo.InvariantCulture,
-                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {2} найма жилого помещения, расположенного по адресу: {3}, ",
+                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {2} найма жилого помещения, расположенного по адресу: Российская Федерация, {3}, ",
                 registrationNumber, GetFormatedRegistrationDate(), GetTenancyRent(), GetTenancyAddress());
 
             // Исключаем старого нанимателя
@@ -627,7 +627,7 @@ namespace Registry.Viewport.Presenters
         internal string TerminateStringBuilder(string terminateReason, DateTime terminateDate)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "1.1. По настоящему Соглашению Стороны договорились расторгнуть с {3} договор № {0} от {1} {4} найма жилого помещения, расположенного по адресу: {5}, (далее - договор) по {2}.\r\n" +
+                "1.1. По настоящему Соглашению Стороны договорились расторгнуть с {3} договор № {0} от {1} {4} найма жилого помещения, расположенного по адресу: Российская Федерация, {5}, (далее - договор) по {2}.\r\n" +
                 "1.2. Обязательства, возникшие из указанного договора до момента расторжения, подлежат исполнению в соответствии с указанным договором. Стороны не имеют взаимных претензий по исполнению условий договора № {0} от {1}.",
                 ParentRow["registration_num"],
                 GetFormatedRegistrationDate(),
@@ -640,7 +640,7 @@ namespace Registry.Viewport.Presenters
         internal string GetDefaultAgreementPoint()
         {           
             return string.Format(CultureInfo.InvariantCulture,
-                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {2} найма жилого помещения, расположенного по адресу: {3}, договорились:",
+                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} {2} найма жилого помещения, расположенного по адресу: Российская Федерация, {3}, договорились:",
                 ParentRow["registration_num"],
                 GetFormatedRegistrationDate(),
                 GetTenancyRent(),
