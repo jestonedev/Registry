@@ -438,7 +438,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(476, 125);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(476, 123);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
@@ -643,9 +643,9 @@ namespace Registry.Viewport
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
             this.tabPageExplain.Controls.Add(this.label79);
-            this.tabPageExplain.Location = new System.Drawing.Point(4, 22);
+            this.tabPageExplain.Location = new System.Drawing.Point(4, 24);
             this.tabPageExplain.Name = "tabPageExplain";
-            this.tabPageExplain.Size = new System.Drawing.Size(482, 194);
+            this.tabPageExplain.Size = new System.Drawing.Size(482, 192);
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
             // 
@@ -675,7 +675,7 @@ namespace Registry.Viewport
             this.textBoxExplainContent.Location = new System.Drawing.Point(15, 62);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(429, 89);
+            this.textBoxExplainContent.Size = new System.Drawing.Size(429, 87);
             this.textBoxExplainContent.TabIndex = 2;
             this.textBoxExplainContent.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -930,10 +930,10 @@ namespace Registry.Viewport
             this.tabPageProlongSpecial.Controls.Add(this.dateTimePickerSpecialProlongFrom);
             this.tabPageProlongSpecial.Controls.Add(this.label14);
             this.tabPageProlongSpecial.Controls.Add(this.vButtonProlongSpecial);
-            this.tabPageProlongSpecial.Location = new System.Drawing.Point(4, 24);
+            this.tabPageProlongSpecial.Location = new System.Drawing.Point(4, 22);
             this.tabPageProlongSpecial.Name = "tabPageProlongSpecial";
             this.tabPageProlongSpecial.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageProlongSpecial.Size = new System.Drawing.Size(482, 192);
+            this.tabPageProlongSpecial.Size = new System.Drawing.Size(482, 194);
             this.tabPageProlongSpecial.TabIndex = 6;
             this.tabPageProlongSpecial.Text = "Срок по спец. найму";
             this.tabPageProlongSpecial.UseVisualStyleBackColor = true;
@@ -1064,10 +1064,10 @@ namespace Registry.Viewport
             this.tabPageChangeTenancy.Controls.Add(this.label100);
             this.tabPageChangeTenancy.Controls.Add(this.newTenancy);
             this.tabPageChangeTenancy.Controls.Add(this.curTenancy);
-            this.tabPageChangeTenancy.Location = new System.Drawing.Point(4, 24);
+            this.tabPageChangeTenancy.Location = new System.Drawing.Point(4, 22);
             this.tabPageChangeTenancy.Name = "tabPageChangeTenancy";
             this.tabPageChangeTenancy.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageChangeTenancy.Size = new System.Drawing.Size(482, 192);
+            this.tabPageChangeTenancy.Size = new System.Drawing.Size(482, 194);
             this.tabPageChangeTenancy.TabIndex = 4;
             this.tabPageChangeTenancy.Text = "Сменить нанимателя";
             // 

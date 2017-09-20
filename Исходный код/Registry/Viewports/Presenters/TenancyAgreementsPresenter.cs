@@ -290,15 +290,15 @@ namespace Registry.Viewport.Presenters
             }
             else
             {
-                point = string.Format("пункт {0}", generalPoint.Trim());
+                point = string.Format("«{0}. Наймодатель передает Нанимателю и членам его семьи за плату в бессрочное владение и пользование муниципальное изолированное жилое помещение - квартира (далее - жилое помещение)", generalPoint.Trim());
             }
-            var element = string.Format(CultureInfo.InvariantCulture, "{0}. {1}", point, explainContent.Trim());
+            var element = string.Format(CultureInfo.InvariantCulture, "{0}». {1}", point, explainContent.Trim());
 
             var contentList = content.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
             const string headerWildcard = "^\u200B.*изложить";
             if (!IsHeaderInserted(content, headerWildcard))
             {
-                contentList.Add(string.Format("\u200B{0}) изложить в новой редакции:", GetNextPointHeaderNumber(content)));
+                contentList.Add(string.Format("\u200B{0}) пункт {1} изложить в новой редакции:", GetNextPointHeaderNumber(content), generalPoint.Trim()));
             }
 
             var lastPointIndex = GetIndexForInsert(content, headerWildcard);

@@ -59,6 +59,7 @@ namespace Registry
             this.ribbonButtonOrbMultiPaymentAccount = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbMultiClaims = new System.Windows.Forms.RibbonButton();
             this.ribbonSeparatorMasters = new System.Windows.Forms.RibbonSeparator();
+            this.ribbonButtonPreContract = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbTenancyContract = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbTenancyContract1711 = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbTenancyContract1712 = new System.Windows.Forms.RibbonButton();
@@ -195,7 +196,6 @@ namespace Registry
             this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton7 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton8 = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonPreContract = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -394,6 +394,17 @@ namespace Registry
             this.ribbonButtonOrbMultiClaims.ToolTipTitle = "Массовые операции над исковыми работами";
             this.ribbonButtonOrbMultiClaims.Click += new System.EventHandler(this.ribbonButtonOrbMultiClaims_Click);
             // 
+            // ribbonButtonPreContract
+            // 
+            this.ribbonButtonPreContract.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPreContract.Image")));
+            this.ribbonButtonPreContract.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPreContract.SmallImage")));
+            this.ribbonButtonPreContract.Text = "Предварительный договор";
+            this.ribbonButtonPreContract.ToolTip = "При нажатии на данную кнопку будет сформирован предварительный договор по текущем" +
+    "у процессу найма";
+            this.ribbonButtonPreContract.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPreContract.ToolTipImage")));
+            this.ribbonButtonPreContract.ToolTipTitle = "Предварительный договор";
+            this.ribbonButtonPreContract.Click += new System.EventHandler(this.ribbonButtonPreContract_Click);
+            // 
             // ribbonButtonOrbTenancyContract
             // 
             this.ribbonButtonOrbTenancyContract.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract.Image")));
@@ -429,7 +440,7 @@ namespace Registry
             // 
             this.ribbonButtonOrbTenancyActToEmployment.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyActToEmployment.Image")));
             this.ribbonButtonOrbTenancyActToEmployment.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyActToEmployment.SmallImage")));
-            this.ribbonButtonOrbTenancyActToEmployment.Text = "Акт о сдаче в найм";
+            this.ribbonButtonOrbTenancyActToEmployment.Text = "Акт передачи в найм";
             this.ribbonButtonOrbTenancyActToEmployment.ToolTip = "При нажатии на данную кнопку будет сформирован акт о сдаче в найм по текущему про" +
     "цессу найма";
             this.ribbonButtonOrbTenancyActToEmployment.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyActToEmployment.ToolTipImage")));
@@ -440,7 +451,7 @@ namespace Registry
             // 
             this.ribbonButtonOrbTenancyActFromEmployment.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyActFromEmployment.Image")));
             this.ribbonButtonOrbTenancyActFromEmployment.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyActFromEmployment.SmallImage")));
-            this.ribbonButtonOrbTenancyActFromEmployment.Text = "Акт о сдаче из найма";
+            this.ribbonButtonOrbTenancyActFromEmployment.Text = "Акт приёма из найма";
             this.ribbonButtonOrbTenancyActFromEmployment.ToolTip = "При нажатии на данную кнопку будет сформирован акт о сдаче из найма по текущему п" +
     "роцессу найма";
             this.ribbonButtonOrbTenancyActFromEmployment.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyActFromEmployment.ToolTipImage")));
@@ -1879,17 +1890,6 @@ namespace Registry
             this.ribbonButton8.ToolTip = "Статистика по разделенным лицевым счетам";
             this.ribbonButton8.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton8.ToolTipImage")));
             this.ribbonButton8.ToolTipTitle = "Статистика по разделенным ЛС";
-            // 
-            // ribbonButtonPreContract
-            // 
-            this.ribbonButtonPreContract.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPreContract.Image")));
-            this.ribbonButtonPreContract.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPreContract.SmallImage")));
-            this.ribbonButtonPreContract.Text = "Предварительный договор";
-            this.ribbonButtonPreContract.ToolTip = "При нажатии на данную кнопку будет сформирован предварительный договор по текущем" +
-    "у процессу найма";
-            this.ribbonButtonPreContract.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPreContract.ToolTipImage")));
-            this.ribbonButtonPreContract.ToolTipTitle = "Предварительный договор";
-            this.ribbonButtonPreContract.Click += new System.EventHandler(this.ribbonButtonPreContract_Click);
             // 
             // MainForm
             // 
