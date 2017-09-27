@@ -247,6 +247,7 @@ namespace Registry.Viewport
                 case ReporterType.TenancyNotifyEvictionTrouble:
                 case ReporterType.TenancyNotifyContractViolation:
                 case ReporterType.RequestToMvdReporter:
+                case ReporterType.RequestToMvdNewReporter:
                 case ReporterType.DistrictCommitteePreContractReporter:
                     return idProcess != null;
                 case ReporterType.TenancyAgreementReporter:
@@ -271,6 +272,9 @@ namespace Registry.Viewport
                 case ReporterType.TenancyContractSpecial1712Reporter:
                 case ReporterType.DistrictCommitteePreContractReporter:
                 case ReporterType.RequestToMvdReporter:
+                    arguments = TenancyContractReporterArguments();
+                    break;
+                case ReporterType.RequestToMvdNewReporter:
                     arguments = TenancyContractReporterArguments();
                     break;
                 case ReporterType.TenancyNotifyDocumentsPrepared:
@@ -350,6 +354,7 @@ namespace Registry.Viewport
             if (row == null)
                 return false;
             if (reporterType == ReporterType.RequestToMvdReporter ||
+                reporterType == ReporterType.RequestToMvdNewReporter ||
                 reporterType == ReporterType.TenancyNotifyIllegalResident ||
                 reporterType == ReporterType.DistrictCommitteePreContractReporter)
             {

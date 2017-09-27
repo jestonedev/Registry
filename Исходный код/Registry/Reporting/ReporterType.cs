@@ -52,6 +52,7 @@
         ClaimsCourtOrderPrepareReporter,
         GisZkhReporter,
         RequestToMvdReporter,
+        RequestToMvdNewReporter,
         TenancyHistoryReporter,
         DistrictCommitteePreContractReporter
     }

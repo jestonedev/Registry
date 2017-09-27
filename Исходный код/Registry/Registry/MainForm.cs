@@ -455,6 +455,8 @@ namespace Registry
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremises);
             if (document.HasReport(ReporterType.RequestToMvdReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonRequestToMvd);
+            if (document.HasReport(ReporterType.RequestToMvdNewReporter))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonRequestToMvdNew);
 
             if (document.HasReport(ReporterType.JudicialOrderReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonJudicialOrder);
@@ -1332,6 +1334,13 @@ namespace Registry
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
                 document.GenerateReport(ReporterType.DistrictCommitteePreContractReporter);
+        }
+
+        private void ribbonButtonRequestToMvdNew_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.RequestToMvdNewReporter);
         }
     }
 }

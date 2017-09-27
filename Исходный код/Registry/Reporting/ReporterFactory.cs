@@ -106,6 +106,8 @@ namespace Registry.Reporting
                     return new GisZkhExport();
                 case ReporterType.RequestToMvdReporter:
                     return new RequestToMvdReporter();
+                case ReporterType.RequestToMvdNewReporter:
+                    return new RequestToMvdNewReporter();
                 case ReporterType.TenancyHistoryReporter:
                     return new TenancyHistoryReporter();
                 case ReporterType.DistrictCommitteePreContractReporter:
