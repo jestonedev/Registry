@@ -290,24 +290,10 @@ namespace Registry.Viewport.Presenters
             }
             else
             {
-                point = string.Format("«{0}. Наймодатель передает Нанимателю и членам его семьи за плату в бессрочное владение и пользование муниципальное изолированное жилое помещение - квартира (далее - жилое помещение)", generalPoint.Trim());
+                point = string.Format("пункт {0}", generalPoint.Trim());
             }
-            var element = string.Format(CultureInfo.InvariantCulture, "{0}.»\r\n {1}", point, explainContent.Trim());
-
-            var contentList = content.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
-            const string headerWildcard = "^\u200B.*изложить";
-            if (!IsHeaderInserted(content, headerWildcard))
-            {
-                contentList.Add(string.Format("\u200B{0}) пункт {1} изложить в новой редакции:", GetNextPointHeaderNumber(content), generalPoint.Trim()));
-            }
-
-            var lastPointIndex = GetIndexForInsert(content, headerWildcard);
-            if (lastPointIndex == -1)
-                contentList.Add(element);
-            else
-                contentList.Insert(lastPointIndex, element);
-
-            return contentList.Aggregate((v, acc) => v + "\r\n" + acc);
+            var element = string.Format(CultureInfo.InvariantCulture, "\u200B{2}) изложить {0} в новой редакции:\r\n«{1}».", point, explainContent.Trim(), GetNextPointHeaderNumber(content));
+            return content + Environment.NewLine + element;
         }
 
         public string IncludePersonsContentModifier(string content, string generalPoint, string point, string surname, string name,

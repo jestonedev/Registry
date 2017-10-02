@@ -1074,5 +1074,10 @@ namespace Registry.Viewport
                 form.ShowDialog();
             }
         }
+
+        internal IEnumerable<int> GetCurrentIds()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -94,6 +94,12 @@
     <Compile Include="ClaimCourtOrdersViewport.Designer.cs">
       <DependentUpon>ClaimCourtOrdersViewport.cs</DependentUpon>
     </Compile>
+    <Compile Include="MultiMasters\MultiTenanciesMaster.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MultiMasters\MultiTenanciesMaster.Designer.cs">
+      <DependentUpon>MultiTenanciesMaster.cs</DependentUpon>
+    </Compile>
     <Compile Include="TenancyFiles.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -643,6 +649,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ClaimCourtOrdersViewport.resx">
       <DependentUpon>ClaimCourtOrdersViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MultiMasters\MultiTenanciesMaster.resx">
+      <DependentUpon>MultiTenanciesMaster.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TenancyFiles.resx">
       <DependentUpon>TenancyFiles.cs</DependentUpon>

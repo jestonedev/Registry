@@ -438,7 +438,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(476, 119);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(476, 117);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
@@ -675,7 +675,7 @@ namespace Registry.Viewport
             this.textBoxExplainContent.Location = new System.Drawing.Point(15, 62);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(429, 83);
+            this.textBoxExplainContent.Size = new System.Drawing.Size(429, 81);
             this.textBoxExplainContent.TabIndex = 2;
             this.textBoxExplainContent.Enter += new System.EventHandler(this.selectAll_Enter);
             // 

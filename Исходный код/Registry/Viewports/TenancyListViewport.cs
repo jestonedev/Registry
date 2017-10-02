@@ -474,5 +474,10 @@ namespace Registry.Viewport
         {
             DataGridView_ColumnHeaderMouseClick(sender, e);
         }
+
+        internal IEnumerable<int> GetCurrentIds()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
