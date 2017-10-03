@@ -558,5 +558,44 @@ namespace Registry.DataModels.Services
             }
             return default(T);
         }
+
+        internal static IEnumerable<int> TenancyProcessIDsWithEmergencyEstates()
+        {
+            var emergencyBuildingsIDs = BuildingService.EmergencyBuildingIDs().ToList();
+            var emergencyPremisesIDs = PremisesService.EmergencyPremisesIDs().ToList();
+            var emergencyExcludedPremisesIDs = PremisesService.EmergencyExcludedPremisesIDs().ToList();
+
+            var buildingsProcessIds =
+                from tba in EntityDataModel<TenancyBuildingAssoc>.GetInstance().FilterDeletedRows()
+                where tba.Field<int?>("id_process") != null && tba.Field<int?>("id_building") != null
+                      && emergencyBuildingsIDs.Contains(tba.Field<int>("id_building"))
+                select tba.Field<int>("id_process");
+
+            var premisesProcessIds = from tpa in EntityDataModel<TenancyPremisesAssoc>.GetInstance().FilterDeletedRows()
+                join p in EntityDataModel<Premise>.GetInstance().FilterDeletedRows()
+                    on tpa.Field<int?>("id_premises") equals p.Field<int?>("id_premises")
+                where tpa.Field<int?>("id_process") != null && p.Field<int?>("id_building") != null
+                      && p.Field<int?>("id_premises") != null && (
+                          emergencyBuildingsIDs.Contains(p.Field<int>("id_building")) || (
+                              emergencyPremisesIDs.Contains(p.Field<int>("id_premises")) &&
+                              !emergencyExcludedPremisesIDs.Contains(p.Field<int>("id_premises")))
+                          )
+                select tpa.Field<int>("id_process");
+
+            var subPremisesProcessIds =
+                from tspa in EntityDataModel<TenancySubPremisesAssoc>.GetInstance().FilterDeletedRows()
+                join sp in EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows()
+                    on tspa.Field<int?>("id_sub_premises") equals sp.Field<int?>("id_sub_premises")
+                join p in EntityDataModel<Premise>.GetInstance().FilterDeletedRows()
+                    on sp.Field<int?>("id_premises") equals p.Field<int?>("id_premises")
+                where tspa.Field<int?>("id_process") != null && p.Field<int?>("id_building") != null
+                      && p.Field<int?>("id_premises") != null && (
+                          emergencyBuildingsIDs.Contains(p.Field<int>("id_building")) || (
+                              emergencyPremisesIDs.Contains(p.Field<int>("id_premises")) &&
+                              !emergencyExcludedPremisesIDs.Contains(p.Field<int>("id_premises")))
+                          )
+                select tspa.Field<int>("id_process");
+            return subPremisesProcessIds.Union(premisesProcessIds).Union(buildingsProcessIds).ToList();
+        }
     }
 }

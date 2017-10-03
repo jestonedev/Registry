@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -21,14 +23,14 @@ namespace Registry.Reporting.SettingForms
         #endregion Models
 
         #region Views
-        private readonly BindingSource _vTenancies;
-        private readonly BindingSource _vTenanciesAggregate;
-        private readonly BindingSource _vRentTypes;
-        private readonly BindingSource _vTenancyNotifiesMaxDate;
+        private BindingSource _vTenancies;
+        private BindingSource _vTenanciesAggregate;
+        private BindingSource _vRentTypes;
+        private BindingSource _vTenancyNotifiesMaxDate;
         #endregion Views
 
-        private readonly string _staticFilter = "(registration_num IS NULL OR registration_num NOT LIKE '%н')";
-
+        private string _staticFilter = "(registration_num IS NULL OR registration_num NOT LIKE '%н')";
+        private Action<TenancyNotifiesSettingsForm> _callback;
         public Collection<int> TenancyProcessIds
         {
             get
@@ -53,6 +55,10 @@ namespace Registry.Reporting.SettingForms
             InitializeComponent();
 
             dataGridView.AutoGenerateColumns = false;
+        }
+
+        public void InitializeData(Action<TenancyNotifiesSettingsForm> callback)
+        {
             DataModel tenancies = EntityDataModel<TenancyProcess>.GetInstance();
             var rentTypes = DataModel.GetInstance<RentTypesDataModel>();
             var executors = DataModel.GetInstance<EntityDataModel<Executor>>();
@@ -66,7 +72,7 @@ namespace Registry.Reporting.SettingForms
 
             var ds = DataStorage.DataSet;
 
-            _vTenancies = new BindingSource {DataMember = "tenancy_processes"};
+            _vTenancies = new BindingSource { DataMember = "tenancy_processes" };
             _vTenancies.CurrentItemChanged += v_tenancies_CurrentItemChanged;
             _vTenancies.DataSource = ds;
             var excludeProcesses = TenancyService.OldTenancyProcesses().ToList();
@@ -76,7 +82,7 @@ namespace Registry.Reporting.SettingForms
                 foreach (var id in excludeProcesses)
                     _staticFilter += "," + id.ToString(CultureInfo.InvariantCulture);
                 _staticFilter += ") ";
-            }   
+            }
             RebuildFilter();
             _vTenancies.Sort = "end_date DESC";
             end_date.HeaderCell.SortGlyphDirection = SortOrder.Descending;
@@ -94,9 +100,9 @@ namespace Registry.Reporting.SettingForms
                 Filter = "is_inactive = 0"
             };
 
-            _vTenanciesAggregate = new BindingSource {DataSource = tenanciesAggregate.Select()};
+            _vTenanciesAggregate = new BindingSource { DataSource = tenanciesAggregate.Select() };
 
-            _vTenancyNotifiesMaxDate = new BindingSource {DataSource = tenancyNotifiesMaxDate.Select()};
+            _vTenancyNotifiesMaxDate = new BindingSource { DataSource = tenancyNotifiesMaxDate.Select() };
 
             tenancies.Select().RowChanged += TenancyListViewport_RowChanged;
             tenancies.Select().RowDeleted += TenancyListViewport_RowDeleted;
@@ -106,11 +112,11 @@ namespace Registry.Reporting.SettingForms
             comboBoxExecutor.ValueMember = "id_executor";
             var login = UserDomain.Current.sAMAccountName;
             var idExecutor = (from row in executors.FilterDeletedRows()
-                             where
-                                row.Field<string>("executor_login") != null &&
-                                row.Field<string>("executor_login").ToUpperInvariant() == 
-                                    "PWR\\"+login.ToUpperInvariant()
-                select row.Field<int?>("id_executor")).FirstOrDefault();
+                              where
+                                 row.Field<string>("executor_login") != null &&
+                                 row.Field<string>("executor_login").ToUpperInvariant() ==
+                                     "PWR\\" + login.ToUpperInvariant()
+                              select row.Field<int?>("id_executor")).FirstOrDefault();
             if (idExecutor != null)
             {
                 comboBoxExecutor.SelectedValue = idExecutor;
@@ -123,6 +129,8 @@ namespace Registry.Reporting.SettingForms
             typeof(Control).InvokeMember("DoubleBuffered",
             BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
             null, dataGridView, new object[] { true }, CultureInfo.InvariantCulture);
+
+            _callback = callback;
         }
 
         private void RebuildFilter()
@@ -243,6 +251,10 @@ namespace Registry.Reporting.SettingForms
             }
             ReportType = TenancyNotifiesReportType.ExportAsIs;
             DialogResult = DialogResult.OK;
+            if (_callback != null)
+            {
+                _callback(this);
+            }
         }
 
         private void vButtonNotify_Click(object sender, EventArgs e)
@@ -255,6 +267,9 @@ namespace Registry.Reporting.SettingForms
             contextMenuStripNotify.Show(vButtonNotify, 0, -48);
         }
 
+        private readonly IEnumerable<int> _tenanciesWithEmergencyEstates =
+            TenancyService.TenancyProcessIDsWithEmergencyEstates().ToList();
+
         private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (_vTenancies.Count <= e.RowIndex) return;
@@ -263,6 +278,16 @@ namespace Registry.Reporting.SettingForms
                 case "is_checked":
                     var idProcess = Convert.ToInt32(((DataRowView)_vTenancies[e.RowIndex])["id_process"], CultureInfo.InvariantCulture);
                     e.Value = _checkedTenancies.Contains(idProcess);
+                    if (_tenanciesWithEmergencyEstates.Contains(idProcess))
+                    {
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.FromArgb(255, 117, 234, 232);
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.FromArgb(255, 22, 145, 143);
+                    }
+                    else
+                    {
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.White;
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = SystemColors.Highlight;
+                    }
                     break;
                 case "id_process":
                     e.Value = ((DataRowView)_vTenancies[e.RowIndex])["id_process"];
@@ -320,7 +345,7 @@ namespace Registry.Reporting.SettingForms
             {
                 foreach (DataGridViewColumn column in dataGridView.Columns)
                     column.HeaderCell.SortGlyphDirection = SortOrder.None;
-                _vTenancies.Sort = dataGridView.Columns[e.ColumnIndex].Name + " " + ((way == SortOrder.Ascending) ? "ASC" : "DESC");
+                _vTenancies.Sort = dataGridView.Columns[e.ColumnIndex].Name + " " + (way == SortOrder.Ascending ? "ASC" : "DESC");
                 dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
                 return true;
             };
@@ -409,18 +434,48 @@ namespace Registry.Reporting.SettingForms
         {
             ReportType = TenancyNotifiesReportType.PrintNotifiesPrimary;
             DialogResult = DialogResult.OK;
+            if (_callback != null)
+            {
+                _callback(this);
+            }
         }
 
         private void повторноеToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ReportType = TenancyNotifiesReportType.PrintNotifiesSecondary;
             DialogResult = DialogResult.OK;
+            if (_callback != null)
+            {
+                _callback(this);
+            }
         }
 
         private void ответНаОбращениеПоПродлениюToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ReportType = TenancyNotifiesReportType.PrintNotifiesProlongContract;
             DialogResult = DialogResult.OK;
+            if (_callback != null)
+            {
+                _callback(this);
+            }
+        }
+
+        private void vButtonCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            if (_callback != null)
+            {
+                _callback(this);
+            }
+        }
+
+        private void TenancyNotifiesSettingsForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            if (_callback != null)
+            {
+                _callback(this);
+            }
         }
     }
 

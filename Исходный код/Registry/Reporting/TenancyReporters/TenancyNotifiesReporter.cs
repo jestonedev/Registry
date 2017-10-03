@@ -17,12 +17,13 @@ namespace Registry.Reporting.TenancyReporters
                 {"config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "tenancy\\notifies.xml")},
                 {"connectionString", RegistrySettings.ConnectionString}
             };
-            using (var tnsForm = new TenancyNotifiesSettingsForm())
+            var tnsForm = new TenancyNotifiesSettingsForm();
+            tnsForm.InitializeData(form =>
             {
-                if (tnsForm.ShowDialog() == DialogResult.OK)
+                if (form.DialogResult == DialogResult.OK)
                 {
                     string reportType = null;
-                    switch (tnsForm.ReportType)
+                    switch (form.ReportType)
                     {
                         case TenancyNotifiesReportType.ExportAsIs:
                             reportType = "1";
@@ -38,10 +39,10 @@ namespace Registry.Reporting.TenancyReporters
                             break;
 
                     }
-                    arguments.Add("id_executor", tnsForm.IdExecutor.ToString(CultureInfo.InvariantCulture));
+                    arguments.Add("id_executor", form.IdExecutor.ToString(CultureInfo.InvariantCulture));
                     arguments.Add("report_type", reportType);
                     var processesStr = "";
-                    var processIds = tnsForm.TenancyProcessIds;
+                    var processIds = form.TenancyProcessIds;
                     foreach (var processId in processIds)
                         processesStr += processId.ToString(CultureInfo.InvariantCulture) + ",";
                     processesStr = processesStr.TrimEnd(',');
@@ -50,7 +51,9 @@ namespace Registry.Reporting.TenancyReporters
                 }
                 else
                     Cancel();
-            }
+                form.Dispose();
+            });
+            tnsForm.Show();
         }
     }
 }

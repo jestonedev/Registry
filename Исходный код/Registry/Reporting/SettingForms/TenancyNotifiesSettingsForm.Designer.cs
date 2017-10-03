@@ -50,7 +50,7 @@
             this.end_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.notify_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tenant = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rent_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_rent_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.checkBoxCheckAll = new System.Windows.Forms.CheckBox();
             this.contextMenuStripNotify = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -190,6 +190,7 @@
             this.vButtonCancel.Text = "Отменить";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonCancel.Click += new System.EventHandler(this.vButtonCancel_Click);
             // 
             // dataGridView
             // 
@@ -217,7 +218,7 @@
             this.end_date,
             this.notify_date,
             this.tenant,
-            this.rent_type,
+            this.id_rent_type,
             this.address});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
@@ -303,15 +304,14 @@
             this.tenant.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.tenant.Width = 250;
             // 
-            // rent_type
+            // id_rent_type
             // 
-            this.rent_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.rent_type.HeaderText = "Тип найма";
-            this.rent_type.MinimumWidth = 150;
-            this.rent_type.Name = "id_rent_type";
-            this.rent_type.ReadOnly = true;
-            // this.rent_type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.rent_type.Width = 150;
+            this.id_rent_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.id_rent_type.HeaderText = "Тип найма";
+            this.id_rent_type.MinimumWidth = 150;
+            this.id_rent_type.Name = "id_rent_type";
+            this.id_rent_type.ReadOnly = true;
+            this.id_rent_type.Width = 150;
             // 
             // address
             // 
@@ -381,11 +381,11 @@
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(962, 298);
             this.Name = "TenancyNotifiesSettingsForm";
             this.Text = "Печать уведомлений";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TenancyNotifiesSettingsForm_FormClosed);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
@@ -424,6 +424,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem ответНаОбращениеПоПродлениюToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxProlongContracts;
+        private System.Windows.Forms.DataGridViewTextBoxColumn id_rent_type;
 
 
     }
