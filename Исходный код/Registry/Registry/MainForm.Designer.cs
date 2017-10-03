@@ -201,6 +201,7 @@ namespace Registry
             this.ribbonButton10 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton11 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton12 = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbMultiTenancies = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -227,6 +228,7 @@ namespace Registry
             this.ribbon1.OrbDropDown.MenuItems.Add(this.ribbonOrbMenuItemExit);
             this.ribbon1.OrbDropDown.Name = "";
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryMultiPremises);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbMultiTenancies);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbMultiPaymentAccount);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbMultiClaims);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonSeparatorMasters);
@@ -256,7 +258,7 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonTenancyHistory);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonRequestToMvdNew);
             this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать и массовые операции";
-            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 697);
+            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 719);
             this.ribbon1.OrbDropDown.TabIndex = 0;
             this.ribbon1.OrbImage = null;
             this.ribbon1.OrbStyle = System.Windows.Forms.RibbonOrbStyle.Office_2010;
@@ -1931,6 +1933,17 @@ namespace Registry
             this.ribbonButton12.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton12.SmallImage")));
             this.ribbonButton12.Text = "ribbonButton12";
             // 
+            // ribbonButtonOrbMultiTenancies
+            // 
+            this.ribbonButtonOrbMultiTenancies.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiTenancies.Image")));
+            this.ribbonButtonOrbMultiTenancies.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiTenancies.SmallImage")));
+            this.ribbonButtonOrbMultiTenancies.Text = "Массовые операции над процессами найма";
+            this.ribbonButtonOrbMultiTenancies.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над процессами на" +
+    "йма";
+            this.ribbonButtonOrbMultiTenancies.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiTenancies.ToolTipImage")));
+            this.ribbonButtonOrbMultiTenancies.ToolTipTitle = "Массовые операции над процессами найма";
+            this.ribbonButtonOrbMultiTenancies.Click += new System.EventHandler(this.ribbonButtonOrbMultiTenancies_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2112,6 +2125,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButton10;
         private System.Windows.Forms.RibbonButton ribbonButton11;
         private System.Windows.Forms.RibbonButton ribbonButton12;
+        private System.Windows.Forms.RibbonButton ribbonButtonOrbMultiTenancies;
     }
 }
 

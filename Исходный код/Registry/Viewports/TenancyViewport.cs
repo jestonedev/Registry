@@ -1075,9 +1075,19 @@ namespace Registry.Viewport
             }
         }
 
-        internal IEnumerable<int> GetCurrentIds()
+        internal int GetCurrentId()
         {
-            throw new NotImplementedException();
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            var columnName = Presenter.ViewModel["general"].PrimaryKeyFirst;
+            if (row == null) return -1;
+            if (row[columnName] != DBNull.Value)
+                return (int)row[columnName];
+            return -1;
+        }
+
+        internal string GetFilter()
+        {
+            return Presenter.ViewModel["general"].BindingSource.Filter;
         }
     }
 }

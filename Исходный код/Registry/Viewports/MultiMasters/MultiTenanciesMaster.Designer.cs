@@ -8,8 +8,8 @@ namespace Registry.Viewport.MultiMasters
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MultiTenanciesMaster));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -23,17 +23,15 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.id_claim = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.at_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.current_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.start_dept_period = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.end_dept_period = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.amount_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.amount_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.amount_padun = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.amount_pkk = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.amount_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_process = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.registration_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.registration_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.end_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.residence_warrant_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tenant = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rent_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.payment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -153,19 +151,26 @@ namespace Registry.Viewport.MultiMasters
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.id_claim,
-            this.id_account,
-            this.at_date,
-            this.current_state,
-            this.start_dept_period,
-            this.end_dept_period,
-            this.amount_tenancy,
-            this.amount_dgi,
-            this.amount_padun,
-            this.amount_pkk,
-            this.amount_penalties});
+            this.id_process,
+            this.registration_num,
+            this.registration_date,
+            this.end_date,
+            this.residence_warrant_num,
+            this.tenant,
+            this.rent_type,
+            this.address,
+            this.payment});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridView.Location = new System.Drawing.Point(0, 25);
@@ -184,97 +189,93 @@ namespace Registry.Viewport.MultiMasters
             this.dataGridView.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView_RowsRemoved);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
-            // id_claim
+            // id_process
             // 
-            this.id_claim.HeaderText = "№";
-            this.id_claim.MinimumWidth = 50;
-            this.id_claim.Name = "id_claim";
-            this.id_claim.ReadOnly = true;
-            this.id_claim.Width = 50;
+            this.id_process.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.id_process.HeaderText = "№";
+            this.id_process.MinimumWidth = 60;
+            this.id_process.Name = "id_process";
+            this.id_process.ReadOnly = true;
+            this.id_process.Width = 60;
             // 
-            // id_account
+            // registration_num
             // 
-            this.id_account.HeaderText = "Лицевой счет";
-            this.id_account.MinimumWidth = 150;
-            this.id_account.Name = "id_account";
-            this.id_account.ReadOnly = true;
-            this.id_account.Width = 150;
+            this.registration_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.registration_num.HeaderText = "№ договора";
+            this.registration_num.MinimumWidth = 90;
+            this.registration_num.Name = "registration_num";
+            this.registration_num.ReadOnly = true;
+            this.registration_num.Width = 90;
             // 
-            // at_date
+            // registration_date
             // 
-            this.at_date.HeaderText = "Дата формирования";
-            this.at_date.MinimumWidth = 170;
-            this.at_date.Name = "at_date";
-            this.at_date.ReadOnly = true;
-            this.at_date.Width = 170;
+            this.registration_date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.registration_date.HeaderText = "Дата регистрации договора";
+            this.registration_date.MinimumWidth = 90;
+            this.registration_date.Name = "registration_date";
+            this.registration_date.ReadOnly = true;
+            this.registration_date.Width = 90;
             // 
-            // current_state
+            // end_date
             // 
-            this.current_state.HeaderText = "Текущее состояние";
-            this.current_state.MinimumWidth = 150;
-            this.current_state.Name = "current_state";
-            this.current_state.ReadOnly = true;
-            this.current_state.Width = 150;
+            this.end_date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.end_date.HeaderText = "Дата окончания договора";
+            this.end_date.MinimumWidth = 90;
+            this.end_date.Name = "end_date";
+            this.end_date.ReadOnly = true;
+            this.end_date.Width = 90;
             // 
-            // start_dept_period
+            // residence_warrant_num
             // 
-            this.start_dept_period.HeaderText = "Период с";
-            this.start_dept_period.MinimumWidth = 150;
-            this.start_dept_period.Name = "start_dept_period";
-            this.start_dept_period.ReadOnly = true;
-            this.start_dept_period.Width = 150;
+            this.residence_warrant_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.residence_warrant_num.HeaderText = "№ ордера / другого документа-основания";
+            this.residence_warrant_num.MinimumWidth = 150;
+            this.residence_warrant_num.Name = "residence_warrant_num";
+            this.residence_warrant_num.ReadOnly = true;
+            this.residence_warrant_num.Width = 150;
             // 
-            // end_dept_period
+            // tenant
             // 
-            this.end_dept_period.HeaderText = "Период по";
-            this.end_dept_period.MinimumWidth = 150;
-            this.end_dept_period.Name = "end_dept_period";
-            this.end_dept_period.ReadOnly = true;
-            this.end_dept_period.Width = 150;
+            this.tenant.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.tenant.HeaderText = "Наниматель";
+            this.tenant.MinimumWidth = 250;
+            this.tenant.Name = "tenant";
+            this.tenant.ReadOnly = true;
+            this.tenant.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.tenant.Width = 250;
             // 
-            // amount_tenancy
+            // rent_type
             // 
-            dataGridViewCellStyle3.Format = "#0.0# руб.";
-            this.amount_tenancy.DefaultCellStyle = dataGridViewCellStyle3;
-            this.amount_tenancy.HeaderText = "Сумма долга найм";
-            this.amount_tenancy.MinimumWidth = 110;
-            this.amount_tenancy.Name = "amount_tenancy";
-            this.amount_tenancy.ReadOnly = true;
-            this.amount_tenancy.Width = 110;
+            this.rent_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.rent_type.HeaderText = "Тип найма";
+            this.rent_type.MinimumWidth = 140;
+            this.rent_type.Name = "rent_type";
+            this.rent_type.ReadOnly = true;
+            this.rent_type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.rent_type.Width = 140;
             // 
-            // amount_dgi
+            // address
             // 
-            dataGridViewCellStyle4.Format = "#0.0# руб.";
-            this.amount_dgi.DefaultCellStyle = dataGridViewCellStyle4;
-            this.amount_dgi.HeaderText = "Сумма долга ДГИ";
-            this.amount_dgi.MinimumWidth = 110;
-            this.amount_dgi.Name = "amount_dgi";
-            this.amount_dgi.ReadOnly = true;
-            this.amount_dgi.Width = 110;
+            this.address.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.address.HeaderText = "Нанимаемое жилье";
+            this.address.MinimumWidth = 400;
+            this.address.Name = "address";
+            this.address.ReadOnly = true;
+            this.address.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.address.Width = 400;
             // 
-            // amount_padun
+            // payment
             // 
-            this.amount_padun.HeaderText = "Сумма долга Падун";
-            this.amount_padun.MinimumWidth = 110;
-            this.amount_padun.Name = "amount_padun";
-            this.amount_padun.ReadOnly = true;
-            this.amount_padun.Width = 110;
-            // 
-            // amount_pkk
-            // 
-            this.amount_pkk.HeaderText = "Сумма долга ПКК";
-            this.amount_pkk.MinimumWidth = 110;
-            this.amount_pkk.Name = "amount_pkk";
-            this.amount_pkk.ReadOnly = true;
-            this.amount_pkk.Width = 110;
-            // 
-            // amount_penalties
-            // 
-            this.amount_penalties.HeaderText = "Сумма долга пени";
-            this.amount_penalties.MinimumWidth = 110;
-            this.amount_penalties.Name = "amount_penalties";
-            this.amount_penalties.ReadOnly = true;
-            this.amount_penalties.Width = 110;
+            this.payment.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle2.Format = "#0.## руб\\.";
+            dataGridViewCellStyle2.NullValue = null;
+            this.payment.DefaultCellStyle = dataGridViewCellStyle2;
+            this.payment.HeaderText = "Размер платы";
+            this.payment.MinimumWidth = 150;
+            this.payment.Name = "payment";
+            this.payment.ReadOnly = true;
+            this.payment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.payment.Width = 150;
             // 
             // MultiTenanciesMaster
             // 
@@ -303,21 +304,19 @@ namespace Registry.Viewport.MultiMasters
         private ToolStripButton toolStripButtonRequestMvd;
         private ToolStrip toolStrip1;
         private ToolStripProgressBar toolStripProgressBarMultiOperations;
-        private DataGridView dataGridView;
         private ToolStripButton toolStripButtonRequestMvdNew;
         private ToolStripLabel toolStripLabelRowCount;
         private ToolStripSeparator toolStripSeparator3;
-        private DataGridViewTextBoxColumn id_claim;
-        private DataGridViewTextBoxColumn id_account;
-        private DataGridViewTextBoxColumn at_date;
-        private DataGridViewTextBoxColumn current_state;
-        private DataGridViewTextBoxColumn start_dept_period;
-        private DataGridViewTextBoxColumn end_dept_period;
-        private DataGridViewTextBoxColumn amount_tenancy;
-        private DataGridViewTextBoxColumn amount_dgi;
-        private DataGridViewTextBoxColumn amount_padun;
-        private DataGridViewTextBoxColumn amount_pkk;
-        private DataGridViewTextBoxColumn amount_penalties;
+        private DataGridView dataGridView;
+        private DataGridViewTextBoxColumn id_process;
+        private DataGridViewTextBoxColumn registration_num;
+        private DataGridViewTextBoxColumn registration_date;
+        private DataGridViewTextBoxColumn end_date;
+        private DataGridViewTextBoxColumn residence_warrant_num;
+        private DataGridViewTextBoxColumn tenant;
+        private DataGridViewTextBoxColumn rent_type;
+        private DataGridViewTextBoxColumn address;
+        private DataGridViewTextBoxColumn payment;
 
     }
 }

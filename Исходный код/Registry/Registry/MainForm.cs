@@ -404,6 +404,10 @@ namespace Registry
             {
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiPremises);
             }
+            if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
+            {
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiTenancies);
+            }
             if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
             {
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiPaymentAccount);
@@ -1186,6 +1190,13 @@ namespace Registry
             var multiClaimsMaster = new MultiClaimsMaster(this);
             multiClaimsMaster.Show(dockPanel, DockState.DockBottom);
             multiClaimsMaster.UpdateToolbar();
+        }
+
+        private void ribbonButtonOrbMultiTenancies_Click(object sender, EventArgs e)
+        {
+            var multiTenanciesMaster = new MultiTenanciesMaster(this);
+            multiTenanciesMaster.Show(dockPanel, DockState.DockBottom);
+            multiTenanciesMaster.UpdateToolbar();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

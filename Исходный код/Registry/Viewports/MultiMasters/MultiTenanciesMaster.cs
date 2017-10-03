@@ -7,6 +7,7 @@ using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Reporting;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -32,8 +33,8 @@ namespace Registry.Viewport.MultiMasters
             _tenancies.Filter = "0 = 1";
 
             DataModel.GetInstance<RentTypesDataModel>().Select();
-            _tenancies.DataSource = DataStorage.DataSet;
-            _tenancies.DataMember = "rent_types";
+            _tenancyRentTypes.DataSource = DataStorage.DataSet;
+            _tenancyRentTypes.DataMember = "rent_types";
 
             _tenancyAggregated.DataSource = CalcDataModel.GetInstance<CalcDataModelTenancyAggregated>().Select();
             dataGridView.RowCount = 0;
@@ -147,7 +148,7 @@ namespace Registry.Viewport.MultiMasters
                 var tenancyViewport = viewport as TenancyViewport;
                 if (tenancyViewport != null)
                 {
-                    idProcesses = tenancyViewport.GetCurrentIds();
+                    idProcesses = new List<int> {tenancyViewport.GetCurrentId()};
                 }
             }
             if (!idProcesses.Any()) return;
@@ -162,9 +163,19 @@ namespace Registry.Viewport.MultiMasters
             if (viewport == null)
                 return;
             var filter = "";
-            var claimsViewport = viewport as ClaimListViewport;
-            if (claimsViewport != null)
-                filter = claimsViewport.GetFilter();
+            var tenancyListViewport = viewport as TenancyListViewport;
+            if (tenancyListViewport != null)
+            {
+                filter = tenancyListViewport.GetFilter();
+            }
+            else
+            {
+                var tenancyViewport = viewport as TenancyViewport;
+                if (tenancyViewport != null)
+                {
+                    filter = tenancyViewport.GetFilter();
+                }
+            }
             if (filter == "") filter = "1=1";
             _tenancies.Filter = string.Format("({0}) OR ({1})", _tenancies.Filter, filter);
             dataGridView.RowCount = _tenancies.Count;
@@ -172,7 +183,27 @@ namespace Registry.Viewport.MultiMasters
 
         private void toolStripButtonRequestMvd_Click(object sender, EventArgs e)
         {
-            
+            _menuCallback.RunReport(ReporterType.RequestToMvdReporter, GetDefaultReportArguments());
+        }
+
+        private void toolStripButtonRequestMvdNew_Click(object sender, EventArgs e)
+        {
+            _menuCallback.RunReport(ReporterType.RequestToMvdNewReporter, GetDefaultReportArguments());
+        }
+
+        private Dictionary<string, string> GetDefaultReportArguments()
+        {
+            var arguments = new Dictionary<string, string>();
+            var ids = "";
+            for (var i = 0; i < _tenancies.Count; i++)
+            {
+                var row = (DataRowView)_tenancies[i];
+                if (row["id_process"] != DBNull.Value)
+                    ids += row["id_process"] + ",";
+            }
+            ids = ids.TrimEnd(',');
+            arguments.Add("ids", ids);
+            return arguments;
         }
 
         public void UpdateToolbar()
@@ -186,12 +217,6 @@ namespace Registry.Viewport.MultiMasters
             toolStripButtonRequestMvd.Enabled = AccessControl.HasPrivelege(Priveleges.TenancyRead);
             toolStripButtonRequestMvdNew.Enabled = AccessControl.HasPrivelege(Priveleges.TenancyRead);
         }
-
-        private void toolStripButtonRequestMvdNew_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         private void dataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             RowCountChanged();

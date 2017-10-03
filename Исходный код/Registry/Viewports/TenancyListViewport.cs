@@ -477,7 +477,20 @@ namespace Registry.Viewport
 
         internal IEnumerable<int> GetCurrentIds()
         {
-            throw new NotImplementedException();
+            var ids = new List<int>();
+            if (Presenter.ViewModel["general"].BindingSource.Position < 0) return ids;
+            for (var i = 0; i < DataGridView.SelectedRows.Count; i++)
+            {
+                var row = (DataRowView)Presenter.ViewModel["general"].BindingSource[DataGridView.SelectedRows[i].Index];
+                if (row["id_process"] != DBNull.Value)
+                    ids.Add((int)row["id_process"]);
+            }
+            return ids;
+        }
+
+        internal string GetFilter()
+        {
+            return Presenter.ViewModel["general"].BindingSource.Filter;
         }
     }
 }
