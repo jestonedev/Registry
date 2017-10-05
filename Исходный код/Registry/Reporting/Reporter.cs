@@ -31,10 +31,10 @@ namespace Registry.Reporting
         {
             if (!File.Exists(RegistrySettings.ActivityManagerPath))
             {
-                MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
+                MessageBox.Show(string.Format(CultureInfo.InvariantCulture, 
                     "Не удалось найти генератор отчетов ActivityManager. Возможно указанный путь {0} является некорректным.",
                     RegistrySettings.ActivityManagerPath), 
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             var context = SynchronizationContext.Current;
@@ -43,11 +43,16 @@ namespace Registry.Reporting
                 using (var process = new Process())
                 {
                     var psi = new ProcessStartInfo(RegistrySettings.ActivityManagerPath,
-                        GetArguments((Dictionary<string, string>)args));
-                    psi.CreateNoWindow = true;
-                    psi.RedirectStandardOutput = true;
-                    psi.StandardOutputEncoding = Encoding.GetEncoding(RegistrySettings.ActivityManagerOutputCodePage);
-                    psi.UseShellExecute = false;
+                        GetArguments((Dictionary<string, string>) args))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
+                    if (ReportOutputStreamResponse != null)
+                    {
+                        psi.RedirectStandardOutput = true;
+                        psi.StandardOutputEncoding = Encoding.GetEncoding(RegistrySettings.ActivityManagerOutputCodePage);
+                    }
                     process.StartInfo = psi;
                     process.Start();
                     if (ReportOutputStreamResponse != null)

@@ -890,9 +890,12 @@ namespace Registry
         public void RunReport(ReporterType reporterType, Dictionary<string, string> arguments = null)
         {
             var reporter = ReporterFactory.CreateReporter(reporterType);
-            reporter.ReportOutputStreamResponse += reporter_ReportOutputStreamResponse;
-            reporter.ReportComplete += reporter_ReportComplete;
-            reporter.ReportCanceled += reporter_ReportCanceled;
+            if (reporterType != ReporterType.ExportReasonsForGisZkhReporter)
+            {
+                reporter.ReportOutputStreamResponse += reporter_ReportOutputStreamResponse;
+                reporter.ReportComplete += reporter_ReportComplete;
+                reporter.ReportCanceled += reporter_ReportCanceled;
+            }
             _reportCounter++;
             if (arguments == null)
                 reporter.Run();
@@ -915,11 +918,13 @@ namespace Registry
                 _reportLogForm.Hide();
         }
 
+
+
         void reporter_ReportOutputStreamResponse(object sender, ReportOutputStreamEventArgs e)
         {
             if (_reportLogForm.Visible == false)
                 _reportLogForm.Show(dockPanel, DockState.DockBottomAutoHide);
-            if (!string.IsNullOrEmpty(e.Text.Trim()) && (!Regex.IsMatch(e.Text.Trim(), "styles.xml")))
+            if (!string.IsNullOrEmpty(e.Text.Trim()) && !Regex.IsMatch(e.Text.Trim(), "styles.xml"))
                 _reportLogForm.Log("["+((Reporter)sender).ReportTitle+"]: "+e.Text.Trim());
         }
 
