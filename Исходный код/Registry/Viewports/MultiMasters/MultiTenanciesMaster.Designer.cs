@@ -19,6 +19,7 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonTenancyDeleteAll = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRequestMvd = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRequestMvdNew = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonExportReasonsForGisZkh = new System.Windows.Forms.ToolStripButton();
             this.toolStripProgressBarMultiOperations = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
@@ -57,6 +58,7 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripSeparator2,
             this.toolStripButtonRequestMvd,
             this.toolStripButtonRequestMvdNew,
+            this.toolStripButtonExportReasonsForGisZkh,
             this.toolStripProgressBarMultiOperations,
             this.toolStripSeparator3,
             this.toolStripLabelRowCount});
@@ -126,6 +128,16 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonRequestMvdNew.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonRequestMvdNew.Text = "Сформировать запрос в МВД (новый шаблон)";
             this.toolStripButtonRequestMvdNew.Click += new System.EventHandler(this.toolStripButtonRequestMvdNew_Click);
+            // 
+            // toolStripButtonExportReasonsForGisZkh
+            // 
+            this.toolStripButtonExportReasonsForGisZkh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonExportReasonsForGisZkh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonExportReasonsForGisZkh.Image")));
+            this.toolStripButtonExportReasonsForGisZkh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonExportReasonsForGisZkh.Name = "toolStripButtonExportReasonsForGisZkh";
+            this.toolStripButtonExportReasonsForGisZkh.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonExportReasonsForGisZkh.Text = "Экспорт файлов-оснований найма для ГИС ЖКХ";
+            this.toolStripButtonExportReasonsForGisZkh.Click += new System.EventHandler(this.toolStripButtonExportReasonsForGisZkh_Click);
             // 
             // toolStripProgressBarMultiOperations
             // 
@@ -317,6 +329,7 @@ namespace Registry.Viewport.MultiMasters
         private DataGridViewTextBoxColumn rent_type;
         private DataGridViewTextBoxColumn address;
         private DataGridViewTextBoxColumn payment;
+        private ToolStripButton toolStripButtonExportReasonsForGisZkh;
 
     }
 }

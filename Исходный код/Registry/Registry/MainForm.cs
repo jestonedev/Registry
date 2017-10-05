@@ -472,6 +472,8 @@ namespace Registry
             var reportsCount = ribbon1.OrbDropDown.RecentItems.Count - mastersCount;
             var hasReports = reportsCount > 0;
 
+            if (document.HasReport(ReporterType.ExportReasonsForGisZkhReporter))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonExportReasonsForGisZkh);
             if (document.HasReport(ReporterType.ExportReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonExportOds);
             if (document.HasReport(ReporterType.TenancyHistoryReporter))
@@ -1352,6 +1354,13 @@ namespace Registry
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
                 document.GenerateReport(ReporterType.RequestToMvdNewReporter);
+        }
+
+        private void ribbonButtonExportReasonsForGisZkh_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.ExportReasonsForGisZkhReporter);
         }
     }
 }

@@ -30,21 +30,21 @@ namespace Registry
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient1 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient2 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient3 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient4 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient5 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin2 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient8 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient9 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient10 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient11 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient12 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient6 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient13 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient14 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.ribbon1 = new System.Windows.Forms.Ribbon();
             this.ribbonOrbMenuItemBuildings = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonOrbMenuItemPremises = new System.Windows.Forms.RibbonOrbMenuItem();
@@ -56,6 +56,7 @@ namespace Registry
             this.ribbonOrbMenuItemHelp = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonOrbMenuItemExit = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonButtonOrbRegistryMultiPremises = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbMultiTenancies = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbMultiPaymentAccount = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbMultiClaims = new System.Windows.Forms.RibbonButton();
             this.ribbonSeparatorMasters = new System.Windows.Forms.RibbonSeparator();
@@ -201,7 +202,7 @@ namespace Registry
             this.ribbonButton10 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton11 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton12 = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbMultiTenancies = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonExportReasonsForGisZkh = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -250,15 +251,16 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremises);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonRequestToMvd);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonRequestToMvdNew);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonJudicialOrder);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonRequestToBks);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonTransfertToLegalDepartment);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonSeparatorExport);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonExportReasonsForGisZkh);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonExportOds);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonTenancyHistory);
-            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonRequestToMvdNew);
             this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать и массовые операции";
-            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 719);
+            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 741);
             this.ribbon1.OrbDropDown.TabIndex = 0;
             this.ribbon1.OrbImage = null;
             this.ribbon1.OrbStyle = System.Windows.Forms.RibbonOrbStyle.Office_2010;
@@ -378,6 +380,17 @@ namespace Registry
             this.ribbonButtonOrbRegistryMultiPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiPremises.ToolTipImage")));
             this.ribbonButtonOrbRegistryMultiPremises.ToolTipTitle = "Массовые операции над помещениями";
             this.ribbonButtonOrbRegistryMultiPremises.Click += new System.EventHandler(this.ribbonButtonOrbMultiPremises_Click);
+            // 
+            // ribbonButtonOrbMultiTenancies
+            // 
+            this.ribbonButtonOrbMultiTenancies.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiTenancies.Image")));
+            this.ribbonButtonOrbMultiTenancies.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiTenancies.SmallImage")));
+            this.ribbonButtonOrbMultiTenancies.Text = "Массовые операции над процессами найма";
+            this.ribbonButtonOrbMultiTenancies.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над процессами на" +
+    "йма";
+            this.ribbonButtonOrbMultiTenancies.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiTenancies.ToolTipImage")));
+            this.ribbonButtonOrbMultiTenancies.ToolTipTitle = "Массовые операции над процессами найма";
+            this.ribbonButtonOrbMultiTenancies.Click += new System.EventHandler(this.ribbonButtonOrbMultiTenancies_Click);
             // 
             // ribbonButtonOrbMultiPaymentAccount
             // 
@@ -1835,53 +1848,53 @@ namespace Registry
             this.dockPanel.Name = "dockPanel";
             this.dockPanel.ShowDocumentIcon = true;
             this.dockPanel.Size = new System.Drawing.Size(1008, 592);
-            dockPanelGradient1.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPanelGradient1.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
-            tabGradient1.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient1.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient1.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            autoHideStripSkin1.TabGradient = tabGradient1;
-            autoHideStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
-            tabGradient2.EndColor = System.Drawing.Color.White;
-            tabGradient2.StartColor = System.Drawing.Color.White;
-            tabGradient2.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
-            dockPanelGradient2.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPanelGradient2.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
-            tabGradient3.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient3.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient3.StartColor = System.Drawing.Color.White;
-            tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
-            dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
-            dockPaneStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            tabGradient4.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient4.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient4.TextColor = System.Drawing.Color.Black;
-            dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
-            tabGradient5.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient5.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient5.TextColor = System.Drawing.Color.Black;
-            dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
-            dockPanelGradient3.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPanelGradient3.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
-            tabGradient6.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient6.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient6.TextColor = System.Drawing.Color.Black;
-            dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
-            tabGradient7.EndColor = System.Drawing.Color.Transparent;
-            tabGradient7.StartColor = System.Drawing.Color.Transparent;
-            tabGradient7.TextColor = System.Drawing.Color.Gray;
-            dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
-            dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
-            dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
-            this.dockPanel.Skin = dockPanelSkin1;
+            dockPanelGradient4.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPanelGradient4.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            autoHideStripSkin2.DockStripGradient = dockPanelGradient4;
+            tabGradient8.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient8.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient8.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            autoHideStripSkin2.TabGradient = tabGradient8;
+            autoHideStripSkin2.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            dockPanelSkin2.AutoHideStripSkin = autoHideStripSkin2;
+            tabGradient9.EndColor = System.Drawing.Color.White;
+            tabGradient9.StartColor = System.Drawing.Color.White;
+            tabGradient9.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient2.ActiveTabGradient = tabGradient9;
+            dockPanelGradient5.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPanelGradient5.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPaneStripGradient2.DockStripGradient = dockPanelGradient5;
+            tabGradient10.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient10.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient10.StartColor = System.Drawing.Color.White;
+            tabGradient10.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient2.InactiveTabGradient = tabGradient10;
+            dockPaneStripSkin2.DocumentGradient = dockPaneStripGradient2;
+            dockPaneStripSkin2.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            tabGradient11.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient11.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient11.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient11.TextColor = System.Drawing.Color.Black;
+            dockPaneStripToolWindowGradient2.ActiveCaptionGradient = tabGradient11;
+            tabGradient12.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient12.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient12.TextColor = System.Drawing.Color.Black;
+            dockPaneStripToolWindowGradient2.ActiveTabGradient = tabGradient12;
+            dockPanelGradient6.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPanelGradient6.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPaneStripToolWindowGradient2.DockStripGradient = dockPanelGradient6;
+            tabGradient13.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient13.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient13.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient13.TextColor = System.Drawing.Color.Black;
+            dockPaneStripToolWindowGradient2.InactiveCaptionGradient = tabGradient13;
+            tabGradient14.EndColor = System.Drawing.Color.Transparent;
+            tabGradient14.StartColor = System.Drawing.Color.Transparent;
+            tabGradient14.TextColor = System.Drawing.Color.Gray;
+            dockPaneStripToolWindowGradient2.InactiveTabGradient = tabGradient14;
+            dockPaneStripSkin2.ToolWindowGradient = dockPaneStripToolWindowGradient2;
+            dockPanelSkin2.DockPaneStripSkin = dockPaneStripSkin2;
+            this.dockPanel.Skin = dockPanelSkin2;
             this.dockPanel.TabIndex = 5;
             this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.dockPanel_ActiveDocumentChanged);
             // 
@@ -1933,16 +1946,15 @@ namespace Registry
             this.ribbonButton12.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton12.SmallImage")));
             this.ribbonButton12.Text = "ribbonButton12";
             // 
-            // ribbonButtonOrbMultiTenancies
+            // ribbonButtonExportReasonsForGisZkh
             // 
-            this.ribbonButtonOrbMultiTenancies.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiTenancies.Image")));
-            this.ribbonButtonOrbMultiTenancies.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiTenancies.SmallImage")));
-            this.ribbonButtonOrbMultiTenancies.Text = "Массовые операции над процессами найма";
-            this.ribbonButtonOrbMultiTenancies.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над процессами на" +
-    "йма";
-            this.ribbonButtonOrbMultiTenancies.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiTenancies.ToolTipImage")));
-            this.ribbonButtonOrbMultiTenancies.ToolTipTitle = "Массовые операции над процессами найма";
-            this.ribbonButtonOrbMultiTenancies.Click += new System.EventHandler(this.ribbonButtonOrbMultiTenancies_Click);
+            this.ribbonButtonExportReasonsForGisZkh.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonExportReasonsForGisZkh.Image")));
+            this.ribbonButtonExportReasonsForGisZkh.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonExportReasonsForGisZkh.SmallImage")));
+            this.ribbonButtonExportReasonsForGisZkh.Text = "Экспорт файлов-оснований для ГИС ЖКХ";
+            this.ribbonButtonExportReasonsForGisZkh.ToolTip = "Экспорт документов-оснований для последующего импорта в ГИС ЖКХ";
+            this.ribbonButtonExportReasonsForGisZkh.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonExportReasonsForGisZkh.ToolTipImage")));
+            this.ribbonButtonExportReasonsForGisZkh.ToolTipTitle = "Экспорт документов-оснований";
+            this.ribbonButtonExportReasonsForGisZkh.Click += new System.EventHandler(this.ribbonButtonExportReasonsForGisZkh_Click);
             // 
             // MainForm
             // 
@@ -2126,6 +2138,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButton11;
         private System.Windows.Forms.RibbonButton ribbonButton12;
         private System.Windows.Forms.RibbonButton ribbonButtonOrbMultiTenancies;
+        private System.Windows.Forms.RibbonButton ribbonButtonExportReasonsForGisZkh;
     }
 }
 

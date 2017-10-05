@@ -183,12 +183,31 @@ namespace Registry.Viewport.MultiMasters
 
         private void toolStripButtonRequestMvd_Click(object sender, EventArgs e)
         {
+            if (_tenancies.Count == 0)
+            {
+                MessageBox.Show(@"Для формирования запроса в МВД необходимо выбрать один или более процессов найма",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
             _menuCallback.RunReport(ReporterType.RequestToMvdReporter, GetDefaultReportArguments());
         }
 
         private void toolStripButtonRequestMvdNew_Click(object sender, EventArgs e)
         {
+            if (_tenancies.Count == 0)
+            {
+                MessageBox.Show(@"Для формирования запроса в МВД необходимо выбрать один или более процессов найма",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
             _menuCallback.RunReport(ReporterType.RequestToMvdNewReporter, GetDefaultReportArguments());
+        }
+
+        private void toolStripButtonExportReasonsForGisZkh_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(@"Обратите внимание, что файлы доментов-оснований формируются только для процессов найма с указанным номером договора",
+                    @"Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            _menuCallback.RunReport(ReporterType.ExportReasonsForGisZkhReporter, GetDefaultReportArguments());
         }
 
         private Dictionary<string, string> GetDefaultReportArguments()

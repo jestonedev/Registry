@@ -112,6 +112,8 @@ namespace Registry.Reporting
                     return new TenancyHistoryReporter();
                 case ReporterType.DistrictCommitteePreContractReporter:
                     return new DistrictCommitteePreContractReporter();
+                case ReporterType.ExportReasonsForGisZkhReporter:
+                    return new ExportReasonsForGisZkhReporter();
             }
             throw new ReporterException(string.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType));
         }

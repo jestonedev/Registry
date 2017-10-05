@@ -54,6 +54,7 @@
         RequestToMvdReporter,
         RequestToMvdNewReporter,
         TenancyHistoryReporter,
-        DistrictCommitteePreContractReporter
+        DistrictCommitteePreContractReporter,
+        ExportReasonsForGisZkhReporter
     }
 }

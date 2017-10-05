@@ -742,7 +742,9 @@ namespace Registry.Viewport
                 case ReporterType.TenancyNotifyNoProlongTrouble:
                 case ReporterType.TenancyNotifyNoProlongCategory:
                 case ReporterType.RequestToMvdReporter:
+                case ReporterType.RequestToMvdNewReporter:
                 case ReporterType.DistrictCommitteePreContractReporter:
+                case ReporterType.ExportReasonsForGisZkhReporter:
                     return idProcess != null;
                 case ReporterType.TenancyAgreementReporter:
                     return idProcess != null && (TenancyService.TenancyAgreementsCountForProcess(idProcess.Value) > 0);
@@ -764,7 +766,9 @@ namespace Registry.Viewport
                 case ReporterType.TenancyContractSpecial1711Reporter:
                 case ReporterType.TenancyContractSpecial1712Reporter:
                 case ReporterType.RequestToMvdReporter:
+                case ReporterType.RequestToMvdNewReporter:
                 case ReporterType.DistrictCommitteePreContractReporter:
+                case ReporterType.ExportReasonsForGisZkhReporter:
                     arguments = TenancyContractReporterArguments();
                     break;
                 case ReporterType.TenancyActToEmploymentReporter:
