@@ -210,6 +210,11 @@ namespace Registry.Viewport.MultiMasters
             _menuCallback.RunReport(ReporterType.ExportReasonsForGisZkhReporter, GetDefaultReportArguments());
         }
 
+        private void toolStripButtonGisZkhExport_Click(object sender, EventArgs e)
+        {
+            _menuCallback.RunReport(ReporterType.GisZkhReporter, GetDefaultReportArguments());
+        }
+
         private Dictionary<string, string> GetDefaultReportArguments()
         {
             var arguments = new Dictionary<string, string>();

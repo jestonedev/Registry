@@ -8,8 +8,8 @@ namespace Registry.Viewport.MultiMasters
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MultiTenanciesMaster));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -33,6 +33,7 @@ namespace Registry.Viewport.MultiMasters
             this.rent_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.payment = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStripButtonGisZkhExport = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -59,6 +60,7 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonRequestMvd,
             this.toolStripButtonRequestMvdNew,
             this.toolStripButtonExportReasonsForGisZkh,
+            this.toolStripButtonGisZkhExport,
             this.toolStripProgressBarMultiOperations,
             this.toolStripSeparator3,
             this.toolStripLabelRowCount});
@@ -163,15 +165,15 @@ namespace Registry.Viewport.MultiMasters
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id_process,
@@ -279,15 +281,25 @@ namespace Registry.Viewport.MultiMasters
             // payment
             // 
             this.payment.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle2.Format = "#0.## руб\\.";
-            dataGridViewCellStyle2.NullValue = null;
-            this.payment.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Format = "#0.## руб\\.";
+            dataGridViewCellStyle6.NullValue = null;
+            this.payment.DefaultCellStyle = dataGridViewCellStyle6;
             this.payment.HeaderText = "Размер платы";
             this.payment.MinimumWidth = 150;
             this.payment.Name = "payment";
             this.payment.ReadOnly = true;
             this.payment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.payment.Width = 150;
+            // 
+            // toolStripButtonGisZkhExport
+            // 
+            this.toolStripButtonGisZkhExport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonGisZkhExport.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGisZkhExport.Image")));
+            this.toolStripButtonGisZkhExport.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGisZkhExport.Name = "toolStripButtonGisZkhExport";
+            this.toolStripButtonGisZkhExport.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonGisZkhExport.Text = "Экспорт для ГИС \"ЖКХ\"";
+            this.toolStripButtonGisZkhExport.Click += new System.EventHandler(this.toolStripButtonGisZkhExport_Click);
             // 
             // MultiTenanciesMaster
             // 
@@ -330,6 +342,7 @@ namespace Registry.Viewport.MultiMasters
         private DataGridViewTextBoxColumn address;
         private DataGridViewTextBoxColumn payment;
         private ToolStripButton toolStripButtonExportReasonsForGisZkh;
+        private ToolStripButton toolStripButtonGisZkhExport;
 
     }
 }
