@@ -660,7 +660,9 @@ namespace Registry.Viewport.Presenters
             var address = "";
             if (premisesInfoRow != null)
             {
-                address = "Иркутская область, город Братск, " + premisesInfoRow["address"].ToString()
+                address = 
+                    (premisesInfoRow["address"].ToString().StartsWith("Иркутская обл.") ? "" : "Иркутская область, город Братск, ") + 
+                    premisesInfoRow["address"].ToString()
                     .Replace("жилрайон.", "жилой район")
                     .Replace("ул.", "улица")
                     .Replace("пр-кт.", "проспект")
@@ -669,6 +671,12 @@ namespace Registry.Viewport.Presenters
                     .Replace("д.", "дом")
                     .Replace("кв.", "квартира")
                     .Replace("пом.", "помещение")
+                    .Replace("проезд.", "проезд")
+                    .Replace("обл.", "область")
+                    .Replace("г.", "город")
+                    .Replace("кв-л.", "квартал")
+                    .Replace("пер.", "переулок")
+                    .Replace("мкр.", "микрорайон")
                     .Replace("ком.", "комната(ы)");
             }
             return address;
