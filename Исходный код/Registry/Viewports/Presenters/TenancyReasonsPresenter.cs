@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ViewModels;
 
@@ -84,10 +85,37 @@ namespace Registry.Viewport.Presenters
         public bool SaveRecords()
         {
             var list = EntitiesListFromSnapshot();
-            if (!SaveInsertedRecords(list)) return false;
-            if (!SaveUpdatedRecords(list)) return false;
+            var hasErrors = !SaveInsertedRecords(list);
+            if (hasErrors) return false;
+            if (!SaveUpdatedRecords(list)) hasErrors = true;
+            if (hasErrors) return false;
             list = EntitiesListFromView();
-            return SaveDeletedRecords(list);
+            hasErrors = !SaveDeletedRecords(list);
+            if (hasErrors) return false;
+            UpdateTenancyCurrentReasonInfo();
+            return true;
+        }
+
+        private void UpdateTenancyCurrentReasonInfo()
+        {
+            var reasonsSource = ViewModel["general"].BindingSource;
+            DateTime? reasonDate = null;
+            string reasonNumber = null;
+            int? idReason = null;
+            for (var i = 0; i < reasonsSource.Count; i++)
+            {
+                var date = (DateTime?) ((DataRowView) reasonsSource[i])["reason_date"];
+                var number = ((DataRowView) reasonsSource[i])["reason_number"].ToString();
+                var id = (int?)((DataRowView) reasonsSource[i])["id_reason"];
+                if (reasonDate != null && date < reasonDate) continue;
+                if (reasonDate != null && date == reasonDate && id <= idReason) continue;
+                reasonDate = date;
+                reasonNumber = number;
+                idReason = id;
+            }
+            if (ParentType != ParentTypeEnum.Tenancy) return;
+            ParentRow["residence_warrant_num"] = reasonNumber;
+            ParentRow["residence_warrant_date"] = reasonDate;
         }
 
         private bool SaveDeletedRecords(IEnumerable<Entity> list)
