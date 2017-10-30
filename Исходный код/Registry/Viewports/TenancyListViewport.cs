@@ -249,6 +249,7 @@ namespace Registry.Viewport
                 case ReporterType.RequestToMvdReporter:
                 case ReporterType.RequestToMvdNewReporter:
                 case ReporterType.DistrictCommitteePreContractReporter:
+                case ReporterType.ContractDksrReporter:
                 case ReporterType.ExportReasonsForGisZkhReporter:
                     return idProcess != null;
                 case ReporterType.TenancyAgreementReporter:
@@ -272,6 +273,7 @@ namespace Registry.Viewport
                 case ReporterType.TenancyContractSpecial1711Reporter:
                 case ReporterType.TenancyContractSpecial1712Reporter:
                 case ReporterType.DistrictCommitteePreContractReporter:
+                case ReporterType.ContractDksrReporter:
                 case ReporterType.RequestToMvdReporter:
                 case ReporterType.RequestToMvdNewReporter:
                 case ReporterType.ExportReasonsForGisZkhReporter:

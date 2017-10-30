@@ -71,6 +71,7 @@
     <Compile Include="SettingForms\DistrictCommitteePreContractReporterSettingsForm.Designer.cs">
       <DependentUpon>DistrictCommitteePreContractReporterSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TenancyReporters\ContractDkrsReporter.cs" />
     <Compile Include="TenancyReporters\ExportReasonsForGisZkhReporter.cs" />
     <Compile Include="TenancyReporters\GisZkhExport.cs" />
     <Compile Include="RegistryReporters\BuildingExcerptReporter.cs" />

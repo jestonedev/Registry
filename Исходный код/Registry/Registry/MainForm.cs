@@ -424,6 +424,8 @@ namespace Registry
 
             if (document.HasReport(ReporterType.DistrictCommitteePreContractReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonPreContract);
+            if (document.HasReport(ReporterType.ContractDksrReporter))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonContractDksr);
             if (document.HasReport(ReporterType.TenancyContractSpecial1711Reporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract1711);
             if (document.HasReport(ReporterType.TenancyContractSpecial1712Reporter))
@@ -1366,6 +1368,13 @@ namespace Registry
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
                 document.GenerateReport(ReporterType.ExportReasonsForGisZkhReporter);
+        }
+
+        private void ribbonButtonContractDksr_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.ContractDksrReporter);
         }
     }
 }

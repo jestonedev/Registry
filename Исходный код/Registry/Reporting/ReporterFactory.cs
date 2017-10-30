@@ -112,6 +112,8 @@ namespace Registry.Reporting
                     return new TenancyHistoryReporter();
                 case ReporterType.DistrictCommitteePreContractReporter:
                     return new DistrictCommitteePreContractReporter();
+                case ReporterType.ContractDksrReporter:
+                    return new ContractDkrsReporter();
                 case ReporterType.ExportReasonsForGisZkhReporter:
                     return new ExportReasonsForGisZkhReporter();
             }
