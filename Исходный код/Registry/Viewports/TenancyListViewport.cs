@@ -358,7 +358,8 @@ namespace Registry.Viewport
             if (reporterType == ReporterType.RequestToMvdReporter ||
                 reporterType == ReporterType.RequestToMvdNewReporter ||
                 reporterType == ReporterType.TenancyNotifyIllegalResident ||
-                reporterType == ReporterType.DistrictCommitteePreContractReporter)
+                reporterType == ReporterType.DistrictCommitteePreContractReporter ||
+                reporterType == ReporterType.ContractDksrReporter)
             {
                 return true;
             }
