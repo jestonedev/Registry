@@ -284,6 +284,7 @@ namespace Registry.Viewport.Presenters
             {
                 var person = EntityConverter<TenancyPerson>.FromRow(personRow);
                 person.IdProcess = idNewProcess;
+                person.RegistrationDate = null;
                 var idPerson = ViewModel["tenancy_processes_tenancy_persons"].Model.Insert(person);
                 if (idPerson == -1)
                 {
