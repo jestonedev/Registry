@@ -157,6 +157,8 @@ namespace Registry.Viewport
             this.dateTimePickerCourtOrderCancelDate = new System.Windows.Forms.DateTimePicker();
             this.label26 = new System.Windows.Forms.Label();
             this.panel10 = new System.Windows.Forms.Panel();
+            this.label32 = new System.Windows.Forms.Label();
+            this.textBoxExecutor = new System.Windows.Forms.TextBox();
             this.dateTimePickerStartState = new System.Windows.Forms.DateTimePicker();
             this.label108 = new System.Windows.Forms.Label();
             this.panel11 = new System.Windows.Forms.Panel();
@@ -385,10 +387,10 @@ namespace Registry.Viewport
             // tabPageToLegalDepartment
             // 
             this.tabPageToLegalDepartment.Controls.Add(this.groupBoxTransfertToLegalDepartment);
-            this.tabPageToLegalDepartment.Location = new System.Drawing.Point(4, 24);
+            this.tabPageToLegalDepartment.Location = new System.Drawing.Point(4, 22);
             this.tabPageToLegalDepartment.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageToLegalDepartment.Name = "tabPageToLegalDepartment";
-            this.tabPageToLegalDepartment.Size = new System.Drawing.Size(988, 328);
+            this.tabPageToLegalDepartment.Size = new System.Drawing.Size(988, 330);
             this.tabPageToLegalDepartment.TabIndex = 0;
             this.tabPageToLegalDepartment.Text = "Передача дела в юр. отдел";
             this.tabPageToLegalDepartment.UseVisualStyleBackColor = true;
@@ -485,9 +487,9 @@ namespace Registry.Viewport
             // tabPageAcceptedByLegalDepartment
             // 
             this.tabPageAcceptedByLegalDepartment.Controls.Add(this.groupBoxAcceptedByLegalDepartment);
-            this.tabPageAcceptedByLegalDepartment.Location = new System.Drawing.Point(4, 24);
+            this.tabPageAcceptedByLegalDepartment.Location = new System.Drawing.Point(4, 22);
             this.tabPageAcceptedByLegalDepartment.Name = "tabPageAcceptedByLegalDepartment";
-            this.tabPageAcceptedByLegalDepartment.Size = new System.Drawing.Size(988, 328);
+            this.tabPageAcceptedByLegalDepartment.Size = new System.Drawing.Size(988, 330);
             this.tabPageAcceptedByLegalDepartment.TabIndex = 4;
             this.tabPageAcceptedByLegalDepartment.Text = "Принято в юр. отдел";
             this.tabPageAcceptedByLegalDepartment.UseVisualStyleBackColor = true;
@@ -586,10 +588,10 @@ namespace Registry.Viewport
             this.tabPagePreparingOrder.Controls.Add(this.groupBoxObtainingCourtOrder);
             this.tabPagePreparingOrder.Controls.Add(this.groupBoxCourtOrder);
             this.tabPagePreparingOrder.Controls.Add(this.groupBoxClaimDirectedToCourt);
-            this.tabPagePreparingOrder.Location = new System.Drawing.Point(4, 24);
+            this.tabPagePreparingOrder.Location = new System.Drawing.Point(4, 22);
             this.tabPagePreparingOrder.Margin = new System.Windows.Forms.Padding(0);
             this.tabPagePreparingOrder.Name = "tabPagePreparingOrder";
-            this.tabPagePreparingOrder.Size = new System.Drawing.Size(988, 328);
+            this.tabPagePreparingOrder.Size = new System.Drawing.Size(988, 330);
             this.tabPagePreparingOrder.TabIndex = 1;
             this.tabPagePreparingOrder.Text = "Подготовка и получение судебного приказа";
             this.tabPagePreparingOrder.UseVisualStyleBackColor = true;
@@ -870,10 +872,10 @@ namespace Registry.Viewport
             this.tabPageExecutoryProcess.Controls.Add(this.groupBoxEnforcementProceedingEnd);
             this.tabPageExecutoryProcess.Controls.Add(this.groupBoxEnforcementProceedingStart);
             this.tabPageExecutoryProcess.Controls.Add(this.groupBoxDirectionCourtOrderBailiffs);
-            this.tabPageExecutoryProcess.Location = new System.Drawing.Point(4, 24);
+            this.tabPageExecutoryProcess.Location = new System.Drawing.Point(4, 22);
             this.tabPageExecutoryProcess.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageExecutoryProcess.Name = "tabPageExecutoryProcess";
-            this.tabPageExecutoryProcess.Size = new System.Drawing.Size(988, 328);
+            this.tabPageExecutoryProcess.Size = new System.Drawing.Size(988, 330);
             this.tabPageExecutoryProcess.TabIndex = 2;
             this.tabPageExecutoryProcess.Text = "Исполнительное производство";
             this.tabPageExecutoryProcess.UseVisualStyleBackColor = true;
@@ -1505,10 +1507,10 @@ namespace Registry.Viewport
             // 
             this.tabPageCompletionClaims.Controls.Add(this.groupBoxClaimComplete);
             this.tabPageCompletionClaims.Controls.Add(this.groupBoxCourtOrderCancel);
-            this.tabPageCompletionClaims.Location = new System.Drawing.Point(4, 24);
+            this.tabPageCompletionClaims.Location = new System.Drawing.Point(4, 22);
             this.tabPageCompletionClaims.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageCompletionClaims.Name = "tabPageCompletionClaims";
-            this.tabPageCompletionClaims.Size = new System.Drawing.Size(988, 328);
+            this.tabPageCompletionClaims.Size = new System.Drawing.Size(988, 330);
             this.tabPageCompletionClaims.TabIndex = 3;
             this.tabPageCompletionClaims.Text = "Завершение претензионной работы";
             this.tabPageCompletionClaims.UseVisualStyleBackColor = true;
@@ -1714,6 +1716,8 @@ namespace Registry.Viewport
             // 
             // panel10
             // 
+            this.panel10.Controls.Add(this.label32);
+            this.panel10.Controls.Add(this.textBoxExecutor);
             this.panel10.Controls.Add(this.dateTimePickerStartState);
             this.panel10.Controls.Add(this.label108);
             this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1722,6 +1726,26 @@ namespace Registry.Viewport
             this.panel10.Name = "panel10";
             this.panel10.Size = new System.Drawing.Size(498, 60);
             this.panel10.TabIndex = 1;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(14, 36);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(85, 15);
+            this.label32.TabIndex = 36;
+            this.label32.Text = "Исполнитель";
+            // 
+            // textBoxExecutor
+            // 
+            this.textBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxExecutor.BackColor = System.Drawing.Color.White;
+            this.textBoxExecutor.Location = new System.Drawing.Point(161, 33);
+            this.textBoxExecutor.Name = "textBoxExecutor";
+            this.textBoxExecutor.ReadOnly = true;
+            this.textBoxExecutor.Size = new System.Drawing.Size(327, 21);
+            this.textBoxExecutor.TabIndex = 35;
             // 
             // dateTimePickerStartState
             // 
@@ -2093,5 +2117,7 @@ namespace Registry.Viewport
         private Panel panel32;
         private Label label31;
         private TextBox textBoxBksRequester;
+        private Label label32;
+        private TextBox textBoxExecutor;
     }
 }

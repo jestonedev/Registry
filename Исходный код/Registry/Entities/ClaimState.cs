@@ -13,6 +13,7 @@ namespace Registry.Entities
         public int? IdClaim { get; set; }
         public int? IdStateType { get; set; }
         public DateTime? DateStartState { get; set; }
+        public string Executor { get; set; }
         public string Description { get; set; }
         public string BksRequester { get; set; }
         public DateTime? TransfertToLegalDepartmentDate { get; set; }

@@ -68,6 +68,7 @@ namespace Registry.Viewport
                  Presenter.ViewModel["claim_state_types"].PrimaryKeyFirst);
             ViewportHelper.BindProperty(comboBoxClaimStateType, "SelectedValue", bindingSource,
                 Presenter.ViewModel["claim_state_types"].PrimaryKeyFirst, DBNull.Value);
+            ViewportHelper.BindProperty(textBoxExecutor, "Text", bindingSource, "executor", "");
             ViewportHelper.BindProperty(textBoxDescription, "Text", bindingSource, "description", "");
             ViewportHelper.BindProperty(dateTimePickerStartState, "Value", bindingSource, "date_start_state", DateTime.Now.Date);
 
@@ -249,6 +250,7 @@ namespace Registry.Viewport
                 IdState = row == null ? null : ViewportHelper.ValueOrNull<int>(row, "id_state"),
                 IdStateType = ViewportHelper.ValueOrNull<int>(comboBoxClaimStateType),
                 IdClaim = ViewportHelper.ValueOrNull<int>(ParentRow, "id_claim"),
+                Executor = ViewportHelper.ValueOrNull(textBoxExecutor),
                 Description = ViewportHelper.ValueOrNull(textBoxDescription),
                 BksRequester = ViewportHelper.ValueOrNull(textBoxBksRequester),
                 DateStartState = ViewportHelper.ValueOrNull(dateTimePickerStartState),
@@ -390,8 +392,9 @@ namespace Registry.Viewport
 
             if (Presenter.ViewModel["claim_state_types"].BindingSource.Count > 0)
             {
-                comboBoxClaimStateType.SelectedValue = ((DataRowView)Presenter.ViewModel["claim_state_types"].BindingSource[0])["id_state_type"];   
+                comboBoxClaimStateType.SelectedValue = ((DataRowView)Presenter.ViewModel["claim_state_types"].BindingSource[0])["id_state_type"];
             }
+            textBoxExecutor.Text = UserDomain.Current.DisplayName;
             textBoxTransferToLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
             textBoxAcceptedByLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
             textBoxBksRequester.Text = UserDomain.Current.DisplayName;
