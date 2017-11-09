@@ -428,8 +428,12 @@ namespace Registry.Viewport.Presenters
                     on processRow.Field<int?>("id_process") equals personsRow.Field<int?>("id_process")
                 where personsRow.Field<int?>("id_kinship") == 1 &&
                       personsRow["exclude_date"] == DBNull.Value &&
-                      personsRow.Field<string>("surname").Trim() == tenant.Field<string>("surname").Trim() &&
-                      personsRow.Field<string>("name").Trim() == tenant.Field<string>("name").Trim() &&
+                      ((personsRow.Field<string>("surname") == null && tenant.Field<string>("surname") == null) ||
+                       (personsRow.Field<string>("surname") != null && tenant.Field<string>("surname") != null &&
+                        personsRow.Field<string>("surname").Trim() == tenant.Field<string>("surname").Trim())) &&
+                      ((personsRow.Field<string>("name") == null && tenant.Field<string>("name") == null) ||
+                       (personsRow.Field<string>("name") != null && tenant.Field<string>("name") != null &&
+                        personsRow.Field<string>("name").Trim() == tenant.Field<string>("name").Trim())) &&
                       ((personsRow.Field<string>("patronymic") == null && tenant.Field<string>("patronymic") == null) || 
                        (personsRow.Field<string>("patronymic") != null && tenant.Field<string>("patronymic") != null &&
                         personsRow.Field<string>("patronymic").Trim() == tenant.Field<string>("patronymic").Trim())) &&
