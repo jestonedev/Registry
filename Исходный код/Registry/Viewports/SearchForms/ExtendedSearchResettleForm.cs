@@ -75,7 +75,7 @@ namespace Registry.Viewport.SearchForms
                         dateTimePickerResettleDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
             if (checkBoxIDResettleEnable.Checked)
-                includedProcesses = DataModelHelper.Intersect(null, new List<int>() { Convert.ToInt32(numericUpDownIDResettle.Value) });
+                includedProcesses = DataModelHelper.Intersect(null, new List<int> { Convert.ToInt32(numericUpDownIDResettle.Value) });
             if (checkBoxPersonSNPEnable.Checked)
             {
                 var snp = textBoxPersonSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
@@ -85,7 +85,9 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxRegionFromEnable.Checked && (comboBoxRegionFrom.SelectedValue != null))
             {
                 var processesIds = ResettleService.ResettleProcessIDsByCondition(
-                    row => row.Field<string>("id_street").StartsWith(comboBoxRegionFrom.SelectedValue.ToString(), StringComparison.OrdinalIgnoreCase), 
+                    row => 
+                        row.Field<string>("id_street") != null &&
+                        row.Field<string>("id_street").StartsWith(comboBoxRegionFrom.SelectedValue.ToString(), StringComparison.OrdinalIgnoreCase), 
                     DataModelHelper.ConditionType.BuildingCondition, ResettleEstateObjectWay.From);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
@@ -113,7 +115,7 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxRegionToEnable.Checked && (comboBoxRegionTo.SelectedValue != null))
             {
                 var processesIds = ResettleService.ResettleProcessIDsByCondition(
-                    row => row.Field<string>("id_street").StartsWith(
+                    row => row.Field<string>("id_street") != null && row.Field<string>("id_street").StartsWith(
                         comboBoxRegionTo.SelectedValue.ToString(), StringComparison.OrdinalIgnoreCase),
                     DataModelHelper.ConditionType.BuildingCondition, ResettleEstateObjectWay.To);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);

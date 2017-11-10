@@ -97,7 +97,8 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxAccountChecked.Checked && !string.IsNullOrEmpty(textBoxAccount.Text.Trim()))
             {
                 var accounts = (from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
-                               where accountRow.Field<string>("account").Contains(textBoxAccount.Text.Trim())
+                               where accountRow.Field<string>("account") != null && 
+                                accountRow.Field<string>("account").Contains(textBoxAccount.Text.Trim())
                                select accountRow).ToList();
                 if (accounts.Any())
                 {
@@ -125,7 +126,7 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxSRNEnable.Checked && !string.IsNullOrEmpty(textBoxSRN.Text.Trim()))
             {
                 var accounts = from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
-                               where accountRow.Field<string>("crn").Contains(textBoxSRN.Text.Trim())
+                               where accountRow.Field<string>("crn") != null && accountRow.Field<string>("crn").Contains(textBoxSRN.Text.Trim())
                                select accountRow.Field<int>("id_account");
                 includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);
             }
@@ -133,7 +134,9 @@ namespace Registry.Viewport.SearchForms
             {
                 var addressParts = textBoxRawAddress.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var accounts = from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
-                               where addressParts.All(a => accountRow.Field<string>("raw_address").ToUpper().Contains(a.ToUpper()))
+                               where addressParts.All(a => 
+                                   accountRow.Field<string>("raw_address") != null && 
+                                   accountRow.Field<string>("raw_address").ToUpper().Contains(a.ToUpper()))
                                select accountRow.Field<int>("id_account");
                 includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);
             }

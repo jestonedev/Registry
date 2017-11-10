@@ -182,7 +182,7 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxRegionEnable.Checked && (comboBoxRegion.SelectedValue != null))
             {
                 var processesIds = TenancyService.TenancyProcessIDsByCondition(
-                    row => row.Field<string>("id_street").StartsWith(
+                    row => row.Field<string>("id_street") != null && row.Field<string>("id_street").StartsWith(
                         comboBoxRegion.SelectedValue.ToString(), StringComparison.OrdinalIgnoreCase), 
                     DataModelHelper.ConditionType.BuildingCondition);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);

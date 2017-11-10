@@ -78,7 +78,7 @@ namespace Registry.Viewport.SearchForms
             {
                 var accounts =
                     (from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
-                     where accountRow.Field<string>("account").Contains(textBoxAccount.Text.Trim())
+                     where accountRow.Field<string>("account") != null && accountRow.Field<string>("account").Contains(textBoxAccount.Text.Trim())
                      select accountRow).ToList();
                 if (accounts.Any())
                 {
@@ -106,7 +106,7 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxSRNEnable.Checked && !string.IsNullOrEmpty(textBoxSRN.Text.Trim()))
             {
                 var accounts = from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
-                               where accountRow.Field<string>("crn").Contains(textBoxSRN.Text.Trim())
+                               where accountRow.Field<string>("crn") != null && accountRow.Field<string>("crn").Contains(textBoxSRN.Text.Trim())
                                select accountRow.Field<int>("id_account");
                 includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);
             }
