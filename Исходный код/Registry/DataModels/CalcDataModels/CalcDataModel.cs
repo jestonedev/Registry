@@ -111,6 +111,7 @@ namespace Registry.DataModels.CalcDataModels
                 DmLoadState = DataModelLoadState.SuccessLoad;
                 return;
             }
+            Application.DoEvents();
             Table.Clear();
             var table = e.Result as DataTable;
             if (table != null)

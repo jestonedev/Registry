@@ -38,6 +38,7 @@ namespace Registry.Viewport.SearchForms
             this.vButtonSearch = new VIBlend.WinForms.Controls.vButton();
             this.comboBoxCriteriaType = new System.Windows.Forms.ComboBox();
             this.checkBoxMunicipalOnly = new System.Windows.Forms.CheckBox();
+            this.checkBoxExcludeDemolished = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // textBoxCriteria
@@ -58,7 +59,7 @@ namespace Registry.Viewport.SearchForms
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
-            this.vButtonCancel.TabIndex = 4;
+            this.vButtonCancel.TabIndex = 5;
             this.vButtonCancel.Text = "Отмена";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -71,7 +72,7 @@ namespace Registry.Viewport.SearchForms
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
-            this.vButtonSearch.TabIndex = 3;
+            this.vButtonSearch.TabIndex = 4;
             this.vButtonSearch.Text = "Поиск";
             this.vButtonSearch.UseVisualStyleBackColor = false;
             this.vButtonSearch.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -100,12 +101,24 @@ namespace Registry.Viewport.SearchForms
             this.checkBoxMunicipalOnly.AutoSize = true;
             this.checkBoxMunicipalOnly.Checked = true;
             this.checkBoxMunicipalOnly.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMunicipalOnly.Location = new System.Drawing.Point(12, 46);
+            this.checkBoxMunicipalOnly.Location = new System.Drawing.Point(14, 39);
             this.checkBoxMunicipalOnly.Name = "checkBoxMunicipalOnly";
             this.checkBoxMunicipalOnly.Size = new System.Drawing.Size(163, 19);
             this.checkBoxMunicipalOnly.TabIndex = 2;
             this.checkBoxMunicipalOnly.Text = "Только муниципальные";
             this.checkBoxMunicipalOnly.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxExcludeDemolished
+            // 
+            this.checkBoxExcludeDemolished.AutoSize = true;
+            this.checkBoxExcludeDemolished.Checked = true;
+            this.checkBoxExcludeDemolished.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxExcludeDemolished.Location = new System.Drawing.Point(14, 59);
+            this.checkBoxExcludeDemolished.Name = "checkBoxExcludeDemolished";
+            this.checkBoxExcludeDemolished.Size = new System.Drawing.Size(156, 19);
+            this.checkBoxExcludeDemolished.TabIndex = 3;
+            this.checkBoxExcludeDemolished.Text = "Исключать снесенные";
+            this.checkBoxExcludeDemolished.UseVisualStyleBackColor = true;
             // 
             // SimpleSearchPremiseForm
             // 
@@ -113,6 +126,7 @@ namespace Registry.Viewport.SearchForms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             this.ClientSize = new System.Drawing.Size(556, 85);
+            this.Controls.Add(this.checkBoxExcludeDemolished);
             this.Controls.Add(this.checkBoxMunicipalOnly);
             this.Controls.Add(this.textBoxCriteria);
             this.Controls.Add(this.vButtonCancel);
@@ -138,5 +152,6 @@ namespace Registry.Viewport.SearchForms
         private vButton vButtonSearch;
         private ComboBox comboBoxCriteriaType;
         private CheckBox checkBoxMunicipalOnly;
+        private CheckBox checkBoxExcludeDemolished;
     }
 }

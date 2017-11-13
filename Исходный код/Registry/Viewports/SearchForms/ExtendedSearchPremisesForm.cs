@@ -19,6 +19,7 @@ namespace Registry.Viewport.SearchForms
         {
             var filter = "";
             IEnumerable<int> includedPremises = null;
+            IEnumerable<int> excludedPremises = new List<int>();
             IEnumerable<int> includedBuildings = null;
             if (checkBoxPremisesNumEnable.Checked && !string.IsNullOrEmpty(textBoxPremisesNum.Text.Trim()))
             {
@@ -111,7 +112,14 @@ namespace Registry.Viewport.SearchForms
             {
                 var premisesIds = PremisesService.PremiseIDsByOwnershipType(
                     int.Parse(comboBoxOwnershipType.SelectedValue.ToString(), CultureInfo.InvariantCulture));
-                includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
+                if (comboBoxOwnershipTypeCondition.SelectedIndex == 0)
+                {
+                    includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
+                }
+                else
+                {
+                    excludedPremises = excludedPremises.Union(premisesIds);
+                }
             }
             if (checkBoxOwnershipNumberEnable.Checked && !string.IsNullOrEmpty(textBoxOwnershipNumber.Text.Trim()))
             {
@@ -157,6 +165,16 @@ namespace Registry.Viewport.SearchForms
                 if (!string.IsNullOrEmpty(premisesFilter))
                     filter += "(" + premisesFilter + ")";
             }
+
+            if (excludedPremises != null)
+            {
+                if (!string.IsNullOrEmpty(filter.Trim()))
+                    filter += " AND ";
+                filter += "id_premises NOT IN (0";
+                filter = excludedPremises.Aggregate(filter, (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
+                filter = filter.TrimEnd(',') + ")";
+            }
+
             if (includedBuildings == null) return filter == "" ? "0 = 1" : filter;
             if (!string.IsNullOrEmpty(filter.Trim()))
                 filter += " AND ";
@@ -267,6 +285,8 @@ namespace Registry.Viewport.SearchForms
             comboBoxOwnershipType.DataSource = vOwnershipRightTypes;
             comboBoxOwnershipType.ValueMember = "id_ownership_right_type";
             comboBoxOwnershipType.DisplayMember = "ownership_right_type";
+
+            comboBoxOwnershipTypeCondition.SelectedIndex = 0;
 
             comboBoxRestrictionType.DataSource = vRestrictionTypes;
             comboBoxRestrictionType.ValueMember = "id_restriction_type";
@@ -441,6 +461,7 @@ namespace Registry.Viewport.SearchForms
         private void checkBoxOwnershipTypeEnable_CheckedChanged(object sender, EventArgs e)
         {
             comboBoxOwnershipType.Enabled = checkBoxOwnershipTypeEnable.Checked;
+            comboBoxOwnershipTypeCondition.Enabled = checkBoxOwnershipTypeEnable.Checked;
         }
 
         private void selectAll_Enter(object sender, EventArgs e)

@@ -37,11 +37,11 @@ namespace Registry.Viewport.SearchForms
                 if (addressParts.Length == 3)
                 {
                     var premisesIds = PremisesService.PremiseIDsByAddress(addressParts);
-                    includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
+                    includedPremises = DataModelHelper.Intersect(null, premisesIds);
                 } else
                 {
                     var buildingIds = BuildingService.BuildingIDsByAddress(addressParts);
-                    includedBuildings = DataModelHelper.Intersect(includedPremises, buildingIds);
+                    includedBuildings = DataModelHelper.Intersect(null, buildingIds);
                 }
             }
             if (comboBoxCriteriaType.SelectedIndex == 1)
@@ -101,6 +101,22 @@ namespace Registry.Viewport.SearchForms
                     filter += " AND ";
                 filter += "id_building IN (0";
                 filter = includedBuildings.Aggregate(filter, (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
+                filter = filter.TrimEnd(',') + ")";
+            }
+            if (checkBoxExcludeDemolished.Checked)
+            {
+                var demolishedPremises = PremisesService.DemolishedPremisesIDs();
+                if (!string.IsNullOrEmpty(filter.Trim()))
+                    filter += " AND ";
+                filter += "id_premises NOT IN (0";
+                filter = demolishedPremises.Aggregate(filter, (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
+                filter = filter.TrimEnd(',') + ")";
+
+                var demolishedBuildings = BuildingService.DemolishedBuildingIDs();
+                if (!string.IsNullOrEmpty(filter.Trim()))
+                    filter += " AND ";
+                filter += "id_building NOT IN (0";
+                filter = demolishedBuildings.Aggregate(filter, (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
                 filter = filter.TrimEnd(',') + ")";
             }
             if (!checkBoxMunicipalOnly.Checked) return filter;

@@ -72,9 +72,16 @@ namespace Registry.DataModels
                         var workTable = tableCacheLvl1;
                         foreach (DataRow row in workTable.Rows)
                         {
-                            if (!error && UpdateModelFromRow(row)) continue;
-                            tableCacheLvl2.Rows.Add(RowToCacheObject(row));
-                            error = true;
+                            try
+                            {
+                                if (!error && UpdateModelFromRow(row)) continue;
+                                tableCacheLvl2.Rows.Add(RowToCacheObject(row));
+                                error = true;
+                            }
+                            catch (RowNotInTableException)
+                            {
+                                
+                            }
                         }
                     }, null);
                     //Переносим данные из кэша 2-го уровня в первый
@@ -99,9 +106,16 @@ namespace Registry.DataModels
                                 var workTable = tableDb;
                                 foreach (DataRow row in workTable.Rows)
                                 {
-                                    if (!error && UpdateModelFromRow(row)) continue;
-                                    tableCacheLvl1.Rows.Add(RowToCacheObject(row));
-                                    error = true;
+                                    try
+                                    {
+                                        if (!error && UpdateModelFromRow(row)) continue;
+                                        tableCacheLvl1.Rows.Add(RowToCacheObject(row));
+                                        error = true;
+                                    }
+                                    catch (RowNotInTableException)
+                                    {
+
+                                    }
                                 }
                             }, null);
                             if (tableDb.Rows.Count > 0)
@@ -178,7 +192,7 @@ namespace Registry.DataModels
                     //Если строка не найдена, значит она уже удалена, возвращаем true
                     if (_updRow == null)
                         return true;
-                    updTable.Rows.Remove(_updRow);
+                        updTable.Rows.Remove(_updRow);
                     return true;
                 default:
                     return true;
