@@ -266,9 +266,9 @@ namespace Registry.Viewport.MultiMasters
                 {
                     return;
                 }
-                toolStripProgressBar1.Value = 0;
-                toolStripProgressBar1.Maximum = _premises.Count - 1;
-                toolStripProgressBar1.Visible = true;
+                toolStripProgressBarMultiOperations.Value = 0;
+                toolStripProgressBarMultiOperations.Maximum = _premises.Count - 1;
+                toolStripProgressBarMultiOperations.Visible = true;
                 for (var i = 0; i < _premises.Count; i++)
                 {
                     int? idPremises = null;
@@ -303,11 +303,11 @@ namespace Registry.Viewport.MultiMasters
                     restrictions.Select().Rows.Add(idRestriction, restriction.IdRestrictionType, restriction.Number, restriction.Date, restriction.Description, restriction.DateStateReg);
                     restrictionsAssoc.Select().Rows.Add(idPremises, idRestriction);
                     restrictions.EditingNewRecord = false;
-                    toolStripProgressBar1.Value = i;
+                    toolStripProgressBarMultiOperations.Value = i;
                 }
                 MessageBox.Show(@"Массовое проставление реквизитов успешно завершено. ",
                     @"Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-                toolStripProgressBar1.Visible = false;
+                toolStripProgressBarMultiOperations.Visible = false;
             }
         }
 
@@ -332,9 +332,9 @@ namespace Registry.Viewport.MultiMasters
                 {
                     return;
                 }
-                toolStripProgressBar1.Value = 0;
-                toolStripProgressBar1.Maximum = _premises.Count - 1;
-                toolStripProgressBar1.Visible = true;
+                toolStripProgressBarMultiOperations.Value = 0;
+                toolStripProgressBarMultiOperations.Maximum = _premises.Count - 1;
+                toolStripProgressBarMultiOperations.Visible = true;
                 for (var i = 0; i < _premises.Count; i++)
                 {
                     int? idPremises = null;
@@ -369,11 +369,11 @@ namespace Registry.Viewport.MultiMasters
                         ownershipRight.Number, ownershipRight.Date, ownershipRight.Description);
                     ownershipsRightsAssoc.Select().Rows.Add(idPremises, idOwnershipRight);
                     ownershipsRights.EditingNewRecord = false;
-                    toolStripProgressBar1.Value = i;
+                    toolStripProgressBarMultiOperations.Value = i;
                 }
                 MessageBox.Show(@"Массовое проставление ограничений успешно завершено. ",
                     @"Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-                toolStripProgressBar1.Visible = false;
+                toolStripProgressBarMultiOperations.Visible = false;
             }
         }
 
@@ -389,9 +389,9 @@ namespace Registry.Viewport.MultiMasters
                 {
                     return;
                 }
-                toolStripProgressBar1.Value = 0;
-                toolStripProgressBar1.Maximum = _premises.Count - 1;
-                toolStripProgressBar1.Visible = true;
+                toolStripProgressBarMultiOperations.Value = 0;
+                toolStripProgressBarMultiOperations.Maximum = _premises.Count - 1;
+                toolStripProgressBarMultiOperations.Visible = true;
                 for (var i = 0; i < _premises.Count; i++)
                 {
                     int? idPremises = null;
@@ -410,11 +410,11 @@ namespace Registry.Viewport.MultiMasters
                         return;
                     }
                     ((DataRowView) _premises[i])["id_state"] = form.IdObjectState;
-                    toolStripProgressBar1.Value = i;
+                    toolStripProgressBarMultiOperations.Value = i;
                 }
                 MessageBox.Show(@"Массовое проставление текущих состояний помещений успешно завершено. ",
                     @"Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-                toolStripProgressBar1.Visible = false;
+                toolStripProgressBarMultiOperations.Visible = false;
             }
         }
 
@@ -430,9 +430,9 @@ namespace Registry.Viewport.MultiMasters
                 {
                     return;
                 }
-                toolStripProgressBar1.Value = 0;
-                toolStripProgressBar1.Maximum = _premises.Count - 1;
-                toolStripProgressBar1.Visible = true;
+                toolStripProgressBarMultiOperations.Value = 0;
+                toolStripProgressBarMultiOperations.Maximum = _premises.Count - 1;
+                toolStripProgressBarMultiOperations.Visible = true;
                 for (var i = 0; i < _premises.Count; i++)
                 {
                     int? idPremises = null;
@@ -451,11 +451,12 @@ namespace Registry.Viewport.MultiMasters
                         return;
                     }
                     ((DataRowView)_premises[i])["reg_date"] = form.RegDate;
-                    toolStripProgressBar1.Value = i;
+                    toolStripProgressBarMultiOperations.Value = i;
                 }
+                dataGridView.Refresh();
                 MessageBox.Show(@"Массовое проставление даты включения в РМИ помещений успешно завершено. ",
                     @"Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-                toolStripProgressBar1.Visible = false;
+                toolStripProgressBarMultiOperations.Visible = false;
             }
         }
 

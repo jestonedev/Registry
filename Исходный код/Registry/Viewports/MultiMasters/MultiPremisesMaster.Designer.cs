@@ -23,7 +23,7 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonOwnerships = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonObjectStates = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRegDate = new System.Windows.Forms.ToolStripButton();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripProgressBarMultiOperations = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
             this.dataGridView = new System.Windows.Forms.DataGridView();
@@ -52,7 +52,7 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonOwnerships,
             this.toolStripButtonObjectStates,
             this.toolStripButtonRegDate,
-            this.toolStripProgressBar1,
+            this.toolStripProgressBarMultiOperations,
             this.toolStripSeparator3,
             this.toolStripLabelRowCount});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -192,11 +192,11 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonRegDate.Text = "Проставить дату включения в РМИ";
             this.toolStripButtonRegDate.Click += new System.EventHandler(this.toolStripButtonRegDate_Click);
             // 
-            // toolStripProgressBar1
+            // toolStripProgressBarMultiOperations
             // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 22);
-            this.toolStripProgressBar1.Visible = false;
+            this.toolStripProgressBarMultiOperations.Name = "toolStripProgressBarMultiOperations";
+            this.toolStripProgressBarMultiOperations.Size = new System.Drawing.Size(100, 22);
+            this.toolStripProgressBarMultiOperations.Visible = false;
             // 
             // toolStripSeparator3
             // 
@@ -305,7 +305,7 @@ namespace Registry.Viewport.MultiMasters
         private ToolStripButton toolStripButtonRestrictions;
         private ToolStripButton toolStripButtonOwnerships;
         private ToolStripButton toolStripButtonObjectStates;
-        private ToolStripProgressBar toolStripProgressBar1;
+        private ToolStripProgressBar toolStripProgressBarMultiOperations;
         private DataGridViewTextBoxColumn id_premises;
         private DataGridViewTextBoxColumn id_street;
         private DataGridViewTextBoxColumn house;

@@ -8,6 +8,8 @@ using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
+using Registry.Viewport.EntityConverters;
+using Registry.Viewport.ModalEditors;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -18,6 +20,8 @@ namespace Registry.Viewport.MultiMasters
         private readonly BindingSource _tenancies = new BindingSource();
         private readonly BindingSource _tenancyAggregated = new BindingSource();
         private readonly BindingSource _tenancyRentTypes = new BindingSource();
+        private readonly DataModel _tenanciesDataModel;
+
         private readonly IMenuCallback _menuCallback;
 
         public MultiTenanciesMaster(IMenuCallback menuCallback)
@@ -38,6 +42,9 @@ namespace Registry.Viewport.MultiMasters
 
             _tenancyAggregated.DataSource = CalcDataModel.GetInstance<CalcDataModelTenancyAggregated>().Select();
             dataGridView.RowCount = 0;
+
+            _tenanciesDataModel = EntityDataModel<TenancyProcess>.GetInstance();
+            _tenanciesDataModel.Select();
         }
 
         void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -254,6 +261,148 @@ namespace Registry.Viewport.MultiMasters
         private void RowCountChanged()
         {
             toolStripLabelRowCount.Text = string.Format("Всего записей в мастере: {0}", dataGridView.RowCount);
+        }
+
+        private void toolStripButtonRegDate_Click(object sender, EventArgs e)
+        {
+            if (!AccessControl.HasPrivelege(Priveleges.TenancyWrite) || !ValidateContracts())
+            {
+                return;
+            }
+            using (var form = new TenancyContractRegDateEditor())
+            {
+                if (form.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+                toolStripProgressBarMultiOperations.Value = 0;
+                toolStripProgressBarMultiOperations.Maximum = _tenancies.Count - 1;
+                toolStripProgressBarMultiOperations.Visible = true;
+                for (var i = 0; i < _tenancies.Count; i++)
+                {
+                    int? idProcess = null;
+                    if (((DataRowView)_tenancies[i])["id_process"] != DBNull.Value)
+                    {
+                        idProcess = (int)((DataRowView)_tenancies[i])["id_process"];
+                    }
+                    if (idProcess == null)
+                    {
+                        continue;
+                    }
+                    var process = EntityConverter<TenancyProcess>.FromRow((DataRowView)_tenancies[i]);
+                    process.RegistrationDate = form.RegDate;
+                    if (_tenanciesDataModel.Update(process) == -1)
+                    {
+                        return;
+                    }
+                    ((DataRowView)_tenancies[i])["registration_date"] = form.RegDate;
+                    toolStripProgressBarMultiOperations.Value = i;
+                }
+                dataGridView.Refresh();
+                MessageBox.Show(@"Массовое проставление даты регистрации договора найма успешно завершено. ",
+                    @"Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                toolStripProgressBarMultiOperations.Visible = false;
+            }
+        }
+
+        private bool ValidateContracts()
+        {
+            for (var i = 0; i < _tenancies.Count; i++)
+            {
+                var row = ((DataRowView) _tenancies[i]);
+                if (row["registration_num"] != DBNull.Value) continue;
+                MessageBox.Show(
+                    string.Format(@"В процессе найма №{0} не проставлен номер договора. Для проставления даты регистрации номер должен быть присвое", 
+                    row["id_process"]), @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            return true;
+        }
+
+        private void toolStripButtonTenancyReason_Click(object sender, EventArgs e)
+        {
+            var tenancyReasons = EntityDataModel<TenancyReason>.GetInstance();
+            if (tenancyReasons.EditingNewRecord)
+            {
+                MessageBox.Show(@"Форма документов-оснований найма уже находится в режиме добавления новой записи. " +
+                    @"Просмотрите все вкладки и отмените добавление новой записи перед тем, как воспользоваться мастером.",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            if (!AccessControl.HasPrivelege(Priveleges.TenancyWrite))
+            {
+                return;
+            }
+            using (var form = new TenancyReasonsEditorMultiMaster())
+            {
+                if (form.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+                toolStripProgressBarMultiOperations.Value = 0;
+                toolStripProgressBarMultiOperations.Maximum = _tenancies.Count - 1;
+                toolStripProgressBarMultiOperations.Visible = true;
+                for (var i = 0; i < _tenancies.Count; i++)
+                {
+                    int? idProcess = null;
+                    if (((DataRowView)_tenancies[i])["id_process"] != DBNull.Value)
+                    {
+                        idProcess = (int)((DataRowView)_tenancies[i])["id_process"];
+                    }
+                    if (idProcess == null)
+                    {
+                        continue;
+                    }
+                    if (form.DeletePrevReasons)
+                    {
+                        var reasons = tenancyReasons.FilterDeletedRows()
+                            .Where(r => r.Field<int?>("id_process") == idProcess).ToList();
+                        for (var j = 0; j < reasons.Count; j++)
+                        {
+                            var reason = reasons[j];
+                            if (reason.Field<int?>("id_reason") == null) continue;
+                            if (tenancyReasons.Delete(reason.Field<int>("id_reason")) == -1)
+                            {
+                                return;
+                            }
+                            reason.Delete();
+                        }
+                    }
+
+                    var tenancyReason = new TenancyReason
+                    {
+                        IdProcess = idProcess,
+                        IdReasonType = form.IdReasonType,
+                        ReasonDate = form.ReasonDate,
+                        ReasonNumber = form.ReasonNumber,
+                        ReasonPrepared = form.ReasonPrepared
+                    };
+                    var idTenancyReason = tenancyReasons.Insert(tenancyReason);
+                    if (idTenancyReason == -1)
+                    {
+                        MessageBox.Show(
+                            string.Format("Для найма с реестровым номером {0} и всех следующих в списке после него не был проставлен документ-основание. ", idProcess),
+                            @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                        break;
+                    }
+                    tenancyReasons.EditingNewRecord = true;
+                    tenancyReasons.Select().Rows.Add(idTenancyReason, tenancyReason.IdProcess, tenancyReason.IdReasonType,
+                        tenancyReason.ReasonNumber, tenancyReason.ReasonDate, tenancyReason.ReasonPrepared);
+                    tenancyReasons.EditingNewRecord = false;
+                    var tenancyRow = (DataRowView) _tenancies[i];
+                    if ((DateTime?)tenancyRow["residence_warrant_date"] <= tenancyReason.ReasonDate || form.DeletePrevReasons)
+                    {
+                        tenancyRow["residence_warrant_num"] = tenancyReason.ReasonNumber;
+                        tenancyRow["residence_warrant_date"] = tenancyReason.ReasonDate;
+                    }
+                    toolStripProgressBarMultiOperations.Value = i;
+                    Application.DoEvents();
+                }
+                dataGridView.Refresh();
+                MessageBox.Show(@"Массовое проставление документа-основания успешно завершено. ",
+                    @"Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                toolStripProgressBarMultiOperations.Visible = false;
+            }
         }
     }
 }

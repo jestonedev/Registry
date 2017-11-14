@@ -94,6 +94,18 @@
     <Compile Include="ClaimCourtOrdersViewport.Designer.cs">
       <DependentUpon>ClaimCourtOrdersViewport.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModalEditors\TenancyReasonsEditorMultiMaster.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalEditors\TenancyReasonsEditorMultiMaster.Designer.cs">
+      <DependentUpon>TenancyReasonsEditorMultiMaster.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModalEditors\TenancyContractRegDateEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalEditors\TenancyContractRegDateEditor.Designer.cs">
+      <DependentUpon>TenancyContractRegDateEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="MultiMasters\MultiTenanciesMaster.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -649,6 +661,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ClaimCourtOrdersViewport.resx">
       <DependentUpon>ClaimCourtOrdersViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalEditors\TenancyReasonsEditorMultiMaster.resx">
+      <DependentUpon>TenancyReasonsEditorMultiMaster.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalEditors\TenancyContractRegDateEditor.resx">
+      <DependentUpon>TenancyContractRegDateEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MultiMasters\MultiTenanciesMaster.resx">
       <DependentUpon>MultiTenanciesMaster.cs</DependentUpon>

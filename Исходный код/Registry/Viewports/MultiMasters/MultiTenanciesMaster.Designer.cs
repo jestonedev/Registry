@@ -8,8 +8,8 @@ namespace Registry.Viewport.MultiMasters
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MultiTenanciesMaster));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -20,9 +20,12 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonRequestMvd = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRequestMvdNew = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonExportReasonsForGisZkh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonGisZkhExport = new System.Windows.Forms.ToolStripButton();
             this.toolStripProgressBarMultiOperations = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripButtonRegDate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonTenancyReason = new System.Windows.Forms.ToolStripButton();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_process = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.registration_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -33,7 +36,6 @@ namespace Registry.Viewport.MultiMasters
             this.rent_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.payment = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStripButtonGisZkhExport = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -61,6 +63,8 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonRequestMvdNew,
             this.toolStripButtonExportReasonsForGisZkh,
             this.toolStripButtonGisZkhExport,
+            this.toolStripButtonRegDate,
+            this.toolStripButtonTenancyReason,
             this.toolStripProgressBarMultiOperations,
             this.toolStripSeparator3,
             this.toolStripLabelRowCount});
@@ -141,6 +145,16 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripButtonExportReasonsForGisZkh.Text = "Экспорт файлов-оснований найма для ГИС ЖКХ";
             this.toolStripButtonExportReasonsForGisZkh.Click += new System.EventHandler(this.toolStripButtonExportReasonsForGisZkh_Click);
             // 
+            // toolStripButtonGisZkhExport
+            // 
+            this.toolStripButtonGisZkhExport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonGisZkhExport.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGisZkhExport.Image")));
+            this.toolStripButtonGisZkhExport.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGisZkhExport.Name = "toolStripButtonGisZkhExport";
+            this.toolStripButtonGisZkhExport.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonGisZkhExport.Text = "Экспорт для ГИС \"ЖКХ\"";
+            this.toolStripButtonGisZkhExport.Click += new System.EventHandler(this.toolStripButtonGisZkhExport_Click);
+            // 
             // toolStripProgressBarMultiOperations
             // 
             this.toolStripProgressBarMultiOperations.Name = "toolStripProgressBarMultiOperations";
@@ -158,6 +172,26 @@ namespace Registry.Viewport.MultiMasters
             this.toolStripLabelRowCount.Size = new System.Drawing.Size(154, 22);
             this.toolStripLabelRowCount.Text = "Всего записей в мастере: 0";
             // 
+            // toolStripButtonRegDate
+            // 
+            this.toolStripButtonRegDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRegDate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRegDate.Image")));
+            this.toolStripButtonRegDate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRegDate.Name = "toolStripButtonRegDate";
+            this.toolStripButtonRegDate.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRegDate.Text = "Проставить дату регистрации договора";
+            this.toolStripButtonRegDate.Click += new System.EventHandler(this.toolStripButtonRegDate_Click);
+            // 
+            // toolStripButtonTenancyReason
+            // 
+            this.toolStripButtonTenancyReason.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonTenancyReason.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonTenancyReason.Image")));
+            this.toolStripButtonTenancyReason.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonTenancyReason.Name = "toolStripButtonTenancyReason";
+            this.toolStripButtonTenancyReason.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonTenancyReason.Text = "Проставить документ-основание";
+            this.toolStripButtonTenancyReason.Click += new System.EventHandler(this.toolStripButtonTenancyReason_Click);
+            // 
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
@@ -165,15 +199,15 @@ namespace Registry.Viewport.MultiMasters
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id_process,
@@ -281,25 +315,15 @@ namespace Registry.Viewport.MultiMasters
             // payment
             // 
             this.payment.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle6.Format = "#0.## руб\\.";
-            dataGridViewCellStyle6.NullValue = null;
-            this.payment.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Format = "#0.## руб\\.";
+            dataGridViewCellStyle2.NullValue = null;
+            this.payment.DefaultCellStyle = dataGridViewCellStyle2;
             this.payment.HeaderText = "Размер платы";
             this.payment.MinimumWidth = 150;
             this.payment.Name = "payment";
             this.payment.ReadOnly = true;
             this.payment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.payment.Width = 150;
-            // 
-            // toolStripButtonGisZkhExport
-            // 
-            this.toolStripButtonGisZkhExport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonGisZkhExport.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGisZkhExport.Image")));
-            this.toolStripButtonGisZkhExport.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonGisZkhExport.Name = "toolStripButtonGisZkhExport";
-            this.toolStripButtonGisZkhExport.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonGisZkhExport.Text = "Экспорт для ГИС \"ЖКХ\"";
-            this.toolStripButtonGisZkhExport.Click += new System.EventHandler(this.toolStripButtonGisZkhExport_Click);
             // 
             // MultiTenanciesMaster
             // 
@@ -343,6 +367,8 @@ namespace Registry.Viewport.MultiMasters
         private DataGridViewTextBoxColumn payment;
         private ToolStripButton toolStripButtonExportReasonsForGisZkh;
         private ToolStripButton toolStripButtonGisZkhExport;
+        private ToolStripButton toolStripButtonRegDate;
+        private ToolStripButton toolStripButtonTenancyReason;
 
     }
 }
