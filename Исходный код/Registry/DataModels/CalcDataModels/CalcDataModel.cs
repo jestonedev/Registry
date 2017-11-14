@@ -33,6 +33,7 @@ namespace Registry.DataModels.CalcDataModels
                 }
                 catch (InvalidOperationException)
                 {
+                    DmLoadState = DataModelLoadState.SuccessLoad;
                     DefferedUpdate = true;
                 }
             };
@@ -58,8 +59,10 @@ namespace Registry.DataModels.CalcDataModels
                                 if (modelRef == null) continue;
                                 var model = (CalcDataModel)modelRef;
                                 if (!model.DefferedUpdate) continue;
-                                model.Refresh();
+                                if (model.DmLoadState != DataModelLoadState.SuccessLoad) continue;
+                                model.DmLoadState = DataModelLoadState.Loading;
                                 model.DefferedUpdate = false;
+                                model.Refresh();
                             }
                             _calcedDataModels = _calcedDataModels.Where(model => model.IsAlive).ToList();
                         }
@@ -72,7 +75,7 @@ namespace Registry.DataModels.CalcDataModels
 
         public new static CalcDataModel GetInstance<T>() where T : CalcDataModel
         {
-            Type currentDataModel = typeof(T);          
+            var currentDataModel = typeof(T);          
             var method = currentDataModel.GetMethod("GetInstance", new Type[] { });
             var instanceDm = (T)method.Invoke(null, new object[] { });
             return instanceDm;                        
@@ -82,7 +85,9 @@ namespace Registry.DataModels.CalcDataModels
         public void Refresh()
         {
             while (_worker.IsBusy)
+            {
                 Application.DoEvents();
+            }
             _worker.RunWorkerAsync();
         }
 
@@ -100,7 +105,11 @@ namespace Registry.DataModels.CalcDataModels
 
         protected void CalculationComplete(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (DefferedUpdate) return;
+            if (DefferedUpdate)
+            {
+                DmLoadState = DataModelLoadState.SuccessLoad;
+                return;
+            }
             // Делаем слияние результатов с текущей таблицей
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект RunWorkerCompletedEventArgs в классе CalcDataModel");

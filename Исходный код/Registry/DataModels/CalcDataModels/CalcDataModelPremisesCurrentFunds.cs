@@ -33,7 +33,6 @@ namespace Registry.DataModels.CalcDataModels
 
         protected override void Calculate(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            DmLoadState = DataModelLoadState.Loading;
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremisesCurrentFunds");
             // Фильтруем удаленные строки

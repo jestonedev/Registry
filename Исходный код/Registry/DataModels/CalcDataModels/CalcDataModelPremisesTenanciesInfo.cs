@@ -42,7 +42,6 @@ namespace Registry.DataModels.CalcDataModels
 
         protected override void Calculate(object sender, DoWorkEventArgs e)
         {
-            DmLoadState = DataModelLoadState.Loading;
             if (e == null)
                 throw new DataModelException(
                     "Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremisesTenanciesRegNumbers");
