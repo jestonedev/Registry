@@ -390,7 +390,8 @@ namespace Registry.Viewport.MultiMasters
                         tenancyReason.ReasonNumber, tenancyReason.ReasonDate, tenancyReason.ReasonPrepared);
                     tenancyReasons.EditingNewRecord = false;
                     var tenancyRow = (DataRowView) _tenancies[i];
-                    if ((DateTime?)tenancyRow["residence_warrant_date"] <= tenancyReason.ReasonDate || form.DeletePrevReasons)
+                    if (tenancyRow["residence_warrant_date"] == DBNull.Value ||
+                        (DateTime?)tenancyRow["residence_warrant_date"] <= tenancyReason.ReasonDate || form.DeletePrevReasons)
                     {
                         tenancyRow["residence_warrant_num"] = tenancyReason.ReasonNumber;
                         tenancyRow["residence_warrant_date"] = tenancyReason.ReasonDate;
