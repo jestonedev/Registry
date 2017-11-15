@@ -18,9 +18,9 @@ namespace Registry.Viewport.SearchForms
         internal override string GetFilter()
         {
             var filter = "";
-            IEnumerable<int> includedPremises = new List<int>();
-            IEnumerable<int> excludedPremises = new List<int>();
-            IEnumerable<int> includedBuildings = new List<int>();
+            IEnumerable<int> includedPremises = null;
+            IEnumerable<int> excludedPremises = null;
+            IEnumerable<int> includedBuildings = null;
             if (checkBoxPremisesNumEnable.Checked && !string.IsNullOrEmpty(textBoxPremisesNum.Text.Trim()))
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
@@ -117,7 +117,7 @@ namespace Registry.Viewport.SearchForms
                 }
                 else
                 {
-                    excludedPremises = excludedPremises.Union(premisesIds);
+                    excludedPremises = (excludedPremises ?? new List<int>()).Union(premisesIds);
                 }
             }
             if (checkBoxOwnershipNumberEnable.Checked && !string.IsNullOrEmpty(textBoxOwnershipNumber.Text.Trim()))
@@ -155,24 +155,21 @@ namespace Registry.Viewport.SearchForms
                                               select subPremisesRow.Field<int>("id_premises");
                 includedPremises = DataModelHelper.Intersect(includedPremises, idPremises.Union(idPremisesBySubPremises));
             }
-            includedBuildings = includedBuildings.ToList();
-
-            includedPremises = includedPremises.ToList();
-            excludedPremises = excludedPremises.ToList();
             
             // Оптимизация: если идентификаторов зданий значительно меньше, чем помещений, то сделать пересечение помещений для уменьшения итогового фильтра
-            if (includedBuildings.Any() && includedBuildings.Count()*10 < includedPremises.Count())
+            if (includedBuildings != null && includedPremises != null && 
+                includedBuildings.Count() * 10 < includedPremises.Count())
             {
-                var buildings = includedBuildings;
-                var premiseIds = from premise in EntityDataModel<Premise>.GetInstance().FilterDeletedRows()
-                    where buildings.Contains(premise.Field<int?>("id_building") ?? 0)
-                    select premise.Field<int>("id_premises");
-                includedBuildings = new List<int>();
+                var premiseIds = (from premise in EntityDataModel<Premise>.GetInstance().FilterDeletedRows()
+                    join building in includedBuildings
+                        on premise.Field<int?>("id_building") equals building
+                    select premise.Field<int>("id_premises")).ToList();
+                includedBuildings = null;
                 includedPremises = DataModelHelper.Intersect(includedPremises, premiseIds).ToList();
             }
             //
 
-            if (includedPremises.Any())
+            if (includedPremises != null)
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
@@ -181,7 +178,7 @@ namespace Registry.Viewport.SearchForms
                     filter += "(" + premisesFilter + ")";
             }
 
-            if (excludedPremises.Any())
+            if (excludedPremises != null)
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
@@ -190,7 +187,7 @@ namespace Registry.Viewport.SearchForms
                 filter = filter.TrimEnd(',') + ")";
             }
 
-            if (!includedBuildings.Any()) 
+            if (includedBuildings == null) 
                 return filter == "" ? "0 = 1" : filter;
             if (!string.IsNullOrEmpty(filter.Trim()))
                 filter += " AND ";
