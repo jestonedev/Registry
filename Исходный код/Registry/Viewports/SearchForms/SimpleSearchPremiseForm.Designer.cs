@@ -55,7 +55,7 @@ namespace Registry.Viewport.SearchForms
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(379, 39);
+            this.vButtonCancel.Location = new System.Drawing.Point(395, 41);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -68,7 +68,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(241, 39);
+            this.vButtonSearch.Location = new System.Drawing.Point(257, 41);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);

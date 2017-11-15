@@ -37,6 +37,7 @@ namespace Registry.Viewport.SearchForms
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.vButtonSearch = new VIBlend.WinForms.Controls.vButton();
             this.textBoxCriteria = new System.Windows.Forms.TextBox();
+            this.checkBoxExcludeDemolished = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // comboBoxCriteriaType
@@ -61,7 +62,7 @@ namespace Registry.Viewport.SearchForms
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(288, 41);
+            this.vButtonCancel.Location = new System.Drawing.Point(395, 41);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -74,7 +75,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(150, 41);
+            this.vButtonSearch.Location = new System.Drawing.Point(257, 41);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
@@ -93,12 +94,25 @@ namespace Registry.Viewport.SearchForms
             this.textBoxCriteria.TabIndex = 0;
             this.textBoxCriteria.Enter += new System.EventHandler(this.textBoxCriteria_Enter);
             // 
+            // checkBoxExcludeDemolished
+            // 
+            this.checkBoxExcludeDemolished.AutoSize = true;
+            this.checkBoxExcludeDemolished.Checked = true;
+            this.checkBoxExcludeDemolished.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxExcludeDemolished.Location = new System.Drawing.Point(13, 50);
+            this.checkBoxExcludeDemolished.Name = "checkBoxExcludeDemolished";
+            this.checkBoxExcludeDemolished.Size = new System.Drawing.Size(200, 19);
+            this.checkBoxExcludeDemolished.TabIndex = 4;
+            this.checkBoxExcludeDemolished.Text = "Исключать снесенные здания";
+            this.checkBoxExcludeDemolished.UseVisualStyleBackColor = true;
+            // 
             // SimpleSearchTenancyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             this.ClientSize = new System.Drawing.Size(556, 85);
+            this.Controls.Add(this.checkBoxExcludeDemolished);
             this.Controls.Add(this.textBoxCriteria);
             this.Controls.Add(this.vButtonCancel);
             this.Controls.Add(this.vButtonSearch);
@@ -123,5 +137,6 @@ namespace Registry.Viewport.SearchForms
         private vButton vButtonCancel;
         private vButton vButtonSearch;
         private TextBox textBoxCriteria;
+        private CheckBox checkBoxExcludeDemolished;
     }
 }

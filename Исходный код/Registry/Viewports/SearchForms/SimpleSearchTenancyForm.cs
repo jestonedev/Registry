@@ -28,6 +28,7 @@ namespace Registry.Viewport.SearchForms
         {
             var filter = "";
             IEnumerable<int> includedProcesses = null;
+            IEnumerable<int> excludeProcesses = null;
             if (comboBoxCriteriaType.SelectedIndex == 0)
             {
                 //по номеру договора
@@ -40,7 +41,7 @@ namespace Registry.Viewport.SearchForms
                 //по номеру документ-основания
                 var num = textBoxCriteria.Text.Trim().Replace("'", "");
                 var processesIds = TenancyService.TenancyProcessIdsByReasonNumber(num);
-                includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
+                includedProcesses = DataModelHelper.Intersect(null, processesIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 2)
             {
@@ -71,12 +72,26 @@ namespace Registry.Viewport.SearchForms
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
 
+            if (checkBoxExcludeDemolished.Checked)
+            {
+                excludeProcesses = TenancyService.TenancyProcessIDsWithDemolishedEstates();
+            }
+
             if (includedProcesses != null)
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "id_process IN (0";
                 foreach (var id in includedProcesses)
+                    filter += id.ToString(CultureInfo.InvariantCulture) + ",";
+                filter = filter.TrimEnd(',') + ")";
+            }
+            if (excludeProcesses != null)
+            {
+                if (!string.IsNullOrEmpty(filter.Trim()))
+                    filter += " AND ";
+                filter += "id_process NOT IN (0";
+                foreach (var id in excludeProcesses)
                     filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(',') + ")";
             }
