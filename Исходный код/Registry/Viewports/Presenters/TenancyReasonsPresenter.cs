@@ -114,8 +114,8 @@ namespace Registry.Viewport.Presenters
                 idReason = id;
             }
             if (ParentType != ParentTypeEnum.Tenancy) return;
-            ParentRow["residence_warrant_num"] = reasonNumber;
-            ParentRow["residence_warrant_date"] = reasonDate;
+            ParentRow["residence_warrant_num"] = (object)reasonNumber ?? DBNull.Value;
+            ParentRow["residence_warrant_date"] = (object)reasonDate ?? DBNull.Value;
         }
 
         private bool SaveDeletedRecords(IEnumerable<Entity> list)
