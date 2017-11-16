@@ -821,9 +821,17 @@ namespace Registry.Viewport
             return ids;
         }
 
-        internal string GetFilter()
+        internal IEnumerable<int> GetFilteredIds()
         {
-            return Presenter.ViewModel["general"].BindingSource.Filter;
+            var ids = new List<int>();
+            if (Presenter.ViewModel["general"].BindingSource.Position < 0) return ids;
+            for (var i = 0; i < Presenter.ViewModel["general"].BindingSource.Count; i++)
+            {
+                var row = (DataRowView)Presenter.ViewModel["general"].BindingSource[i];
+                if (row["id_claim"] != DBNull.Value)
+                    ids.Add((int)row["id_claim"]);
+            }
+            return ids;
         }
 
         private void textBoxAccount_Leave(object sender, EventArgs e)

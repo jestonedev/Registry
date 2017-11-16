@@ -139,12 +139,13 @@ namespace Registry.Viewport.MultiMasters
             var viewport = _menuCallback.GetCurrentViewport();
             if (viewport == null)
                 return;
-            IEnumerable<int> idClaim = new List<int>();
+            IEnumerable<int> idClaims = new List<int>();
             var claimsViewport = viewport as ClaimListViewport;
             if (claimsViewport != null)
-                idClaim = claimsViewport.GetCurrentIds();
-            if (!idClaim.Any()) return;
-            _claims.Filter = string.Format("({0}) OR (id_claim IN ({1}))", _claims.Filter, idClaim.Select(x => x.ToString()).Aggregate((x, y) => x + "," + y));
+                idClaims = claimsViewport.GetCurrentIds();
+            if (!idClaims.Any()) return;
+            _claims.Filter = string.Format("({0}) OR (id_claim IN ({1}))", _claims.Filter, 
+                idClaims.Select(x => x.ToString()).Aggregate((x, y) => x + "," + y));
             dataGridView.RowCount = _claims.Count;
         }
 
@@ -153,12 +154,13 @@ namespace Registry.Viewport.MultiMasters
             var viewport = _menuCallback.GetCurrentViewport();
             if (viewport == null)
                 return;
-            var filter = "";
+            IEnumerable<int> idClaims = new List<int>();
             var claimsViewport = viewport as ClaimListViewport;
             if (claimsViewport != null)
-                filter = claimsViewport.GetFilter();
-            if (filter == "") filter = "1=1";
-            _claims.Filter = string.Format("({0}) OR ({1})", _claims.Filter, filter);
+                idClaims = claimsViewport.GetFilteredIds();
+            if (!idClaims.Any()) return;
+            _claims.Filter = string.Format("({0}) OR (id_claim IN ({1}))", _claims.Filter,
+                idClaims.Select(x => x.ToString()).Aggregate((x, y) => x + "," + y));
             dataGridView.RowCount = _claims.Count;
         }
 

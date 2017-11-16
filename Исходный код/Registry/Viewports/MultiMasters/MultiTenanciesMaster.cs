@@ -169,22 +169,16 @@ namespace Registry.Viewport.MultiMasters
             var viewport = _menuCallback.GetCurrentViewport();
             if (viewport == null)
                 return;
-            var filter = "";
+            IEnumerable<int> idTenancies = new List<int>();
             var tenancyListViewport = viewport as TenancyListViewport;
             if (tenancyListViewport != null)
-            {
-                filter = tenancyListViewport.GetFilter();
-            }
-            else
-            {
-                var tenancyViewport = viewport as TenancyViewport;
-                if (tenancyViewport != null)
-                {
-                    filter = tenancyViewport.GetFilter();
-                }
-            }
-            if (filter == "") filter = "1=1";
-            _tenancies.Filter = string.Format("({0}) OR ({1})", _tenancies.Filter, filter);
+                idTenancies = tenancyListViewport.GetFilteredIds();
+            var tenancyViewport = viewport as TenancyViewport;
+            if (tenancyViewport != null)
+                idTenancies = tenancyViewport.GetFilteredIds();
+            if (!idTenancies.Any()) return;
+            _tenancies.Filter = string.Format("({0}) OR (id_process IN ({1}))", _tenancies.Filter,
+                idTenancies.Select(x => x.ToString()).Aggregate((x, y) => x + "," + y));
             dataGridView.RowCount = _tenancies.Count;
         }
 

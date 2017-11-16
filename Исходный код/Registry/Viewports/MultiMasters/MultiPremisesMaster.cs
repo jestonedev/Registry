@@ -119,7 +119,13 @@ namespace Registry.Viewport.MultiMasters
             if (buildingsViewport != null)
                 idBuilding = buildingsViewport.GetCurrentId();
             if (idBuilding == -1) return;
-            _premises.Filter = string.Format("({0}) OR (id_building = {1} AND id_state IN (4,5,9))", _premises.Filter, idBuilding);
+
+            var munPremises = from row in EntityDataModel<Premise>.GetInstance().FilterDeletedRows()
+                where DataModelHelper.MunicipalObjectStates().Contains(row.Field<int?>("id_state") ?? 0) && row.Field<int?>("id_building") == idBuilding
+                select row.Field<int>("id_premises");
+
+            _premises.Filter = string.Format("({0}) OR (id_premises IN ({1}))",
+                _premises.Filter, munPremises.Select(x => x.ToString()).Aggregate((x, y) => x + "," + y));
             dataGridView.RowCount = _premises.Count;
         }
 
@@ -145,9 +151,12 @@ namespace Registry.Viewport.MultiMasters
             if (viewport == null)
                 return;
             IEnumerable<int> idPremises = new List<int>();
-            var premisesViewport = viewport as PremisesListViewport;
+            var premisesListViewport = viewport as PremisesListViewport;
+            if (premisesListViewport != null)
+                idPremises = premisesListViewport.GetCurrentIds();
+            var premisesViewport = viewport as PremisesViewport;
             if (premisesViewport != null)
-                idPremises = premisesViewport.GetCurrentIds();
+                idPremises = new List<int> {premisesViewport.GetCurrentId()};
             if (!idPremises.Any()) return;
             _premises.Filter = string.Format("({0}) OR (id_premises IN ({1}))", _premises.Filter,
                 idPremises.Select(x => x.ToString()).Aggregate((x, y) => x + "," + y));
@@ -159,15 +168,16 @@ namespace Registry.Viewport.MultiMasters
             var viewport = _menuCallback.GetCurrentViewport();
             if (viewport == null)
                 return;
-            var filter = "";
+            IEnumerable<int> idPremises = new List<int>();
             var premisesListViewport = viewport as PremisesListViewport;
             if (premisesListViewport != null)
-                filter = premisesListViewport.GetFilter();
+                idPremises = premisesListViewport.GetFilteredIds();
             var premisesViewport = viewport as PremisesViewport;
             if (premisesViewport != null)
-                filter = premisesViewport.GetFilter();
-            if (filter == "") filter = "1=1";
-            _premises.Filter = string.Format("({0}) OR ({1})", _premises.Filter, filter);
+                idPremises = premisesViewport.GetFilteredIds();
+            if (!idPremises.Any()) return;
+            _premises.Filter = string.Format("({0}) OR (id_premises IN ({1}))", _premises.Filter,
+                idPremises.Select(x => x.ToString()).Aggregate((x, y) => x + "," + y));
             dataGridView.RowCount = _premises.Count;
         }
 

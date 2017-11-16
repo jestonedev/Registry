@@ -408,11 +408,6 @@ namespace Registry.Viewport
             return arguments;
         }
 
-        internal string GetFilter()
-        {
-            return Presenter.ViewModel["general"].BindingSource.Filter;
-        }
-
         private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1) return;
@@ -609,6 +604,19 @@ namespace Registry.Viewport
             for (var i = 0; i < DataGridView.SelectedRows.Count; i++)
             {
                 var row = (DataRowView)Presenter.ViewModel["general"].BindingSource[DataGridView.SelectedRows[i].Index];
+                if (row["id_premises"] != DBNull.Value)
+                    ids.Add((int)row["id_premises"]);
+            }
+            return ids;
+        }
+
+        internal IEnumerable<int> GetFilteredIds()
+        {
+            var ids = new List<int>();
+            if (Presenter.ViewModel["general"].BindingSource.Position < 0) return ids;
+            for (var i = 0; i < Presenter.ViewModel["general"].BindingSource.Count; i++)
+            {
+                var row = (DataRowView)Presenter.ViewModel["general"].BindingSource[i];
                 if (row["id_premises"] != DBNull.Value)
                     ids.Add((int)row["id_premises"]);
             }
