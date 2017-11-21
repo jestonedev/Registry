@@ -56,6 +56,7 @@
         TenancyHistoryReporter,
         DistrictCommitteePreContractReporter,
         ExportReasonsForGisZkhReporter,
-        ContractDksrReporter
+        ContractDksrReporter,
+        ClaimStatesExecutorsReporter
     }
 }

@@ -44,7 +44,7 @@
             this.vButtonOk.AllowAnimations = true;
             this.vButtonOk.BackColor = System.Drawing.Color.Transparent;
             this.vButtonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.vButtonOk.Location = new System.Drawing.Point(32, 94);
+            this.vButtonOk.Location = new System.Drawing.Point(32, 96);
             this.vButtonOk.Name = "vButtonOk";
             this.vButtonOk.RoundedCornersMask = ((byte)(15));
             this.vButtonOk.Size = new System.Drawing.Size(117, 35);
@@ -58,7 +58,7 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(167, 94);
+            this.vButtonCancel.Location = new System.Drawing.Point(167, 96);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -115,7 +115,7 @@
             // comboBoxExecutor
             // 
             this.comboBoxExecutor.FormattingEnabled = true;
-            this.comboBoxExecutor.Location = new System.Drawing.Point(97, 64);
+            this.comboBoxExecutor.Location = new System.Drawing.Point(97, 65);
             this.comboBoxExecutor.Name = "comboBoxExecutor";
             this.comboBoxExecutor.Size = new System.Drawing.Size(204, 21);
             this.comboBoxExecutor.TabIndex = 3;
@@ -125,7 +125,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(313, 134);
+            this.ClientSize = new System.Drawing.Size(313, 140);
             this.Controls.Add(this.comboBoxExecutor);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.vButtonOk);

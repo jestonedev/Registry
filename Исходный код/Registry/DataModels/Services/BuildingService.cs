@@ -106,7 +106,8 @@ namespace Registry.DataModels.Services
             var buildings = DataModel.GetInstance<EntityDataModel<Building>>().FilterDeletedRows();
             return from buildingRow in buildings
                 where buildingRow.Field<string>("house") != null && 
-                      string.Equals(buildingRow.Field<string>("house"), house, StringComparison.CurrentCultureIgnoreCase)
+                      string.Equals((buildingRow.Field<string>("house") ?? "").ToUpperInvariant(), house.ToUpperInvariant(), 
+                      StringComparison.CurrentCultureIgnoreCase)
                 select buildingRow.Field<int>("id_building");
         }
 

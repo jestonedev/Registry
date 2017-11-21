@@ -61,6 +61,7 @@ namespace Registry
             this.ribbonButtonOrbMultiClaims = new System.Windows.Forms.RibbonButton();
             this.ribbonSeparatorMasters = new System.Windows.Forms.RibbonSeparator();
             this.ribbonButtonPreContract = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonContractDksr = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbTenancyContract = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbTenancyContract1711 = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbTenancyContract1712 = new System.Windows.Forms.RibbonButton();
@@ -203,7 +204,7 @@ namespace Registry
             this.ribbonButton10 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton11 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton12 = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonContractDksr = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonStatesExecutorsReport = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -427,6 +428,17 @@ namespace Registry
             this.ribbonButtonPreContract.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPreContract.ToolTipImage")));
             this.ribbonButtonPreContract.ToolTipTitle = "Предварительный договор";
             this.ribbonButtonPreContract.Click += new System.EventHandler(this.ribbonButtonPreContract_Click);
+            // 
+            // ribbonButtonContractDksr
+            // 
+            this.ribbonButtonContractDksr.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractDksr.Image")));
+            this.ribbonButtonContractDksr.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractDksr.SmallImage")));
+            this.ribbonButtonContractDksr.Text = "Договор (ДКСР)";
+            this.ribbonButtonContractDksr.ToolTip = "При нажатии на данную кнопку будет сформирован договор (ДКСР) по текущему процесс" +
+    "у найма";
+            this.ribbonButtonContractDksr.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractDksr.ToolTipImage")));
+            this.ribbonButtonContractDksr.ToolTipTitle = "Договор (ДКСР)";
+            this.ribbonButtonContractDksr.Click += new System.EventHandler(this.ribbonButtonContractDksr_Click);
             // 
             // ribbonButtonOrbTenancyContract
             // 
@@ -1654,6 +1666,7 @@ namespace Registry
             this.ribbonPanel4.ButtonMoreVisible = false;
             this.ribbonPanel4.Items.Add(this.ribbonButtonClaimsStatistic);
             this.ribbonPanel4.Items.Add(this.ribbonButtonClaimStatesReport);
+            this.ribbonPanel4.Items.Add(this.ribbonButtonStatesExecutorsReport);
             this.ribbonPanel4.Items.Add(this.ribbonButtonAccountsDuplicateStatistic);
             this.ribbonPanel4.Items.Add(this.ribbonButtonCourtOrdersPrepareReport);
             this.ribbonPanel4.Text = "Отчеты";
@@ -1958,16 +1971,16 @@ namespace Registry
             this.ribbonButton12.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton12.SmallImage")));
             this.ribbonButton12.Text = "ribbonButton12";
             // 
-            // ribbonButtonContractDksr
+            // ribbonButtonStatesExecutorsReport
             // 
-            this.ribbonButtonContractDksr.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractDksr.Image")));
-            this.ribbonButtonContractDksr.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractDksr.SmallImage")));
-            this.ribbonButtonContractDksr.Text = "Договор (ДКСР)";
-            this.ribbonButtonContractDksr.ToolTip = "При нажатии на данную кнопку будет сформирован договор (ДКСР) по текущему процесс" +
-    "у найма";
-            this.ribbonButtonContractDksr.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractDksr.ToolTipImage")));
-            this.ribbonButtonContractDksr.ToolTipTitle = "Договор (ДКСР)";
-            this.ribbonButtonContractDksr.Click += new System.EventHandler(this.ribbonButtonContractDksr_Click);
+            this.ribbonButtonStatesExecutorsReport.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonStatesExecutorsReport.Image")));
+            this.ribbonButtonStatesExecutorsReport.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonStatesExecutorsReport.SmallImage")));
+            this.ribbonButtonStatesExecutorsReport.Text = "Отчет по исполнителям ИР";
+            this.ribbonButtonStatesExecutorsReport.ToolTip = "При нажатии на данную кнопку будет сформирован отчет по исполнителям стадий прете" +
+    "нзионно-исковых работ в OpenOffice Calc";
+            this.ribbonButtonStatesExecutorsReport.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonStatesExecutorsReport.ToolTipImage")));
+            this.ribbonButtonStatesExecutorsReport.ToolTipTitle = "Отчет по исполнителям ИР";
+            this.ribbonButtonStatesExecutorsReport.Click += new System.EventHandler(this.ribbonButtonStatesExecutorsReport_Click);
             // 
             // MainForm
             // 
@@ -2153,6 +2166,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonOrbMultiTenancies;
         private System.Windows.Forms.RibbonButton ribbonButtonExportReasonsForGisZkh;
         private System.Windows.Forms.RibbonButton ribbonButtonContractDksr;
+        private System.Windows.Forms.RibbonButton ribbonButtonStatesExecutorsReport;
     }
 }
 

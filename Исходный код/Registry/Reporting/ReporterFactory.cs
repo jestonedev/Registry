@@ -1,5 +1,4 @@
-﻿using System;
-using Registry.Reporting.RegistryReporters;
+﻿using Registry.Reporting.RegistryReporters;
 using Registry.Reporting.TenancyReporters;
 using System.Globalization;
 using Registry.Reporting.ClaimsAndPaymentsReporters;
@@ -116,6 +115,8 @@ namespace Registry.Reporting
                     return new ContractDkrsReporter();
                 case ReporterType.ExportReasonsForGisZkhReporter:
                     return new ExportReasonsForGisZkhReporter();
+                case ReporterType.ClaimStatesExecutorsReporter:
+                    return new ClaimsStatesExecutorsReporter();
             }
             throw new ReporterException(string.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType));
         }

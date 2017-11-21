@@ -1050,6 +1050,21 @@ namespace Registry
             RunReport(ReporterType.AccountsDuplicateStatistic);
         }
 
+        private void ribbonButtonCourtOrdersPrepareReport_Click(object sender, EventArgs e)
+        {
+            RunReport(ReporterType.ClaimsCourtOrderPrepareReporter);
+        }
+
+        private void ribbonButtonStatesExecutorsReport_Click(object sender, EventArgs e)
+        {
+            RunReport(ReporterType.ClaimStatesExecutorsReporter);
+        }
+
+        private void ribbonButtonGisZkhExport_Click(object sender, EventArgs e)
+        {
+            RunReport(ReporterType.GisZkhReporter);
+        }
+
         private void ribbonButton1711_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
@@ -1323,16 +1338,6 @@ namespace Registry
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
                 document.ShowAssocViewport<ClaimCourtOrdersViewport>();
-        }
-
-        private void ribbonButtonCourtOrdersPrepareReport_Click(object sender, EventArgs e)
-        {
-            RunReport(ReporterType.ClaimsCourtOrderPrepareReporter);
-        }
-
-        private void ribbonButtonGisZkhExport_Click(object sender, EventArgs e)
-        {
-            RunReport(ReporterType.GisZkhReporter);
         }
 
         private void ribbonButtonRequestToMvd_Click(object sender, EventArgs e)

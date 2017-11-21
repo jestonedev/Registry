@@ -60,11 +60,18 @@
   <ItemGroup>
     <Compile Include="ClaimsAndPaymentsReporters\AccountsDuplicateStatistic.cs" />
     <Compile Include="ClaimsAndPaymentsReporters\ClaimsCourtOrderPrepareReporter.cs" />
+    <Compile Include="ClaimsAndPaymentsReporters\ClaimsStatesExecutorsReporter.cs" />
     <Compile Include="ClaimsAndPaymentsReporters\JudicialOrderReporter.cs" />
     <Compile Include="ClaimsAndPaymentsReporters\RequestToBksReporter.cs" />
     <Compile Include="ClaimsAndPaymentsReporters\TransfertToLegalDepartmentReporter.cs" />
     <Compile Include="ClaimsAndPaymentsReporters\ClaimsStatesReporter.cs" />
     <Compile Include="RegistryReporters\TenancyHistoryReporter.cs" />
+    <Compile Include="SettingForms\ClaimStatesExecutorsSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingForms\ClaimStatesExecutorsSettingsForm.Designer.cs">
+      <DependentUpon>ClaimStatesExecutorsSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingForms\DistrictCommitteePreContractReporterSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -217,6 +224,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingForms\ClaimCourtOrdersPrepareSettingsForm.resx">
       <DependentUpon>ClaimCourtOrdersPrepareSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingForms\ClaimStatesExecutorsSettingsForm.resx">
+      <DependentUpon>ClaimStatesExecutorsSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingForms\ClaimStatesSettingsForm.resx">
       <DependentUpon>ClaimStatesSettingsForm.cs</DependentUpon>
