@@ -128,7 +128,7 @@ namespace Registry.DataModels.Services
             return from ownershipBuildingsAssocRow in ownershipBuildingdsAssoc
                 join ownershipRightsRow in ownershipRights
                     on ownershipBuildingsAssocRow.Field<int?>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
-                where ownershipRightsRow.Field<int?>("id_ownership_right_type") == 1
+                where ownershipBuildingsAssocRow.Field<int?>("id_building") != null && ownershipRightsRow.Field<int?>("id_ownership_right_type") == 1
                 select ownershipBuildingsAssocRow.Field<int>("id_building");
         }
 
@@ -139,7 +139,7 @@ namespace Registry.DataModels.Services
             return from ownershipBuildingsAssocRow in ownershipBuildingdsAssoc
                    join ownershipRightsRow in ownershipRights
                        on ownershipBuildingsAssocRow.Field<int?>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
-                   where ownershipRightsRow.Field<int?>("id_ownership_right_type") == 2
+                   where ownershipBuildingsAssocRow.Field<int?>("id_building") != null && ownershipRightsRow.Field<int?>("id_ownership_right_type") == 2
                    select ownershipBuildingsAssocRow.Field<int>("id_building");
         }
 
