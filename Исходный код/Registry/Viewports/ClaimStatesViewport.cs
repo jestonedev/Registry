@@ -476,6 +476,7 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             RebuildFilter();
             _noUpdateFieldList = false;
+
             comboBoxClaimStateType_SelectedValueChanged(this, new EventArgs());
             IsEditable = isEditable;
             if (!Selected) return;
@@ -576,7 +577,7 @@ namespace Registry.Viewport
                     tabControlWithoutTabs1.Visible = false;
                     break;
             }
-            comboBoxClaimStateType.Focus();
+            textBoxDescription.Focus();
             IsEditable = isEditabel;
         }
     }
