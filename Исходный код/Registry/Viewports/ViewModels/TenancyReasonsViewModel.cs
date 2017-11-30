@@ -17,7 +17,7 @@ namespace Registry.Viewport.ViewModels
                 {"reason_types", new ViewModelItem(EntityDataModel<ReasonType>.GetInstance())}
             })
         {
-            this["reason_types"].BindingSource.Sort = "reason_name";
+            this["reason_types"].BindingSource.Sort = "order, reason_name";
         }
 
         public override void InitializeSnapshot()

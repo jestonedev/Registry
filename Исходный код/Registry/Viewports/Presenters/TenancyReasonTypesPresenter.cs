@@ -43,12 +43,6 @@ namespace Registry.Viewport.Presenters
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (Regex.IsMatch(reasonType.ReasonTemplate, "@reason_number@") &&
-                    Regex.IsMatch(reasonType.ReasonTemplate, "@reason_date@")) continue;
-                MessageBox.Show(@"Шаблон основания имеет неверный формат. В шаблоне должны быть указаны номер (в виде шаблона @reason_number@) и" +
-                                @" дата (в виде шаблона @reason_date@) основания", @"Ошибка", 
-                                MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return false;
             }
             return true;
         }
@@ -78,6 +72,7 @@ namespace Registry.Viewport.Presenters
         {
             var row = (DataRowView)((SnapshotedViewModel)ViewModel).SnapshotBindingSource.AddNew();
             if (row == null) return;
+            row["order"] = 100;
             row.EndEdit();
         }
 

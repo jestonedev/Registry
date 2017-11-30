@@ -43,7 +43,6 @@ namespace Registry.Viewport.Presenters
             return true;
         }
 
-
         public List<Entity> EntitiesListFromView()
         {
             var list = new List<Entity>();

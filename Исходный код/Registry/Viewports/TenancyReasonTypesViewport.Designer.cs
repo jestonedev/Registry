@@ -12,20 +12,19 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_reason_type;
-        private DataGridViewTextBoxColumn reason_name;
-        private DataGridViewTextBoxColumn reason_template;
         #endregion Components
 
 
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyReasonTypesViewport));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_reason_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.reason_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.reason_template = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.order = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,7 +49,8 @@ namespace Registry.Viewport
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id_reason_type,
             this.reason_name,
-            this.reason_template});
+            this.reason_template,
+            this.order});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridView.Location = new System.Drawing.Point(3, 3);
@@ -61,6 +61,7 @@ namespace Registry.Viewport
             this.dataGridView.TabIndex = 7;
             this.dataGridView.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValidated);
             this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
+            this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
             // 
             // id_reason_type
             // 
@@ -84,6 +85,14 @@ namespace Registry.Viewport
             this.reason_template.MinimumWidth = 100;
             this.reason_template.Name = "reason_template";
             // 
+            // order
+            // 
+            dataGridViewCellStyle2.Format = "N0";
+            dataGridViewCellStyle2.NullValue = null;
+            this.order.DefaultCellStyle = dataGridViewCellStyle2;
+            this.order.HeaderText = "Сортировка";
+            this.order.Name = "order";
+            // 
             // TenancyReasonTypesViewport
             // 
             this.BackColor = System.Drawing.Color.White;
@@ -98,5 +107,10 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
+
+        private DataGridViewTextBoxColumn id_reason_type;
+        private DataGridViewTextBoxColumn reason_name;
+        private DataGridViewTextBoxColumn reason_template;
+        private DataGridViewTextBoxColumn order;
     }
 }

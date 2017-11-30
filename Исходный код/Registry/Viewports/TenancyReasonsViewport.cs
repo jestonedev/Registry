@@ -94,8 +94,15 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            ((TenancyReasonsPresenter)Presenter).InsertRecordIntoSnapshot(); 
-            dataGridView.Rows[dataGridView.Rows.Count - 1].Cells["id_reason_type"].Value = 1;
+            ((TenancyReasonsPresenter)Presenter).InsertRecordIntoSnapshot();
+            try
+            {
+                dataGridView.Rows[dataGridView.Rows.Count - 1].Cells["id_reason_type"].Value = 25;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                
+            }
             dataGridView.Rows[dataGridView.Rows.Count - 1].Cells["reason_number"].Selected = true;
         }
 

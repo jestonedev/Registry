@@ -168,7 +168,7 @@ namespace Registry.DataModels.DataModels
         protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
         {
             const string commandTemplate = "UPDATE {0} SET {1} WHERE {2}";
-            const string columnTemplate = "{0} = ?";
+            const string columnTemplate = "`{0}` = ?";
             var setStatement = "";
 
             foreach (var property in NonPrimaryKeyProperty)

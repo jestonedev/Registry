@@ -10,5 +10,6 @@ namespace Registry.Entities
         public int? IdReasonType { get; set; }
         public string ReasonName { get; set; }
         public string ReasonTemplate { get; set; }
+        public int Order { get; set; }
     }
 }

@@ -67,6 +67,7 @@ namespace Registry.Viewport
             id_reason_type.DataPropertyName = "id_reason_type";
             reason_name.DataPropertyName = "reason_name";
             reason_template.DataPropertyName = "reason_template";
+            order.DataPropertyName = "order";
         }
 
         public override bool CanInsertRecord()
@@ -110,7 +111,11 @@ namespace Registry.Viewport
         {
 
             SyncViews = false;
-            dataGridView.EndEdit();
+            if (!dataGridView.EndEdit())
+            {
+                SyncViews = true;
+                return;
+            };
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
             if (((TenancyReasonTypesPresenter)Presenter).ValidateReasonTypesInSnapshot())
             {
@@ -196,6 +201,15 @@ namespace Registry.Viewport
         {
             if (!Selected) return;
             MenuCallback.NavigationStateUpdate();
+        }
+
+        private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            if (dataGridView.Columns[e.ColumnIndex].Name == "order")
+            {
+                MessageBox.Show(@"В поле сортировки разрешено указывать только цифры", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            }
         }
     }
 }
