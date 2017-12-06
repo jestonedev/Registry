@@ -117,6 +117,10 @@ namespace Registry.Viewport.SearchForms
                 }
                 else
                 {
+                    if ((int)comboBoxOwnershipType.SelectedValue == 2)
+                    {
+                        premisesIds = premisesIds.Union(PremisesService.PremiseIDsByOwnershipType(1));
+                    }
                     excludedPremises = (excludedPremises ?? new List<int>()).Union(premisesIds);
                 }
             }
