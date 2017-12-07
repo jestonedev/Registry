@@ -227,7 +227,6 @@
             this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.ShowCellToolTips = false;
             this.dataGridView.Size = new System.Drawing.Size(946, 606);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.VirtualMode = true;

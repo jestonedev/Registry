@@ -285,13 +285,15 @@ namespace Registry.Viewport
                     var style = DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style;
                     if (_demolishedBuildings.Contains((int)row[Presenter.ViewModel["general"].PrimaryKeyFirst]))
                     {
-                        style.BackColor = Color.Red;
-                        style.SelectionBackColor = Color.DarkRed;
+                        style.BackColor = Color.FromArgb(255, 254, 220, 220);
+                        style.SelectionBackColor = Color.FromArgb(255, 215, 72, 72);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = "Присутствует реквизит \"Снесено\"";
                     }
                     else
                     {
                         style.BackColor = Color.White;
                         style.SelectionBackColor = SystemColors.Highlight;
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = "";
                     }
                     break;
                 case "house":

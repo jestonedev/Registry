@@ -280,13 +280,15 @@ namespace Registry.Reporting.SettingForms
                     e.Value = _checkedTenancies.Contains(idProcess);
                     if (_tenanciesWithEmergencyEstates.Contains(idProcess))
                     {
-                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.FromArgb(255, 117, 234, 232);
-                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.FromArgb(255, 22, 145, 143);
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.FromArgb(255, 187, 254, 232);
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.FromArgb(255, 72, 215, 143);
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = "Присутствует реквизит \"Аварийное\"";
                     }
                     else
                     {
                         dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.White;
                         dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = SystemColors.Highlight;
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = "";
                     }
                     break;
                 case "id_process":

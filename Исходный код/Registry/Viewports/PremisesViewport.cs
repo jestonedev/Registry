@@ -109,8 +109,8 @@ namespace Registry.Viewport
                     assoc.Find("id_restriction",
                         dataGridViewRestrictions.Rows[i].Cells["id_restriction"].Value) != -1)
                 {
-                    style.BackColor = Color.LightGreen;
-                    style.SelectionBackColor = Color.Green;
+                    style.BackColor = Color.FromArgb(255, 187, 254, 232);
+                    style.SelectionBackColor = Color.FromArgb(255, 72, 215, 143);
                     dataGridViewRestrictions.Rows[i].Cells["restriction_relation"].Value = "Здание";
                 }
                 else
@@ -139,12 +139,12 @@ namespace Registry.Viewport
                     if (idOwnershipRightType == 6)
                     {
                         style.BackColor = Color.LightBlue;
-                        style.SelectionBackColor = Color.Blue;
+                        style.SelectionBackColor = Color.DeepSkyBlue;
                     }
                     else
                     {
-                        style.BackColor = Color.LightGreen;
-                        style.SelectionBackColor = Color.Green;
+                        style.BackColor = Color.FromArgb(255, 187, 254, 232);
+                        style.SelectionBackColor = Color.FromArgb(255, 72, 215, 143);
                     }
                     
                     dataGridViewOwnerships.Rows[i].Cells["ownership_relation"].Value = "Здание";

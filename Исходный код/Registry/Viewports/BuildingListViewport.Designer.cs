@@ -19,7 +19,6 @@ namespace Registry.Viewport
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BuildingListViewport));
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.BTI_rooms = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_building = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_street = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.house = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -32,6 +31,7 @@ namespace Registry.Viewport
             this.id_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.num_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_heating_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BTI_rooms = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -73,7 +73,6 @@ namespace Registry.Viewport
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.ShowCellToolTips = false;
             this.dataGridView.Size = new System.Drawing.Size(1099, 723);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.VirtualMode = true;
@@ -82,10 +81,6 @@ namespace Registry.Viewport
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             this.dataGridView.Resize += new System.EventHandler(this.dataGridView_Resize);
-            // 
-            // BTI_rooms
-            // 
-            this.BTI_rooms.Name = "BTI_rooms";
             // 
             // id_building
             // 
@@ -196,6 +191,10 @@ namespace Registry.Viewport
             this.id_heating_type.Name = "id_heating_type";
             this.id_heating_type.ReadOnly = true;
             this.id_heating_type.Width = 120;
+            // 
+            // BTI_rooms
+            // 
+            this.BTI_rooms.Name = "BTI_rooms";
             // 
             // BuildingListViewport
             // 

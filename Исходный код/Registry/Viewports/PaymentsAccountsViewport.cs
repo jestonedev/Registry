@@ -208,13 +208,15 @@ namespace Registry.Viewport
                         _notCompletedClaims.Any(r => row["parsed_address"] != DBNull.Value && r.ParsedAddress == (string)row["parsed_address"]);
                     if (hasDuplicate)
                     {
-                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.FromArgb(255, 117, 234, 232);
-                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.FromArgb(255, 22, 145, 143);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.FromArgb(255, 254, 220, 220);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.FromArgb(255, 215, 72, 72);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = "По данному адресу или лицевому счету имеются незавершенные претензионно-исковые работы";
                     }
                     else
                     {
                         DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.White;
                         DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = SystemColors.Highlight;
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = "";
                     }
 
                     DateTime dateValue;
@@ -236,8 +238,8 @@ namespace Registry.Viewport
             }
             if (ParentType == ParentTypeEnum.Claim && (int)ParentRow["id_account"] == (int)row["id_account"])
             {
-                DataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
-                DataGridView.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.Green;
+                DataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(255, 187, 254, 232);
+                DataGridView.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.FromArgb(255, 72, 215, 143);
             }
             else
             {

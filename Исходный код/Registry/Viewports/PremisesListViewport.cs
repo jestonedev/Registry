@@ -444,21 +444,24 @@ namespace Registry.Viewport
                     if (_demolishedBuildings.Contains((int) row["id_building"]) ||
                         _demolishedPremises.Contains((int) row["id_premises"]))
                     {
-                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.Red;
-                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.DarkRed;
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.FromArgb(255, 254, 220, 220);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.FromArgb(255, 215, 72, 72);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = "Присутствует реквизит \"Снесено\"";
                     } else
                     if (_emergencyBuildings.Contains((int) row["id_building"]) || (
                         _emergencyPremises.Contains((int) row["id_premises"]) &&
                         !_emergencyExcludedPremises.Contains((int) row["id_premises"])
                         ))
                     {
-                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.FromArgb(255, 117, 234, 232);
-                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.FromArgb(255, 22, 145, 143);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.FromArgb(255, 187, 254, 232);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.FromArgb(255, 72, 215, 143);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = "Присутствует реквизит \"Аварийное\"";
                     }
                     else
                     {
                         DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.White;
                         DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = SystemColors.Highlight;
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = "";
                     }
                     break;
                 case "id_street":
@@ -562,13 +565,15 @@ namespace Registry.Viewport
                     }
                     if (tenancyRow.Field<int?>("object_type") == 2)
                     {
-                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.LightGreen;
-                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.Green;
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.FromArgb(255, 187, 254, 232);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.FromArgb(255, 72, 215, 143);
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = "Текущий найм одной из комнат помещения";
                     }
                     else
                     {
                         DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.White;
                         DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = SystemColors.Highlight;
+                        DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = "";
                     }
                     break;
             }

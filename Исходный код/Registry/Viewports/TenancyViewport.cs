@@ -105,11 +105,20 @@ namespace Registry.Viewport
             {
                 var row = (DataRowView)Presenter.ViewModel["tenancy_processes_tenancy_persons"].BindingSource[i];
                 if (ViewportHelper.ValueOrNull<int>(row, "id_kinship") == 1 && row["exclude_date"] == DBNull.Value)
-                    dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                {
+                    dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(255, 187, 254, 232);
+                    dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.SelectionBackColor = Color.FromArgb(255, 72, 215, 143);
+                }
                 else if (row["exclude_date"] != DBNull.Value)
-                    dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightCoral;
+                {
+                    dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(255, 254, 220, 220);
+                    dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.SelectionBackColor = Color.FromArgb(255, 215, 72, 72);
+                }
                 else
+                {
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                    dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
+                }
             }
         }
 

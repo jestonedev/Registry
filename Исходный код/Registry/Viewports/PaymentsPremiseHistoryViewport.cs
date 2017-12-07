@@ -114,8 +114,8 @@ namespace Registry.Viewport
                     if (ParentType == ParentTypeEnum.PaymentAccount &&
                         (int) ParentRow["id_account"] == (int) row["id_account"])
                     {
-                        DataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
-                        DataGridView.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.Green;
+                        DataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(255, 187, 254, 232);
+                        DataGridView.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.FromArgb(255, 72, 215, 143);
                     }
                     else
                     {
